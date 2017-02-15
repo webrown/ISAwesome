@@ -1,10 +1,7 @@
 #ifndef MACHINECODE_H
 #define MACHINECODE_H
-#include <iostream>
 #include <string>
 #include <vector>
-#include "utility.h"
-#include "conversions.h"
 
 using namespace std;
 

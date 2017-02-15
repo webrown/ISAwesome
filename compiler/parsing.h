@@ -1,10 +1,7 @@
 #ifndef PARSING_H
 #define PARSING_H
-#include <iostream>
 #include <string>
 #include <vector>
-#include "utility.h"
-#include "conversions.h"
 #include "MachineCode.h"
 
 using namespace std;
