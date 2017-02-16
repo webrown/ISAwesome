@@ -8,5 +8,5 @@ test: $(OUT) testfile
 	cat testfile | ./$(OUT) > testout
 
 clean:
-	-rm $(OUT)
-	-rm testout
+	rm -f $(OUT)
+	rm -f testout
