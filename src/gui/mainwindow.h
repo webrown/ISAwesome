@@ -5,8 +5,8 @@
 #include <QSpinBox>
 #include <QWidget>
 #include <QPlainTextEdit>
-#include "ui_pisa.h"
 #include "codeeditor.h"
+#include "ui_pisa.h"
 
 class MainWindow : public QMainWindow
 {

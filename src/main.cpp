@@ -1,9 +1,9 @@
 #include <QApplication>
 #include <stdio.h>
-#include "ui_pisa.h"
 #include <QFont>
 #include <QFontDatabase>
-#include "mainwindow.h"
+#include "gui/mainwindow.h"
+
 int main( int argc, char **argv )
 {
 	QApplication app( argc, argv );

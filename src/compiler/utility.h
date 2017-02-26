@@ -6,7 +6,4 @@
 
 using namespace std;
 
-string uppercase(string input);
-vector<string> split(string line, char delimeter);
-
 #endif

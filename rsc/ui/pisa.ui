@@ -25,6 +25,16 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../pisa.qrc">
+    <normaloff>:/icon/img/icon.png</normaloff>:/icon/img/icon.png</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>22</width>
+    <height>22</height>
+   </size>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget_editor">
     <property name="geometry">
@@ -752,8 +762,8 @@
   </action>
   <action name="actionRun">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/play.png</normaloff>:/Menu_icon/play.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/play.png</normaloff>:/menu_icon/img/play.png</iconset>
    </property>
    <property name="text">
     <string>Run</string>
@@ -779,8 +789,8 @@
   </action>
   <action name="actionnew">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/new.png</normaloff>:/Menu_icon/new.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/new.png</normaloff>:/menu_icon/img/new.png</iconset>
    </property>
    <property name="text">
     <string>new</string>
@@ -791,8 +801,8 @@
   </action>
   <action name="actionopen">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/open.png</normaloff>:/Menu_icon/open.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/open.png</normaloff>:/menu_icon/img/open.png</iconset>
    </property>
    <property name="text">
     <string>open</string>
@@ -803,8 +813,8 @@
   </action>
   <action name="actionsave">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/save.png</normaloff>:/Menu_icon/save.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/save.png</normaloff>:/menu_icon/img/save.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -815,8 +825,8 @@
   </action>
   <action name="actionstop">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/stop.png</normaloff>:/Menu_icon/stop.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/stop.png</normaloff>:/menu_icon/img/stop.png</iconset>
    </property>
    <property name="text">
     <string>stop</string>
@@ -827,8 +837,8 @@
   </action>
   <action name="actionpause">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/pause.png</normaloff>:/Menu_icon/pause.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/pause.png</normaloff>:/menu_icon/img/pause.png</iconset>
    </property>
    <property name="text">
     <string>pause</string>
@@ -839,8 +849,8 @@
   </action>
   <action name="actionforward">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/forward.png</normaloff>:/Menu_icon/forward.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/forward.png</normaloff>:/menu_icon/img/forward.png</iconset>
    </property>
    <property name="text">
     <string>forward</string>
@@ -851,8 +861,8 @@
   </action>
   <action name="actionrewind">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/backward.png</normaloff>:/Menu_icon/backward.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/backward.png</normaloff>:/menu_icon/img/backward.png</iconset>
    </property>
    <property name="text">
     <string>rewind</string>
@@ -863,8 +873,8 @@
   </action>
   <action name="actionbuild">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/build.png</normaloff>:/Menu_icon/build.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/build.png</normaloff>:/menu_icon/img/build.png</iconset>
    </property>
    <property name="text">
     <string>build</string>
@@ -875,8 +885,8 @@
   </action>
   <action name="actionbuild_all">
    <property name="icon">
-    <iconset resource="rsc/pisa_resource.qrc">
-     <normaloff>:/Menu_icon/build_all.png</normaloff>:/Menu_icon/build_all.png</iconset>
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon/img/build_all.png</normaloff>:/menu_icon/img/build_all.png</iconset>
    </property>
    <property name="text">
     <string>build all</string>
@@ -944,7 +954,7 @@
   <tabstop>tabWidget_memory</tabstop>
  </tabstops>
  <resources>
-  <include location="rsc/pisa_resource.qrc"/>
+  <include location="../pisa.qrc"/>
  </resources>
  <connections/>
 </ui>
