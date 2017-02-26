@@ -44,6 +44,9 @@
     <property name="currentIndex">
      <number>-1</number>
     </property>
+    <property name="tabsClosable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QTabWidget" name="tabWidget_output">
     <property name="geometry">
@@ -197,6 +200,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Address</string>
@@ -240,6 +246,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Address</string>
@@ -283,6 +292,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Address</string>
@@ -314,7 +326,7 @@
         <attribute name="title">
          <string>Memory</string>
         </attribute>
-        <widget class="QTableWidget" name="tableWidget_9">
+        <widget class="QTableWidget" name="tableWidget_memory">
          <property name="geometry">
           <rect>
            <x>0</x>
@@ -326,6 +338,12 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <property name="rowCount">
+          <number>0</number>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Address</string>
@@ -368,7 +386,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_cache">
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tab_cache_l1_i">
         <attribute name="title">
@@ -386,6 +404,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Tag</string>
@@ -439,6 +460,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Tag</string>
@@ -492,6 +516,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Tag</string>
@@ -545,6 +572,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Tag</string>
@@ -605,6 +635,9 @@
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_state"/>
+    <addaction name="actionRestore_State"/>
    </widget>
    <widget class="QMenu" name="menuEdt">
     <property name="title">
@@ -659,7 +692,7 @@
    </attribute>
    <addaction name="actionnew"/>
    <addaction name="actionopen"/>
-   <addaction name="actionSave_2"/>
+   <addaction name="actionsave"/>
    <addaction name="separator"/>
    <addaction name="actionRun"/>
    <addaction name="actionpause"/>
@@ -670,6 +703,7 @@
    <addaction name="separator"/>
    <addaction name="actionrewind"/>
    <addaction name="actionforward"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -767,7 +801,7 @@
     <string>Open File</string>
    </property>
   </action>
-  <action name="actionSave_2">
+  <action name="actionsave">
    <property name="icon">
     <iconset resource="rsc/pisa_resource.qrc">
      <normaloff>:/Menu_icon/save.png</normaloff>:/Menu_icon/save.png</iconset>
@@ -879,6 +913,26 @@
   <action name="actionDelete">
    <property name="text">
     <string>&amp;Delete</string>
+   </property>
+  </action>
+  <action name="actionSave_State">
+   <property name="text">
+    <string>Save State</string>
+   </property>
+  </action>
+  <action name="actionSave_State_As">
+   <property name="text">
+    <string>Save State As</string>
+   </property>
+  </action>
+  <action name="actionLoad_state">
+   <property name="text">
+    <string>&amp;Load State</string>
+   </property>
+  </action>
+  <action name="actionRestore_State">
+   <property name="text">
+    <string>&amp;Restore State</string>
    </property>
   </action>
  </widget>

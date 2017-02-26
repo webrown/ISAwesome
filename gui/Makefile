@@ -49,12 +49,20 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = main.cpp \
-		MainWindow.cpp qrc_pisa_resource.cpp \
-		moc_MainWindow.cpp
+		mainwindow.cpp \
+		codeeditor.cpp \
+		newfiledialog.cpp qrc_pisa_resource.cpp \
+		moc_mainwindow.cpp \
+		moc_codeeditor.cpp \
+		moc_newfiledialog.cpp
 OBJECTS       = main.o \
-		MainWindow.o \
+		mainwindow.o \
+		codeeditor.o \
+		newfiledialog.o \
 		qrc_pisa_resource.o \
-		moc_MainWindow.o
+		moc_mainwindow.o \
+		moc_codeeditor.o \
+		moc_newfiledialog.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -246,9 +254,14 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/exceptions.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
-		gui.pro MainWindow.h \
-		ui_pisa.h main.cpp \
-		MainWindow.cpp
+		gui.pro mainwindow.h \
+		ui_pisa.h \
+		ui_newfiledialog.h \
+		codeeditor.h \
+		newfiledialog.h main.cpp \
+		mainwindow.cpp \
+		codeeditor.cpp \
+		newfiledialog.cpp
 QMAKE_TARGET  = gui
 DESTDIR       = 
 TARGET        = gui
@@ -257,7 +270,7 @@ TARGET        = gui
 first: all
 ####### Build rules
 
-$(TARGET): ui_pisa.h $(OBJECTS)  
+$(TARGET): ui_pisa.h ui_newfiledialog.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: gui.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/features/spec_pre.prf \
@@ -669,9 +682,9 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa_resource.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents MainWindow.h ui_pisa.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp MainWindow.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents pisa.ui $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h ui_pisa.h ui_newfiledialog.h codeeditor.h newfiledialog.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp codeeditor.cpp newfiledialog.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents pisa.ui newfiledialog.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -720,23 +733,39 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -Wall -W -dM -E -o moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_MainWindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_codeeditor.cpp moc_newfiledialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_MainWindow.cpp
-moc_MainWindow.cpp: ui_pisa.h \
-		MainWindow.h \
+	-$(DEL_FILE) moc_mainwindow.cpp moc_codeeditor.cpp moc_newfiledialog.cpp
+moc_mainwindow.cpp: ui_pisa.h \
+		codeeditor.h \
+		mainwindow.h \
 		moc_predefs.h \
 		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Projects/PISA/gui -I/home/younglee/Projects/PISA/gui -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include MainWindow.h -o moc_MainWindow.cpp
+	/usr/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Projects/PISA/gui -I/home/younglee/Projects/PISA/gui -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+
+moc_codeeditor.cpp: codeeditor.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Projects/PISA/gui -I/home/younglee/Projects/PISA/gui -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include codeeditor.h -o moc_codeeditor.cpp
+
+moc_newfiledialog.cpp: ui_newfiledialog.h \
+		newfiledialog.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Projects/PISA/gui -I/home/younglee/Projects/PISA/gui -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include newfiledialog.h -o moc_newfiledialog.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_pisa.h
+compiler_uic_make_all: ui_pisa.h ui_newfiledialog.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_pisa.h
+	-$(DEL_FILE) ui_pisa.h ui_newfiledialog.h
 ui_pisa.h: pisa.ui \
 		/usr/bin/uic
 	/usr/bin/uic pisa.ui -o ui_pisa.h
+
+ui_newfiledialog.h: newfiledialog.ui \
+		/usr/bin/uic
+	/usr/bin/uic newfiledialog.ui -o ui_newfiledialog.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -749,18 +778,35 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 ####### Compile
 
 main.o: main.cpp ui_pisa.h \
-		MainWindow.h
+		mainwindow.h \
+		codeeditor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
-MainWindow.o: MainWindow.cpp MainWindow.h \
-		ui_pisa.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MainWindow.o MainWindow.cpp
+mainwindow.o: mainwindow.cpp mainwindow.h \
+		ui_pisa.h \
+		codeeditor.h \
+		newfiledialog.h \
+		ui_newfiledialog.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
+
+codeeditor.o: codeeditor.cpp codeeditor.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o codeeditor.o codeeditor.cpp
+
+newfiledialog.o: newfiledialog.cpp newfiledialog.h \
+		ui_newfiledialog.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o newfiledialog.o newfiledialog.cpp
 
 qrc_pisa_resource.o: qrc_pisa_resource.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_pisa_resource.o qrc_pisa_resource.cpp
 
-moc_MainWindow.o: moc_MainWindow.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_MainWindow.o moc_MainWindow.cpp
+moc_mainwindow.o: moc_mainwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_codeeditor.o: moc_codeeditor.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_codeeditor.o moc_codeeditor.cpp
+
+moc_newfiledialog.o: moc_newfiledialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_newfiledialog.o moc_newfiledialog.cpp
 
 ####### Install
 

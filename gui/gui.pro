@@ -5,12 +5,20 @@
 TEMPLATE = app
 TARGET = gui
 INCLUDEPATH += .
-QT += widgets
+QT += widgets gui
 
 # Input
-FORMS 	+= pisa.ui
-HEADERS	+= MainWindow.h \
-		ui_pisa.h
-SOURCES += main.cpp \ 
-		MainWindow.cpp
+FORMS 	+=	pisa.ui \
+                newfiledialog.ui
+
+HEADERS	+= 	mainwindow.h \
+		ui_pisa.h \
+                ui_newfiledialog.h \
+		codeeditor.h \
+                newfiledialog.h
+
+SOURCES += 	main.cpp \ 
+		mainwindow.cpp \
+		codeeditor.cpp \
+                newfiledialog.cpp
 RESOURCES += rsc/pisa_resource.qrc
