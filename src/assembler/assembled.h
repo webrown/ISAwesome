@@ -12,6 +12,12 @@ class Error{
         int wordNumber;
         QString cause;
 };
+class Warning{
+    public:
+        int lineNumber;
+        int wordNumber;
+        QString cause;
+};
 
 
 /* This class will contain the result of compilation
@@ -22,7 +28,9 @@ class Assembled{
   public:
     bool isAssembled; 
     Assembly* assembly;
+
     QList<Error>* errorList;
+    QList<Warning>* warningList;
       
 };
 #endif
