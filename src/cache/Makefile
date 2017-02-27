@@ -4,3 +4,4 @@ cacheTest: Cache.o CacheResult.o main.cpp
 	g++ -c $<
 clean:
 	rm -f *.o
+	rm -f cacheTest

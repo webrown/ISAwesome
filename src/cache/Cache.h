@@ -5,15 +5,17 @@
 
 class Cache{
   public:
-    int tag_bits;
-    int index_bits;
-    int log_data_word_count;
+    int tagBits;
+    int indexBits;
+    int logDataWordCount;
+    int logAssociativity;
     float delay;
-    Cache *prev_cache;
-    Cache *next_cache;
-    Cache(int tag_bits, int index_bits, int log_data_word_count, float delay, Cache *prev_cache, Cache *next_cache);
+    Cache *prevCache;
+    Cache *nextCache;
+    Cache(int tagBits, int indexBits, int logDataWordCount, int logAssociativity, float delay, Cache *prevCache, Cache *nextCache);
     CacheResult *read(unsigned int address, unsigned int length);
     float write(vector<int> *value, unsigned int address);
+    float write(int value, unsigned int address);
     string *save();
     void restore(string *xml);
 };

@@ -3,13 +3,14 @@
 
 using namespace std;
 
-Cache::Cache( int tag_bits, int index_bits, int log_data_word_count, float delay, Cache *prev_cache, Cache *next_cache) {
-  this->tag_bits = tag_bits;
-  this->index_bits = index_bits;
-  this->log_data_word_count = log_data_word_count;
-  this->prev_cache = prev_cache;
-  this->next_cache = next_cache;
+Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociativity, float delay, Cache *prevCache, Cache *nextCache) {
+  this->tagBits = tagBits;
+  this->indexBits = indexBits;
+  this->logDataWordCount = logDataWordCount;
+  this->prevCache = prevCache;
+  this->nextCache = nextCache;
   this->delay = delay;
+  this->logAssociativity = logAssociativity;
   cout << "Cache done! :D" << endl;
 }
 
