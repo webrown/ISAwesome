@@ -23,6 +23,11 @@ INCLUDEPATH += .
 QT += widgets
 #LIBS += .
 
+#CONFIG setting
+CONFIG += qt debug console
+
+
+
 # Input
 FORMS 	+=	rsc/ui/pisa.ui \
                 rsc/ui/newfiledialog.ui
