@@ -7,6 +7,6 @@ class CacheResult{
     vector<int> result;
     double time;
     CacheResult(vector<int> result, double time);
-    int getIntForm();
+    int at(int index);
 };
 #endif

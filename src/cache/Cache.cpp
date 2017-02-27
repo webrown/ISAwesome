@@ -21,7 +21,17 @@ CacheResult *Cache::read(unsigned int address, unsigned int length){
   return result;
 }
 
+CacheResult *Cache::read(unsigned int address){
+  return read(address, 1);
+}
+
 float Cache::write(vector<int> *value, unsigned int address){
+  return 42;
+}
+
+float Cache::write(int input, unsigned int address){
+  vector<int> *vectorInput = new vector<int>(input);
+  write(vectorInput, address);
   return 42;
 }
 

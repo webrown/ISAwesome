@@ -4,6 +4,6 @@ CacheResult::CacheResult(vector<int> result, double time) {
   this->time = time;
 }
 
-int CacheResult::getIntForm() {
-  return this->result.at(0);
+int CacheResult::at(int i) {
+  return this->result.at(i);
 }

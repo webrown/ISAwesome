@@ -14,6 +14,7 @@ class Cache{
     Cache *nextCache;
     Cache(int tagBits, int indexBits, int logDataWordCount, int logAssociativity, float delay, Cache *prevCache, Cache *nextCache);
     CacheResult *read(unsigned int address, unsigned int length);
+    CacheResult *read(unsigned int address);
     float write(vector<int> *value, unsigned int address);
     float write(int value, unsigned int address);
     string *save();
