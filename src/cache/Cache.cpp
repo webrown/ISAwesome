@@ -4,6 +4,7 @@
 using namespace std;
 
 Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociativity, float delay, Cache *prevCache, Cache *nextCache) {
+  // Load in params.
   this->tagBits = tagBits;
   this->indexBits = indexBits;
   this->logDataWordCount = logDataWordCount;
@@ -11,6 +12,29 @@ Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociati
   this->nextCache = nextCache;
   this->delay = delay;
   this->logAssociativity = logAssociativity;
+
+  // Set up the cache vectors.
+  tags = new vector< vector<int> * >();
+  contents = new vector< vector< vector<int> * > * >();
+  LRU = new vector< vector<int> * >();
+  dirty = new vector< vector<int> * >();
+  size_t maxIndex = 1 << indexBits;
+  size_t ways = 1 << logAssociativity;
+  size_t dataWordCount = 1 << logDataWordCount;
+  for(size_t index = 0; index < maxIndex; index++) {
+    // Add tag bits.
+    tags->push_back(new vector<int>(0, ways));
+    // Add content cells.
+    vector< vector<int> * > *newContent = new vector<vector<int> * >();
+    for(size_t way = 0; way < ways; way++) {
+      newContent->push_back(new vector<int>(0, dataWordCount));
+    }
+    contents->push_back(newContent);
+    // Add LRU bit
+    LRU->push_back(new vector<int>(0, ways));
+    // Add dirty bit
+    dirty->push_back(new vector<int>(0, ways));
+  }
   cout << "Cache done! :D" << endl;
 }
 
