@@ -7,5 +7,6 @@ class CacheResult{
     vector<int> result;
     double time;
     CacheResult(vector<int> result, double time);
+    int at(int index);
 };
 #endif
