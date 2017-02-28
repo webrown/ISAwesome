@@ -2,6 +2,10 @@
 #define CACHE_H
 
 #include "CacheResult.h"
+#include <string>
+#include <vector>
+
+using namespace std;
 
 class Cache{
   public:
@@ -23,6 +27,7 @@ class Cache{
     float write(int value, unsigned int address);
     string *save();
     void restore(string *xml);
+    vector<int> *splitAddress(unsigned int address);
 };
 
 #endif

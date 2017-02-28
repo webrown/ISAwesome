@@ -5,6 +5,28 @@
 using namespace std;
 
 int main() {
+    vector<int> *splitAddress(unsigned int address);
+  {
+    Cache l1Cache(5,3,2, 2, 10, NULL, NULL);
+    vector<int> *result = l1Cache.splitAddress(4294967295);
+    if(result->at(0) != 31 || result->at(1) != 7 || result->at(2) != 16777215) {
+      cout << "FAIL:  result[0]=" << result->at(0)
+           << "result[1]=" << result->at(1)
+           << "result[2]=" << result->at(2) << endl;
+    }
+    else {
+      cout << "Split address looks good so far..." << endl;
+    }
+    result = l1Cache.splitAddress(134217727); // put 0s in tag spot.
+    if(result->at(0) != 0) {
+      cout << "FAIL:  result[0]=" << result->at(0)
+           << "result[1]=" << result->at(1)
+           << "result[2]=" << result->at(2) << endl;
+    }
+    else {
+      cout << "Split address looks swell!" << endl;
+    }
+  }
   {
     Cache l1Cache(3,3,6, 2, 10, NULL, NULL);
     Cache l2Cache(3,3,6, 2, 10, &l1Cache, NULL);

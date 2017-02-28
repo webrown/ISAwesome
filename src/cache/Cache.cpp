@@ -56,7 +56,10 @@ float Cache::write(vector<int> *value, unsigned int address){
 float Cache::write(int input, unsigned int address){
   vector<int> *vectorInput = new vector<int>(input);
   write(vectorInput, address);
-  return 42;
+  // Write to the specified index.
+  
+  // Tell the layer above how long this took.
+  return delay;
 }
 
 string *Cache::save(){
@@ -68,3 +71,15 @@ void Cache::restore(string *xml){
 }
 
 
+vector<int> *Cache::splitAddress(unsigned int address){
+  // Returns three-long vector:
+  // [0] - tag
+  // [1] - index
+  // [2] - offset
+  int totalBits = 32;
+  vector<int> *result = new vector<int>();
+  result->push_back(address >> (totalBits - tagBits));
+  result->push_back((address >> (totalBits - tagBits - indexBits)) % (1 << indexBits));
+  result->push_back(address % (1 << (totalBits - tagBits - indexBits)));
+  return result;
+}
