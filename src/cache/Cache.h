@@ -30,6 +30,9 @@ class Cache{
     void restore(string *xml);
     vector<int> *splitAddress(unsigned int address);
     int addressWay(unsigned int address);
+    float fetch(unsigned int address);
+    unsigned int firstInLine(unsigned int address);
+    void updateLRU(unsigned int address);
 };
 
 #endif

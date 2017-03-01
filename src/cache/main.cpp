@@ -67,6 +67,54 @@ int main() {
     cout << "END of addressWay test!" << endl;
   }
   {
+    cout << "Testing updateLRU" << endl;
+    Cache l1Cache(5,0,0, 2, 2, NULL, NULL);
+    l1Cache.valid->at(0)->at(0) = 1;
+    l1Cache.valid->at(0)->at(1) = 1;
+    l1Cache.valid->at(0)->at(2) = 1;
+    l1Cache.valid->at(0)->at(3) = 1;
+    for(int i = 0; i < 4; i++) {
+      l1Cache.tags->at(0)->at(i) = i;
+    }
+    l1Cache.updateLRU(0);
+    l1Cache.updateLRU(1);
+    l1Cache.updateLRU(2);
+    l1Cache.updateLRU(3);
+    l1Cache.updateLRU(3);
+    l1Cache.updateLRU(3);
+    l1Cache.updateLRU(3);
+    if(l1Cache.LRU->at(0)->at(0) == 3 
+     &&l1Cache.LRU->at(0)->at(1) == 2 
+     &&l1Cache.LRU->at(0)->at(2) == 1 
+     &&l1Cache.LRU->at(0)->at(3) == 0) {
+      cout << "Looks good." << endl;
+    }
+    else {
+      cout << "BAD:";
+      for(int i = 0; i < 4; i++) {
+        cout << " LRU[" << i << "]=" << l1Cache.LRU->at(0)->at(i);
+      }
+      cout << endl;
+    }
+    l1Cache.updateLRU(0);
+    l1Cache.updateLRU(0);
+    l1Cache.updateLRU(0);
+    if(l1Cache.LRU->at(0)->at(0) == 0 
+     &&l1Cache.LRU->at(0)->at(1) == 3 
+     &&l1Cache.LRU->at(0)->at(2) == 2 
+     &&l1Cache.LRU->at(0)->at(3) == 1) {
+      cout << "Still Looks good." << endl;
+    }
+    else {
+      cout << "BAD:";
+      for(int i = 0; i < 4; i++) {
+        cout << " LRU[" << i << "]=" << l1Cache.LRU->at(0)->at(i);
+      }
+      cout << endl;
+    }
+    cout << "END Testing updateLRU" << endl;
+  }
+  {
     cout << "Basic reading and writing test:" << endl;
     Cache l1Cache(5,1,2, 2, 10, NULL, NULL);
     Cache l2Cache(3,4,1, 2, 10, &l1Cache, NULL);

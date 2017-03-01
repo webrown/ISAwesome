@@ -108,6 +108,66 @@ string *Cache::save(){
 void Cache::restore(string *xml){
 }
 
+unsigned int Cache::firstInLine(unsigned int address) {
+  // Returns the line first address on the line of a given address.
+  int dataPerLine = contents->at(0)->at(0)->size();
+  return address - (address % dataPerLine);
+}
+
+void Cache::updateLRU(unsigned int address){
+  // Call this to bring an address to the front of its LRU queue.
+  // Can you find this address?
+  int way = addressWay(address);
+  if(way == -1) {
+    return;
+  }
+  vector<int> tagIndOff = * splitAddress(address);
+  // What is your current spot in the queue?
+  int queuePosition = LRU->at(tagIndOff[1])->at(way);
+  // Anyone in font of you just got cut.
+  for(int i = 0; i < LRU->at(0)->size(); i++) {
+    if(LRU->at(tagIndOff[1])->at(i) <= queuePosition) {
+      LRU->at(tagIndOff[1])->at(i)++;
+    }
+  }
+  // Move to the front of the queue.
+  LRU->at(tagIndOff[1])->at(way) = 0;
+}
+
+float Cache::fetch(unsigned int address){
+  // Pull this value into the cache from the caches below.
+  // Returns the amount of time it took to fetch this.
+
+  // Maybe you already have the item!
+  int way = addressWay(address);
+  if(way != -1) {
+    // We don't need to do anything!
+    return 0;
+  }
+  float wait = 0;
+  vector<int> tagIndOff = * splitAddress(address);
+  // At this point, an eviction is needed.
+  // TODO Find the item with the worst LRU
+  // What is the first address this involves?
+  int firstEvictedAddress = firstInLine(0); // TODO needs to change.
+  // Write to the cache below if dirty and able.
+  if(dirty->at(tagIndOff[1])->at(way) && nextCache) {
+    wait += nextCache->write(firstEvictedAddress, contents->at(0)->at(0)->size());
+  }
+  // Set tag and valid bits
+  tags->at(tagIndOff[1])->at(way) = tagIndOff[0];
+  valid->at(tagIndOff[1])->at(way) = 1;
+  // Get value from below.
+  if(nextCache) {
+    CacheResult *resultFromBelow = nextCache->read(firstInLine(address), contents->at(0)->at(0)->size());
+    for(int i = 0; i < contents->at(0)->at(0)->size(); i++) {
+      contents->at(tagIndOff[1])->at(way)->at(i) = resultFromBelow->result.at(i);
+    }
+    wait += resultFromBelow->time;
+  }
+  return wait;
+}
+
 
 vector<int> *Cache::splitAddress(unsigned int address){
   // Returns three-long vector:
