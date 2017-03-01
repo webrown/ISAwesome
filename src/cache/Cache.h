@@ -20,6 +20,7 @@ class Cache{
     vector< vector< vector<int> * > * > *contents;
     vector< vector<int> * > *LRU;
     vector< vector<int> * > *dirty;
+    vector< vector<int> * > *valid;
     Cache(int tagBits, int indexBits, int logDataWordCount, int logAssociativity, float delay, Cache *prevCache, Cache *nextCache);
     CacheResult *read(unsigned int address, unsigned int length);
     CacheResult *read(unsigned int address);
@@ -28,6 +29,7 @@ class Cache{
     string *save();
     void restore(string *xml);
     vector<int> *splitAddress(unsigned int address);
+    int addressWay(unsigned int address);
 };
 
 #endif

@@ -28,6 +28,44 @@ int main() {
     }
   }
   {
+    cout << "Testing addressWay..." << endl;
+    Cache l1Cache(5,3,2, 2, 10, NULL, NULL);
+    // Make sure empty at start.
+    int result = l1Cache.addressWay(4294967295);
+    if(result == -1) {
+      cout << "good so far..." << endl;
+    }
+    else {
+      cout << "RETURNED " << result << " on empty!" << endl;
+    }
+    // Still nothing is valid, even if the tag exists.
+    result = l1Cache.addressWay(0);
+    if(result == -1) {
+      cout << "good so far..." << endl;
+    }
+    else {
+      cout << "RETURNED " << result << " on invalid but good tag" << endl;
+    }
+    // Now we're valid, but bad tag.
+    l1Cache.valid->at(0)->at(2) = 1;
+    result = l1Cache.addressWay(4294967295);
+    if(result == -1) {
+      cout << "good so far..." << endl;
+    }
+    else {
+      cout << "RETURNED " << result << " on valid but bad tag!" << endl;
+    }
+    // Valid and good tag should do good things.
+    result = l1Cache.addressWay(0);
+    if(result == 2) {
+      cout << "good so far..." << endl;
+    }
+    else {
+      cout << "RETURNED " << result << " on valid and good tag!" << endl;
+    }
+    cout << "END of addressWay test!" << endl;
+  }
+  {
     Cache l1Cache(3,3,6, 2, 10, NULL, NULL);
     Cache l2Cache(3,3,6, 2, 10, &l1Cache, NULL);
     Cache l3Cache(3,3,6, 2, 10, &l2Cache, NULL);

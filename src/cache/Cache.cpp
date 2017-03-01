@@ -18,22 +18,25 @@ Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociati
   contents = new vector< vector< vector<int> * > * >();
   LRU = new vector< vector<int> * >();
   dirty = new vector< vector<int> * >();
+  valid = new vector< vector<int> * >();
   size_t maxIndex = 1 << indexBits;
   size_t ways = 1 << logAssociativity;
   size_t dataWordCount = 1 << logDataWordCount;
   for(size_t index = 0; index < maxIndex; index++) {
     // Add tag bits.
-    tags->push_back(new vector<int>(0, ways));
+    tags->push_back(new vector<int>(ways, 0));
     // Add content cells.
     vector< vector<int> * > *newContent = new vector<vector<int> * >();
     for(size_t way = 0; way < ways; way++) {
-      newContent->push_back(new vector<int>(0, dataWordCount));
+      newContent->push_back(new vector<int>(dataWordCount, 0));
     }
     contents->push_back(newContent);
     // Add LRU bit
-    LRU->push_back(new vector<int>(0, ways));
+    LRU->push_back(new vector<int>(ways, 0));
     // Add dirty bit
-    dirty->push_back(new vector<int>(0, ways));
+    dirty->push_back(new vector<int>(ways, 0));
+    // Add valid bit
+    valid->push_back(new vector<int>(ways, 0));
   }
   cout << "Cache done! :D" << endl;
 }
@@ -53,10 +56,33 @@ float Cache::write(vector<int> *value, unsigned int address){
   return 42;
 }
 
+int Cache::addressWay(unsigned int address){
+  // Returns the associative way that a certain address is at.
+  // If there is no way, return -1.
+  vector<int> tagIndOff = * splitAddress(address);
+  for(int i = 0; i < tags->at(tagIndOff[1])->size(); i++) {
+    if(!valid->at(tagIndOff[1])->at(i)) {
+      // If valid bit is not set, this is not a valid cell to think about.
+      continue;
+    }
+    if(tags->at(tagIndOff[1])->at(i) == tagIndOff[0]) {
+      // Aha!  The tag matches!  This is your way!
+      return i;
+    }
+  }
+  // Saw nothing!
+  return -1;
+}
+
 float Cache::write(int input, unsigned int address){
-  vector<int> *vectorInput = new vector<int>(input);
-  write(vectorInput, address);
+  // No matter what, you will need to wait your delay.
+  float wait = delay;
+  // Is the value you want in the cache? TODO
+  // If not, pull in the value.
   // Write to the specified index.
+  vector<int> tagIndOff = * splitAddress(address);
+  int way = 0;
+  contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) = input;
   
   // Tell the layer above how long this took.
   return delay;
