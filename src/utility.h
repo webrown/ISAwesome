@@ -1,9 +1,9 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
-#include <string>
-#include <vector>
+#include <QString>
 
 using namespace std;
+int toB(QString str);
 
 #endif

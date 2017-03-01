@@ -8,8 +8,8 @@
  */
 class Assembly {
     public:
-        QVector<uint> instructions;
-        QVector<uint> addresses;
+        QVector<uint>* instructions;
+        QVector<uint>* addresses;
 };
 
 #endif
