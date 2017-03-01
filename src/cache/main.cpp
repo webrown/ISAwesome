@@ -5,11 +5,11 @@
 using namespace std;
 
 int main() {
-    vector<int> *splitAddress(unsigned int address);
   {
+    cout << "splitAddress tests:" << endl;
     Cache l1Cache(5,3,2, 2, 10, NULL, NULL);
-    vector<int> *result = l1Cache.splitAddress(4294967295);
-    if(result->at(0) != 31 || result->at(1) != 7 || result->at(2) != 16777215) {
+    vector<int> *result = l1Cache.splitAddress(1023);
+    if(result->at(0) != 31 || result->at(1) != 7 || result->at(2) != 3) {
       cout << "FAIL:  result[0]=" << result->at(0)
            << "result[1]=" << result->at(1)
            << "result[2]=" << result->at(2) << endl;
@@ -17,7 +17,7 @@ int main() {
     else {
       cout << "Split address looks good so far..." << endl;
     }
-    result = l1Cache.splitAddress(134217727); // put 0s in tag spot.
+    result = l1Cache.splitAddress(31); // put 0s in tag spot.
     if(result->at(0) != 0) {
       cout << "FAIL:  result[0]=" << result->at(0)
            << "result[1]=" << result->at(1)
@@ -26,6 +26,7 @@ int main() {
     else {
       cout << "Split address looks swell!" << endl;
     }
+    cout << "END splitAddress tests" << endl;
   }
   {
     cout << "Testing addressWay..." << endl;

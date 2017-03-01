@@ -78,10 +78,13 @@ float Cache::write(int input, unsigned int address){
   // No matter what, you will need to wait your delay.
   float wait = delay;
   // Is the value you want in the cache? TODO
-  // If not, pull in the value.
+  int way = addressWay(address);
+  if(way == -1) {
+    // If not, pull in the value.
+    
+  }
   // Write to the specified index.
   vector<int> tagIndOff = * splitAddress(address);
-  int way = 0;
   contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) = input;
   
   // Tell the layer above how long this took.
@@ -102,10 +105,9 @@ vector<int> *Cache::splitAddress(unsigned int address){
   // [0] - tag
   // [1] - index
   // [2] - offset
-  int totalBits = 32;
   vector<int> *result = new vector<int>();
-  result->push_back(address >> (totalBits - tagBits));
-  result->push_back((address >> (totalBits - tagBits - indexBits)) % (1 << indexBits));
-  result->push_back(address % (1 << (totalBits - tagBits - indexBits)));
+  result->push_back(address >> (indexBits + logDataWordCount));
+  result->push_back((address >> (logDataWordCount)) % (1 << indexBits));
+  result->push_back(address % (1 << (logDataWordCount)));
   return result;
 }
