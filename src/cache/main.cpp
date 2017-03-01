@@ -155,7 +155,7 @@ int main() {
     cout << "Basic reading and writing test:" << endl;
     Cache l1Cache(5,1,2, 2, 10, NULL, NULL);
     Cache l2Cache(3,4,1, 2, 10, &l1Cache, NULL);
-    Cache l3Cache(0,8,0, 1, 10, &l2Cache, NULL);
+    Cache l3Cache(0,8,0, 0, 10, &l2Cache, NULL);
     l2Cache.nextCache = &l3Cache;
     l1Cache.nextCache = &l2Cache;
 
@@ -169,6 +169,40 @@ int main() {
     }
     else {
       cout << "Can write and read single value to cache" << endl;
+    }
+    // Now let's see if I can read and write vectors.
+    vector<int> *testVec = new vector<int>();
+    for(int i = 0; i < 32; i++) {
+      testVec->push_back(i);
+    }
+    //int targAddress = 22;
+    int targAddress = 52;
+    l1Cache.write(testVec, targAddress);
+    muffins = l1Cache.read(targAddress, 32);
+    int broke = 0;
+    for(int i = 0; i < 32; i++) {
+      if(muffins->at(i) != i) {
+        broke = 1;
+      }
+    }
+    if(broke) {
+      cout << "Failed with vector read/write: ";
+      for(int i = 0; i < 32; i++) {
+        cout << "vec[" << i << "]=" << muffins->at(i) << " ";
+      }
+      cout << endl;
+    }
+    else {
+      cout << "Can write and read vector to cache" << endl;
+    }
+    // Now make sure vector realism safeties in place.
+    l1Cache.write(new vector<int>(64, 42), 22);
+    muffins = l1Cache.read(22, 64);
+    if(muffins->size() < 64) {
+      cout << "Safety cropping works!" << endl;
+    }
+    else {
+      cout << "BAD:  returned vec of size " << muffins->size() << endl;
     }
     cout << "END of basic reading and writing test." << endl;
   }

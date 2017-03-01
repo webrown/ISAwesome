@@ -7,3 +7,7 @@ CacheResult::CacheResult(vector<int> result, double time) {
 int CacheResult::at(int i) {
   return this->result.at(i);
 }
+
+size_t CacheResult::size() {
+  return this->result.size();
+}

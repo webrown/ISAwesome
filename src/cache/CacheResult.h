@@ -8,5 +8,6 @@ class CacheResult{
     double time;
     CacheResult(vector<int> result, double time);
     int at(int index);
+    size_t size();
 };
 #endif

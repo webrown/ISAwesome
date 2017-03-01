@@ -1,9 +1,11 @@
 #include "Cache.h"
 #include <iostream>
+#include <algorithm>
+#include <sstream>
 
 using namespace std;
 
-Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociativity, float delay, Cache *prevCache, Cache *nextCache) {
+Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *prevCache, Cache *nextCache) {
   // Load in params.
   this->tagBits = tagBits;
   this->indexBits = indexBits;
@@ -46,18 +48,28 @@ unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned 
 }
 
 CacheResult *Cache::read(unsigned int address, unsigned int length){
-  float wait = delay;
-  // Is value present?
-  int way = addressWay(address);
-  // TODO If not, grab it
-  vector<int> tagIndOff = * splitAddress(address);
-  if(way == -1) {
-    way = 0; // TODO REMOVE THIS LATER
-    tags->at(tagIndOff[1])->at(way) = tagIndOff[0];
+  // Hardware constraint:  Can't parallel load more values than there are in the cache.
+  int mL = maxLength(address);
+  if(length > mL) {
+    length = mL;
+    cout << "WARNING:  read given too large a vector, shrinking size to " << mL << "." << endl;
   }
-  // TODO Read value.
-  vector<int> *data;
-  data = new vector<int>(1,contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)));
+  double wait = delay;
+  // Get these values into the cache if they are not already.
+  double fetchWait = 0;
+  vector<int> *data = new vector<int>();
+  for(int i = address; i < address+length; i++) {
+    // TODO May be able to be optimized later; often tag and index won't change for long periods of time.
+    fetchWait = max(0.0, fetch(i));
+    // Now at front of LRU queue
+    updateLRU(i);
+    // Read value.
+    int way = addressWay(i);
+    vector<int> tagIndOff = * splitAddress(i);
+    data->push_back(contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)));
+  }
+  // All fetches happened in parallel.
+  wait += fetchWait;
   CacheResult *result = new CacheResult(*data, wait);
   return result;
 }
@@ -66,8 +78,48 @@ CacheResult *Cache::read(unsigned int address){
   return read(address, 1);
 }
 
-float Cache::write(vector<int> *value, unsigned int address){
-  return 42;
+size_t Cache::maxLength(unsigned int startAddress){
+  // Return the maximum length off of this address you can fit in cache.
+  // Get the size of the cache.
+  size_t result =  contents->size() * contents->at(0)->size() * contents->at(0)->at(0)->size();
+  // How many slots will get wasted due to the startAddress not taking a complete line?
+  result -= startAddress % contents->at(0)->at(0)->size();
+  return result;
+}
+
+double Cache::write(vector<int> *value, unsigned int address){
+  int mL = maxLength(address);
+  if(value->size() > mL) {
+    value = new vector<int>(value->begin(), value->begin()+mL);
+    cout << "WARNING:  write given too large a vector, shrinking size to " << mL << "." << endl;
+  }
+#if 0
+  cout << "Cache::write value = ";
+  for(int i = 0; i < value->size(); i++) {
+    cout << value->at(i) << " ";
+  }
+  cout << endl;
+#endif
+  // No matter what, you will need to wait your delay.
+  double wait = delay;
+  // Get the value you want into cache.
+  double fetchWait = 0;
+  for(int i = 0; i < value->size(); i++) {
+    fetchWait = max(0.0, fetch(address+i));
+    // Move up in LRU queue.
+    updateLRU(address+i);
+    // If this is going to change the value, the value is becoming dirty.
+    vector<int> tagIndOff = * splitAddress(address+i);
+    int way = addressWay(address+i);
+    if(contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) != value->at(i)) {
+      dirty->at(tagIndOff.at(1))->at(way) = 1;
+      // Write to the specified index.
+      contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) = value->at(i);
+    }
+  }
+  wait += fetchWait;
+  // Tell the layer above how long this took.
+  return delay;
 }
 
 int Cache::addressWay(unsigned int address){
@@ -88,22 +140,8 @@ int Cache::addressWay(unsigned int address){
   return -1;
 }
 
-float Cache::write(int input, unsigned int address){
-  // No matter what, you will need to wait your delay.
-  float wait = delay;
-  // Is the value you want in the cache?
-  vector<int> tagIndOff = * splitAddress(address);
-  int way = addressWay(address);
-  if(way == -1) {
-    // If not, remove LRU value and pull in new value. TODO
-    way = 0; // TODO THIS IS WRONG
-    tags->at(tagIndOff[1])->at(way) = tagIndOff[0];
-  }
-  // If this is going to change the value, the value is becoming dirty. TODO
-  // Write to the specified index.
-  contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) = input;
-  // Tell the layer above how long this took.
-  return delay;
+double Cache::write(int input, unsigned int address){
+  return write(new vector<int>(1, input), address);
 }
 
 string *Cache::save(){
@@ -151,7 +189,7 @@ void Cache::updateLRU(unsigned int address){
   LRU->at(tagIndOff[1])->at(way) = 0;
 }
 
-float Cache::fetch(unsigned int address){
+double Cache::fetch(unsigned int address){
   // Pull this value into the cache from the caches below.
   // Returns the amount of time it took to fetch this.
 
@@ -161,7 +199,7 @@ float Cache::fetch(unsigned int address){
     // We don't need to do anything!
     return 0;
   }
-  float wait = 0;
+  double wait = 0;
   vector<int> tagIndOff = * splitAddress(address);
   // At this point, an eviction is needed.
   // Find the item with the worst LRU
@@ -182,6 +220,8 @@ float Cache::fetch(unsigned int address){
       contents->at(tagIndOff[1])->at(way)->at(i) = resultFromBelow->result.at(i);
     }
     wait += resultFromBelow->time;
+    // This is newly fetched, so it's clean.
+    dirty->at(tagIndOff[1])->at(way) = 0;
   }
   return wait;
 }
@@ -197,4 +237,19 @@ vector<int> *Cache::splitAddress(unsigned int address){
   result->push_back((address >> (logDataWordCount)) % (1 << indexBits));
   result->push_back(address % (1 << (logDataWordCount)));
   return result;
+}
+
+string Cache::toTable() {
+  stringstream result;
+  result << "tag\tind" << endl;
+  for(int ind = 0; ind < contents->size(); ind++) {
+    for(int way = 0; way < contents->at(0)->size(); way++) {
+      result << tags->at(ind)->at(way) << "\t" << ind << "\t";
+      for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
+        result << contents->at(ind)->at(way)->at(offset) << "\t";
+      }
+      result << endl;
+    }
+  }
+  return result.str();
 }
