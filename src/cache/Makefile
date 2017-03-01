@@ -1,5 +1,5 @@
-cacheTest: Cache.o CacheResult.o main.cpp
-	g++ -g -o cacheTest Cache.o CacheResult.o main.cpp
+cacheTest: Cache.o CacheResult.o test.cpp
+	g++ -g -o cacheTest Cache.o CacheResult.o test.cpp
 test: cacheTest
 	./cacheTest
 %.o: %.cpp
