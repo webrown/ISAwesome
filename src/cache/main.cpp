@@ -175,7 +175,6 @@ int main() {
     for(int i = 0; i < 32; i++) {
       testVec->push_back(i);
     }
-    //int targAddress = 22;
     int targAddress = 52;
     l1Cache.write(testVec, targAddress);
     muffins = l1Cache.read(targAddress, 32);
@@ -205,6 +204,38 @@ int main() {
       cout << "BAD:  returned vec of size " << muffins->size() << endl;
     }
     cout << "END of basic reading and writing test." << endl;
+  }
+  {
+    cout << "save restore tests:" << endl;
+    Cache l1Cache(5,2,1, 1, 10, NULL, NULL);
+    Cache l2Cache(5,2,1, 1, 10, NULL, NULL);
+    vector<int> *testVec = new vector<int>();
+    for(int i = 0; i < 10; i++) {
+      testVec->push_back(i);
+    }
+    l1Cache.write(testVec, 2);
+    string *state = l1Cache.save();
+    l2Cache.restore(state);
+    CacheResult *muffins1 = l1Cache.read(2, 16);
+    CacheResult *muffins2 = l2Cache.read(2, 16);
+    int broke = 0;
+    for(int i = 0; i < 16; i++) {
+      if(muffins1->at(i) != muffins2->at(i)) {
+        broke = 1;
+      }
+    }
+    if(broke) {
+      cout << "Failed to recover l1: ";
+      for(int i = 0; i < 32; i++) {
+        cout << i << muffins1->at(i) << " " << muffins2->at(i) << endl;
+      }
+    }
+    else {
+      cout << "Can recover l1" << endl;
+    }
+    cout << l1Cache.toTable() << endl;
+    cout << l2Cache.toTable() << endl;
+    cout << "END save restore tests" << endl;
   }
   return 0;
 }

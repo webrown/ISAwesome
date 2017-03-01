@@ -27,7 +27,7 @@ class Cache{
     double write(vector<int> *value, unsigned int address);
     double write(int value, unsigned int address);
     string *save();
-    void restore(string *xml);
+    void restore(string *state);
     vector<int> *splitAddress(unsigned int address);
     int addressWay(unsigned int address);
     double fetch(unsigned int address);

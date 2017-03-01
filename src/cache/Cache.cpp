@@ -145,11 +145,62 @@ double Cache::write(int input, unsigned int address){
 }
 
 string *Cache::save(){
-  string *result = new string("42");
+  string *result = new string();
+  for(int ind = 0; ind < contents->size(); ind++) {
+    for(int way = 0; way < contents->at(0)->size(); way++) {
+      // Record contents
+      for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
+        *result += contents->at(ind)->at(way)->at(offset);
+      }
+      // Record dirty
+      *result += dirty->at(ind)->at(way);
+      // Record LRU
+      *result += LRU->at(ind)->at(way);
+      // Record tag
+      *result += tags->at(ind)->at(way);
+      // Record valid
+      *result += valid->at(ind)->at(way);
+    }
+  }
   return result;
 }
 
-void Cache::restore(string *xml){
+void Cache::restore(string *state){
+  if(!state) {
+    return;
+  }
+  int stateIndex = 0;
+  for(int ind = 0; ind < contents->size(); ind++) {
+    for(int way = 0; way < contents->at(0)->size(); way++) {
+      // Place contents.
+      for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
+        if(stateIndex == state->size()) {
+          return;
+        }
+        contents->at(ind)->at(way)->at(offset) = state->at(stateIndex++);
+      }
+      // Place in dirty.
+      if(stateIndex == state->size()) {
+        return;
+      }
+      dirty->at(ind)->at(way) = state->at(stateIndex++);
+      // Place in LRU.
+      if(stateIndex == state->size()) {
+        return;
+      }
+      LRU->at(ind)->at(way) = state->at(stateIndex++);
+      // Place in tag.
+      if(stateIndex == state->size()) {
+        return;
+      }
+      tags->at(ind)->at(way) = state->at(stateIndex++);
+      // Place in valid.
+      if(stateIndex == state->size()) {
+        return;
+      }
+      valid->at(ind)->at(way) = state->at(stateIndex++);
+    }
+  }
 }
 
 unsigned int Cache::getLRUWay(unsigned int index){
@@ -241,10 +292,19 @@ vector<int> *Cache::splitAddress(unsigned int address){
 
 string Cache::toTable() {
   stringstream result;
-  result << "tag\tind" << endl;
+  result << "tag\tind\tdirty\tLRU\tvalid\t";
+  for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
+    result << "D" << offset << "\t";
+  }
+  result << endl;
   for(int ind = 0; ind < contents->size(); ind++) {
     for(int way = 0; way < contents->at(0)->size(); way++) {
-      result << tags->at(ind)->at(way) << "\t" << ind << "\t";
+      result 
+        << tags->at(ind)->at(way) << "\t" 
+        << ind << "\t" 
+        << dirty->at(ind)->at(way) << "\t"
+        << LRU->at(ind)->at(way) << "\t"
+        << valid->at(ind)->at(way) << "\t";
       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
         result << contents->at(ind)->at(way)->at(offset) << "\t";
       }
