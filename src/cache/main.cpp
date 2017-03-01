@@ -29,6 +29,19 @@ int main() {
     cout << "END splitAddress tests" << endl;
   }
   {
+    cout << "buildAddress tests:" << endl;
+    Cache l1Cache(5,3,2, 2, 10, NULL, NULL);
+    vector<int> *split = l1Cache.splitAddress(1023);
+    int result = l1Cache.buildAddress(split->at(0), split->at(1), split->at(2));
+    if(result == 1023) {
+      cout << "good..." << endl;
+    }
+    else {
+      cout << "BAD: " << result << endl;
+    }
+    cout << "END buildAddress tests" << endl;
+  }
+  {
     cout << "Testing addressWay..." << endl;
     Cache l1Cache(5,3,2, 2, 10, NULL, NULL);
     // Make sure empty at start.

@@ -34,6 +34,7 @@ class Cache{
     unsigned int firstInLine(unsigned int address);
     void updateLRU(unsigned int address);
     unsigned int getLRUWay(unsigned int index);
+    unsigned int buildAddress(unsigned int tag, unsigned int index, unsigned int offset);
 };
 
 #endif

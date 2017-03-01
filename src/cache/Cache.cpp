@@ -40,6 +40,11 @@ Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociati
   }
 }
 
+unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned int offset){
+  // Concatenate tag, index, and offset into an address.
+  return (tag << (indexBits + logDataWordCount)) | (index << logDataWordCount) | offset;
+}
+
 CacheResult *Cache::read(unsigned int address, unsigned int length){
   float wait = delay;
   // Is value present?
@@ -94,6 +99,7 @@ float Cache::write(int input, unsigned int address){
     way = 0; // TODO THIS IS WRONG
     tags->at(tagIndOff[1])->at(way) = tagIndOff[0];
   }
+  // If this is going to change the value, the value is becoming dirty. TODO
   // Write to the specified index.
   contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) = input;
   // Tell the layer above how long this took.
@@ -158,9 +164,10 @@ float Cache::fetch(unsigned int address){
   float wait = 0;
   vector<int> tagIndOff = * splitAddress(address);
   // At this point, an eviction is needed.
-  // TODO Find the item with the worst LRU
-  // What is the first address this involves?
-  int firstEvictedAddress = firstInLine(0); // TODO needs to change.
+  // Find the item with the worst LRU
+  way = getLRUWay(tagIndOff[1]);
+  // What is the first address on the evicted line?
+  int firstEvictedAddress = buildAddress(tags->at(tagIndOff[1])->at(way), tagIndOff[1], 0);
   // Write to the cache below if dirty and able.
   if(dirty->at(tagIndOff[1])->at(way) && nextCache) {
     wait += nextCache->write(firstEvictedAddress, contents->at(0)->at(0)->size());
