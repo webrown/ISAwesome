@@ -38,13 +38,22 @@ Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociati
     // Add valid bit
     valid->push_back(new vector<int>(ways, 0));
   }
-  cout << "Cache done! :D" << endl;
 }
 
 CacheResult *Cache::read(unsigned int address, unsigned int length){
+  float wait = delay;
+  // Is value present?
+  int way = addressWay(address);
+  // TODO If not, grab it
+  vector<int> tagIndOff = * splitAddress(address);
+  if(way == -1) {
+    way = 0; // TODO REMOVE THIS LATER
+    tags->at(tagIndOff[1])->at(way) = tagIndOff[0];
+  }
+  // TODO Read value.
   vector<int> *data;
-  data = new vector<int>();
-  CacheResult *result = new CacheResult(*data, 42);
+  data = new vector<int>(1,contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)));
+  CacheResult *result = new CacheResult(*data, wait);
   return result;
 }
 
@@ -77,16 +86,16 @@ int Cache::addressWay(unsigned int address){
 float Cache::write(int input, unsigned int address){
   // No matter what, you will need to wait your delay.
   float wait = delay;
-  // Is the value you want in the cache? TODO
+  // Is the value you want in the cache?
+  vector<int> tagIndOff = * splitAddress(address);
   int way = addressWay(address);
   if(way == -1) {
-    // If not, pull in the value.
-    
+    // If not, remove LRU value and pull in new value. TODO
+    way = 0; // TODO THIS IS WRONG
+    tags->at(tagIndOff[1])->at(way) = tagIndOff[0];
   }
   // Write to the specified index.
-  vector<int> tagIndOff = * splitAddress(address);
   contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) = input;
-  
   // Tell the layer above how long this took.
   return delay;
 }

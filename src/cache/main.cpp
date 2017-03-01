@@ -67,23 +67,25 @@ int main() {
     cout << "END of addressWay test!" << endl;
   }
   {
-    Cache l1Cache(3,3,6, 2, 10, NULL, NULL);
-    Cache l2Cache(3,3,6, 2, 10, &l1Cache, NULL);
-    Cache l3Cache(3,3,6, 2, 10, &l2Cache, NULL);
+    cout << "Basic reading and writing test:" << endl;
+    Cache l1Cache(5,1,2, 2, 10, NULL, NULL);
+    Cache l2Cache(3,4,1, 2, 10, &l1Cache, NULL);
+    Cache l3Cache(0,8,0, 1, 10, &l2Cache, NULL);
     l2Cache.nextCache = &l3Cache;
     l1Cache.nextCache = &l2Cache;
 
-    l1Cache.write(22, 1234);
-    CacheResult *muffins = l1Cache.read(1234);
+    l1Cache.write(1234, 22);
+    CacheResult *muffins = l1Cache.read(22);
     if(!muffins) {
       cout << "l1Cache.read returned a null!!!" << endl;
     }
-    else if(muffins->at(0) != 22) {
+    else if(muffins->at(0) != 1234) {
       cout << "l1Cache.read returned " << muffins->at(0) << endl;
     }
     else {
-      cout << "HAPPY 1" << endl;
+      cout << "Can write and read single value to cache" << endl;
     }
+    cout << "END of basic reading and writing test." << endl;
   }
   return 0;
 }
