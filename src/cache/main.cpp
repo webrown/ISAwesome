@@ -69,6 +69,12 @@ int main() {
   {
     cout << "Testing updateLRU" << endl;
     Cache l1Cache(5,0,0, 2, 2, NULL, NULL);
+    if(l1Cache.getLRUWay(0) == 0) {
+      cout << "getLRUWay Looks good." << endl;
+    }
+    else {
+      cout << "BAD: getLRUWay = " << l1Cache.getLRUWay(0) << endl;
+    }
     l1Cache.valid->at(0)->at(0) = 1;
     l1Cache.valid->at(0)->at(1) = 1;
     l1Cache.valid->at(0)->at(2) = 1;
@@ -77,12 +83,30 @@ int main() {
       l1Cache.tags->at(0)->at(i) = i;
     }
     l1Cache.updateLRU(0);
+    if(l1Cache.getLRUWay(0) == 1) {
+      cout << "getLRUWay Looks good." << endl;
+    }
+    else {
+      cout << "BAD: getLRUWay = " << l1Cache.getLRUWay(0) << endl;
+    }
     l1Cache.updateLRU(1);
     l1Cache.updateLRU(2);
+    if(l1Cache.getLRUWay(0) == 3) {
+      cout << "getLRUWay Looks good." << endl;
+    }
+    else {
+      cout << "BAD: getLRUWay = " << l1Cache.getLRUWay(0) << endl;
+    }
     l1Cache.updateLRU(3);
     l1Cache.updateLRU(3);
     l1Cache.updateLRU(3);
     l1Cache.updateLRU(3);
+    if(l1Cache.getLRUWay(0) == 0) {
+      cout << "getLRUWay Looks good." << endl;
+    }
+    else {
+      cout << "BAD: getLRUWay = " << l1Cache.getLRUWay(0) << endl;
+    }
     if(l1Cache.LRU->at(0)->at(0) == 3 
      &&l1Cache.LRU->at(0)->at(1) == 2 
      &&l1Cache.LRU->at(0)->at(2) == 1 

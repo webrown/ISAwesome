@@ -33,6 +33,7 @@ class Cache{
     float fetch(unsigned int address);
     unsigned int firstInLine(unsigned int address);
     void updateLRU(unsigned int address);
+    unsigned int getLRUWay(unsigned int index);
 };
 
 #endif

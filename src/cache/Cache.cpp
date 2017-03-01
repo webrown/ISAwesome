@@ -108,6 +108,17 @@ string *Cache::save(){
 void Cache::restore(string *xml){
 }
 
+unsigned int Cache::getLRUWay(unsigned int index){
+  // Returns the index that is least recently used.
+  int LRUWay = 0;
+  for(int i = 0; i < LRU->at(0)->size(); i++) {
+    if(LRU->at(index)->at(i) > LRU->at(index)->at(LRUWay)) {
+      LRUWay = i;
+    }
+  }
+  return LRUWay;
+}
+
 unsigned int Cache::firstInLine(unsigned int address) {
   // Returns the line first address on the line of a given address.
   int dataPerLine = contents->at(0)->at(0)->size();
