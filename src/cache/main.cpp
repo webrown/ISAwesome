@@ -203,7 +203,78 @@ int main() {
     else {
       cout << "BAD:  returned vec of size " << muffins->size() << endl;
     }
-    cout << "END of basic reading and writing test." << endl;
+    // Make sure you can read through layers of cache.
+    testVec = new vector<int>();
+    for(int i = 0; i < 32; i++) {
+      testVec->push_back(i);
+    }
+    targAddress = 100;
+    l3Cache.write(testVec, targAddress);
+    muffins = l1Cache.read(targAddress, 32);
+    broke = 0;
+    for(int i = 0; i < 32; i++) {
+      if(muffins->at(i) != i) {
+        broke = 1;
+      }
+    }
+    if(broke) {
+      cout << "Failed to recover vector from l3: ";
+      for(int i = 0; i < 32; i++) {
+        cout << "vec[" << i << "]=" << muffins->at(i) << " ";
+      }
+      cout << endl;
+    }
+    else {
+      cout << "Can read vector from l3" << endl;
+    }
+    // Now push modified versions of these values down the caches.
+    vector<int> *modifiedVec = new vector<int>();
+    for(int i = 0; i < 32; i++) {
+      modifiedVec->push_back(i*2+1);
+    }
+    l1Cache.write(modifiedVec, targAddress);
+#if 0
+    cout << "After writing modifiedVec:" << endl;
+    cout << l1Cache.toTable() << endl;
+    cout << l2Cache.toTable() << endl;
+    cout << l3Cache.toTable() << endl;
+#endif
+    testVec = new vector<int>();
+    for(int i = 0; i < 32; i++) {
+      testVec->push_back(i);
+    }
+    l1Cache.write(testVec, 0);
+#if 0
+    cout << "After writing testVec:" << endl;
+    cout << l1Cache.toTable() << endl;
+    cout << l2Cache.toTable() << endl;
+    cout << l3Cache.toTable() << endl;
+#endif
+    // Can we recover the values we pushed down?
+    muffins = l1Cache.read(targAddress, 32);
+#if 0
+    cout << "After reading modifiedVec:" << endl;
+    cout << l1Cache.toTable() << endl;
+    cout << l2Cache.toTable() << endl;
+    cout << l3Cache.toTable() << endl;
+#endif
+    broke = 0;
+    for(int i = 0; i < 32; i++) {
+      if(muffins->at(i) != modifiedVec->at(i)) {
+        broke = 1;
+      }
+    }
+    if(broke) {
+      cout << "Failed to recover modified vector: ";
+      for(int i = 0; i < 32; i++) {
+        cout << "vec[" << i << "]=" << muffins->at(i) << " ";
+      }
+      cout << endl;
+    }
+    else {
+      cout << "Can recover modified vector" << endl;
+    }
+    cout << "END of basic read write tests" << endl;
   }
   {
     cout << "save restore tests:" << endl;
@@ -233,8 +304,6 @@ int main() {
     else {
       cout << "Can recover l1" << endl;
     }
-    cout << l1Cache.toTable() << endl;
-    cout << l2Cache.toTable() << endl;
     cout << "END save restore tests" << endl;
   }
   return 0;

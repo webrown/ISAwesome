@@ -259,7 +259,7 @@ double Cache::fetch(unsigned int address){
   int firstEvictedAddress = buildAddress(tags->at(tagIndOff[1])->at(way), tagIndOff[1], 0);
   // Write to the cache below if dirty and able.
   if(dirty->at(tagIndOff[1])->at(way) && nextCache) {
-    wait += nextCache->write(firstEvictedAddress, contents->at(0)->at(0)->size());
+    wait += nextCache->write(contents->at(tagIndOff[1])->at(way), firstEvictedAddress);
   }
   // Set tag and valid bits
   tags->at(tagIndOff[1])->at(way) = tagIndOff[0];
@@ -292,7 +292,7 @@ vector<int> *Cache::splitAddress(unsigned int address){
 
 string Cache::toTable() {
   stringstream result;
-  result << "tag\tind\tdirty\tLRU\tvalid\t";
+  result << "tag\tind\tdirty\tLRU\tvalid\tD0add\t";
   for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
     result << "D" << offset << "\t";
   }
@@ -304,7 +304,8 @@ string Cache::toTable() {
         << ind << "\t" 
         << dirty->at(ind)->at(way) << "\t"
         << LRU->at(ind)->at(way) << "\t"
-        << valid->at(ind)->at(way) << "\t";
+        << valid->at(ind)->at(way) << "\t"
+        << buildAddress(tags->at(ind)->at(way), ind, 0) << "\t";
       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
         result << contents->at(ind)->at(way)->at(offset) << "\t";
       }
