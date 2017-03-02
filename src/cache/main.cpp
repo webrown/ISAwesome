@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <stdlib.h>
+#include <fstream>
 
 using namespace std;
 
@@ -22,22 +23,37 @@ void showHelp() {
   cout << "Example: h" << endl;
   cout << "Show this help." << endl;
   cout << endl;
+
   cout << "add|a|push tagBits indexBits offsetBits wayBits delay" << endl;
   cout << "Example: a 0 4 0 0 5.1" << endl;
   cout << "Adds a new cache above the last one." << endl;
   cout << endl;
+
   cout << "pop|subtract|s" << endl;
   cout << "Example: pop" << endl;
   cout << "Removes the top cache." << endl;
   cout << endl;
+
   cout << "write|w value1 value2 value3... address" << endl;
   cout << "Example: write 4 9" << endl;
   cout << "Parallel-writes the values to a vector starting at address." << endl;
   cout << endl;
+
   cout << "read|r address [length]" << endl;
   cout << "Example: read 4" << endl;
   cout << "Parallel-reads starting from address and going to specified length." << endl;
   cout << endl;
+
+  cout << "fwrite|save fileName" << endl;
+  cout << "Example: fwrite state.ccs" << endl;
+  cout << "Saves state of top cache to a file." << endl;
+  cout << endl;
+
+  cout << "fread|restore fileName" << endl;
+  cout << "Example: fread state.ccs" << endl;
+  cout << "Sets state of top cache.  Make sure cache dimensions match!" << endl;
+  cout << endl;
+
   cout << "exit|e|quit|q" << endl;
   cout << "Example: exit" << endl;
   cout << "Exit the program" << endl;
@@ -104,6 +120,47 @@ int main() {
       }
       else {
         cout << tokens[0] << " shouldn't have any parameters." << endl;
+      }
+    }
+    else if(tokens[0] == "fwrite" || tokens[0] == "save") {
+      if(tokens.size() == 2) {
+        if(topCache == NULL) {
+          cout << "No cache to save." << endl;
+        }
+        else {
+          string fileName = tokens[1];
+          ofstream output(fileName.c_str());
+          string *state = topCache->save();
+          output << *state;
+          output.close();
+          cout << "Wrote state to " << fileName << "." << endl;
+          cout << *state << endl;
+          delete state;
+        }
+      }
+      else {
+        cout << "Must have exactly 1 parameter." << endl;
+      }
+    }
+    else if(tokens[0] == "fread" || tokens[0] == "restore") {
+      if(tokens.size() == 2) {
+        if(topCache == NULL) {
+          cout << "No cache to read into." << endl;
+        }
+        else {
+          string fileName = tokens[1];
+          ifstream file(fileName.c_str());
+          string state;
+          file >> state;
+          file.close();
+          topCache->restore(&state);
+          showCaches();
+          cout << "Read state from " << fileName << "." << endl;
+          cout << state << endl;
+        }
+      }
+      else {
+        cout << "Must have exactly 1 parameter." << endl;
       }
     }
     else if(tokens[0] == "write" || tokens[0] == "w") {
