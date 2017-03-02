@@ -17,6 +17,33 @@ void showCaches() {
   }
 }
 
+void showHelp() {
+  cout << "help|h" << endl;
+  cout << "Example: h" << endl;
+  cout << "Show this help." << endl;
+  cout << endl;
+  cout << "add|a|push tagBits indexBits offsetBits wayBits delay" << endl;
+  cout << "Example: a 0 4 0 0 5.1" << endl;
+  cout << "Adds a new cache above the last one." << endl;
+  cout << endl;
+  cout << "pop|subtract|s" << endl;
+  cout << "Example: pop" << endl;
+  cout << "Removes the top cache." << endl;
+  cout << endl;
+  cout << "write|w value1 value2 value3... address" << endl;
+  cout << "Example: write 4 9" << endl;
+  cout << "Parallel-writes the values to a vector starting at address." << endl;
+  cout << endl;
+  cout << "read|r address [length]" << endl;
+  cout << "Example: read 4" << endl;
+  cout << "Parallel-reads starting from address and going to specified length." << endl;
+  cout << endl;
+  cout << "exit|e|quit|q" << endl;
+  cout << "Example: exit" << endl;
+  cout << "Exit the program" << endl;
+  cout << endl;
+}
+
 int main() {
   cout << "Welcome to" << endl;
   cout << "  ____                       _            ____           _          " << endl;
@@ -29,6 +56,8 @@ int main() {
   cout << endl;
   cout << "By Youngkyun Lee and Walter Brown" << endl;
   cout << endl;
+
+  showHelp();
 
   // Main loop
   string input;
@@ -145,7 +174,11 @@ int main() {
         cout << tokens[0] << " shouldn't have any parameters." << endl;
       }
     }
+    else if(tokens[0] == "help" || tokens[0] == "h") {
+      showHelp();
+    }
     else {
+      showHelp();
       cout << "I don't know what " << tokens[0] << " is." << endl;
     }
   }
