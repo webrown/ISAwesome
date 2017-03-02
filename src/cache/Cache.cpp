@@ -59,7 +59,7 @@ CacheResult *Cache::read(unsigned int address, unsigned int length){
   vector<int> *data = new vector<int>();
   for(int i = address; i < address+length; i++) {
     // TODO May be able to be optimized later; often tag and index won't change for long periods of time.
-    fetchWait = max(0.0, fetch(i));
+    fetchWait = max(fetchWait, fetch(i));
     // Now at front of LRU queue
     updateLRU(i);
     // Read value.
@@ -104,7 +104,7 @@ double Cache::write(vector<int> *value, unsigned int address){
   // Get the value you want into cache.
   double fetchWait = 0;
   for(int i = 0; i < value->size(); i++) {
-    fetchWait = max(0.0, fetch(address+i));
+    fetchWait = max(fetchWait, fetch(address+i));
     // Move up in LRU queue.
     updateLRU(address+i);
     // If this is going to change the value, the value is becoming dirty.
