@@ -5,12 +5,11 @@
 
 using namespace std;
 
-Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *prevCache, Cache *nextCache) {
+Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache) {
   // Load in params.
   this->tagBits = tagBits;
   this->indexBits = indexBits;
   this->logDataWordCount = logDataWordCount;
-  this->prevCache = prevCache;
   this->nextCache = nextCache;
   this->delay = delay;
   this->logAssociativity = logAssociativity;
