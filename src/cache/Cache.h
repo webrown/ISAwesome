@@ -9,7 +9,6 @@ using namespace std;
 
 class Cache{
   public:
-    int tagBits;
     int indexBits;
     int logDataWordCount;
     int logAssociativity;
@@ -21,7 +20,7 @@ class Cache{
     vector< vector<int> * > *LRU;
     vector< vector<int> * > *dirty;
     vector< vector<int> * > *valid;
-    Cache(int tagBits, int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache);
+    Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache);
     ~Cache();
     CacheResult *read(unsigned int address, unsigned int length);
     CacheResult *read(unsigned int address);

@@ -7,7 +7,7 @@ using namespace std;
 int main() {
   {
     cout << "splitAddress tests:" << endl;
-    Cache l1Cache(5,3,2, 2, 10, NULL);
+    Cache l1Cache(3, 2, 2, 10, NULL);
     vector<int> *result = l1Cache.splitAddress(1023);
     if(result->at(0) != 31 || result->at(1) != 7 || result->at(2) != 3) {
       cout << "FAIL:  result[0]=" << result->at(0)
@@ -32,7 +32,7 @@ int main() {
   }
   {
     cout << "buildAddress tests:" << endl;
-    Cache l1Cache(5,3,2, 2, 10, NULL);
+    Cache l1Cache(3,2, 2, 10, NULL);
     vector<int> *split = l1Cache.splitAddress(1023);
     int result = l1Cache.buildAddress(split->at(0), split->at(1), split->at(2));
     if(result == 1023) {
@@ -46,7 +46,7 @@ int main() {
   }
   {
     cout << "Testing addressWay..." << endl;
-    Cache l1Cache(5,3,2, 2, 10, NULL);
+    Cache l1Cache(3,2, 2, 10, NULL);
     // Make sure empty at start.
     int result = l1Cache.addressWay(4294967295);
     if(result == -1) {
@@ -84,7 +84,7 @@ int main() {
   }
   {
     cout << "Testing updateLRU" << endl;
-    Cache l1Cache(5,0,0, 2, 2, NULL);
+    Cache l1Cache(0,0, 2, 2, NULL);
     if(l1Cache.getLRUWay(0) == 0) {
       cout << "PASS" << endl;
     }
@@ -156,9 +156,9 @@ int main() {
   }
   {
     cout << "Basic reading and writing test:" << endl;
-    Cache l3Cache(0,8,0, 0, 10, NULL);
-    Cache l2Cache(3,4,1, 2, 10, &l3Cache);
-    Cache l1Cache(5,1,2, 2, 10, &l2Cache);
+    Cache l3Cache(8,0, 0, 10, NULL);
+    Cache l2Cache(4,1, 2, 10, &l3Cache);
+    Cache l1Cache(1,2, 2, 10, &l2Cache);
     l2Cache.nextCache = &l3Cache;
     l1Cache.nextCache = &l2Cache;
 
@@ -292,8 +292,8 @@ int main() {
   }
   {
     cout << "save restore tests:" << endl;
-    Cache l1Cache(5,2,1, 1, 10, NULL);
-    Cache l2Cache(5,2,1, 1, 10, NULL);
+    Cache l1Cache(2,1, 1, 10, NULL);
+    Cache l2Cache(2,1, 1, 10, NULL);
     vector<int> *testVec = new vector<int>();
     for(int i = 0; i < 10; i++) {
       testVec->push_back(i);

@@ -91,18 +91,17 @@ int main() {
       continue;
     }
     if(tokens[0] == "push" || tokens[0] == "a" || tokens[0] == "add") {
-      if(tokens.size() == 6) {
+      if(tokens.size() == 5) {
         cout << "Created cache:" << endl;
-        cout << "  Tag Bits = " << tokens[1] << endl;
-        cout << "  Index Bits = " << tokens[2] << endl;
-        cout << "  Offset Bits = " << tokens[3] << endl;
-        cout << "  Way Bits = " << tokens[4] << endl;
-        cout << "  Delay = " << tokens[5] << endl;
-        topCache = new Cache(atoi(tokens[1].c_str()), atoi(tokens[2].c_str()), atoi(tokens[3].c_str()), atoi(tokens[4].c_str()), atof(tokens[5].c_str()), topCache);
+        cout << "  Index Bits = " << tokens[1] << endl;
+        cout << "  Offset Bits = " << tokens[2] << endl;
+        cout << "  Way Bits = " << tokens[3] << endl;
+        cout << "  Delay = " << tokens[4] << endl;
+        topCache = new Cache(atoi(tokens[1].c_str()), atoi(tokens[2].c_str()), atoi(tokens[3].c_str()), atof(tokens[4].c_str()), topCache);
         showCaches();
       }
       else {
-        cout << "I want 5 parameters for that." << endl;
+        cout << "I want 4 parameters for that." << endl;
       }
     }
     else if(tokens[0] == "pop" || tokens[0] == "s" || tokens[0] == "subtract") {
