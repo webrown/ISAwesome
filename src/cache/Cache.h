@@ -22,6 +22,7 @@ class Cache{
     vector< vector<int> * > *dirty;
     vector< vector<int> * > *valid;
     Cache(int tagBits, int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache);
+    ~Cache();
     CacheResult *read(unsigned int address, unsigned int length);
     CacheResult *read(unsigned int address);
     double write(vector<int> *value, unsigned int address);

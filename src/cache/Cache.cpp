@@ -41,6 +41,37 @@ Cache::Cache( int tagBits, int indexBits, int logDataWordCount, int logAssociati
   }
 }
 
+Cache::~Cache() {
+  // Clean tags
+  for(int i = 0; i < tags->size(); i++) {
+    delete tags->at(i);
+  }
+  delete tags;
+  // Clean contents
+  for(int i = 0; i < contents->size(); i++) {
+    for(int j = 0; j < contents->at(i)->size(); j++) {
+      delete contents->at(i)->at(j);
+    }
+    delete contents->at(i);
+  }
+  delete contents;
+  // Clean LRUs
+  for(int i = 0; i < LRU->size(); i++) {
+    delete LRU->at(i);
+  }
+  delete LRU;
+  // Clean dirty
+  for(int i = 0; i < dirty->size(); i++) {
+    delete dirty->at(i);
+  }
+  delete dirty;
+  // Clean valid
+  for(int i = 0; i < valid->size(); i++) {
+    delete valid->at(i);
+  }
+  delete valid;
+}
+
 unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned int offset){
   // Concatenate tag, index, and offset into an address.
   return (tag << (indexBits + logDataWordCount)) | (index << logDataWordCount) | offset;
@@ -64,12 +95,16 @@ CacheResult *Cache::read(unsigned int address, unsigned int length){
     updateLRU(i);
     // Read value.
     int way = addressWay(i);
-    vector<int> tagIndOff = * splitAddress(i);
-    data->push_back(contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)));
+    vector<int> *tagIndOff = splitAddress(i);
+    int index = tagIndOff->at(1);
+    int offset = tagIndOff->at(2);
+    delete tagIndOff;
+    data->push_back(contents->at(index)->at(way)->at(offset));
   }
   // All fetches happened in parallel.
   wait += fetchWait;
   CacheResult *result = new CacheResult(*data, wait);
+  delete data;
   return result;
 }
 
@@ -88,8 +123,11 @@ size_t Cache::maxLength(unsigned int startAddress){
 
 double Cache::write(vector<int> *value, unsigned int address){
   int mL = maxLength(address);
+  int mustDeleteValue = 0;
   if(value->size() > mL) {
     value = new vector<int>(value->begin(), value->begin()+mL);
+    // You'll have to clean up this new vector later!
+    mustDeleteValue = 1;
     cout << "WARNING:  write given too large a vector, shrinking size to " << mL << "." << endl;
   }
 #if 0
@@ -108,15 +146,21 @@ double Cache::write(vector<int> *value, unsigned int address){
     // Move up in LRU queue.
     updateLRU(address+i);
     // If this is going to change the value, the value is becoming dirty.
-    vector<int> tagIndOff = * splitAddress(address+i);
+    vector<int> *tagIndOff = splitAddress(address+i);
+    int index = tagIndOff->at(1);
+    int offset = tagIndOff->at(2);
+    delete tagIndOff;
     int way = addressWay(address+i);
-    if(contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) != value->at(i)) {
-      dirty->at(tagIndOff.at(1))->at(way) = 1;
+    if(contents->at(index)->at(way)->at(offset) != value->at(i)) {
+      dirty->at(index)->at(way) = 1;
       // Write to the specified index.
-      contents->at(tagIndOff.at(1))->at(way)->at(tagIndOff.at(2)) = value->at(i);
+      contents->at(index)->at(way)->at(offset) = value->at(i);
     }
   }
   wait += fetchWait;
+  if(mustDeleteValue) {
+    delete value;
+  }
   // Tell the layer above how long this took.
   return delay;
 }
@@ -124,13 +168,16 @@ double Cache::write(vector<int> *value, unsigned int address){
 int Cache::addressWay(unsigned int address){
   // Returns the associative way that a certain address is at.
   // If there is no way, return -1.
-  vector<int> tagIndOff = * splitAddress(address);
-  for(int i = 0; i < tags->at(tagIndOff[1])->size(); i++) {
-    if(!valid->at(tagIndOff[1])->at(i)) {
+  vector<int> *tagIndOff = splitAddress(address);
+  int tag = tagIndOff->at(0);
+  int index = tagIndOff->at(1);
+  delete tagIndOff;
+  for(int i = 0; i < tags->at(index)->size(); i++) {
+    if(!valid->at(index)->at(i)) {
       // If valid bit is not set, this is not a valid cell to think about.
       continue;
     }
-    if(tags->at(tagIndOff[1])->at(i) == tagIndOff[0]) {
+    if(tags->at(index)->at(i) == tag) {
       // Aha!  The tag matches!  This is your way!
       return i;
     }
@@ -140,7 +187,10 @@ int Cache::addressWay(unsigned int address){
 }
 
 double Cache::write(int input, unsigned int address){
-  return write(new vector<int>(1, input), address);
+  vector<int> *tinyVector = new vector<int>(1, input);
+  double result = write(tinyVector, address);
+  delete tinyVector;
+  return result;
 }
 
 string *Cache::save(){
@@ -226,17 +276,19 @@ void Cache::updateLRU(unsigned int address){
   if(way == -1) {
     return;
   }
-  vector<int> tagIndOff = * splitAddress(address);
+  vector<int> *tagIndOff = splitAddress(address);
+  int index = tagIndOff->at(1);
+  delete tagIndOff;
   // What is your current spot in the queue?
-  int queuePosition = LRU->at(tagIndOff[1])->at(way);
+  int queuePosition = LRU->at(index)->at(way);
   // Anyone in font of you just got cut.
   for(int i = 0; i < LRU->at(0)->size(); i++) {
-    if(LRU->at(tagIndOff[1])->at(i) <= queuePosition) {
-      LRU->at(tagIndOff[1])->at(i)++;
+    if(LRU->at(index)->at(i) <= queuePosition) {
+      LRU->at(index)->at(i)++;
     }
   }
   // Move to the front of the queue.
-  LRU->at(tagIndOff[1])->at(way) = 0;
+  LRU->at(index)->at(way) = 0;
 }
 
 double Cache::fetch(unsigned int address){
@@ -250,28 +302,32 @@ double Cache::fetch(unsigned int address){
     return 0;
   }
   double wait = 0;
-  vector<int> tagIndOff = * splitAddress(address);
+  vector<int> *tagIndOff = splitAddress(address);
+  int index = tagIndOff->at(1);
+  int tag = tagIndOff->at(0);
+  delete tagIndOff;
   // At this point, an eviction is needed.
   // Find the item with the worst LRU
-  way = getLRUWay(tagIndOff[1]);
+  way = getLRUWay(index);
   // What is the first address on the evicted line?
-  int firstEvictedAddress = buildAddress(tags->at(tagIndOff[1])->at(way), tagIndOff[1], 0);
+  int firstEvictedAddress = buildAddress(tags->at(index)->at(way), index, 0);
   // Write to the cache below if dirty and able.
-  if(dirty->at(tagIndOff[1])->at(way) && nextCache) {
-    wait += nextCache->write(contents->at(tagIndOff[1])->at(way), firstEvictedAddress);
+  if(dirty->at(index)->at(way) && nextCache) {
+    wait += nextCache->write(contents->at(index)->at(way), firstEvictedAddress);
   }
   // Set tag and valid bits
-  tags->at(tagIndOff[1])->at(way) = tagIndOff[0];
-  valid->at(tagIndOff[1])->at(way) = 1;
+  tags->at(index)->at(way) = tag;
+  valid->at(index)->at(way) = 1;
   // Get value from below.
   if(nextCache) {
     CacheResult *resultFromBelow = nextCache->read(firstInLine(address), contents->at(0)->at(0)->size());
     for(int i = 0; i < contents->at(0)->at(0)->size(); i++) {
-      contents->at(tagIndOff[1])->at(way)->at(i) = resultFromBelow->result.at(i);
+      contents->at(index)->at(way)->at(i) = resultFromBelow->result.at(i);
     }
     wait += resultFromBelow->time;
     // This is newly fetched, so it's clean.
-    dirty->at(tagIndOff[1])->at(way) = 0;
+    dirty->at(index)->at(way) = 0;
+    delete resultFromBelow;
   }
   return wait;
 }

@@ -160,6 +160,7 @@ int main() {
             cout << res->at(i) << " ";
           }
           cout << ">." << endl;
+          delete res;
         }
       }
       else {

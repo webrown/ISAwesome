@@ -17,6 +17,7 @@ int main() {
     else {
       cout << "PASS" << endl;
     }
+    delete result;
     result = l1Cache.splitAddress(31); // put 0s in tag spot.
     if(result->at(0) != 0) {
       cout << "FAIL:  result[0]=" << result->at(0)
@@ -27,6 +28,7 @@ int main() {
       cout << "PASS" << endl;
     }
     cout << "END splitAddress tests" << endl;
+    delete result;
   }
   {
     cout << "buildAddress tests:" << endl;
@@ -40,6 +42,7 @@ int main() {
       cout << "FAIL: " << result << endl;
     }
     cout << "END buildAddress tests" << endl;
+    delete split;
   }
   {
     cout << "Testing addressWay..." << endl;
@@ -170,6 +173,7 @@ int main() {
     else {
       cout << "PASS: Can write and read single value to cache" << endl;
     }
+    delete muffins;
     // Now let's see if I can read and write vectors.
     vector<int> *testVec = new vector<int>();
     for(int i = 0; i < 32; i++) {
@@ -177,6 +181,7 @@ int main() {
     }
     int targAddress = 52;
     l1Cache.write(testVec, targAddress);
+    delete testVec;
     muffins = l1Cache.read(targAddress, 32);
     int broke = 0;
     for(int i = 0; i < 32; i++) {
@@ -194,8 +199,11 @@ int main() {
     else {
       cout << "PASS: Can write and read vector to cache" << endl;
     }
+    delete muffins;
     // Now make sure vector realism safeties in place.
-    l1Cache.write(new vector<int>(64, 42), 22);
+    testVec = new vector<int>(64, 42);
+    l1Cache.write(testVec, 22);
+    delete testVec;
     muffins = l1Cache.read(22, 64);
     if(muffins->size() < 64) {
       cout << "PASS: Safety cropping works!" << endl;
@@ -203,6 +211,7 @@ int main() {
     else {
       cout << "FAIL:  returned vec of size " << muffins->size() << endl;
     }
+    delete muffins;
     // Make sure you can read through layers of cache.
     testVec = new vector<int>();
     for(int i = 0; i < 32; i++) {
@@ -227,6 +236,8 @@ int main() {
     else {
       cout << "PASS: Can read vector from l3" << endl;
     }
+    delete muffins;
+    delete testVec;
     // Now push modified versions of these values down the caches.
     vector<int> *modifiedVec = new vector<int>();
     for(int i = 0; i < 32; i++) {
@@ -244,6 +255,7 @@ int main() {
       testVec->push_back(i);
     }
     l1Cache.write(testVec, 0);
+    delete testVec;
 #if 0
     cout << "After writing testVec:" << endl;
     cout << l1Cache.toTable() << endl;
@@ -275,6 +287,8 @@ int main() {
       cout << "PASS: Can recover modified vector" << endl;
     }
     cout << "END of basic read write tests" << endl;
+    delete muffins;
+    delete modifiedVec;
   }
   {
     cout << "save restore tests:" << endl;
@@ -305,6 +319,10 @@ int main() {
       cout << "PASS: Can recover l1" << endl;
     }
     cout << "END save restore tests" << endl;
+    delete state;
+    delete testVec;
+    delete muffins1;
+    delete muffins2;
   }
   return 0;
 }
