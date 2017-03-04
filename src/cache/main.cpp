@@ -24,8 +24,8 @@ void showHelp() {
   cout << "Show this help." << endl;
   cout << endl;
 
-  cout << "add|a|push tagBits indexBits offsetBits wayBits delay" << endl;
-  cout << "Example: a 0 4 0 0 5.1" << endl;
+  cout << "add|a|push indexBits offsetBits wayBits delay" << endl;
+  cout << "Example: a 4 0 0 5.1" << endl;
   cout << "Adds a new cache above the last one." << endl;
   cout << endl;
 
