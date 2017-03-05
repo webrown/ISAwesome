@@ -3,32 +3,42 @@
 
 #include "CacheResult.h"
 #include <string>
-#include <vector>
+#include <QVector>
 
 using namespace std;
 
+enum CacheType{
+    DATA, INSTRUCTION, BOTH
+};
+
 class Cache{
   public:
+    //fields
+    CacheType type = BOTH;
     int indexBits;
     int logDataWordCount;
     int logAssociativity;
     double delay;
-    Cache *prevCache;
-    Cache *nextCache;
-    vector< vector<int> * > *tags;
-    vector< vector< vector<int> * > * > *contents;
-    vector< vector<int> * > *LRU;
-    vector< vector<int> * > *dirty;
-    vector< vector<int> * > *valid;
+    Cache *prevCache = NULL;
+    Cache *nextCache = NULL;
+    QVector< QVector<int> * > *tags;
+    QVector< QVector< QVector<int> * > * > *contents;
+    QVector< QVector<int> * > *LRU;
+    QVector< QVector<int> * > *dirty;
+    QVector< QVector<int> * > *valid;
+
+    //constructors
     Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache);
     ~Cache();
+    
+    //functions
     CacheResult *read(unsigned int address, unsigned int length);
     CacheResult *read(unsigned int address);
-    double write(vector<int> *value, unsigned int address);
+    double write(QVector<int> *value, unsigned int address);
     double write(int value, unsigned int address);
     string *save();
     void restore(string *state);
-    vector<int> *splitAddress(unsigned int address);
+    QVector<int> *splitAddress(unsigned int address);
     int addressWay(unsigned int address);
     double fetch(unsigned int address);
     unsigned int firstInLine(unsigned int address);
@@ -38,5 +48,6 @@ class Cache{
     string toTable();
     size_t maxLength(unsigned int startAddress);
 };
+
 
 #endif

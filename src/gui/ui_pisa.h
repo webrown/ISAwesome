@@ -13,10 +13,9 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QFrame>
 #include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
@@ -37,7 +36,6 @@ public:
     QAction *actionSave;
     QAction *actionSave_As;
     QAction *actionNew;
-    QAction *actionCache_View;
     QAction *actionPipeline;
     QAction *actionCode_Examiner;
     QAction *actionMemory;
@@ -65,59 +63,74 @@ public:
     QAction *actionSave_State_As;
     QAction *actionLoad_state;
     QAction *actionRestore_State;
+    QAction *actionNew_2;
+    QAction *actionLoad;
+    QAction *actionRestore;
+    QAction *actionSave_As_2;
+    QAction *actionAddCache;
+    QAction *actionRemoveCache;
+    QAction *actionClearCache;
+    QAction *actionPredefined;
+    QAction *actionDefault;
+    QAction *actionFlushCache;
+    QAction *acitonFlushAllCache;
     QWidget *centralwidget;
+    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayout_2;
+    QHBoxLayout *horizontalLayout_2;
+    QTabWidget *file_system;
+    QWidget *tab_navigation;
+    QWidget *tab_performance;
+    QWidget *Track;
     QTabWidget *tabWidget_editor;
     QTabWidget *tabWidget_output;
     QWidget *tab_problems;
+    QVBoxLayout *verticalLayout_5;
     QListWidget *listWidget;
     QWidget *tab_console;
+    QVBoxLayout *verticalLayout_6;
     QPlainTextEdit *plainTextEdit;
     QWidget *tab_screen;
+    QVBoxLayout *verticalLayout_4;
     QGraphicsView *graphicsView;
-    QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
-    QFrame *line;
     QTabWidget *tabWidget_pipeline;
     QWidget *tab_scalar;
     QWidget *tab_vector;
     QTabWidget *tabWidget_memory;
     QWidget *tab_register;
+    QVBoxLayout *verticalLayout_10;
     QTableWidget *tableWidget_6;
     QWidget *tab_flag;
+    QVBoxLayout *verticalLayout_9;
     QTableWidget *tableWidget_8;
     QWidget *tab_vector1;
+    QVBoxLayout *verticalLayout_8;
     QTableWidget *tableWidget_7;
     QWidget *tab_memory;
+    QVBoxLayout *verticalLayout_7;
     QTableWidget *tableWidget_memory;
-    QLineEdit *lineEdit;
-    QTabWidget *tabWidget_cache;
-    QWidget *tab_cache_l1_i;
-    QTableWidget *tableWidget;
-    QWidget *tab_cache_l1_d;
-    QTableWidget *tableWidget_3;
-    QWidget *tab_cache_l2;
-    QTableWidget *tableWidget_4;
-    QWidget *tab_cache_l3;
-    QTableWidget *tableWidget_5;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdt;
     QMenu *menuWindow;
     QMenu *menuWindow_2;
+    QMenu *menu_Cache;
     QMenu *menuHelp;
     QToolBar *toolBar;
+    QToolBar *toolBar_2;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(1000, 750);
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        MainWindow->resize(1920, 1080);
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
-        MainWindow->setMinimumSize(QSize(1000, 0));
+        MainWindow->setMinimumSize(QSize(0, 0));
         QIcon icon;
         icon.addFile(QStringLiteral(":/icon/img/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -130,8 +143,6 @@ public:
         actionSave_As->setObjectName(QStringLiteral("actionSave_As"));
         actionNew = new QAction(MainWindow);
         actionNew->setObjectName(QStringLiteral("actionNew"));
-        actionCache_View = new QAction(MainWindow);
-        actionCache_View->setObjectName(QStringLiteral("actionCache_View"));
         actionPipeline = new QAction(MainWindow);
         actionPipeline->setObjectName(QStringLiteral("actionPipeline"));
         actionCode_Examiner = new QAction(MainWindow);
@@ -216,61 +227,132 @@ public:
         actionLoad_state->setObjectName(QStringLiteral("actionLoad_state"));
         actionRestore_State = new QAction(MainWindow);
         actionRestore_State->setObjectName(QStringLiteral("actionRestore_State"));
+        actionNew_2 = new QAction(MainWindow);
+        actionNew_2->setObjectName(QStringLiteral("actionNew_2"));
+        actionLoad = new QAction(MainWindow);
+        actionLoad->setObjectName(QStringLiteral("actionLoad"));
+        actionRestore = new QAction(MainWindow);
+        actionRestore->setObjectName(QStringLiteral("actionRestore"));
+        actionSave_As_2 = new QAction(MainWindow);
+        actionSave_As_2->setObjectName(QStringLiteral("actionSave_As_2"));
+        actionAddCache = new QAction(MainWindow);
+        actionAddCache->setObjectName(QStringLiteral("actionAddCache"));
+        actionRemoveCache = new QAction(MainWindow);
+        actionRemoveCache->setObjectName(QStringLiteral("actionRemoveCache"));
+        actionClearCache = new QAction(MainWindow);
+        actionClearCache->setObjectName(QStringLiteral("actionClearCache"));
+        actionPredefined = new QAction(MainWindow);
+        actionPredefined->setObjectName(QStringLiteral("actionPredefined"));
+        actionDefault = new QAction(MainWindow);
+        actionDefault->setObjectName(QStringLiteral("actionDefault"));
+        actionFlushCache = new QAction(MainWindow);
+        actionFlushCache->setObjectName(QStringLiteral("actionFlushCache"));
+        acitonFlushAllCache = new QAction(MainWindow);
+        acitonFlushAllCache->setObjectName(QStringLiteral("acitonFlushAllCache"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
+        sizePolicy.setHeightForWidth(centralwidget->sizePolicy().hasHeightForWidth());
+        centralwidget->setSizePolicy(sizePolicy);
+        horizontalLayout = new QHBoxLayout(centralwidget);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        verticalLayout_2->setSizeConstraint(QLayout::SetNoConstraint);
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        file_system = new QTabWidget(centralwidget);
+        file_system->setObjectName(QStringLiteral("file_system"));
+        file_system->setTabShape(QTabWidget::Triangular);
+        tab_navigation = new QWidget();
+        tab_navigation->setObjectName(QStringLiteral("tab_navigation"));
+        file_system->addTab(tab_navigation, QString());
+        tab_performance = new QWidget();
+        tab_performance->setObjectName(QStringLiteral("tab_performance"));
+        sizePolicy.setHeightForWidth(tab_performance->sizePolicy().hasHeightForWidth());
+        tab_performance->setSizePolicy(sizePolicy);
+        file_system->addTab(tab_performance, QString());
+        Track = new QWidget();
+        Track->setObjectName(QStringLiteral("Track"));
+        file_system->addTab(Track, QString());
+
+        horizontalLayout_2->addWidget(file_system);
+
         tabWidget_editor = new QTabWidget(centralwidget);
         tabWidget_editor->setObjectName(QStringLiteral("tabWidget_editor"));
-        tabWidget_editor->setGeometry(QRect(0, 0, 491, 461));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(tabWidget_editor->sizePolicy().hasHeightForWidth());
-        tabWidget_editor->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(tabWidget_editor->sizePolicy().hasHeightForWidth());
+        tabWidget_editor->setSizePolicy(sizePolicy);
         tabWidget_editor->setTabsClosable(true);
+
+        horizontalLayout_2->addWidget(tabWidget_editor);
+
+        horizontalLayout_2->setStretch(0, 1);
+        horizontalLayout_2->setStretch(1, 3);
+
+        verticalLayout_2->addLayout(horizontalLayout_2);
+
         tabWidget_output = new QTabWidget(centralwidget);
         tabWidget_output->setObjectName(QStringLiteral("tabWidget_output"));
-        tabWidget_output->setGeometry(QRect(0, 460, 491, 221));
-        tabWidget_output->setMaximumSize(QSize(491, 16777215));
+        tabWidget_output->setEnabled(true);
+        sizePolicy.setHeightForWidth(tabWidget_output->sizePolicy().hasHeightForWidth());
+        tabWidget_output->setSizePolicy(sizePolicy);
+        tabWidget_output->setMaximumSize(QSize(16777215, 16777215));
         tab_problems = new QWidget();
         tab_problems->setObjectName(QStringLiteral("tab_problems"));
+        sizePolicy.setHeightForWidth(tab_problems->sizePolicy().hasHeightForWidth());
+        tab_problems->setSizePolicy(sizePolicy);
+        verticalLayout_5 = new QVBoxLayout(tab_problems);
+        verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
         listWidget = new QListWidget(tab_problems);
         listWidget->setObjectName(QStringLiteral("listWidget"));
-        listWidget->setGeometry(QRect(0, 0, 483, 186));
-        listWidget->setFrameShape(QFrame::HLine);
+        listWidget->setFrameShape(QFrame::StyledPanel);
+        listWidget->setFrameShadow(QFrame::Raised);
+
+        verticalLayout_5->addWidget(listWidget);
+
         tabWidget_output->addTab(tab_problems, QString());
         tab_console = new QWidget();
         tab_console->setObjectName(QStringLiteral("tab_console"));
+        sizePolicy.setHeightForWidth(tab_console->sizePolicy().hasHeightForWidth());
+        tab_console->setSizePolicy(sizePolicy);
+        verticalLayout_6 = new QVBoxLayout(tab_console);
+        verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
         plainTextEdit = new QPlainTextEdit(tab_console);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(0, 0, 483, 186));
-        plainTextEdit->setFrameShape(QFrame::NoFrame);
+        plainTextEdit->setFrameShape(QFrame::StyledPanel);
+        plainTextEdit->setFrameShadow(QFrame::Raised);
+
+        verticalLayout_6->addWidget(plainTextEdit);
+
         tabWidget_output->addTab(tab_console, QString());
         tab_screen = new QWidget();
         tab_screen->setObjectName(QStringLiteral("tab_screen"));
+        sizePolicy.setHeightForWidth(tab_screen->sizePolicy().hasHeightForWidth());
+        tab_screen->setSizePolicy(sizePolicy);
+        verticalLayout_4 = new QVBoxLayout(tab_screen);
+        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
         graphicsView = new QGraphicsView(tab_screen);
         graphicsView->setObjectName(QStringLiteral("graphicsView"));
-        graphicsView->setGeometry(QRect(110, 0, 256, 185));
-        graphicsView->setFrameShape(QFrame::Panel);
-        graphicsView->setFrameShadow(QFrame::Plain);
+        graphicsView->setFrameShape(QFrame::StyledPanel);
+        graphicsView->setFrameShadow(QFrame::Raised);
+
+        verticalLayout_4->addWidget(graphicsView);
+
         tabWidget_output->addTab(tab_screen, QString());
-        verticalLayoutWidget = new QWidget(centralwidget);
-        verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(490, 0, 511, 681));
-        verticalLayout = new QVBoxLayout(verticalLayoutWidget);
+
+        verticalLayout_2->addWidget(tabWidget_output);
+
+        verticalLayout_2->setStretch(0, 3);
+        verticalLayout_2->setStretch(1, 1);
+
+        horizontalLayout->addLayout(verticalLayout_2);
+
+        verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setSizeConstraint(QLayout::SetNoConstraint);
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        line = new QFrame(verticalLayoutWidget);
-        line->setObjectName(QStringLiteral("line"));
-        line->setFrameShape(QFrame::VLine);
-        line->setFrameShadow(QFrame::Sunken);
-
-        verticalLayout->addWidget(line);
-
-        tabWidget_pipeline = new QTabWidget(verticalLayoutWidget);
+        tabWidget_pipeline = new QTabWidget(centralwidget);
         tabWidget_pipeline->setObjectName(QStringLiteral("tabWidget_pipeline"));
-        tabWidget_pipeline->setStyleSheet(QStringLiteral("QTabBar::tab { height: 110px; }"));
+        tabWidget_pipeline->setStyleSheet(QStringLiteral("QTabBar::tab { height: 160px; }"));
         tabWidget_pipeline->setTabPosition(QTabWidget::West);
         tabWidget_pipeline->setTabShape(QTabWidget::Triangular);
         tabWidget_pipeline->setDocumentMode(true);
@@ -284,10 +366,12 @@ public:
 
         verticalLayout->addWidget(tabWidget_pipeline);
 
-        tabWidget_memory = new QTabWidget(verticalLayoutWidget);
+        tabWidget_memory = new QTabWidget(centralwidget);
         tabWidget_memory->setObjectName(QStringLiteral("tabWidget_memory"));
         tab_register = new QWidget();
         tab_register->setObjectName(QStringLiteral("tab_register"));
+        verticalLayout_10 = new QVBoxLayout(tab_register);
+        verticalLayout_10->setObjectName(QStringLiteral("verticalLayout_10"));
         tableWidget_6 = new QTableWidget(tab_register);
         if (tableWidget_6->columnCount() < 5)
             tableWidget_6->setColumnCount(5);
@@ -302,12 +386,16 @@ public:
         QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
         tableWidget_6->setHorizontalHeaderItem(4, __qtablewidgetitem4);
         tableWidget_6->setObjectName(QStringLiteral("tableWidget_6"));
-        tableWidget_6->setGeometry(QRect(0, 0, 501, 192));
         tableWidget_6->setFrameShape(QFrame::NoFrame);
         tableWidget_6->verticalHeader()->setVisible(false);
+
+        verticalLayout_10->addWidget(tableWidget_6);
+
         tabWidget_memory->addTab(tab_register, QString());
         tab_flag = new QWidget();
         tab_flag->setObjectName(QStringLiteral("tab_flag"));
+        verticalLayout_9 = new QVBoxLayout(tab_flag);
+        verticalLayout_9->setObjectName(QStringLiteral("verticalLayout_9"));
         tableWidget_8 = new QTableWidget(tab_flag);
         if (tableWidget_8->columnCount() < 5)
             tableWidget_8->setColumnCount(5);
@@ -322,12 +410,16 @@ public:
         QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
         tableWidget_8->setHorizontalHeaderItem(4, __qtablewidgetitem9);
         tableWidget_8->setObjectName(QStringLiteral("tableWidget_8"));
-        tableWidget_8->setGeometry(QRect(0, 0, 501, 192));
         tableWidget_8->setFrameShape(QFrame::NoFrame);
         tableWidget_8->verticalHeader()->setVisible(false);
+
+        verticalLayout_9->addWidget(tableWidget_8);
+
         tabWidget_memory->addTab(tab_flag, QString());
         tab_vector1 = new QWidget();
         tab_vector1->setObjectName(QStringLiteral("tab_vector1"));
+        verticalLayout_8 = new QVBoxLayout(tab_vector1);
+        verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
         tableWidget_7 = new QTableWidget(tab_vector1);
         if (tableWidget_7->columnCount() < 5)
             tableWidget_7->setColumnCount(5);
@@ -342,12 +434,16 @@ public:
         QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
         tableWidget_7->setHorizontalHeaderItem(4, __qtablewidgetitem14);
         tableWidget_7->setObjectName(QStringLiteral("tableWidget_7"));
-        tableWidget_7->setGeometry(QRect(0, 0, 501, 192));
         tableWidget_7->setFrameShape(QFrame::NoFrame);
         tableWidget_7->verticalHeader()->setVisible(false);
+
+        verticalLayout_8->addWidget(tableWidget_7);
+
         tabWidget_memory->addTab(tab_vector1, QString());
         tab_memory = new QWidget();
         tab_memory->setObjectName(QStringLiteral("tab_memory"));
+        verticalLayout_7 = new QVBoxLayout(tab_memory);
+        verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
         tableWidget_memory = new QTableWidget(tab_memory);
         if (tableWidget_memory->columnCount() < 5)
             tableWidget_memory->setColumnCount(5);
@@ -362,122 +458,27 @@ public:
         QTableWidgetItem *__qtablewidgetitem19 = new QTableWidgetItem();
         tableWidget_memory->setHorizontalHeaderItem(4, __qtablewidgetitem19);
         tableWidget_memory->setObjectName(QStringLiteral("tableWidget_memory"));
-        tableWidget_memory->setGeometry(QRect(0, 0, 501, 191));
         tableWidget_memory->setFrameShape(QFrame::NoFrame);
         tableWidget_memory->setRowCount(0);
         tableWidget_memory->verticalHeader()->setVisible(false);
-        lineEdit = new QLineEdit(tab_memory);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setGeometry(QRect(400, 160, 101, 29));
+
+        verticalLayout_7->addWidget(tableWidget_memory);
+
         tabWidget_memory->addTab(tab_memory, QString());
 
         verticalLayout->addWidget(tabWidget_memory);
 
-        tabWidget_cache = new QTabWidget(verticalLayoutWidget);
-        tabWidget_cache->setObjectName(QStringLiteral("tabWidget_cache"));
-        tab_cache_l1_i = new QWidget();
-        tab_cache_l1_i->setObjectName(QStringLiteral("tab_cache_l1_i"));
-        tableWidget = new QTableWidget(tab_cache_l1_i);
-        if (tableWidget->columnCount() < 7)
-            tableWidget->setColumnCount(7);
-        QTableWidgetItem *__qtablewidgetitem20 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem20);
-        QTableWidgetItem *__qtablewidgetitem21 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem21);
-        QTableWidgetItem *__qtablewidgetitem22 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem22);
-        QTableWidgetItem *__qtablewidgetitem23 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem23);
-        QTableWidgetItem *__qtablewidgetitem24 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem24);
-        QTableWidgetItem *__qtablewidgetitem25 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(5, __qtablewidgetitem25);
-        QTableWidgetItem *__qtablewidgetitem26 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(6, __qtablewidgetitem26);
-        tableWidget->setObjectName(QStringLiteral("tableWidget"));
-        tableWidget->setGeometry(QRect(0, 0, 501, 192));
-        tableWidget->setFrameShape(QFrame::NoFrame);
-        tableWidget->verticalHeader()->setVisible(false);
-        tabWidget_cache->addTab(tab_cache_l1_i, QString());
-        tab_cache_l1_d = new QWidget();
-        tab_cache_l1_d->setObjectName(QStringLiteral("tab_cache_l1_d"));
-        tableWidget_3 = new QTableWidget(tab_cache_l1_d);
-        if (tableWidget_3->columnCount() < 7)
-            tableWidget_3->setColumnCount(7);
-        QTableWidgetItem *__qtablewidgetitem27 = new QTableWidgetItem();
-        tableWidget_3->setHorizontalHeaderItem(0, __qtablewidgetitem27);
-        QTableWidgetItem *__qtablewidgetitem28 = new QTableWidgetItem();
-        tableWidget_3->setHorizontalHeaderItem(1, __qtablewidgetitem28);
-        QTableWidgetItem *__qtablewidgetitem29 = new QTableWidgetItem();
-        tableWidget_3->setHorizontalHeaderItem(2, __qtablewidgetitem29);
-        QTableWidgetItem *__qtablewidgetitem30 = new QTableWidgetItem();
-        tableWidget_3->setHorizontalHeaderItem(3, __qtablewidgetitem30);
-        QTableWidgetItem *__qtablewidgetitem31 = new QTableWidgetItem();
-        tableWidget_3->setHorizontalHeaderItem(4, __qtablewidgetitem31);
-        QTableWidgetItem *__qtablewidgetitem32 = new QTableWidgetItem();
-        tableWidget_3->setHorizontalHeaderItem(5, __qtablewidgetitem32);
-        QTableWidgetItem *__qtablewidgetitem33 = new QTableWidgetItem();
-        tableWidget_3->setHorizontalHeaderItem(6, __qtablewidgetitem33);
-        tableWidget_3->setObjectName(QStringLiteral("tableWidget_3"));
-        tableWidget_3->setGeometry(QRect(0, 0, 501, 192));
-        tableWidget_3->setFrameShape(QFrame::NoFrame);
-        tableWidget_3->verticalHeader()->setVisible(false);
-        tabWidget_cache->addTab(tab_cache_l1_d, QString());
-        tab_cache_l2 = new QWidget();
-        tab_cache_l2->setObjectName(QStringLiteral("tab_cache_l2"));
-        tableWidget_4 = new QTableWidget(tab_cache_l2);
-        if (tableWidget_4->columnCount() < 7)
-            tableWidget_4->setColumnCount(7);
-        QTableWidgetItem *__qtablewidgetitem34 = new QTableWidgetItem();
-        tableWidget_4->setHorizontalHeaderItem(0, __qtablewidgetitem34);
-        QTableWidgetItem *__qtablewidgetitem35 = new QTableWidgetItem();
-        tableWidget_4->setHorizontalHeaderItem(1, __qtablewidgetitem35);
-        QTableWidgetItem *__qtablewidgetitem36 = new QTableWidgetItem();
-        tableWidget_4->setHorizontalHeaderItem(2, __qtablewidgetitem36);
-        QTableWidgetItem *__qtablewidgetitem37 = new QTableWidgetItem();
-        tableWidget_4->setHorizontalHeaderItem(3, __qtablewidgetitem37);
-        QTableWidgetItem *__qtablewidgetitem38 = new QTableWidgetItem();
-        tableWidget_4->setHorizontalHeaderItem(4, __qtablewidgetitem38);
-        QTableWidgetItem *__qtablewidgetitem39 = new QTableWidgetItem();
-        tableWidget_4->setHorizontalHeaderItem(5, __qtablewidgetitem39);
-        QTableWidgetItem *__qtablewidgetitem40 = new QTableWidgetItem();
-        tableWidget_4->setHorizontalHeaderItem(6, __qtablewidgetitem40);
-        tableWidget_4->setObjectName(QStringLiteral("tableWidget_4"));
-        tableWidget_4->setGeometry(QRect(0, 0, 501, 192));
-        tableWidget_4->setFrameShape(QFrame::NoFrame);
-        tableWidget_4->verticalHeader()->setVisible(false);
-        tabWidget_cache->addTab(tab_cache_l2, QString());
-        tab_cache_l3 = new QWidget();
-        tab_cache_l3->setObjectName(QStringLiteral("tab_cache_l3"));
-        tableWidget_5 = new QTableWidget(tab_cache_l3);
-        if (tableWidget_5->columnCount() < 7)
-            tableWidget_5->setColumnCount(7);
-        QTableWidgetItem *__qtablewidgetitem41 = new QTableWidgetItem();
-        tableWidget_5->setHorizontalHeaderItem(0, __qtablewidgetitem41);
-        QTableWidgetItem *__qtablewidgetitem42 = new QTableWidgetItem();
-        tableWidget_5->setHorizontalHeaderItem(1, __qtablewidgetitem42);
-        QTableWidgetItem *__qtablewidgetitem43 = new QTableWidgetItem();
-        tableWidget_5->setHorizontalHeaderItem(2, __qtablewidgetitem43);
-        QTableWidgetItem *__qtablewidgetitem44 = new QTableWidgetItem();
-        tableWidget_5->setHorizontalHeaderItem(3, __qtablewidgetitem44);
-        QTableWidgetItem *__qtablewidgetitem45 = new QTableWidgetItem();
-        tableWidget_5->setHorizontalHeaderItem(4, __qtablewidgetitem45);
-        QTableWidgetItem *__qtablewidgetitem46 = new QTableWidgetItem();
-        tableWidget_5->setHorizontalHeaderItem(5, __qtablewidgetitem46);
-        QTableWidgetItem *__qtablewidgetitem47 = new QTableWidgetItem();
-        tableWidget_5->setHorizontalHeaderItem(6, __qtablewidgetitem47);
-        tableWidget_5->setObjectName(QStringLiteral("tableWidget_5"));
-        tableWidget_5->setGeometry(QRect(0, 0, 501, 192));
-        tableWidget_5->setFrameShape(QFrame::NoFrame);
-        tableWidget_5->verticalHeader()->setVisible(false);
-        tabWidget_cache->addTab(tab_cache_l3, QString());
+        verticalLayout->setStretch(0, 3);
+        verticalLayout->setStretch(1, 6);
 
-        verticalLayout->addWidget(tabWidget_cache);
+        horizontalLayout->addLayout(verticalLayout);
 
+        horizontalLayout->setStretch(0, 8);
+        horizontalLayout->setStretch(1, 5);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QStringLiteral("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1000, 30));
+        menubar->setGeometry(QRect(0, 0, 1920, 30));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuEdt = new QMenu(menubar);
@@ -486,16 +487,18 @@ public:
         menuWindow->setObjectName(QStringLiteral("menuWindow"));
         menuWindow_2 = new QMenu(menubar);
         menuWindow_2->setObjectName(QStringLiteral("menuWindow_2"));
+        menu_Cache = new QMenu(menuWindow_2);
+        menu_Cache->setObjectName(QStringLiteral("menu_Cache"));
         menuHelp = new QMenu(menubar);
         menuHelp->setObjectName(QStringLiteral("menuHelp"));
         MainWindow->setMenuBar(menubar);
         toolBar = new QToolBar(MainWindow);
         toolBar->setObjectName(QStringLiteral("toolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
-        QWidget::setTabOrder(tabWidget_output, tabWidget_editor);
-        QWidget::setTabOrder(tabWidget_editor, tabWidget_pipeline);
-        QWidget::setTabOrder(tabWidget_pipeline, tabWidget_cache);
-        QWidget::setTabOrder(tabWidget_cache, tabWidget_memory);
+        toolBar_2 = new QToolBar(MainWindow);
+        toolBar_2->setObjectName(QStringLiteral("toolBar_2"));
+        MainWindow->addToolBar(Qt::TopToolBarArea, toolBar_2);
+        QWidget::setTabOrder(tabWidget_pipeline, tabWidget_memory);
 
         menubar->addAction(menuFile->menuAction());
         menubar->addAction(menuEdt->menuAction());
@@ -517,12 +520,20 @@ public:
         menuEdt->addAction(actionCopy);
         menuEdt->addAction(actionPaste);
         menuEdt->addAction(actionDelete);
-        menuWindow_2->addAction(actionCache_View);
+        menuWindow_2->addAction(menu_Cache->menuAction());
         menuWindow_2->addAction(actionPipeline);
         menuWindow_2->addAction(actionCode_Examiner);
         menuWindow_2->addAction(actionMemory);
         menuWindow_2->addAction(actionRegister);
         menuWindow_2->addAction(actionConsole);
+        menu_Cache->addAction(actionPredefined);
+        menu_Cache->addSeparator();
+        menu_Cache->addAction(actionAddCache);
+        menu_Cache->addAction(actionRemoveCache);
+        menu_Cache->addAction(actionClearCache);
+        menu_Cache->addSeparator();
+        menu_Cache->addAction(actionFlushCache);
+        menu_Cache->addAction(acitonFlushAllCache);
         menuHelp->addAction(actionPISA_Help);
         menuHelp->addAction(actionAbout_PISA);
         toolBar->addAction(actionnew);
@@ -542,11 +553,11 @@ public:
 
         retranslateUi(MainWindow);
 
+        file_system->setCurrentIndex(2);
         tabWidget_editor->setCurrentIndex(-1);
-        tabWidget_output->setCurrentIndex(1);
+        tabWidget_output->setCurrentIndex(2);
         tabWidget_pipeline->setCurrentIndex(1);
         tabWidget_memory->setCurrentIndex(3);
-        tabWidget_cache->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -559,7 +570,6 @@ public:
         actionSave->setText(QApplication::translate("MainWindow", "&Save", Q_NULLPTR));
         actionSave_As->setText(QApplication::translate("MainWindow", "Sa&ve As", Q_NULLPTR));
         actionNew->setText(QApplication::translate("MainWindow", "&New", Q_NULLPTR));
-        actionCache_View->setText(QApplication::translate("MainWindow", "&Cache", Q_NULLPTR));
         actionPipeline->setText(QApplication::translate("MainWindow", "&Pipeline", Q_NULLPTR));
         actionCode_Examiner->setText(QApplication::translate("MainWindow", "Code &Examiner", Q_NULLPTR));
         actionMemory->setText(QApplication::translate("MainWindow", "&Memory", Q_NULLPTR));
@@ -617,6 +627,20 @@ public:
         actionSave_State_As->setText(QApplication::translate("MainWindow", "Save State As", Q_NULLPTR));
         actionLoad_state->setText(QApplication::translate("MainWindow", "&Load State", Q_NULLPTR));
         actionRestore_State->setText(QApplication::translate("MainWindow", "&Restore State", Q_NULLPTR));
+        actionNew_2->setText(QApplication::translate("MainWindow", "Add", Q_NULLPTR));
+        actionLoad->setText(QApplication::translate("MainWindow", "Default", Q_NULLPTR));
+        actionRestore->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
+        actionSave_As_2->setText(QApplication::translate("MainWindow", "Save As", Q_NULLPTR));
+        actionAddCache->setText(QApplication::translate("MainWindow", "&Add Cache", Q_NULLPTR));
+        actionRemoveCache->setText(QApplication::translate("MainWindow", "&Remove Cache", Q_NULLPTR));
+        actionClearCache->setText(QApplication::translate("MainWindow", "&Clear Cache", Q_NULLPTR));
+        actionPredefined->setText(QApplication::translate("MainWindow", "&Predefined", Q_NULLPTR));
+        actionDefault->setText(QApplication::translate("MainWindow", "&Default", Q_NULLPTR));
+        actionFlushCache->setText(QApplication::translate("MainWindow", "&Flush", Q_NULLPTR));
+        acitonFlushAllCache->setText(QApplication::translate("MainWindow", "F&lush All", Q_NULLPTR));
+        file_system->setTabText(file_system->indexOf(tab_navigation), QApplication::translate("MainWindow", "Navigation", Q_NULLPTR));
+        file_system->setTabText(file_system->indexOf(tab_performance), QApplication::translate("MainWindow", "Performance", Q_NULLPTR));
+        file_system->setTabText(file_system->indexOf(Track), QApplication::translate("MainWindow", "Tracker", Q_NULLPTR));
         tabWidget_output->setTabText(tabWidget_output->indexOf(tab_problems), QApplication::translate("MainWindow", "Problems", Q_NULLPTR));
         tabWidget_output->setTabText(tabWidget_output->indexOf(tab_console), QApplication::translate("MainWindow", "Console", Q_NULLPTR));
         tabWidget_output->setTabText(tabWidget_output->indexOf(tab_screen), QApplication::translate("MainWindow", "Screen", Q_NULLPTR));
@@ -666,72 +690,14 @@ public:
         QTableWidgetItem *___qtablewidgetitem19 = tableWidget_memory->horizontalHeaderItem(4);
         ___qtablewidgetitem19->setText(QApplication::translate("MainWindow", "ASC II", Q_NULLPTR));
         tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_memory), QApplication::translate("MainWindow", "Memory", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem20 = tableWidget->horizontalHeaderItem(0);
-        ___qtablewidgetitem20->setText(QApplication::translate("MainWindow", "Tag", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem21 = tableWidget->horizontalHeaderItem(1);
-        ___qtablewidgetitem21->setText(QApplication::translate("MainWindow", "Set", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem22 = tableWidget->horizontalHeaderItem(2);
-        ___qtablewidgetitem22->setText(QApplication::translate("MainWindow", "LRU", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem23 = tableWidget->horizontalHeaderItem(3);
-        ___qtablewidgetitem23->setText(QApplication::translate("MainWindow", "Word0", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem24 = tableWidget->horizontalHeaderItem(4);
-        ___qtablewidgetitem24->setText(QApplication::translate("MainWindow", "Word1", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem25 = tableWidget->horizontalHeaderItem(5);
-        ___qtablewidgetitem25->setText(QApplication::translate("MainWindow", "Word2", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem26 = tableWidget->horizontalHeaderItem(6);
-        ___qtablewidgetitem26->setText(QApplication::translate("MainWindow", "Word3", Q_NULLPTR));
-        tabWidget_cache->setTabText(tabWidget_cache->indexOf(tab_cache_l1_i), QApplication::translate("MainWindow", "Cache L1(I)", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem27 = tableWidget_3->horizontalHeaderItem(0);
-        ___qtablewidgetitem27->setText(QApplication::translate("MainWindow", "Tag", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem28 = tableWidget_3->horizontalHeaderItem(1);
-        ___qtablewidgetitem28->setText(QApplication::translate("MainWindow", "Set", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem29 = tableWidget_3->horizontalHeaderItem(2);
-        ___qtablewidgetitem29->setText(QApplication::translate("MainWindow", "LRU", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem30 = tableWidget_3->horizontalHeaderItem(3);
-        ___qtablewidgetitem30->setText(QApplication::translate("MainWindow", "Word0", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem31 = tableWidget_3->horizontalHeaderItem(4);
-        ___qtablewidgetitem31->setText(QApplication::translate("MainWindow", "Word1", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem32 = tableWidget_3->horizontalHeaderItem(5);
-        ___qtablewidgetitem32->setText(QApplication::translate("MainWindow", "Word2", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem33 = tableWidget_3->horizontalHeaderItem(6);
-        ___qtablewidgetitem33->setText(QApplication::translate("MainWindow", "Word3", Q_NULLPTR));
-        tabWidget_cache->setTabText(tabWidget_cache->indexOf(tab_cache_l1_d), QApplication::translate("MainWindow", "Cache L1(D)", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem34 = tableWidget_4->horizontalHeaderItem(0);
-        ___qtablewidgetitem34->setText(QApplication::translate("MainWindow", "Tag", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem35 = tableWidget_4->horizontalHeaderItem(1);
-        ___qtablewidgetitem35->setText(QApplication::translate("MainWindow", "Set", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem36 = tableWidget_4->horizontalHeaderItem(2);
-        ___qtablewidgetitem36->setText(QApplication::translate("MainWindow", "LRU", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem37 = tableWidget_4->horizontalHeaderItem(3);
-        ___qtablewidgetitem37->setText(QApplication::translate("MainWindow", "Word0", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem38 = tableWidget_4->horizontalHeaderItem(4);
-        ___qtablewidgetitem38->setText(QApplication::translate("MainWindow", "Word1", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem39 = tableWidget_4->horizontalHeaderItem(5);
-        ___qtablewidgetitem39->setText(QApplication::translate("MainWindow", "Word2", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem40 = tableWidget_4->horizontalHeaderItem(6);
-        ___qtablewidgetitem40->setText(QApplication::translate("MainWindow", "Word3", Q_NULLPTR));
-        tabWidget_cache->setTabText(tabWidget_cache->indexOf(tab_cache_l2), QApplication::translate("MainWindow", "Cache L2", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem41 = tableWidget_5->horizontalHeaderItem(0);
-        ___qtablewidgetitem41->setText(QApplication::translate("MainWindow", "Tag", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem42 = tableWidget_5->horizontalHeaderItem(1);
-        ___qtablewidgetitem42->setText(QApplication::translate("MainWindow", "Set", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem43 = tableWidget_5->horizontalHeaderItem(2);
-        ___qtablewidgetitem43->setText(QApplication::translate("MainWindow", "LRU", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem44 = tableWidget_5->horizontalHeaderItem(3);
-        ___qtablewidgetitem44->setText(QApplication::translate("MainWindow", "Word0", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem45 = tableWidget_5->horizontalHeaderItem(4);
-        ___qtablewidgetitem45->setText(QApplication::translate("MainWindow", "Word1", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem46 = tableWidget_5->horizontalHeaderItem(5);
-        ___qtablewidgetitem46->setText(QApplication::translate("MainWindow", "Word2", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem47 = tableWidget_5->horizontalHeaderItem(6);
-        ___qtablewidgetitem47->setText(QApplication::translate("MainWindow", "Word3", Q_NULLPTR));
-        tabWidget_cache->setTabText(tabWidget_cache->indexOf(tab_cache_l3), QApplication::translate("MainWindow", "Cache L3", Q_NULLPTR));
         menuFile->setTitle(QApplication::translate("MainWindow", "Fi&le", Q_NULLPTR));
         menuEdt->setTitle(QApplication::translate("MainWindow", "E&dt", Q_NULLPTR));
         menuWindow->setTitle(QApplication::translate("MainWindow", "V&iew", Q_NULLPTR));
-        menuWindow_2->setTitle(QApplication::translate("MainWindow", "Wi&ndow", Q_NULLPTR));
+        menuWindow_2->setTitle(QApplication::translate("MainWindow", "Mod&ule", Q_NULLPTR));
+        menu_Cache->setTitle(QApplication::translate("MainWindow", "&Cache", Q_NULLPTR));
         menuHelp->setTitle(QApplication::translate("MainWindow", "Help", Q_NULLPTR));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
+        toolBar_2->setWindowTitle(QApplication::translate("MainWindow", "toolBar_2", Q_NULLPTR));
     } // retranslateUi
 
 };

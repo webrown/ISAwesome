@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <iostream>
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QStandardPaths>
@@ -6,9 +6,11 @@
 #include <QDialog>
 #include "mainwindow.h"
 #include "newfiledialog.h"
+#include "newcachedialog.h"
+#include "cacheview.h"
 #include <QLabel>
 #include <QDesktopServices>
-
+#include <QDebug>
 
 MainWindow::MainWindow( QWidget *parent )
     : QMainWindow( parent )
@@ -24,14 +26,19 @@ MainWindow::MainWindow( QWidget *parent )
     //connect input widget to event handler
     connect(_ui.actionnew, SIGNAL(triggered()), this, SLOT (handleNewButton()));
     connect(_ui.actionNew, SIGNAL(triggered()), this, SLOT (handleNewButton()));
-    connect(_ui.actionopen, SIGNAL(triggered()), this, SLOT (handleOpenButton()));
-    connect(_ui.actionOpen, SIGNAL(triggered()), this, SLOT (handleOpenButton()));
+    connect(_ui.actionopen, SIGNAL(triggered()), this, SLOT (handleOpenButton())); connect(_ui.actionOpen, SIGNAL(triggered()), this, SLOT (handleOpenButton()));
     connect(_ui.actionSave, SIGNAL(triggered()), this, SLOT (handleSaveButton()));
     connect(_ui.actionsave, SIGNAL(triggered()), this, SLOT (handleSaveButton()));
     connect(_ui.actionUndo, SIGNAL(triggered()), this, SLOT (handleUndoButton()));
     connect(_ui.actionRedo, SIGNAL(triggered()), this, SLOT (handleRedoButton()));
     connect(_ui.actionSave_As, SIGNAL(triggered()), this, SLOT (handleSaveAsButton()));
     connect(_ui.actionAbout_PISA, SIGNAL(triggered()), this, SLOT (handleAboutPISAButton()));
+    
+    connect(_ui.actionAddCache, SIGNAL(triggered()), this, SLOT (handleAddCache()));
+    connect(_ui.actionRemoveCache, SIGNAL(triggered()), this, SLOT (handleRemoveCache()));
+    connect(_ui.actionClearCache, SIGNAL(triggered()), this, SLOT (handleClearCache()));
+    connect(_ui.actionFlushCache, SIGNAL(triggered()), this, SLOT (handleFlushCache()));
+    connect(_ui.acitonFlushAllCache, SIGNAL(triggered()), this, SLOT (handleFlushAllCache()));
 
 
     //connect close tab stuff for editor tabs
@@ -58,7 +65,7 @@ MainWindow::~MainWindow()
 }
 
 //handle New Event
-void MainWindow::handleNewButton(){ bool ok;
+void MainWindow::handleNewButton(){
     NewFileDialog dialog(this);
     int result = dialog.exec();
     if(result == QDialog::Accepted){
@@ -185,5 +192,37 @@ void MainWindow::editorModified()
             title = title + "*";
         }
         _ui.tabWidget_editor->setTabText(index,title);
+}
+
+void MainWindow::handleAddCache(){ 
+    NewCacheDialog dialog(computer->topCache, this);
+    int result = dialog.exec();
+    if(result == QDialog::Accepted){
+        CacheInfo info = dialog.getCacheInfo();
+        Cache* cache = new Cache(info.indexBits, info.logDataWordCount, info.logAssociativity,info.delay, info.next);
+        cache->prevCache = info.prev;
+        if(info.next != NULL){
+                info.next->prevCache = cache;
+        }
+        if(info.prev != NULL){
+            info.prev->nextCache = cache;
+        }
+        else{
+            computer->topCache = cache;
+        }
+        _ui.tabWidget_memory->addTab(new CacheView(cache), "AAA");
+    }
+}
+
+void MainWindow::handleRemoveCache(){
+}
+
+void MainWindow::handleClearCache(){
+}
+
+void MainWindow::handleFlushCache(){
+}
+
+void MainWindow::handleFlushAllCache(){
 }
 

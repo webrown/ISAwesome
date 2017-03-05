@@ -20,28 +20,38 @@ RCC_DIR = build
 INCLUDEPATH += .
 
 # Plugins and Library
-QT += widgets
+QT += widgets testlib
 #LIBS += .
 
 #CONFIG setting
-CONFIG += qt debug console
+CONFIG += qt debug console testcase
 
 
 
 # Input
 FORMS 	+=	rsc/ui/pisa.ui \
-                rsc/ui/newfiledialog.ui
+                rsc/ui/newfiledialog.ui \
+                rsc/ui/newcachedialog.ui
 
 HEADERS	+= 	src/gui/mainwindow.h \
 		src/gui/ui_pisa.h \
                 src/gui/ui_newfiledialog.h \
+                src/gui/ui_newcachedialog.h \
 		src/gui/codeeditor.h \
-                src/gui/newfiledialog.h
+                src/gui/newfiledialog.h \
+                src/gui/newcachedialog.h \
+                src/gui/cacheview.h \
+                src/memory/Cache.h \
+                src/memory/CacheResult.h
 
 SOURCES += 	src/main.cpp \ 
 		src/gui/mainwindow.cpp \
 		src/gui/codeeditor.cpp \
-                src/gui/newfiledialog.cpp
+                src/gui/newfiledialog.cpp \
+                src/gui/newcachedialog.cpp \
+                src/gui/cacheview.cpp \
+                src/memory/Cache.cpp \
+                src/memory/CacheResult.cpp
 
 
 RESOURCES += rsc/pisa.qrc

@@ -4,7 +4,7 @@
 #include "assembly.h"
 #include "../instruction/conditionResolver.h"
 #include <QVector>
-#include <Qqueue>
+#include <QQueue>
 #include <QMap>
 #include "../instruction/instructionResolver.h"
 

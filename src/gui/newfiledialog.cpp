@@ -32,6 +32,7 @@ void NewFileDialog::handleRandomButton()
     //QString name = "file" + rand();
     _ui.lineEdit_fileName->setText("file"+QString::number(rand()));
 }
+
 NewFileDialog::~NewFileDialog(){
     //nothing
 }
