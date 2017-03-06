@@ -146,7 +146,6 @@ double Cache::write(QVector<int> *_value, unsigned int address){
   double fetchWait = 0;
   for(int i = 0; i < _value->size(); i++) {
     fetchWait = max(fetchWait, fetch(address+i));
-    cout << "FW:" << fetchWait << endl;
     // Move up in LRU queue.
     updateLRU(address+i);
     // If this is going to change the value, the value is becoming dirty.
