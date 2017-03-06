@@ -193,7 +193,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="3,6">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="3,6,0">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -235,7 +235,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_memory">
         <property name="currentIndex">
-         <number>3</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_register">
          <attribute name="title">
@@ -321,48 +321,6 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_vector">
-         <attribute name="title">
-          <string>Vector</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_8">
-          <item>
-           <widget class="QTableWidget" name="tableWidget_7">
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <attribute name="verticalHeaderVisible">
-             <bool>false</bool>
-            </attribute>
-            <column>
-             <property name="text">
-              <string>Address</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Binary</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Decimal</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Hex</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>ASC II</string>
-             </property>
-            </column>
-           </widget>
-          </item>
-         </layout>
-        </widget>
         <widget class="QWidget" name="tab_memory">
          <attribute name="title">
           <string>Memory</string>
@@ -409,6 +367,9 @@
          </layout>
         </widget>
        </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget" native="true"/>
       </item>
      </layout>
     </item>

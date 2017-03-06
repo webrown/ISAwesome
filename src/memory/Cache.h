@@ -1,18 +1,19 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#include "CacheResult.h"
-#include <string>
+#include "QueryResult.h"
+#include "MemoryInterface.h"
+#include <QString>
 #include <vector>
-#include "../gui/CacheView.h"
 
 using namespace std;
+class CacheView;
 
 enum CacheType{
     DATA, INSTRUCTION, BOTH
 };
 
-class Cache{
+class Cache : MemoryInterface{
   public:
     CacheType type = BOTH;
     CacheView* view = NULL;
@@ -22,27 +23,27 @@ class Cache{
     double delay;
     Cache *prevCache = NULL;
     Cache *nextCache = NULL;
-    vector< vector<int> * > *tags;
-    vector< vector< vector<int> * > * > *contents;
-    vector< vector<int> * > *LRU;
-    vector< vector<int> * > *dirty;
-    vector< vector<int> * > *valid;
+    QVector< QVector<int> * > *tags;
+    QVector< QVector< QVector<int> * > * > *contents;
+    QVector< QVector<int> * > *LRU;
+    QVector< QVector<int> * > *dirty;
+    QVector< QVector<int> * > *valid;
     Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache);
     ~Cache();
-    CacheResult *read(unsigned int address, unsigned int length);
-    CacheResult *read(unsigned int address);
-    double write(vector<int> *value, unsigned int address);
+    QueryResult *read(unsigned int address, unsigned int length);
+    QueryResult *read(unsigned int address);
+    double write(QVector<int> *value, unsigned int address);
     double write(int value, unsigned int address);
-    string *save();
-    void restore(string *state);
-    vector<int> *splitAddress(unsigned int address);
+    QString *save();
+    void restore(QString *state);
+    QVector<int> *splitAddress(unsigned int address);
     int addressWay(unsigned int address);
     double fetch(unsigned int address);
     unsigned int firstInLine(unsigned int address);
     void updateLRU(unsigned int address);
     unsigned int getLRUWay(unsigned int index);
     unsigned int buildAddress(unsigned int tag, unsigned int index, unsigned int offset);
-    string toTable();
+    QString toTable();
     size_t maxLength(unsigned int startAddress);
 };
 

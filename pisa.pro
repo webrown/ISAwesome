@@ -42,7 +42,7 @@ HEADERS	+= 	src/gui/mainwindow.h \
                 src/gui/newcachedialog.h \
                 src/gui/cacheview.h \
                 src/memory/Cache.h \
-                src/memory/CacheResult.h
+                src/memory/QueryResult.h
 
 SOURCES += 	src/main.cpp \ 
 		src/gui/mainwindow.cpp \
@@ -51,7 +51,7 @@ SOURCES += 	src/main.cpp \
                 src/gui/newcachedialog.cpp \
                 src/gui/cacheview.cpp \
                 src/memory/Cache.cpp \
-                src/memory/CacheResult.cpp
+                src/memory/QueryResult.cpp
 
 
 RESOURCES += rsc/pisa.qrc

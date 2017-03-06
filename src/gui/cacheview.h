@@ -3,14 +3,14 @@
 
 
 #include <QTableWidget>
-#include "../memory/Cache.h"
+class Cache;
 
 class CacheView : public QTableWidget
 {
     Q_OBJECT
 
 public:
-        Cache* cache;
+    Cache* cache;
     CacheView(Cache* cache);
     ~CacheView();
     void update();

@@ -13,30 +13,30 @@ Cache::Cache(int indexBits, int logDataWordCount, int logAssociativity, double d
   this->delay = delay;
   this->logAssociativity = logAssociativity;
 
-  // Set up the cache vectors.
-  tags = new vector< vector<int> * >();
-  contents = new vector< vector< vector<int> * > * >();
-  LRU = new vector< vector<int> * >();
-  dirty = new vector< vector<int> * >();
-  valid = new vector< vector<int> * >();
+  // Set up the cache QVectors.
+  tags = new QVector< QVector<int> * >();
+  contents = new QVector< QVector< QVector<int> * > * >();
+  LRU = new QVector< QVector<int> * >();
+  dirty = new QVector< QVector<int> * >();
+  valid = new QVector< QVector<int> * >();
   size_t maxIndex = 1 << indexBits;
   size_t ways = 1 << logAssociativity;
   size_t dataWordCount = 1 << logDataWordCount;
   for(size_t index = 0; index < maxIndex; index++) {
     // Add tag bits.
-    tags->push_back(new vector<int>(ways, 0));
+    tags->push_back(new QVector<int>(ways, 0));
     // Add content cells.
-    vector< vector<int> * > *newContent = new vector<vector<int> * >();
+    QVector< QVector<int> * > *newContent = new QVector<QVector<int> * >();
     for(size_t way = 0; way < ways; way++) {
-      newContent->push_back(new vector<int>(dataWordCount, 0));
+      newContent->push_back(new QVector<int>(dataWordCount, 0));
     }
     contents->push_back(newContent);
     // Add LRU bit
-    LRU->push_back(new vector<int>(ways, 0));
+    LRU->push_back(new QVector<int>(ways, 0));
     // Add dirty bit
-    dirty->push_back(new vector<int>(ways, 0));
+    dirty->push_back(new QVector<int>(ways, 0));
     // Add valid bit
-    valid->push_back(new vector<int>(ways, 0));
+    valid->push_back(new QVector<int>(ways, 0));
   }
 }
 
@@ -76,17 +76,17 @@ unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned 
   return (tag << (indexBits + logDataWordCount)) | (index << logDataWordCount) | offset;
 }
 
-CacheResult *Cache::read(unsigned int address, unsigned int length){
+QueryResult *Cache::read(unsigned int address, unsigned int length){
   // Hardware constraint:  Can't parallel load more values than there are in the cache.
   int mL = maxLength(address);
   if(length > mL) {
     length = mL;
-    cout << "WARNING:  read given too large a vector, shrinking size to " << mL << "." << endl;
+    cout << "WARNING:  read given too large a QVector, shrinking size to " << mL << "." << endl;
   }
   double wait = delay;
   // Get these values into the cache if they are not already.
   double fetchWait = 0;
-  vector<int> *data = new vector<int>();
+  QVector<int> *data = new QVector<int>();
   for(int i = address; i < address+length; i++) {
     // TODO May be able to be optimized later; often tag and index won't change for long periods of time.
     fetchWait = max(fetchWait, fetch(i));
@@ -94,7 +94,7 @@ CacheResult *Cache::read(unsigned int address, unsigned int length){
     updateLRU(i);
     // Read value.
     int way = addressWay(i);
-    vector<int> *tagIndOff = splitAddress(i);
+    QVector<int> *tagIndOff = splitAddress(i);
     int index = tagIndOff->at(1);
     int offset = tagIndOff->at(2);
     delete tagIndOff;
@@ -102,12 +102,12 @@ CacheResult *Cache::read(unsigned int address, unsigned int length){
   }
   // All fetches happened in parallel.
   wait += fetchWait;
-  CacheResult *result = new CacheResult(*data, wait);
+  QueryResult *result = new QueryResult(*data, wait);
   delete data;
   return result;
 }
 
-CacheResult *Cache::read(unsigned int address){
+QueryResult *Cache::read(unsigned int address){
   return read(address, 1);
 }
 
@@ -120,14 +120,18 @@ size_t Cache::maxLength(unsigned int startAddress){
   return result;
 }
 
-double Cache::write(vector<int> *value, unsigned int address){
+double Cache::write(QVector<int> *_value, unsigned int address){
   int mL = maxLength(address);
   int mustDeleteValue = 0;
-  if(value->size() > mL) {
-    value = new vector<int>(value->begin(), value->begin()+mL);
-    // You'll have to clean up this new vector later!
+  if(_value->size() > mL) {
+    QVector<int>* value = new QVector<int>(mL);
+      for(int i =0; i < mL; i++){
+          value->append(_value->at(i));
+      } 
+      _value = value;
+    // You'll have to clean up this new QVector later!
     mustDeleteValue = 1;
-    cout << "WARNING:  write given too large a vector, shrinking size to " << mL << "." << endl;
+    cout << "WARNING:  write given too large a QVector, shrinking size to " << mL << "." << endl;
   }
 #if 0
   cout << "Cache::write value = ";
@@ -140,26 +144,26 @@ double Cache::write(vector<int> *value, unsigned int address){
   double wait = delay;
   // Get the value you want into cache.
   double fetchWait = 0;
-  for(int i = 0; i < value->size(); i++) {
+  for(int i = 0; i < _value->size(); i++) {
     fetchWait = max(fetchWait, fetch(address+i));
     cout << "FW:" << fetchWait << endl;
     // Move up in LRU queue.
     updateLRU(address+i);
     // If this is going to change the value, the value is becoming dirty.
-    vector<int> *tagIndOff = splitAddress(address+i);
+    QVector<int> *tagIndOff = splitAddress(address+i);
     int index = tagIndOff->at(1);
     int offset = tagIndOff->at(2);
     delete tagIndOff;
     int way = addressWay(address+i);
-    if(contents->at(index)->at(way)->at(offset) != value->at(i)) {
-      dirty->at(index)->at(way) = 1;
+    if(contents->at(index)->at(way)->at(offset) != _value->at(i)) {
+      dirty->at(index)->replace(way,1);
       // Write to the specified index.
-      contents->at(index)->at(way)->at(offset) = value->at(i);
+      contents->at(index)->at(way)->replace(offset,_value->at(i));
     }
   }
   wait += fetchWait;
   if(mustDeleteValue) {
-    delete value;
+    delete _value;
   }
   // Tell the layer above how long this took.
   return wait;
@@ -168,7 +172,7 @@ double Cache::write(vector<int> *value, unsigned int address){
 int Cache::addressWay(unsigned int address){
   // Returns the associative way that a certain address is at.
   // If there is no way, return -1.
-  vector<int> *tagIndOff = splitAddress(address);
+  QVector<int> *tagIndOff = splitAddress(address);
   int tag = tagIndOff->at(0);
   int index = tagIndOff->at(1);
   delete tagIndOff;
@@ -187,14 +191,14 @@ int Cache::addressWay(unsigned int address){
 }
 
 double Cache::write(int input, unsigned int address){
-  vector<int> *tinyVector = new vector<int>(1, input);
-  double result = write(tinyVector, address);
-  delete tinyVector;
+  QVector<int> *tinyQVector = new QVector<int>(1, input);
+  double result = write(tinyQVector, address);
+  delete tinyQVector;
   return result;
 }
 
-string *Cache::save(){
-  string *result = new string();
+QString *Cache::save(){
+  QString *result = new QString();
   for(int ind = 0; ind < contents->size(); ind++) {
     for(int way = 0; way < contents->at(0)->size(); way++) {
       // Record contents
@@ -214,7 +218,7 @@ string *Cache::save(){
   return result;
 }
 
-void Cache::restore(string *state){
+void Cache::restore(QString *state){
   if(!state) {
     return;
   }
@@ -226,28 +230,28 @@ void Cache::restore(string *state){
         if(stateIndex == state->size()) {
           return;
         }
-        contents->at(ind)->at(way)->at(offset) = state->at(stateIndex++);
+        contents->at(ind)->at(way)->replace(offset,state->at(stateIndex++).digitValue());
       }
       // Place in dirty.
       if(stateIndex == state->size()) {
         return;
       }
-      dirty->at(ind)->at(way) = state->at(stateIndex++);
+      dirty->at(ind)->replace(way,state->at(stateIndex++).digitValue());
       // Place in LRU.
       if(stateIndex == state->size()) {
         return;
       }
-      LRU->at(ind)->at(way) = state->at(stateIndex++);
+      LRU->at(ind)->replace(way,state->at(stateIndex++).digitValue());
       // Place in tag.
       if(stateIndex == state->size()) {
         return;
       }
-      tags->at(ind)->at(way) = state->at(stateIndex++);
+      tags->at(ind)->replace(way,state->at(stateIndex++).digitValue());
       // Place in valid.
       if(stateIndex == state->size()) {
         return;
       }
-      valid->at(ind)->at(way) = state->at(stateIndex++);
+      valid->at(ind)->replace(way,state->at(stateIndex++).digitValue());
     }
   }
 }
@@ -276,7 +280,7 @@ void Cache::updateLRU(unsigned int address){
   if(way == -1) {
     return;
   }
-  vector<int> *tagIndOff = splitAddress(address);
+  QVector<int> *tagIndOff = splitAddress(address);
   int index = tagIndOff->at(1);
   delete tagIndOff;
   // What is your current spot in the queue?
@@ -284,11 +288,11 @@ void Cache::updateLRU(unsigned int address){
   // Anyone in font of you just got cut.
   for(int i = 0; i < LRU->at(0)->size(); i++) {
     if(LRU->at(index)->at(i) <= queuePosition) {
-      LRU->at(index)->at(i)++;
+      LRU->at(index)->replace(i, LRU->at(index)->at(i)+1);
     }
   }
   // Move to the front of the queue.
-  LRU->at(index)->at(way) = 0;
+  LRU->at(index)->replace(way, 0);
 }
 
 double Cache::fetch(unsigned int address){
@@ -302,7 +306,7 @@ double Cache::fetch(unsigned int address){
     return 0;
   }
   double wait = 0;
-  vector<int> *tagIndOff = splitAddress(address);
+  QVector<int> *tagIndOff = splitAddress(address);
   int index = tagIndOff->at(1);
   int tag = tagIndOff->at(0);
   delete tagIndOff;
@@ -316,56 +320,56 @@ double Cache::fetch(unsigned int address){
     wait += nextCache->write(contents->at(index)->at(way), firstEvictedAddress);
   }
   // Set tag and valid bits
-  tags->at(index)->at(way) = tag;
-  valid->at(index)->at(way) = 1;
+  tags->at(index)->replace(way, tag);
+  valid->at(index)->replace(way, 1);
   // Get value from below.
   if(nextCache) {
-    CacheResult *resultFromBelow = nextCache->read(firstInLine(address), contents->at(0)->at(0)->size());
-    for(int i = 0; i < contents->at(0)->at(0)->size(); i++) {
-      contents->at(index)->at(way)->at(i) = resultFromBelow->result.at(i);
+    QueryResult *resultFromBelow = nextCache->read(firstInLine(address), contents->at(0)->at(0)->size());
+   for(int i = 0; i < contents->at(0)->at(0)->size(); i++) {
+      contents->at(index)->at(way)->replace(i,resultFromBelow->result.at(i));
     }
     wait += resultFromBelow->time;
     // This is newly fetched, so it's clean.
-    dirty->at(index)->at(way) = 0;
+    dirty->at(index)->replace(way,0);
     delete resultFromBelow;
   }
   return wait;
 }
 
 
-vector<int> *Cache::splitAddress(unsigned int address){
-  // Returns three-long vector:
+QVector<int> *Cache::splitAddress(unsigned int address){
+  // Returns three-long QVector:
   // [0] - tag
   // [1] - index
   // [2] - offset
-  vector<int> *result = new vector<int>();
+  QVector<int> *result = new QVector<int>();
   result->push_back(address >> (indexBits + logDataWordCount));
   result->push_back((address >> (logDataWordCount)) % (1 << indexBits));
   result->push_back(address % (1 << (logDataWordCount)));
   return result;
 }
 
-string Cache::toTable() {
-  stringstream result;
-  result << "tag\tind\tdirty\tLRU\tvalid\tD0add\t";
-  for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-    result << "D" << offset << "\t";
-  }
-  result << endl;
-  for(int ind = 0; ind < contents->size(); ind++) {
-    for(int way = 0; way < contents->at(0)->size(); way++) {
-      result 
-        << tags->at(ind)->at(way) << "\t" 
-        << ind << "\t" 
-        << dirty->at(ind)->at(way) << "\t"
-        << LRU->at(ind)->at(way) << "\t"
-        << valid->at(ind)->at(way) << "\t"
-        << buildAddress(tags->at(ind)->at(way), ind, 0) << "\t";
-      for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-        result << contents->at(ind)->at(way)->at(offset) << "\t";
-      }
-      result << endl;
-    }
-  }
-  return result.str();
-}
+// QString Cache::toTable() {
+//   QStringstream result;
+//   result << "tag\tind\tdirty\tLRU\tvalid\tD0add\t";
+//   for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
+//     result << "D" << offset << "\t";
+//   }
+//   result << endl;
+//   for(int ind = 0; ind < contents->size(); ind++) {
+//     for(int way = 0; way < contents->at(0)->size(); way++) {
+//       result
+//         << tags->at(ind)->at(way) << "\t"
+//         << ind << "\t"
+//         << dirty->at(ind)->at(way) << "\t"
+//         << LRU->at(ind)->at(way) << "\t"
+//         << valid->at(ind)->at(way) << "\t"
+//         << buildAddress(tags->at(ind)->at(way), ind, 0) << "\t";
+//       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
+//         result << contents->at(ind)->at(way)->at(offset) << "\t";
+//       }
+//       result << endl;
+//     }
+//   }
+//   return result.str();
+/* } */

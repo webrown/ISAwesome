@@ -1,11 +1,14 @@
 #include "cacheview.h"
 #include <QHeaderView>
 #include <QDebug>
+#include "../memory/Cache.h"
 
 #define NUMBER_OF_DEFAULT_HEADERS 5
 
+
 CacheView::CacheView(Cache* cache){
     this->cache = cache;
+    cache->view = this;
     size_t dataWordCount =1<< cache->logDataWordCount;
     size_t ways = 1<< cache->logAssociativity;
     size_t maxIndex = 1 << cache->indexBits;

@@ -104,12 +104,10 @@ public:
     QWidget *tab_flag;
     QVBoxLayout *verticalLayout_9;
     QTableWidget *tableWidget_8;
-    QWidget *tab_vector1;
-    QVBoxLayout *verticalLayout_8;
-    QTableWidget *tableWidget_7;
     QWidget *tab_memory;
     QVBoxLayout *verticalLayout_7;
     QTableWidget *tableWidget_memory;
+    QWidget *widget;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdt;
@@ -416,30 +414,6 @@ public:
         verticalLayout_9->addWidget(tableWidget_8);
 
         tabWidget_memory->addTab(tab_flag, QString());
-        tab_vector1 = new QWidget();
-        tab_vector1->setObjectName(QStringLiteral("tab_vector1"));
-        verticalLayout_8 = new QVBoxLayout(tab_vector1);
-        verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
-        tableWidget_7 = new QTableWidget(tab_vector1);
-        if (tableWidget_7->columnCount() < 5)
-            tableWidget_7->setColumnCount(5);
-        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
-        tableWidget_7->setHorizontalHeaderItem(0, __qtablewidgetitem10);
-        QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
-        tableWidget_7->setHorizontalHeaderItem(1, __qtablewidgetitem11);
-        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
-        tableWidget_7->setHorizontalHeaderItem(2, __qtablewidgetitem12);
-        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
-        tableWidget_7->setHorizontalHeaderItem(3, __qtablewidgetitem13);
-        QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
-        tableWidget_7->setHorizontalHeaderItem(4, __qtablewidgetitem14);
-        tableWidget_7->setObjectName(QStringLiteral("tableWidget_7"));
-        tableWidget_7->setFrameShape(QFrame::NoFrame);
-        tableWidget_7->verticalHeader()->setVisible(false);
-
-        verticalLayout_8->addWidget(tableWidget_7);
-
-        tabWidget_memory->addTab(tab_vector1, QString());
         tab_memory = new QWidget();
         tab_memory->setObjectName(QStringLiteral("tab_memory"));
         verticalLayout_7 = new QVBoxLayout(tab_memory);
@@ -447,16 +421,16 @@ public:
         tableWidget_memory = new QTableWidget(tab_memory);
         if (tableWidget_memory->columnCount() < 5)
             tableWidget_memory->setColumnCount(5);
-        QTableWidgetItem *__qtablewidgetitem15 = new QTableWidgetItem();
-        tableWidget_memory->setHorizontalHeaderItem(0, __qtablewidgetitem15);
-        QTableWidgetItem *__qtablewidgetitem16 = new QTableWidgetItem();
-        tableWidget_memory->setHorizontalHeaderItem(1, __qtablewidgetitem16);
-        QTableWidgetItem *__qtablewidgetitem17 = new QTableWidgetItem();
-        tableWidget_memory->setHorizontalHeaderItem(2, __qtablewidgetitem17);
-        QTableWidgetItem *__qtablewidgetitem18 = new QTableWidgetItem();
-        tableWidget_memory->setHorizontalHeaderItem(3, __qtablewidgetitem18);
-        QTableWidgetItem *__qtablewidgetitem19 = new QTableWidgetItem();
-        tableWidget_memory->setHorizontalHeaderItem(4, __qtablewidgetitem19);
+        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
+        tableWidget_memory->setHorizontalHeaderItem(0, __qtablewidgetitem10);
+        QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
+        tableWidget_memory->setHorizontalHeaderItem(1, __qtablewidgetitem11);
+        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
+        tableWidget_memory->setHorizontalHeaderItem(2, __qtablewidgetitem12);
+        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
+        tableWidget_memory->setHorizontalHeaderItem(3, __qtablewidgetitem13);
+        QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
+        tableWidget_memory->setHorizontalHeaderItem(4, __qtablewidgetitem14);
         tableWidget_memory->setObjectName(QStringLiteral("tableWidget_memory"));
         tableWidget_memory->setFrameShape(QFrame::NoFrame);
         tableWidget_memory->setRowCount(0);
@@ -467,6 +441,11 @@ public:
         tabWidget_memory->addTab(tab_memory, QString());
 
         verticalLayout->addWidget(tabWidget_memory);
+
+        widget = new QWidget(centralwidget);
+        widget->setObjectName(QStringLiteral("widget"));
+
+        verticalLayout->addWidget(widget);
 
         verticalLayout->setStretch(0, 3);
         verticalLayout->setStretch(1, 6);
@@ -557,7 +536,7 @@ public:
         tabWidget_editor->setCurrentIndex(-1);
         tabWidget_output->setCurrentIndex(2);
         tabWidget_pipeline->setCurrentIndex(1);
-        tabWidget_memory->setCurrentIndex(3);
+        tabWidget_memory->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -668,27 +647,16 @@ public:
         QTableWidgetItem *___qtablewidgetitem9 = tableWidget_8->horizontalHeaderItem(4);
         ___qtablewidgetitem9->setText(QApplication::translate("MainWindow", "ASC II", Q_NULLPTR));
         tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_flag), QApplication::translate("MainWindow", "Flag", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem10 = tableWidget_7->horizontalHeaderItem(0);
+        QTableWidgetItem *___qtablewidgetitem10 = tableWidget_memory->horizontalHeaderItem(0);
         ___qtablewidgetitem10->setText(QApplication::translate("MainWindow", "Address", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem11 = tableWidget_7->horizontalHeaderItem(1);
+        QTableWidgetItem *___qtablewidgetitem11 = tableWidget_memory->horizontalHeaderItem(1);
         ___qtablewidgetitem11->setText(QApplication::translate("MainWindow", "Binary", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem12 = tableWidget_7->horizontalHeaderItem(2);
+        QTableWidgetItem *___qtablewidgetitem12 = tableWidget_memory->horizontalHeaderItem(2);
         ___qtablewidgetitem12->setText(QApplication::translate("MainWindow", "Decimal", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem13 = tableWidget_7->horizontalHeaderItem(3);
+        QTableWidgetItem *___qtablewidgetitem13 = tableWidget_memory->horizontalHeaderItem(3);
         ___qtablewidgetitem13->setText(QApplication::translate("MainWindow", "Hex", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem14 = tableWidget_7->horizontalHeaderItem(4);
+        QTableWidgetItem *___qtablewidgetitem14 = tableWidget_memory->horizontalHeaderItem(4);
         ___qtablewidgetitem14->setText(QApplication::translate("MainWindow", "ASC II", Q_NULLPTR));
-        tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_vector1), QApplication::translate("MainWindow", "Vector", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem15 = tableWidget_memory->horizontalHeaderItem(0);
-        ___qtablewidgetitem15->setText(QApplication::translate("MainWindow", "Address", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem16 = tableWidget_memory->horizontalHeaderItem(1);
-        ___qtablewidgetitem16->setText(QApplication::translate("MainWindow", "Binary", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem17 = tableWidget_memory->horizontalHeaderItem(2);
-        ___qtablewidgetitem17->setText(QApplication::translate("MainWindow", "Decimal", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem18 = tableWidget_memory->horizontalHeaderItem(3);
-        ___qtablewidgetitem18->setText(QApplication::translate("MainWindow", "Hex", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem19 = tableWidget_memory->horizontalHeaderItem(4);
-        ___qtablewidgetitem19->setText(QApplication::translate("MainWindow", "ASC II", Q_NULLPTR));
         tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_memory), QApplication::translate("MainWindow", "Memory", Q_NULLPTR));
         menuFile->setTitle(QApplication::translate("MainWindow", "Fi&le", Q_NULLPTR));
         menuEdt->setTitle(QApplication::translate("MainWindow", "E&dt", Q_NULLPTR));

@@ -211,6 +211,11 @@ void MainWindow::handleAddCache(){
             computer->topCache = cache;
         }
         _ui.tabWidget_memory->addTab(new CacheView(cache), "AAA");
+
+        int index = 1;
+        for(Cache* curr = computer->topCache; curr != NULL; curr = curr->nextCache){
+            _ui.tabWidget_memory->setTabText(_ui.tabWidget_memory->indexOf(curr->view),(new QString("Cache %1(BOTH)"))->arg(index++));
+        }   
     }
 }
 

@@ -55,7 +55,7 @@ SOURCES       = src/main.cpp \
 		src/gui/newcachedialog.cpp \
 		src/gui/cacheview.cpp \
 		src/memory/Cache.cpp \
-		src/memory/CacheResult.cpp build/qrc_pisa.cpp \
+		src/memory/QueryResult.cpp build/qrc_pisa.cpp \
 		build/moc_mainwindow.cpp \
 		build/moc_codeeditor.cpp \
 		build/moc_newfiledialog.cpp \
@@ -68,7 +68,7 @@ OBJECTS       = build/main.o \
 		build/newcachedialog.o \
 		build/cacheview.o \
 		build/Cache.o \
-		build/CacheResult.o \
+		build/QueryResult.o \
 		build/qrc_pisa.o \
 		build/moc_mainwindow.o \
 		build/moc_codeeditor.o \
@@ -278,14 +278,14 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/newcachedialog.h \
 		src/gui/cacheview.h \
 		src/memory/Cache.h \
-		src/memory/CacheResult.h src/main.cpp \
+		src/memory/QueryResult.h src/main.cpp \
 		src/gui/mainwindow.cpp \
 		src/gui/codeeditor.cpp \
 		src/gui/newfiledialog.cpp \
 		src/gui/newcachedialog.cpp \
 		src/gui/cacheview.cpp \
 		src/memory/Cache.cpp \
-		src/memory/CacheResult.cpp
+		src/memory/QueryResult.cpp
 QMAKE_TARGET  = pisa
 DESTDIR       = bin/
 TARGET        = bin/pisa
@@ -715,8 +715,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/gui/mainwindow.h src/gui/ui_pisa.h src/gui/ui_newfiledialog.h src/gui/ui_newcachedialog.h src/gui/codeeditor.h src/gui/newfiledialog.h src/gui/newcachedialog.h src/gui/cacheview.h src/memory/Cache.h src/memory/CacheResult.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/gui/mainwindow.cpp src/gui/codeeditor.cpp src/gui/newfiledialog.cpp src/gui/newcachedialog.cpp src/gui/cacheview.cpp src/memory/Cache.cpp src/memory/CacheResult.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/gui/mainwindow.h src/gui/ui_pisa.h src/gui/ui_newfiledialog.h src/gui/ui_newcachedialog.h src/gui/codeeditor.h src/gui/newfiledialog.h src/gui/newcachedialog.h src/gui/cacheview.h src/memory/Cache.h src/memory/QueryResult.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/gui/mainwindow.cpp src/gui/codeeditor.cpp src/gui/newfiledialog.cpp src/gui/newcachedialog.cpp src/gui/cacheview.cpp src/memory/Cache.cpp src/memory/QueryResult.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/pisa.ui rsc/ui/newfiledialog.ui rsc/ui/newcachedialog.ui $(DISTDIR)/
 
 
@@ -773,7 +773,7 @@ build/moc_mainwindow.cpp: src/gui/codeeditor.h \
 		src/gui/ui_pisa.h \
 		src/computer.h \
 		src/memory/Cache.h \
-		src/memory/CacheResult.h \
+		src/memory/QueryResult.h \
 		src/assembler/assembler.h \
 		src/assembler/assembly.h \
 		src/instruction/conditionResolver.h \
@@ -797,15 +797,13 @@ build/moc_newfiledialog.cpp: src/gui/ui_newfiledialog.h \
 
 build/moc_newcachedialog.cpp: src/gui/ui_newcachedialog.h \
 		src/memory/Cache.h \
-		src/memory/CacheResult.h \
+		src/memory/QueryResult.h \
 		src/gui/newcachedialog.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/newcachedialog.h -o build/moc_newcachedialog.cpp
 
-build/moc_cacheview.cpp: src/memory/Cache.h \
-		src/memory/CacheResult.h \
-		src/gui/cacheview.h \
+build/moc_cacheview.cpp: src/gui/cacheview.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/cacheview.h -o build/moc_cacheview.cpp
@@ -842,7 +840,7 @@ build/main.o: src/main.cpp src/gui/mainwindow.h \
 		src/gui/ui_pisa.h \
 		src/computer.h \
 		src/memory/Cache.h \
-		src/memory/CacheResult.h \
+		src/memory/QueryResult.h \
 		src/assembler/assembler.h \
 		src/assembler/assembly.h \
 		src/instruction/conditionResolver.h \
@@ -855,7 +853,7 @@ build/mainwindow.o: src/gui/mainwindow.cpp src/gui/mainwindow.h \
 		src/gui/ui_pisa.h \
 		src/computer.h \
 		src/memory/Cache.h \
-		src/memory/CacheResult.h \
+		src/memory/QueryResult.h \
 		src/assembler/assembler.h \
 		src/assembler/assembly.h \
 		src/instruction/conditionResolver.h \
@@ -878,20 +876,20 @@ build/newfiledialog.o: src/gui/newfiledialog.cpp src/gui/newfiledialog.h \
 build/newcachedialog.o: src/gui/newcachedialog.cpp src/gui/newcachedialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/memory/Cache.h \
-		src/memory/CacheResult.h
+		src/memory/QueryResult.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/newcachedialog.o src/gui/newcachedialog.cpp
 
 build/cacheview.o: src/gui/cacheview.cpp src/gui/cacheview.h \
 		src/memory/Cache.h \
-		src/memory/CacheResult.h
+		src/memory/QueryResult.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/cacheview.o src/gui/cacheview.cpp
 
 build/Cache.o: src/memory/Cache.cpp src/memory/Cache.h \
-		src/memory/CacheResult.h
+		src/memory/QueryResult.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Cache.o src/memory/Cache.cpp
 
-build/CacheResult.o: src/memory/CacheResult.cpp src/memory/CacheResult.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CacheResult.o src/memory/CacheResult.cpp
+build/QueryResult.o: src/memory/QueryResult.cpp src/memory/QueryResult.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/QueryResult.o src/memory/QueryResult.cpp
 
 build/qrc_pisa.o: build/qrc_pisa.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_pisa.o build/qrc_pisa.cpp
