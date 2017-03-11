@@ -1,7 +1,0 @@
-SEQ VA             ; vector A is [0,1,2,3...63]
-CMP #0x21 VA       ; Compare all elements of vector A against 17.  Your array is
-                   ; 17 elements.
-CPY #0x12345678 R1 ; Write #0x12345678 to R1, this is the address you want to
-                   ; read.
-LODLE R1 VA        ; In every case where the element in A was less than or equal
-                   ; to 17 (indexes 0...17), load from memory into vector A.
