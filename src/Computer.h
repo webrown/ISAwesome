@@ -5,7 +5,6 @@
 #include "memory/Cache.h"
 #include "memory/Register.h"
 #include "memory/MainMemory.h"
-#include "assembler/assembler.h"
 
 class Computer{
     public:
@@ -47,8 +46,5 @@ class Computer{
          */
         void init();
 
-    private:
-        static bool isInitialized;
 };   
-
 #endif
