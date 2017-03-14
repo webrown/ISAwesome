@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+qmake -project "DESTDIR = bin
+OBJECTS_DIR = build
+UI_DIR = src/gui
+MOC_DIR = build
+RCC_DIR = build
+
+QT += widgets testlib
+CONFIG += qt debug console testlib"
+
+

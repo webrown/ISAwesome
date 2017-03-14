@@ -1,19 +1,15 @@
-#ifndef ERROR_H
-#define ERROR_H 
+#ifndef WARNING_H
+#define WARNING_H 
 #include <QString>
 #include <QDebug>
 
-/* Contain error generated during assembly
-*/
-class Error{
+class Warning{
     public:
         int docNumber;
         int lineNumber;
         int wordNumber;
         QString cause;
-
-        //If wordNumber = -1, then whole line has problem
-        Error(QString cause, int docNumber, int lineNumber, int wordNumber = -1){
+        Warning(QString cause, int docNumber, int lineNumber, int wordNumber){
             docNumber = docNumber;
             lineNumber = lineNumber;
             wordNumber = wordNumber;
@@ -21,8 +17,8 @@ class Error{
             qDebug() << "Document Number: " << docNumber << endl;
             qDebug() << "Line Number: " << lineNumber << " \tWord Number: " << wordNumber << endl;
             qDebug() << "cause:\n" << cause <<endl;
-        }
 
+        }
 };
 #endif
 

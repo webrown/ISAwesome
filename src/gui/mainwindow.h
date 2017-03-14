@@ -7,7 +7,7 @@
 #include <QPlainTextEdit>
 #include "codeeditor.h"
 #include "ui_pisa.h"
-#include "../computer.h"
+#include "../Computer.h"
 
 class MainWindow : public QMainWindow
 {
