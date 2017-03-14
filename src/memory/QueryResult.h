@@ -16,6 +16,7 @@ class QueryResult{
     QueryResult(QVector<int> result, double time);
     QueryResult(QVector<float> result, double time);
     int at(int index);
+    float at(int index);
     size_t size();
 };
 #endif

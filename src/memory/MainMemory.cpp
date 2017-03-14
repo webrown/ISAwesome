@@ -1,0 +1,30 @@
+#include "MainMemory.h"
+#include "../architecture.h"
+#include <QDebug>
+
+MainMemory::MainMemory(){
+    qDebug() << "MainMemory generated" << endl;
+}
+
+MainMemory::~MainMemory(){
+    qDebug() << "MainMemory destroyed" << endl;
+}
+
+QueryResult* MainMemory::read(unsigned int address, unsigned int length){
+    if(length != VECTOR_SIZE && length != 1){
+        qDebug() << "Invalid Access: length has to be 1 or " << VECTOR_SIZE << endl;
+        exit(-1);
+    }
+    qDebug() << address << length << endl;
+    return NULL;
+}
+
+QueryResult* MainMemory::read(unsigned int address){
+    return read(address, 1);
+}
+
+double MainMemory::write(QVector<int> *value, unsigned int address){
+    qDebug() << value << address << endl;
+    return 0;
+}
+
