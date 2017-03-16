@@ -7,20 +7,20 @@
 */
 class Error{
     public:
-        int docNumber;
         int lineNumber;
         int wordNumber;
-        QString cause;
+        QString cause, fileName;
 
         //If wordNumber = -1, then whole line has problem
-        Error(QString cause, int docNumber, int lineNumber, int wordNumber = -1){
-            docNumber = docNumber;
-            lineNumber = lineNumber;
-            wordNumber = wordNumber;
-            cause = cause;
-            qDebug() << "Document Number: " << docNumber << endl;
-            qDebug() << "Line Number: " << lineNumber << " \tWord Number: " << wordNumber << endl;
-            qDebug() << "cause:\n" << cause <<endl;
+        Error(QString cause, QString fileName, int lineNumber, int wordNumber = -1){
+            this->fileName = fileName;
+            this->lineNumber = lineNumber;
+            this->wordNumber = wordNumber;
+            this->cause = cause;
+            qDebug() << "File Name: " << fileName;
+            qDebug() << "Line Number: " << lineNumber << " \tWord Number: " << wordNumber;
+            qDebug() << "cause:" << cause;
+
         }
 
 };

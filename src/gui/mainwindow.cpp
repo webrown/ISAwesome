@@ -1,21 +1,21 @@
-#include <iostream>
-#include <QFileDialog>
-#include <QInputDialog>
-#include <QStandardPaths>
-#include <QTextStream>
-#include <QDialog>
 #include "mainwindow.h"
-#include "newfiledialog.h"
-#include "newcachedialog.h"
-#include "cacheview.h"
-#include <QLabel>
-#include <QDesktopServices>
-#include <QDebug>
-
-MainWindow::MainWindow( QWidget *parent )
-    : QMainWindow( parent )
+MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535","PISA")
 {
     _ui.setupUi( this );
+
+    //Don't ask me what these lines do... 
+    qRegisterMetaType<AssemblerConfiguration>();
+    qRegisterMetaType<Assembled>();
+
+    //move assembly to different thread
+    assembler = new Assembler();
+    disassembler = new Disassembler();
+    computer = new Computer();
+    assembler->moveToThread(&assemblyThread);
+    connect(&assemblyThread, &QThread::finished, assembler, &QObject::deleteLater);
+    connect(this, &MainWindow::startBuild, assembler, &Assembler::assemble);
+    connect(assembler, &Assembler::resultReady, this, &MainWindow::finishBuild);
+    assemblyThread.start();
 
     //add element on toolbar
     _ui.toolBar->insertWidget(_ui.actionforward,createToolBarSpinBox());
@@ -23,33 +23,19 @@ MainWindow::MainWindow( QWidget *parent )
     QLabel* pcLabel = new QLabel("PC: F20A3E0A");
     _ui.toolBar->addWidget(pcLabel);
 
-    //connect input widget to event handler
-    connect(_ui.actionnew, SIGNAL(triggered()), this, SLOT (handleNewButton()));
-    connect(_ui.actionNew, SIGNAL(triggered()), this, SLOT (handleNewButton()));
-    connect(_ui.actionopen, SIGNAL(triggered()), this, SLOT (handleOpenButton())); connect(_ui.actionOpen, SIGNAL(triggered()), this, SLOT (handleOpenButton()));
-    connect(_ui.actionSave, SIGNAL(triggered()), this, SLOT (handleSaveButton()));
-    connect(_ui.actionsave, SIGNAL(triggered()), this, SLOT (handleSaveButton()));
-    connect(_ui.actionUndo, SIGNAL(triggered()), this, SLOT (handleUndoButton()));
-    connect(_ui.actionRedo, SIGNAL(triggered()), this, SLOT (handleRedoButton()));
-    connect(_ui.actionSave_As, SIGNAL(triggered()), this, SLOT (handleSaveAsButton()));
-    connect(_ui.actionAbout_PISA, SIGNAL(triggered()), this, SLOT (handleAboutPISAButton()));
-    
-    connect(_ui.actionAddCache, SIGNAL(triggered()), this, SLOT (handleAddCache()));
-    connect(_ui.actionRemoveCache, SIGNAL(triggered()), this, SLOT (handleRemoveCache()));
-    connect(_ui.actionClearCache, SIGNAL(triggered()), this, SLOT (handleClearCache()));
-    connect(_ui.actionFlushCache, SIGNAL(triggered()), this, SLOT (handleFlushCache()));
-    connect(_ui.acitonFlushAllCache, SIGNAL(triggered()), this, SLOT (handleFlushAllCache()));
-
-
-    //connect close tab stuff for editor tabs
-    connect(_ui.tabWidget_editor, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
-
     //disable both undo and redo
     _ui.actionUndo->setEnabled(false);
     _ui.actionRedo->setEnabled(false);
-    QTableWidgetItem *newItem = new QTableWidgetItem("Hello");
-    _ui.tableWidget_memory->setRowCount(1000);
-    _ui.tableWidget_memory->setItem(0,0,newItem);
+
+    //Set filesystemview
+    QFileSystemModel* fModel = new QFileSystemModel(this);
+    fModel->setRootPath(settings.value("general/workdirectory",getDocDir()).toString());
+    _ui.fileSystemView->setModel(fModel);
+    _ui.fileSystemView->header()->hide();
+    _ui.fileSystemView->setColumnHidden( 1, true );
+    _ui.fileSystemView->setColumnHidden( 2, true );
+    _ui.fileSystemView->setColumnHidden( 3, true );
+
 }
 
 QSpinBox* MainWindow::createToolBarSpinBox()
@@ -61,12 +47,20 @@ QSpinBox* MainWindow::createToolBarSpinBox()
 }
 MainWindow::~MainWindow()
 {
-    //delete _ui;
+    delete computer;
+    delete assembler;
+    delete disassembler;
+    qDebug() << "Close MainWindow";
+    qDebug() << "2";
+    assemblyThread.quit();
+    assemblyThread.wait();
+    qDebug() << "Fin.";
 }
+
 
 //handle New Event
 void MainWindow::handleNewButton(){
-    NewFileDialog dialog(this);
+    NewFileDialog dialog(settings.value("general/workdirectory",getDocDir()).toString(),this);
     int result = dialog.exec();
     if(result == QDialog::Accepted){
         QString str = dialog.getFileName();
@@ -78,7 +72,7 @@ void MainWindow::handleNewButton(){
 //handle Open Event
 void MainWindow::handleOpenButton()
 {
-    QString docLoc = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
+    QString docLoc = settings.value("general/workdirectory",getDocDir()).toString();
     QStringList fileNames = QFileDialog::getOpenFileNames(
             this,
             "Open Files",
@@ -121,7 +115,7 @@ void MainWindow::handleSaveButton()
 //handle Save As event
 void MainWindow::handleSaveAsButton()
 {
-    NewFileDialog dialog(this);
+    NewFileDialog dialog(settings.value("general/workdirectory",getDocDir()).toString(),this);
     int result = dialog.exec();
     if(result == QDialog::Accepted){
         QString str = dialog.getFileName();
@@ -154,7 +148,7 @@ void MainWindow::handleAboutPISAButton()
 void MainWindow::createEditorTab(QString fileName)
 {
     //create file
-    QFile* file = new QFile(fileName);
+    QFile* file = new QFile(fileName); 
     CodeEditor* widget = new CodeEditor(file);
 
     //connect undo and redo button
@@ -179,7 +173,7 @@ void MainWindow::updateRedo(bool avail)
 }
 
 //close tab
-void MainWindow::closeTab(int index){
+void MainWindow::handleCloseTab(int index){
     _ui.tabWidget_editor->removeTab(index);
 }
 
@@ -230,4 +224,71 @@ void MainWindow::handleFlushCache(){
 
 void MainWindow::handleFlushAllCache(){
 }
+void MainWindow::handleBuild(){
+    //Nothing to build
+    //TODO output?
+    int index = _ui.tabWidget_editor->currentIndex();
+    if(index == -1){ 
+        _ui.consoleTextEdit->appendPlainText("Nothing to build...");
+        return;
+    }
+    handleSaveButton();
 
+    AssemblerConfiguration config;
+    config.useDefaultMacro = settings.value("assembly/useDefaultMacro", true).toBool();
+    config.useDefaultAlias = settings.value("assembly/useDefaultAlias", true).toBool();
+    config.useGlobalMacro = settings.value("assembly/useGlobalMacro", true).toBool();
+    config.useGlobalAlias = settings.value("assembly/useGlobalAlias", true).toBool();
+    config.useMainEntry = settings.value("assembly/useMainEntry", true).toBool();
+   
+    startBuild(((CodeEditor*)_ui.tabWidget_editor->currentWidget())->file->fileName(), config);
+}
+
+void MainWindow::finishBuild(Assembled* assembled){
+    _ui.problemTable->clearContents();
+    _ui.problemTable->setRowCount(0);
+    _ui.tracker->clear();
+
+   if(assembled->isAssembled){
+       _ui.consoleTextEdit->appendPlainText("Build succeeded.");
+       for(int i = 0; i < assembled->instructions->size(); i++){
+           _ui.tracker->addItem(disassembler->disassemble(assembled->instructions->at(i)));
+       }
+
+       delete assembled->instructions;
+   }
+   else{
+       _ui.consoleTextEdit->appendPlainText("Build failed...");
+       _ui.problemTable->setRowCount(assembled->errorLog->size());
+       for(int i =0; i < assembled->errorLog->size(); i++){
+           qDebug() << "printing out error";
+           Error error = assembled->errorLog->at(i);
+           qDebug() << error.fileName;
+           QTableWidgetItem *typeItem = new QTableWidgetItem("Error");
+           _ui.problemTable->setItem(i,0,typeItem);
+           QTableWidgetItem *fileItem = new QTableWidgetItem(error.fileName);
+           _ui.problemTable->setItem(i,1,fileItem);
+           QTableWidgetItem *lineItem = new QTableWidgetItem(QString::number(error.lineNumber+1));
+           _ui.problemTable->setItem(i,2,lineItem);
+           QTableWidgetItem *wordItem = new QTableWidgetItem(QString::number(error.wordNumber+1));
+           _ui.problemTable->setItem(i,3,wordItem);
+           QTableWidgetItem *causeItem = new QTableWidgetItem(error.cause);
+           _ui.problemTable->setItem(i,4,causeItem);
+       }
+       delete assembled->errorLog;
+   }
+
+   _ui.consoleTextEdit->appendPlainText("Time elasped: " + QString::number(assembled->elaspedTime) + " msec");
+    delete assembled->warningLog;
+    delete assembled;
+
+}
+void MainWindow::handleBuildAll(){
+}
+
+void MainWindow::handlePreference(){
+    PreferenceDialog dialog(this);
+    dialog.exec();
+}
+void MainWindow::handleAssemblerConfiguration(){
+}

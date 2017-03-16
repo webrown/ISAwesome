@@ -52,7 +52,7 @@ public:
         openButton->setGeometry(QRect(320, 30, 71, 31));
         label = new QLabel(NewFileDialog);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(10, 10, 81, 16));
+        label->setGeometry(QRect(10, 10, 101, 16));
         label_2 = new QLabel(NewFileDialog);
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setGeometry(QRect(10, 70, 81, 16));
@@ -74,7 +74,7 @@ public:
     {
         NewFileDialog->setWindowTitle(QApplication::translate("NewFileDialog", "New File", Q_NULLPTR));
         openButton->setText(QApplication::translate("NewFileDialog", "Open", Q_NULLPTR));
-        label->setText(QApplication::translate("NewFileDialog", "Directory:", Q_NULLPTR));
+        label->setText(QApplication::translate("NewFileDialog", "Work Directory:", Q_NULLPTR));
         label_2->setText(QApplication::translate("NewFileDialog", "File Name:", Q_NULLPTR));
         randomButton->setText(QApplication::translate("NewFileDialog", "Random", Q_NULLPTR));
     } // retranslateUi

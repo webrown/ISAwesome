@@ -48,47 +48,59 @@ OBJECTS_DIR   = build/
 
 ####### Files
 
-SOURCES       = build/qrc_pisa.cpp \
-		src/Computer.cpp \
+SOURCES       = src/Computer.cpp \
 		src/main.cpp \
 		src/utility.cpp \
+		test/TestAssembler.cpp \
 		test/TestInstructionResolver.cpp \
 		src/assembler/Assembler.cpp \
+		src/assembler/Disassembler.cpp \
+		src/assembler/InstructionResolver.cpp \
 		src/gui/cacheview.cpp \
 		src/gui/codeeditor.cpp \
 		src/gui/mainwindow.cpp \
 		src/gui/newcachedialog.cpp \
 		src/gui/newfiledialog.cpp \
-		src/instruction/InstructionResolver.cpp \
+		src/gui/PreferenceDialog.cpp \
 		src/memory/Cache.cpp \
 		src/memory/QueryResult.cpp \
 		src/memory/Register.cpp build/qrc_pisa.cpp \
+		build/moc_TestAssembler.cpp \
+		build/moc_TestInstructionResolver.cpp \
+		build/moc_Assembler.cpp \
 		build/moc_cacheview.cpp \
 		build/moc_codeeditor.cpp \
 		build/moc_mainwindow.cpp \
 		build/moc_newcachedialog.cpp \
-		build/moc_newfiledialog.cpp
-OBJECTS       = build/qrc_pisa.o \
-		build/Computer.o \
+		build/moc_newfiledialog.cpp \
+		build/moc_PreferenceDialog.cpp
+OBJECTS       = build/Computer.o \
 		build/main.o \
 		build/utility.o \
+		build/TestAssembler.o \
 		build/TestInstructionResolver.o \
 		build/Assembler.o \
+		build/Disassembler.o \
+		build/InstructionResolver.o \
 		build/cacheview.o \
 		build/codeeditor.o \
 		build/mainwindow.o \
 		build/newcachedialog.o \
 		build/newfiledialog.o \
-		build/InstructionResolver.o \
+		build/PreferenceDialog.o \
 		build/Cache.o \
 		build/QueryResult.o \
 		build/Register.o \
 		build/qrc_pisa.o \
+		build/moc_TestAssembler.o \
+		build/moc_TestInstructionResolver.o \
+		build/moc_Assembler.o \
 		build/moc_cacheview.o \
 		build/moc_codeeditor.o \
 		build/moc_mainwindow.o \
 		build/moc_newcachedialog.o \
-		build/moc_newfiledialog.o
+		build/moc_newfiledialog.o \
+		build/moc_PreferenceDialog.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -281,13 +293,16 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/exceptions.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
-		PISA.pro build/ui_newfiledialog.h \
-		build/ui_pisa.h \
-		src/architecture.h \
+		PISA.pro src/architecture.h \
 		src/Computer.h \
 		src/utility.h \
+		test/TestAssembler.h \
+		test/TestInstructionResolver.h \
 		src/assembler/Assembler.h \
+		src/assembler/ConditionResolver.h \
+		src/assembler/Disassembler.h \
 		src/assembler/Error.h \
+		src/assembler/InstructionResolver.h \
 		src/assembler/Warning.h \
 		src/gui/cacheview.h \
 		src/gui/codeeditor.h \
@@ -295,27 +310,25 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/mainwindow.h \
 		src/gui/newcachedialog.h \
 		src/gui/newfiledialog.h \
-		src/gui/ui_newcachedialog.h \
-		src/gui/ui_newfiledialog.h \
-		src/gui/ui_pisa.h \
-		src/instruction/conditionResolver.h \
-		src/instruction/InstructionResolver.h \
+		src/gui/PreferenceDialog.h \
 		src/memory/Cache.h \
 		src/memory/MainMemory.h \
 		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
-		src/memory/Register.h build/qrc_pisa.cpp \
-		src/Computer.cpp \
+		src/memory/Register.h src/Computer.cpp \
 		src/main.cpp \
 		src/utility.cpp \
+		test/TestAssembler.cpp \
 		test/TestInstructionResolver.cpp \
 		src/assembler/Assembler.cpp \
+		src/assembler/Disassembler.cpp \
+		src/assembler/InstructionResolver.cpp \
 		src/gui/cacheview.cpp \
 		src/gui/codeeditor.cpp \
 		src/gui/mainwindow.cpp \
 		src/gui/newcachedialog.cpp \
 		src/gui/newfiledialog.cpp \
-		src/instruction/InstructionResolver.cpp \
+		src/gui/PreferenceDialog.cpp \
 		src/memory/Cache.cpp \
 		src/memory/QueryResult.cpp \
 		src/memory/Register.cpp
@@ -327,7 +340,7 @@ TARGET        = bin/PISA
 first: all
 ####### Build rules
 
-$(TARGET): src/gui/ui_newcachedialog.h src/gui/ui_newfiledialog.h src/gui/ui_pisa.h $(OBJECTS)  
+$(TARGET): src/gui/ui_newcachedialog.h src/gui/ui_newfiledialog.h src/gui/ui_pisa.h src/gui/ui_preferencedialog.h $(OBJECTS)  
 	@test -d bin/ || mkdir -p bin/
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
@@ -744,9 +757,9 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents build/ui_newfiledialog.h build/ui_pisa.h src/architecture.h src/Computer.h src/utility.h src/assembler/Assembler.h src/assembler/Error.h src/assembler/Warning.h src/gui/cacheview.h src/gui/codeeditor.h src/gui/GuiInterface.h src/gui/mainwindow.h src/gui/newcachedialog.h src/gui/newfiledialog.h src/gui/ui_newcachedialog.h src/gui/ui_newfiledialog.h src/gui/ui_pisa.h src/instruction/conditionResolver.h src/instruction/InstructionResolver.h src/memory/Cache.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/QueryResult.h src/memory/Register.h $(DISTDIR)/
-	$(COPY_FILE) --parents build/qrc_pisa.cpp src/Computer.cpp src/main.cpp src/utility.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/gui/cacheview.cpp src/gui/codeeditor.cpp src/gui/mainwindow.cpp src/gui/newcachedialog.cpp src/gui/newfiledialog.cpp src/instruction/InstructionResolver.cpp src/memory/Cache.cpp src/memory/QueryResult.cpp src/memory/Register.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui $(DISTDIR)/
+	$(COPY_FILE) --parents src/architecture.h src/Computer.h src/utility.h test/TestAssembler.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/Error.h src/assembler/InstructionResolver.h src/assembler/Warning.h src/gui/cacheview.h src/gui/codeeditor.h src/gui/GuiInterface.h src/gui/mainwindow.h src/gui/newcachedialog.h src/gui/newfiledialog.h src/gui/PreferenceDialog.h src/memory/Cache.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/QueryResult.h src/memory/Register.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/Computer.cpp src/main.cpp src/utility.cpp test/TestAssembler.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/gui/cacheview.cpp src/gui/codeeditor.cpp src/gui/mainwindow.cpp src/gui/newcachedialog.cpp src/gui/newfiledialog.cpp src/gui/PreferenceDialog.cpp src/memory/Cache.cpp src/memory/QueryResult.cpp src/memory/Register.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -761,6 +774,11 @@ distclean: clean
 
 
 ####### Sub-libraries
+
+first: $(first) copydata
+
+copydata:
+	cp src/assembler/DefaultMacro src/assembler/DefaultAlias bin
 
 mocclean: compiler_moc_header_clean compiler_moc_source_clean
 
@@ -794,9 +812,41 @@ compiler_moc_predefs_clean:
 build/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -dM -E -o build/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc_cacheview.cpp build/moc_codeeditor.cpp build/moc_mainwindow.cpp build/moc_newcachedialog.cpp build/moc_newfiledialog.cpp
+compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_cacheview.cpp build/moc_codeeditor.cpp build/moc_mainwindow.cpp build/moc_newcachedialog.cpp build/moc_newfiledialog.cpp build/moc_PreferenceDialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_cacheview.cpp build/moc_codeeditor.cpp build/moc_mainwindow.cpp build/moc_newcachedialog.cpp build/moc_newfiledialog.cpp
+	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_cacheview.cpp build/moc_codeeditor.cpp build/moc_mainwindow.cpp build/moc_newcachedialog.cpp build/moc_newfiledialog.cpp build/moc_PreferenceDialog.cpp
+build/moc_TestAssembler.cpp: src/assembler/Assembler.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h \
+		src/architecture.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h \
+		test/TestAssembler.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestAssembler.h -o build/moc_TestAssembler.cpp
+
+build/moc_TestInstructionResolver.cpp: src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h \
+		test/TestInstructionResolver.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestInstructionResolver.h -o build/moc_TestInstructionResolver.cpp
+
+build/moc_Assembler.cpp: src/assembler/Error.h \
+		src/assembler/Warning.h \
+		src/architecture.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h \
+		src/assembler/Assembler.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/assembler/Assembler.h -o build/moc_Assembler.cpp
+
 build/moc_cacheview.cpp: src/gui/cacheview.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -807,8 +857,8 @@ build/moc_codeeditor.cpp: src/gui/codeeditor.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/codeeditor.h -o build/moc_codeeditor.cpp
 
-build/moc_mainwindow.cpp: src/gui/codeeditor.h \
-		src/gui/ui_pisa.h \
+build/moc_mainwindow.cpp: src/gui/ui_pisa.h \
+		src/gui/codeeditor.h \
 		src/Computer.h \
 		src/memory/Cache.h \
 		src/memory/QueryResult.h \
@@ -816,6 +866,21 @@ build/moc_mainwindow.cpp: src/gui/codeeditor.h \
 		src/memory/Register.h \
 		src/architecture.h \
 		src/memory/MainMemory.h \
+		src/assembler/Assembler.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h \
+		src/gui/newfiledialog.h \
+		src/gui/ui_newfiledialog.h \
+		src/gui/newcachedialog.h \
+		src/gui/ui_newcachedialog.h \
+		src/gui/PreferenceDialog.h \
+		src/gui/ui_preferencedialog.h \
+		src/gui/mainwindow.h \
+		src/gui/cacheview.h \
+		src/assembler/Disassembler.h \
 		src/gui/mainwindow.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -836,17 +901,40 @@ build/moc_newfiledialog.cpp: src/gui/ui_newfiledialog.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/newfiledialog.h -o build/moc_newfiledialog.cpp
 
-compiler_moc_source_make_all: build/TestInstructionResolver.moc
-compiler_moc_source_clean:
-	-$(DEL_FILE) build/TestInstructionResolver.moc
-build/TestInstructionResolver.moc: test/TestInstructionResolver.cpp \
+build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
+		src/gui/mainwindow.h \
+		src/gui/ui_pisa.h \
+		src/gui/codeeditor.h \
+		src/Computer.h \
+		src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/MemoryInterface.h \
+		src/memory/Register.h \
+		src/architecture.h \
+		src/memory/MainMemory.h \
+		src/assembler/Assembler.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h \
+		src/gui/newfiledialog.h \
+		src/gui/ui_newfiledialog.h \
+		src/gui/newcachedialog.h \
+		src/gui/ui_newcachedialog.h \
+		src/gui/PreferenceDialog.h \
+		src/gui/cacheview.h \
+		src/assembler/Disassembler.h \
+		src/gui/PreferenceDialog.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestInstructionResolver.cpp -o build/TestInstructionResolver.moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/PreferenceDialog.h -o build/moc_PreferenceDialog.cpp
 
-compiler_uic_make_all: src/gui/ui_newcachedialog.h src/gui/ui_newfiledialog.h src/gui/ui_pisa.h
+compiler_moc_source_make_all:
+compiler_moc_source_clean:
+compiler_uic_make_all: src/gui/ui_newcachedialog.h src/gui/ui_newfiledialog.h src/gui/ui_pisa.h src/gui/ui_preferencedialog.h
 compiler_uic_clean:
-	-$(DEL_FILE) src/gui/ui_newcachedialog.h src/gui/ui_newfiledialog.h src/gui/ui_pisa.h
+	-$(DEL_FILE) src/gui/ui_newcachedialog.h src/gui/ui_newfiledialog.h src/gui/ui_pisa.h src/gui/ui_preferencedialog.h
 src/gui/ui_newcachedialog.h: rsc/ui/newcachedialog.ui \
 		/usr/bin/uic
 	/usr/bin/uic rsc/ui/newcachedialog.ui -o src/gui/ui_newcachedialog.h
@@ -859,18 +947,19 @@ src/gui/ui_pisa.h: rsc/ui/pisa.ui \
 		/usr/bin/uic
 	/usr/bin/uic rsc/ui/pisa.ui -o src/gui/ui_pisa.h
 
+src/gui/ui_preferencedialog.h: rsc/ui/preferencedialog.ui \
+		/usr/bin/uic
+	/usr/bin/uic rsc/ui/preferencedialog.ui -o src/gui/ui_preferencedialog.h
+
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean compiler_moc_source_clean compiler_uic_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
-
-build/qrc_pisa.o: build/qrc_pisa.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_pisa.o build/qrc_pisa.cpp
 
 build/Computer.o: src/Computer.cpp src/Computer.h \
 		src/memory/Cache.h \
@@ -882,30 +971,73 @@ build/Computer.o: src/Computer.cpp src/Computer.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Computer.o src/Computer.cpp
 
 build/main.o: src/main.cpp src/gui/mainwindow.h \
-		src/gui/codeeditor.h \
 		src/gui/ui_pisa.h \
+		src/gui/codeeditor.h \
 		src/Computer.h \
 		src/memory/Cache.h \
 		src/memory/QueryResult.h \
 		src/memory/MemoryInterface.h \
 		src/memory/Register.h \
 		src/architecture.h \
-		src/memory/MainMemory.h
+		src/memory/MainMemory.h \
+		src/assembler/Assembler.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h \
+		src/gui/newfiledialog.h \
+		src/gui/ui_newfiledialog.h \
+		src/gui/newcachedialog.h \
+		src/gui/ui_newcachedialog.h \
+		src/gui/PreferenceDialog.h \
+		src/gui/ui_preferencedialog.h \
+		src/gui/cacheview.h \
+		src/assembler/Disassembler.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/main.o src/main.cpp
 
 build/utility.o: src/utility.cpp src/utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/utility.o src/utility.cpp
 
-build/TestInstructionResolver.o: test/TestInstructionResolver.cpp build/TestInstructionResolver.moc
+build/TestAssembler.o: test/TestAssembler.cpp test/TestAssembler.h \
+		src/assembler/Assembler.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h \
+		src/architecture.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestAssembler.o test/TestAssembler.cpp
+
+build/TestInstructionResolver.o: test/TestInstructionResolver.cpp test/TestInstructionResolver.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestInstructionResolver.o test/TestInstructionResolver.cpp
 
 build/Assembler.o: src/assembler/Assembler.cpp src/assembler/Assembler.h \
 		src/assembler/Error.h \
 		src/assembler/Warning.h \
 		src/architecture.h \
-		src/instruction/conditionResolver.h \
-		src/utility.h
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Assembler.o src/assembler/Assembler.cpp
+
+build/Disassembler.o: src/assembler/Disassembler.cpp src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h \
+		src/assembler/ConditionResolver.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Disassembler.o src/assembler/Disassembler.cpp
+
+build/InstructionResolver.o: src/assembler/InstructionResolver.cpp src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/InstructionResolver.o src/assembler/InstructionResolver.cpp
 
 build/cacheview.o: src/gui/cacheview.cpp src/gui/cacheview.h \
 		src/memory/Cache.h \
@@ -917,8 +1049,8 @@ build/codeeditor.o: src/gui/codeeditor.cpp src/gui/codeeditor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/codeeditor.o src/gui/codeeditor.cpp
 
 build/mainwindow.o: src/gui/mainwindow.cpp src/gui/mainwindow.h \
-		src/gui/codeeditor.h \
 		src/gui/ui_pisa.h \
+		src/gui/codeeditor.h \
 		src/Computer.h \
 		src/memory/Cache.h \
 		src/memory/QueryResult.h \
@@ -926,11 +1058,20 @@ build/mainwindow.o: src/gui/mainwindow.cpp src/gui/mainwindow.h \
 		src/memory/Register.h \
 		src/architecture.h \
 		src/memory/MainMemory.h \
+		src/assembler/Assembler.h \
+		src/assembler/Error.h \
+		src/assembler/Warning.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h \
 		src/gui/newfiledialog.h \
 		src/gui/ui_newfiledialog.h \
 		src/gui/newcachedialog.h \
 		src/gui/ui_newcachedialog.h \
-		src/gui/cacheview.h
+		src/gui/PreferenceDialog.h \
+		src/gui/ui_preferencedialog.h \
+		src/gui/cacheview.h \
+		src/assembler/Disassembler.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/mainwindow.o src/gui/mainwindow.cpp
 
 build/newcachedialog.o: src/gui/newcachedialog.cpp src/gui/newcachedialog.h \
@@ -944,11 +1085,31 @@ build/newfiledialog.o: src/gui/newfiledialog.cpp src/gui/newfiledialog.h \
 		src/gui/ui_newfiledialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/newfiledialog.o src/gui/newfiledialog.cpp
 
-build/InstructionResolver.o: src/instruction/InstructionResolver.cpp src/instruction/InstructionResolver.h \
-		src/utility.h \
+build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.h \
+		src/gui/ui_preferencedialog.h \
+		src/gui/mainwindow.h \
+		src/gui/ui_pisa.h \
+		src/gui/codeeditor.h \
+		src/Computer.h \
+		src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/MemoryInterface.h \
+		src/memory/Register.h \
+		src/architecture.h \
+		src/memory/MainMemory.h \
+		src/assembler/Assembler.h \
 		src/assembler/Error.h \
-		src/assembler/Warning.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/InstructionResolver.o src/instruction/InstructionResolver.cpp
+		src/assembler/Warning.h \
+		src/assembler/InstructionResolver.h \
+		src/utility.h \
+		src/assembler/ConditionResolver.h \
+		src/gui/newfiledialog.h \
+		src/gui/ui_newfiledialog.h \
+		src/gui/newcachedialog.h \
+		src/gui/ui_newcachedialog.h \
+		src/gui/cacheview.h \
+		src/assembler/Disassembler.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PreferenceDialog.o src/gui/PreferenceDialog.cpp
 
 build/Cache.o: src/memory/Cache.cpp src/memory/Cache.h \
 		src/memory/QueryResult.h \
@@ -967,6 +1128,15 @@ build/Register.o: src/memory/Register.cpp src/memory/Register.h \
 build/qrc_pisa.o: build/qrc_pisa.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_pisa.o build/qrc_pisa.cpp
 
+build/moc_TestAssembler.o: build/moc_TestAssembler.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestAssembler.o build/moc_TestAssembler.cpp
+
+build/moc_TestInstructionResolver.o: build/moc_TestInstructionResolver.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestInstructionResolver.o build/moc_TestInstructionResolver.cpp
+
+build/moc_Assembler.o: build/moc_Assembler.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_Assembler.o build/moc_Assembler.cpp
+
 build/moc_cacheview.o: build/moc_cacheview.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_cacheview.o build/moc_cacheview.cpp
 
@@ -981,6 +1151,9 @@ build/moc_newcachedialog.o: build/moc_newcachedialog.cpp
 
 build/moc_newfiledialog.o: build/moc_newfiledialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_newfiledialog.o build/moc_newfiledialog.cpp
+
+build/moc_PreferenceDialog.o: build/moc_PreferenceDialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_PreferenceDialog.o build/moc_PreferenceDialog.cpp
 
 ####### Install
 

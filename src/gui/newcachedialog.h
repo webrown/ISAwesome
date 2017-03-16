@@ -7,13 +7,9 @@
 
 class CacheInfo{
     public:
-    CacheInfo(){
-    }
     Cache *next = NULL, *prev = NULL;
     int indexBits, logDataWordCount, logAssociativity;
     double delay;
-    
-    
 };
 
 class NewCacheDialog : public QDialog

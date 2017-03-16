@@ -4,6 +4,7 @@
 #include <QString>
 
 using namespace std;
-int toB(QString str);
+uint toB(QString str);
+QString getDocDir();
 
 #endif

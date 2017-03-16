@@ -60,12 +60,12 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>81</width>
+     <width>101</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Directory:</string>
+    <string>Work Directory:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">

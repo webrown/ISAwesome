@@ -19,6 +19,10 @@ Register::Register(){
     qDebug() << "Registers generated" << endl;
 }
 
+Register::~Register(){
+    //Do nothing
+}
+
 QueryResult* Register::read(unsigned int address, unsigned int length){
     if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER|| address >= TOTAL_NUMBER_OF_REGISTERS){
         qDebug()<< "Invalid Access: address has to be between 24 to 31" << endl;
@@ -81,3 +85,11 @@ double Register::write(QVector<int> *value, unsigned int address){
     }
 }
 
+//TODO implemnt
+double Register::write(int value, unsigned int address){
+}
+
+QString* Register::save(){
+}
+void Register::restore(QString *state){
+}

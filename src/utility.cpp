@@ -1,11 +1,16 @@
 #include "utility.h"
+#include <QStandardPaths>
 
 
 using namespace std;
 
-int toB(QString str){
+uint toB(QString str){
   bool ok;
-  return str.toInt(&ok, 2);
+  return str.toUInt(&ok, 2);
+}
+
+QString getDocDir(){
+    return QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
 }
 
 

@@ -4,13 +4,13 @@
 #include <cstdlib>
 #include <string>
 
-NewFileDialog::NewFileDialog( QWidget *parent )
+NewFileDialog::NewFileDialog(QString dir, QWidget *parent )
     : QDialog( parent )
 {
     _ui.setupUi( this );
     connect(_ui.openButton, SIGNAL(clicked()), this, SLOT(handleOpenButton()));
     connect(_ui.randomButton, SIGNAL(clicked()), this,SLOT(handleRandomButton()));
-    QString docLoc = QStandardPaths::locate(QStandardPaths::DocumentsLocation, QString(), QStandardPaths::LocateDirectory);
+    QString docLoc =  dir;
     _ui.lineEdit_directory->insert(docLoc); 
 }
 

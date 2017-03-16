@@ -1,13 +1,31 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include <iostream>
+#include <QFileDialog>
+#include <QMetaType>
+#include <QInputDialog>
+#include <QStandardPaths>
+#include <QTextStream>
+#include <QDialog>
+#include <QLabel>
+#include <QDesktopServices>
+#include <QDebug>
 #include <QMainWindow>
 #include <QSpinBox>
 #include <QWidget>
 #include <QPlainTextEdit>
-#include "codeeditor.h"
+#include <QFileSystemModel>
+#include <QSettings>
 #include "ui_pisa.h"
+#include "codeeditor.h"
 #include "../Computer.h"
+#include "../assembler/Assembler.h"
+#include "newfiledialog.h"
+#include "newcachedialog.h"
+#include "PreferenceDialog.h"
+#include "cacheview.h"
+#include "../assembler/Disassembler.h"
+#include <QThread>
 
 class MainWindow : public QMainWindow
 {
@@ -15,7 +33,10 @@ class MainWindow : public QMainWindow
     public:
         explicit MainWindow( QWidget *parent = 0);
         ~MainWindow();
-        Computer* computer = new Computer();
+        Computer* computer;
+        Assembler* assembler;
+        Disassembler* disassembler;
+        QSettings settings;
 
 
     public slots:
@@ -32,14 +53,21 @@ class MainWindow : public QMainWindow
         void handleClearCache();
         void handleFlushCache();
         void handleFlushAllCache();
-        
+        void handlePreference();
+        void handleAssemblerConfiguration();
+        void handleBuild();
+        void handleBuildAll();
 
-        void closeTab(int index);
+        void handleCloseTab(int index);
         void updateUndo(bool avail);
         void updateRedo(bool avail);
         void editorModified();
+        void finishBuild(Assembled* assembled);
+signals:
+        void startBuild(QString fileName, AssemblerConfiguration config);
 
     private:
+        QThread assemblyThread;
         Ui::MainWindow _ui;
         QSpinBox* createToolBarSpinBox();
         void createEditorTab(QString fileName);

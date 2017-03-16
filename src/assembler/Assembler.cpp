@@ -1,14 +1,7 @@
-
 #include "Assembler.h" 
 
 Assembler::Assembler(){
-    if(Assembler::isExisting == true){
-        qDebug() << "Assembler already exists!" <<endl;
-        exit(-1);
-    }
-
-    qDebug() << "Assembler initialized." <<endl;
-    Assembler::isExisting = true;
+    //Do nothing
 }
 
 Assembler::~Assembler(){
@@ -16,7 +9,7 @@ Assembler::~Assembler(){
 }
 
 void Assembler::init(){
-    qDebug() << "Initiating Assembler variables" << endl;
+    qDebug() << "Initiating Assembler variables" ;
     _success = true;
     uint mainAddress = 0;
 
@@ -29,215 +22,209 @@ void Assembler::init(){
 
     _preprocessedQueue = new QList<Preprocessed>();
     _instructions = new QVector<uint>();
-    _addresses = new QVector<uint>();
 }
 
 void Assembler::clear(){
-    qDebug() << "Cleaning..." <<endl;
+    qDebug() << "Clear";
 
     if(_labelTable != NULL){
         delete _labelTable;
+        _labelTable = NULL;
     }
+
     if(_aliasTable != NULL){
         delete _aliasTable;
+        _aliasTable = NULL;
     }
+    
     if(_macroTable != NULL){
         delete _macroTable;
+        _macroTable = NULL;
     }
+
     if(_preprocessedQueue != NULL){
         delete _preprocessedQueue;
+        _preprocessedQueue = NULL;
     }
 
-    //TODO : delete errorlog and instructions based on the result
     _errorLog = NULL;
     _instructions = NULL;
-    _addresses = NULL;
     _warningLog = NULL;
+    qDebug() << "Assembler is cleared";
 }
 
-Assembled* Assembler::assemble(QStringList documents, AssemblerConfiguration config){
+void Assembler::assemble(QString fileName, AssemblerConfiguration config){
     //Start time to measure how long it took to compile
     QTime timer;
     timer.start();
 
-    qDebug() << "----------Start Assembly-------------" << endl;
+    qDebug() << "----------Start Assembly---------------" ;
 
     //initialize assembler
     _config = config;
     init();
 
-    preprocessLines(documents);
+    qDebug() << "----------Set Environment--------------";
+    if(_config.useDefaultMacro == true){
+        processFile("DefaultMacro");
+    }
+    if(_config.useGlobalMacro == true){
+        processFile("GlobalMacro");
+    }
+    if(_config.useDefaultAlias == true){
+        processFile("DefaultAlias");
+    }
+    if(_config.useGlobalAlias == true){
+        processFile("GlobalAlias");
+    }
+
+    qDebug() << "----------Preprocess-------------------";
+
+    processFile(fileName);
+
+    qDebug() << "----------Process----------------------";
 
     processLines();
 
-    qDebug() << "----------Assembly Result---------------\n";
+    qDebug() << "----------Assembly Result---------------" ;
 
     Assembled* assembled = new Assembled();
     assembled->warningLog = _warningLog;
     //if we succeed to assemble, then remove error list
     if(_success){
-        qDebug() << "Success: true\n";
+        qDebug() << "Success: true";
         assembled->isAssembled = true;
         assembled->instructions = _instructions; 
+        delete assembled->errorLog;
     }
     //else we failed to assemble, then remvoe assembly part
     else{
-        qDebug() << "Success: false\n";
+        qDebug() << "Success: false";
         assembled->isAssembled = false;
         assembled->errorLog = _errorLog;
+        delete assembled->instructions;
     }
+    assembled->elaspedTime = timer.elapsed();
 
-    qDebug() << "Elasped time: " << timer.elapsed() << " msec\n";
+    qDebug() << "Elasped time: " << assembled->elaspedTime << " msec";
     clear();
 
-    return assembled;
+    emit resultReady(assembled);
+    return;
 }
 
-void Assembler::loadFromSystemFile(QString fileName){
-    qDebug() << "Processing " << fileName << endl;
+void Assembler::processFile(QString fileName){
+    qDebug() << "Reading: " << fileName ;
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug() << fileName << " is not found" << endl;
+        qDebug() << fileName << " is not found" ;
         exit(-1);
     }
 
-    int lineNumber = 1;
+    QStringList document;
     while (!file.atEnd()) {
-        QByteArray line = file.readLine();
-        preprocessLine(-1, lineNumber++, line);
+        document << file.readLine();
     }
+    preprocessDocument(document, fileName);
 }
 
-void Assembler::preprocessLines(QStringList documents){
-    qDebug() << "Preprocessing" << endl;
+void Assembler::preprocessDocument(QStringList document, QString fileName){
+    int lineNumber = 0;
 
-    if(_config.useDefaultMacro == true){
-        loadFromSystemFile("DefaultMacro");
-    }
-    if(_config.useGlobalMacro == true){
-        loadFromSystemFile("GlobalMacro");
-    }
-    if(_config.useDefaultAlias == true){
-        loadFromSystemFile("DefaultAlias");
-    }
-    if(_config.useGlobalAlias == true){
-        loadFromSystemFile("GlobalAlias");
-    }
-    if(_config.useOrder == true){
-        sortDocuments(documents);
-    }
+    //There are "correct" way of dealing local macro in file.
+    //But who cares?
+    bool isProcessingMacro = false;
+    QStringList macroBuffer;
 
-    int docNumber = 0;
-    for(QString lines : documents){
-        int lineNumber = 0;
-        qDebug() << "Processing Document: " << docNumber << endl;
+    for(QString line : document){
+        qDebug() << "Line: " << line;
 
-        //There are "correct" way of dealing local macro in file.
-        //But who cares?
-        bool isProcessingMacro = false;
-        QStringList macroBuffer;
+        //remove extra white space and comment
+        line = line.trimmed().split(";").at(0).toUpper();
+        qDebug() << "Simplified: " << line ;
 
-        for(QString line  : lines.split("\n")){
-            qDebug() << "Line: " << line << "\n";
-            
-            //remove extra white space and comment
-            line = line.trimmed().split(";").at(0).toUpper();
-            qDebug() << "Trimmed: " << line << endl;
+        if(line == "#ENDMACRO"){
+            qDebug() << "End special local macro subroutine" ;
+            isProcessingMacro = false;
 
-            //Special subroutine for checking macro
-            if(isProcessingMacro){
-                macroBuffer << line;
+            //process through macro
+            if(macroBuffer.isEmpty()){
+                throwError(fileName, lineNumber, 0,"Invalid Format: macro definition can't be empty");
+                continue;
             }
-            if(line == "#DEFINEMACRO"){
-                qDebug() << "Enter special local macro subroutine :)" << endl;
-                isProcessingMacro = true;
+            QStringList tokens = macroBuffer.first().split(QRegExp("\\s+"));
+            QRegExp re("^[a-zA-Z_][a-zA-Z0-9_]*");
+            if(!re.exactMatch(tokens[0])){
+                throwError(fileName, lineNumber - macroBuffer.size(), 0, "Invalid Formant: Not valid symbol");
+                continue;
             }
-            if(line == "#ENDMACRO"){
-                qDebug() << "End special local macro subroutine" << endl;
-                isProcessingMacro = false;
-
-                //process through macro
-                if(macroBuffer.isEmpty()){
-                    throwError(docNumber, lineNumber, 0,"Invalid Format: macro definition can't be empty");
-                    continue;
-                }
-                QStringList tokens = macroBuffer.first().split(QRegExp("\\s+"));
-                QRegExp re("^[a-zA-Z_][a-zA-Z0-9_]*");
-                if(!re.exactMatch(tokens[0])){
-                    throwError(docNumber, lineNumber - macroBuffer.size(), 0, "Invalid Formant: Not valid symbol");
-                    continue;
-                }
-                qDebug() << "New Macro defined" << tokens[0] << endl;
-                _macroTable->insert(tokens[0], macroBuffer);
-                macroBuffer = QStringList();
-            }
-
-            preprocessLine(docNumber, lineNumber, line);
-
-            //increment line number by 1.
-            lineNumber+=1;
-            qDebug()<< "-\n";
+            qDebug() << "New Macro defined" << tokens[0] ;
+            _macroTable->insert(tokens[0], macroBuffer);
+            macroBuffer = QStringList();
+            continue;
+        }
+        //Special subroutine for checking macro
+        if(isProcessingMacro){
+            macroBuffer << line;
+            continue;
+        }
+        if(line == "#DEFINEMACRO"){
+            qDebug() << "Enter special local macro subroutine :)" ;
+            isProcessingMacro = true;
+            continue;
         }
 
-        if(isProcessingMacro == true){
-            throwError(docNumber, lineNumber, 0, "Invalid Format: Macro definition is not fully defined");
-        }
+        //Preprocess line
+        preprocessLine(fileName, lineNumber, line);
 
-        docNumber += 1;
+        //increment line number by 1.
+        lineNumber+=1;
+        qDebug()<< "---";
     }
-}
 
-void Assembler::sortDocuments(QStringList documents){
-    qDebug() << "Sorting documents" << endl;
-    QMultiMap<int, QString> map;
+    if(isProcessingMacro == true){
+        throwError(fileName, lineNumber, 0, "Invalid Format: Macro definition is not fully defined");
+    }
 
-    int n = 0;
-    for(QString document : documents){
-        QString firstLine = document.section("\n", 0,0).simplified().toUpper();
-        if(firstLine.startsWith("#ORDER")){
-            int order = firstLine.remove("#ORDER").toInt();
-            qDebug() << (n+1)<<"th document is assigned to " << order << endl;
-            map.insert(order, document);
-        }
-        else{
-            qDebug() << (n+1)<<"th document is assigned to " << INT_MAX << endl;
-            map.insert(INT_MAX, document);
-        }
-    }
-    //I am pretty sure there is more efficient algorith mfor this problem, but who cares?
-    n = 0;
-    for(int order : map.keys()){
-        for(QString document : map.values(order)){
-            documents.replace(n++,document);
-        }
-    }
 }
 
 
 
-void Assembler::preprocessLine(int docNumber, int lineNumber, QString line){
+void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
     //If empty then continue
     if(line.isEmpty()){ 
-        qDebug() << "SKIP: line is empty\n-" << endl;
+        qDebug() << "SKIP: line is empty" ;
         return;
+    }
+
+    //Check import;
+    if(line.startsWith("#IMPORT")){
+        QDir dir(fileName); 
+        QString path = dir.filePath(line.remove(0,8));
+        QFile file(path);
+        if(file.exists() == false){
+            throwError(fileName, lineNumber, 1, "Import failed: file doesn't exist");
+            return;
+        }
+        this->processFile(path);
     }
 
     //Process alias
     if(line.startsWith("#ALIAS")){
-        qDebug() << "Defining local alias" << endl;
-        line.remove("#ALIAS");
+        qDebug() << "Defining alias" ;
+        line.remove(0,7);
         QStringList tokens = line.split(QRegExp("\\s+"));
         if(tokens.size() != 2){
-            throwError(docNumber, lineNumber, tokens.size(), "Invalid Format: Invalid argument");
+            throwError(fileName, lineNumber, tokens.size(), "Invalid Format: Invalid argument");
             return;
         }
         QRegExp re("^[a-zA-Z_][a-zA-Z0-9_]*");
         if(!re.exactMatch(tokens[0])){
-            throwError(docNumber, lineNumber, 0, "Invalid Formant: Not valid symbol");
+            throwError(fileName, lineNumber, 0, "Invalid Formant: Not valid symbol");
             return;
         }
         if(!re.exactMatch(tokens[1])){
-            throwError(docNumber, lineNumber, 1, "Invalid Formant: Not valid symbol");
+            throwError(fileName, lineNumber, 1, "Invalid Formant: Not valid symbol");
             return;
         }
         qDebug() << tokens[0] << " = " << tokens[1];
@@ -246,18 +233,18 @@ void Assembler::preprocessLine(int docNumber, int lineNumber, QString line){
     }
 
     if(line.startsWith("#UNALIAS")){
-        qDebug() << "Removing local alias" << endl;
+        qDebug() << "Removing local alias" ;
         line.remove("#UNALIAS");
         QStringList tokens = line.split(QRegExp("\\s+"));
         if(tokens.size() != 1){
-            throwError(docNumber ,lineNumber, tokens.size(), "InvalidFormat: Wrong number of argument for unalias");
+            throwError(fileName ,lineNumber, tokens.size(), "InvalidFormat: Wrong number of argument for unalias");
             return;
         }
         if(!_aliasTable->contains(tokens[0])){
-            throwError(docNumber ,lineNumber, 0, "InvalidFormat: undefined alias");
+            throwError(fileName ,lineNumber, 0, "InvalidFormat: undefined alias");
             return;
         }
-        qDebug() << "alias " << tokens[0] << " is removed." << endl;
+        qDebug() << "alias " << tokens[0] << " is removed." ;
         _aliasTable-> remove(tokens[0]);
         return;
     }
@@ -266,11 +253,11 @@ void Assembler::preprocessLine(int docNumber, int lineNumber, QString line){
     QStringList tokens = line.split(QRegExp("\\s+"));
 
     for (int i = 0; i < tokens.size(); i++)
-        qDebug() << tokens.at(i) << endl;
+        qDebug() << tokens.at(i) ;
 
     // Bail if there's nothing here.
     if(tokens.size() == 0){
-        qDebug() << "Is it even possible to have zero for tokens size?\n";
+        qDebug() << "Is it even possible to have zero for tokens size?";
         exit(-1);
     }
 
@@ -286,9 +273,9 @@ void Assembler::preprocessLine(int docNumber, int lineNumber, QString line){
 
     //check whether the statement is label
     if(tokens.at(0).endsWith(":")){
-        qDebug() << "Label detected" << endl;
+        qDebug() << "Label detected" ;
         if(tokens.size() >= 1){
-            throwError(docNumber, lineNumber, 1,"Invalid Format; Not a Label" );
+            throwError(fileName, lineNumber, 1,"Invalid Format; Not a Label" );
             return;
         }
 
@@ -298,54 +285,55 @@ void Assembler::preprocessLine(int docNumber, int lineNumber, QString line){
         //check the validity of label name
         QRegExp re("^[a-zA-Z][a-zA-Z0-9_]*$");  
         if (!re.exactMatch(label)){
-            throwError(docNumber,lineNumber,0, "Invalid Format: " + label + " is not a Label");
+            throwError(fileName,lineNumber,0, "Invalid Format: " + label + " is not a Label");
             return;
         }
 
         //check whether label is already defined
         if(_labelTable->contains(label)){
-            throwError(docNumber, lineNumber, 0, "Invalid Format: " + label + " is already defined");
+            throwError(fileName, lineNumber, 0, "Invalid Format: " + label + " is already defined");
             return;
         }
 
-        qDebug() << "Symbol added: " << label << " = " << nextAddress << endl;
+        qDebug() << "Symbol added: " << label << " = " << nextAddress ;
         _labelTable->insert(label, nextAddress);
         return;
     }
     else{
 
         //process through aliasTable
+        //And convert immediate to decimal
         for(int i = 0; i < tokens.size(); i++){
             QString str = tokens[i];
             if(_aliasTable->contains(str)){
                 tokens[i] = _aliasTable->value(str);
-                qDebug() <<"Alias resolved: " << str << " -> " << tokens[i] << endl;
+                qDebug() <<"Alias resolved: " << str << " -> " << tokens[i] ;
             }
             if(str.startsWith("#0X")){
-                str.remove("#0X");
+                str.remove(0,2);
                 bool success;
                 tokens[i] = str.toInt(&success, 16);
                 if(success == false){
-                    throwError(docNumber, lineNumber, i, "Invalid Format: Not Hexadecimal");
+                    throwError(fileName, lineNumber, i, "Invalid Format: Not Hexadecimal");
                     return;
                 }
             }
             if(str.startsWith("#0B")){
-                str.remove("#0B");
+                str.remove(0,2);
                 bool success;
                 tokens[i] = str.toInt(&success, 2);
                 if(success == false){
-                    throwError(docNumber ,lineNumber, i, "Invalid Format: Not Binary");
+                    throwError(fileName ,lineNumber, i, "Invalid Format: Not Binary");
                     return;
                 }
             }
         }
 
-        qDebug() << "Address added: " << nextAddress << "\n";
+        qDebug() << "Address added: " << nextAddress;
 
         //Preprcoessed data will be stored here
         Preprocessed preprocessed;
-        preprocessed.docNumber = docNumber;
+        preprocessed.fileName = fileName;
         preprocessed.lineNumber = lineNumber;
         preprocessed.address = nextAddress;
         preprocessed.tokens = tokens;
@@ -355,20 +343,18 @@ void Assembler::preprocessLine(int docNumber, int lineNumber, QString line){
 }
 
 void Assembler::processLines(){
-    qDebug() << "Processing" <<endl;
-
     for(Preprocessed preprocessed : *_preprocessedQueue){
         //process each line
         processLine(preprocessed);
 
-        qDebug()<< "-\n";
+        qDebug()<< "-";
     } 
 }
 
 
 void Assembler::processLine(Preprocessed prep){
-    qDebug() << "processing a line" << endl;
-    int docNumber = prep.docNumber;
+    qDebug() << "processing a line" ;
+    QString fileName = prep.fileName;
     int lineNumber = prep.lineNumber;
     uint address = prep.address;
     QStringList tokens = prep.tokens;
@@ -378,96 +364,68 @@ void Assembler::processLine(Preprocessed prep){
     QString token1 = tokens.takeFirst();
 
     uint flag = CRS.nameTable["AL"];
-    uint opcode = IRS.nameTable["NOP"];
+    uint opcode = 000011; //=NOP
+    InstructionDefinition* def;
     int operandTokenNumber = 0;
-    
+
 
     //IS token1 instruction?
     if(IRS.nameTable.contains(token1)){
         //Instruction deteceted!
-        opcode = IRS.nameTable[token1];
-        qDebug() << "Conversion: " << token1 << " -> " << opcode << endl;
+        def = IRS.nameTable[token1];
+        qDebug() << "Conversion: " << token1 << " -> " << def->opcode ;
         operandTokenNumber = 1;
     }
     else{
         //Token1 must be condition.
         if(!CRS.nameTable.contains(token1)){
             //okay, error
-            throwError(docNumber,lineNumber,0,"Invalid Symbol: " +token1);
+            throwError(fileName,lineNumber,0,"Invalid Symbol: " +token1);
             return;
         }
 
         flag = CRS.nameTable[token1];
-        qDebug() << "Conversion: " << token1 << " -> " << flag << endl;
+        qDebug() << "Conversion: " << token1 << " -> " << flag ;
 
         QString token2 = tokens.takeFirst();
         //token 2 must be instruction
         if(!IRS.nameTable.contains(token2)){
-            throwError(docNumber, lineNumber,1, "Invalid Symbol: " + token2);
+            throwError(fileName, lineNumber,1, "Invalid Symbol: " + token2);
             return;
         }    
         //yes
-        opcode = IRS.nameTable[token2];
-        qDebug() << "Conversion: " << token1 << " -> " << flag << endl;
+        def = IRS.nameTable[token2];
+        qDebug() << "Conversion: " << token1 << " -> " << def->opcode ;
         operandTokenNumber =2;
     }
+    opcode = def->opcode;
 
-    uint args;
-    int availableArgTypes = IRS.argTable[opcode];
-
-
-    
-    //If instruction is branch with immediate
-    if(opcode == 0){
-           if(tokens.size() > 1 || tokens.size() != 0){
-               throwError(docNumber, lineNumber, operandTokenNumber + tokens.size()-1, "Branch instruction only require 1 operands");
-               return;
-           }
-           bool okay;
-           args = tokens[0].toInt(&okay, 10);
-           if(okay == false && args >= (1<<23)){
-               throwError(docNumber, lineNumber, operandTokenNumber, "Branch instruction requires immediate 22");
-               return;
-           }
+    ParseResult result = def->parse(tokens);
+    if(result.error != "None"){
+        throwError(fileName,lineNumber, result.failureLocation, result.error);
+        return;
     }
-    else if(opcode ==1){
-           if(tokens.size() > 1 || tokens.size() != 0){
-               throwError(docNumber, lineNumber, operandTokenNumber + tokens.size()-1, "Branch instruction only require 1 operands");
-               return;
-           }
-           if(intReg.exactMatch(tokens[0])){
-               args = convertRegister(tokens[0]);
-           }
-           else if(floatReg.exactMatch(tokens[1])){
-               throwWarning(docNumber,lineNumber, operandTokenNumber, "Branch prefers integer register");
-               args = convertRegister(tokens[0]);
-           }
-           else{
-               throwError(docNumber, lineNumber, operandTokenNumber, "Branch with Register requires register");
-               return;
-           }
+    else if (result.warning != "None"){
+        throwWarning(fileName, lineNumber, result.failureLocation, result.warning);
     }
+    qDebug() << "Argument parsed: " << QString::number(result.parsed, 2).rightJustified(22,'0') ;
 
-     
     //Generate instruction
-    uint instruction = (((flag << 6) | opcode) << 22) | args;
+    uint instruction = (((flag << 6) | opcode) << 22) | result.parsed;
 
-    qDebug() << "Instruction generated: " << QString::number(instruction, 2).rightJustified(32,'0') << endl;
-    _instructions->append(args);
+    qDebug() << "Instruction generated: " << QString::number(instruction, 2).rightJustified(32,'0') ;
+    _instructions->append(instruction);
+    qDebug() << "---";
 }
 
-uint convertRegister(QString str){
-    str.remove("R");
-    return str.toInt();
-}
 
-void Assembler::throwError(int docNumber, int lineNumber, int wordNumber, QString cause){
-    Error error(docNumber, lineNumber, wordNumber, cause);
+void Assembler::throwError(QString fileName, int lineNumber, int wordNumber, QString cause){
+    Error error(cause, fileName, lineNumber, wordNumber);
     _errorLog->append(error);
     _success=false;
 }
 
-void Assembler::throwWarning(int docNumber, int lineNumber, int wordNumber, QString cause){
-    Warning warning(docNumber, lineNumber,wordNumber,cause);
+void Assembler::throwWarning(QString fileName, int lineNumber, int wordNumber, QString cause){
+    Warning warning(cause, fileName, lineNumber,wordNumber);
     _warningLog->append(warning);
 }

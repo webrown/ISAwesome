@@ -8,7 +8,7 @@ class NewFileDialog : public QDialog
 {
     Q_OBJECT
     public:
-        explicit NewFileDialog( QWidget *parent = 0);
+        explicit NewFileDialog(QString dir, QWidget *parent = 0);
         ~NewFileDialog();
         QString getFileName();
 
