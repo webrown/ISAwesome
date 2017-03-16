@@ -29,7 +29,7 @@ class Cache : MemoryInterface{
     QVector< QVector<int> * > *dirty;
     QVector< QVector<int> * > *valid;
     Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache);
-    ~Cache();
+    virtual ~Cache();
     QueryResult *read(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address);
     double write(QVector<int> *value, unsigned int address);
