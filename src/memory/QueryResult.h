@@ -1,21 +1,18 @@
 #ifndef QUERY_RESULT_H
 #define QUERY_RESULT_H
 #include <QVector>
-enum Type{
-    INTEGER, FLOAT
-};
+#include "Value.h"
 
 using namespace std;
 class QueryResult{
   public:
-    Type type;
-    QVector<int> result;
-    QVector<float> result2;
+    QVector<Value> result;
     double time;
 
     QueryResult(QVector<int> result, double time);
     QueryResult(QVector<float> result, double time);
-    int at(int index);
+    QueryResult(QVector<Value> result, double time);
+    Value at(int index);
     size_t size();
 };
 #endif

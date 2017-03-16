@@ -8,9 +8,10 @@ HEADERS += Register.h
 HEADERS += ../architecture.h
 HEADERS += serialization.h
 
-SOURCES += Cache.cpp
 SOURCES += MainMemory.cpp
-SOURCES += test.cpp
+SOURCES += Cache.cpp
 SOURCES += QueryResult.cpp
 SOURCES += Register.cpp
 SOURCES += serialization.cpp
+SOURCES += MemoryInterface.cpp
+SOURCES += test.cpp

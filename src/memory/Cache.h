@@ -5,6 +5,7 @@
 #include "MemoryInterface.h"
 #include <QString>
 #include <vector>
+#include "Value.h"
 
 using namespace std;
 class CacheView;
@@ -13,8 +14,9 @@ enum CacheType{
     DATA, INSTRUCTION, BOTH
 };
 
-class Cache : MemoryInterface{
+class Cache : public MemoryInterface{
   public:
+    using MemoryInterface::write;
     CacheType type;
     CacheView* view = NULL;
     int indexBits;
@@ -24,7 +26,7 @@ class Cache : MemoryInterface{
     Cache *prevCache = NULL;
     Cache *nextCache = NULL;
     QVector< QVector<int> * > *tags;
-    QVector< QVector< QVector<int> * > * > *contents;
+    QVector< QVector< QVector<Value> * > * > *contents;
     QVector< QVector<int> * > *LRU;
     QVector< QVector<int> * > *dirty;
     QVector< QVector<int> * > *valid;
@@ -32,8 +34,8 @@ class Cache : MemoryInterface{
     virtual ~Cache();
     QueryResult *read(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address);
-    double write(QVector<int> *value, unsigned int address);
-    double write(int value, unsigned int address);
+    double write(QVector<Value> *value, unsigned int address);
+    double write(Value value, unsigned int address);
     QString *save();
     void restore(QString *state);
     QVector<int> *splitAddress(unsigned int address);

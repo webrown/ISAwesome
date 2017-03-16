@@ -167,8 +167,8 @@ int main() {
     if(!muffins) {
       cout << "FAIL: l1Cache.read returned a null!!!" << endl;
     }
-    else if(muffins->at(0) != 1234) {
-      cout << "FAIL: l1Cache.read returned " << muffins->at(0) << endl;
+    else if(muffins->at(0).i != 1234) {
+      cout << "FAIL: l1Cache.read returned " << muffins->at(0).i << endl;
     }
     else {
       cout << "PASS: Can write and read single value to cache" << endl;
@@ -185,14 +185,14 @@ int main() {
     muffins = l1Cache.read(targAddress, 32);
     int broke = 0;
     for(int i = 0; i < 32; i++) {
-      if(muffins->at(i) != i) {
+      if(muffins->at(i).i != i) {
         broke = 1;
       }
     }
     if(broke) {
       cout << "FAIL: Failed with vector read/write: ";
       for(int i = 0; i < 32; i++) {
-        cout << "vec[" << i << "]=" << muffins->at(i) << " ";
+        cout << "vec[" << i << "]=" << muffins->at(i).i << " ";
       }
       cout << endl;
     }
@@ -222,14 +222,14 @@ int main() {
     muffins = l1Cache.read(targAddress, 32);
     broke = 0;
     for(int i = 0; i < 32; i++) {
-      if(muffins->at(i) != i) {
+      if(muffins->at(i).i != i) {
         broke = 1;
       }
     }
     if(broke) {
       cout << "FAIL: Failed to recover vector from l3: ";
       for(int i = 0; i < 32; i++) {
-        cout << "vec[" << i << "]=" << muffins->at(i) << " ";
+        cout << "vec[" << i << "]=" << muffins->at(i).i << " ";
       }
       cout << endl;
     }
@@ -272,14 +272,14 @@ int main() {
 #endif
     broke = 0;
     for(int i = 0; i < 32; i++) {
-      if(muffins->at(i) != modifiedVec->at(i)) {
+      if(muffins->at(i).i != modifiedVec->at(i)) {
         broke = 1;
       }
     }
     if(broke) {
       cout << "FAIL: Failed to recover modified vector: ";
       for(int i = 0; i < 32; i++) {
-        cout << "vec[" << i << "]=" << muffins->at(i) << " ";
+        cout << "vec[" << i << "]=" << muffins->at(i).i << " ";
       }
       cout << endl;
     }
@@ -306,7 +306,7 @@ int main() {
     QueryResult *muffins2 = l2Cache.read(2, 16);
     int broke = 0;
     for(int i = 0; i < 16; i++) {
-      if(muffins1->at(i) != muffins2->at(i)) {
+      if(muffins1->at(i).i != muffins2->at(i).i) {
         broke = 1;
       }
     }
@@ -323,6 +323,37 @@ int main() {
     delete testVec;
     delete muffins1;
     delete muffins2;
+  }
+  {
+    // Just a minor sanity test, make sure we don't barf when we do floats.
+    cout << "BEGIN:  Test floats" << endl;
+    float original = 101.01;
+    Cache l2Cache(2,1, 1, 10, NULL);
+    Cache l1Cache(10,0, 0, 10, &l2Cache);
+    for(int address = 0; address < 1000; address++) {
+      l1Cache.write(original, address);
+      original = original + 1.0;
+    }
+    QVector<Value> heard;
+    bool broke = false;
+    original = 101.01;
+    for(int address = 0; address < 1000; address++) {
+      QueryResult *qr = l1Cache.read(address);
+      heard.push_back(qr->result.at(0));
+      delete qr;
+      if(heard.back().f != original) broke = true;
+      original = original + 1.0;
+    }
+    if(broke) {
+      cout << "FAILED:  Stored floats do not match." << endl;
+      for(int i = 0; i < heard.size(); i++) {
+        cout << heard.at(i).f << endl;
+      }
+    }
+    else {
+      cout << "PASS:  Floats could be written/read." << endl;
+    }
+    cout << "END:  Test floats" << endl;
   }
   return 0;
 }

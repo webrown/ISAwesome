@@ -17,7 +17,7 @@ Cache::Cache(int indexBits, int logDataWordCount, int logAssociativity, double d
 
   // Set up the cache QVectors.
   tags = new QVector< QVector<int> * >();
-  contents = new QVector< QVector< QVector<int> * > * >();
+  contents = new QVector< QVector< QVector<Value> * > * >();
   LRU = new QVector< QVector<int> * >();
   dirty = new QVector< QVector<int> * >();
   valid = new QVector< QVector<int> * >();
@@ -28,9 +28,10 @@ Cache::Cache(int indexBits, int logDataWordCount, int logAssociativity, double d
     // Add tag bits.
     tags->push_back(new QVector<int>(ways, 0));
     // Add content cells.
-    QVector< QVector<int> * > *newContent = new QVector<QVector<int> * >();
+    QVector< QVector<Value> * > *newContent = new QVector<QVector<Value> * >();
     for(size_t way = 0; way < ways; way++) {
-      newContent->push_back(new QVector<int>(dataWordCount, 0));
+      Value v = {0};
+      newContent->push_back(new QVector<Value>(dataWordCount, v));
     }
     contents->push_back(newContent);
     // Add LRU bit
@@ -88,7 +89,7 @@ QueryResult *Cache::read(unsigned int address, unsigned int length){
   double wait = delay;
   // Get these values into the cache if they are not already.
   double fetchWait = 0;
-  QVector<int> *data = new QVector<int>();
+  QVector<Value> *data = new QVector<Value>();
   for(unsigned int i = address; i < address+length; i++) {
     // TODO May be able to be optimized later; often tag and index won't change for long periods of time.
     fetchWait = max(fetchWait, fetch(i));
@@ -122,12 +123,12 @@ size_t Cache::maxLength(unsigned int startAddress){
   return result;
 }
 
-double Cache::write(QVector<int> *_value, unsigned int address){
+double Cache::write(QVector<Value> *_value, unsigned int address){
   int mL = maxLength(address);
   int mustDeleteValue = 0;
   if(_value->size() > mL) {
-    QVector<int>* value = new QVector<int>(mL);
-      for(int i =0; i < mL; i++){
+    QVector<Value>* value = new QVector<Value>(mL);
+      for(int i = 0; i < mL; i++){
           value->append(_value->at(i));
       } 
       _value = value;
@@ -156,7 +157,7 @@ double Cache::write(QVector<int> *_value, unsigned int address){
     int offset = tagIndOff->at(2);
     delete tagIndOff;
     int way = addressWay(address+i);
-    if(contents->at(index)->at(way)->at(offset) != _value->at(i)) {
+    if(contents->at(index)->at(way)->at(offset).i != _value->at(i).i) {
       dirty->at(index)->replace(way,1);
       // Write to the specified index.
       contents->at(index)->at(way)->replace(offset,_value->at(i));
@@ -191,8 +192,8 @@ int Cache::addressWay(unsigned int address){
   return -1;
 }
 
-double Cache::write(int input, unsigned int address){
-  QVector<int> *tinyQVector = new QVector<int>(1, input);
+double Cache::write(Value input, unsigned int address){
+  QVector<Value> *tinyQVector = new QVector<Value>(1, input);
   double result = write(tinyQVector, address);
   delete tinyQVector;
   return result;
@@ -204,7 +205,7 @@ QString *Cache::save(){
     for(int way = 0; way < contents->at(0)->size(); way++) {
       // Record contents
       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-        v.push_back(contents->at(ind)->at(way)->at(offset));
+        v.push_back(contents->at(ind)->at(way)->at(offset).toInt);
       }
       // Record dirty
       v.push_back(dirty->at(ind)->at(way));
@@ -232,7 +233,8 @@ void Cache::restore(QString *state){
         if(stateIndex == s->size()) {
           return;
         }
-        contents->at(ind)->at(way)->replace(offset,s->at(stateIndex++));
+        Value value = {s->at(stateIndex++)};
+        contents->at(ind)->at(way)->replace(offset, value);
       }
       // Place in dirty.
       if(stateIndex == s->size()) {
@@ -368,7 +370,7 @@ QString Cache::toTable() {
         << valid->at(ind)->at(way) << "\t"
         << buildAddress(tags->at(ind)->at(way), ind, 0) << "\t";
       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-        result << contents->at(ind)->at(way)->at(offset) << "\t";
+        result << contents->at(ind)->at(way)->at(offset).i << "\t";
       }
       result << endl;
     }
