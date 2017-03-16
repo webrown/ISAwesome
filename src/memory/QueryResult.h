@@ -8,7 +8,7 @@ enum Type{
 using namespace std;
 class QueryResult{
   public:
-    Type type = INTEGER;
+    Type type;
     QVector<int> result;
     QVector<float> result2;
     double time;
@@ -16,7 +16,6 @@ class QueryResult{
     QueryResult(QVector<int> result, double time);
     QueryResult(QVector<float> result, double time);
     int at(int index);
-    float at(int index);
     size_t size();
 };
 #endif

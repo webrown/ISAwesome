@@ -15,7 +15,7 @@ enum CacheType{
 
 class Cache : MemoryInterface{
   public:
-    CacheType type = BOTH;
+    CacheType type;
     CacheView* view = NULL;
     int indexBits;
     int logDataWordCount;

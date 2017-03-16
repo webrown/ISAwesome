@@ -1,4 +1,5 @@
 #include "Cache.h"
+#include "serialization.h"
 #include <iostream>
 #include <algorithm>
 #include <sstream>
@@ -6,6 +7,7 @@
 using namespace std;
 
 Cache::Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache) {
+  type = BOTH;
   // Load in params.
   this->indexBits = indexBits;
   this->logDataWordCount = logDataWordCount;
@@ -78,7 +80,7 @@ unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned 
 
 QueryResult *Cache::read(unsigned int address, unsigned int length){
   // Hardware constraint:  Can't parallel load more values than there are in the cache.
-  int mL = maxLength(address);
+  size_t mL = maxLength(address);
   if(length > mL) {
     length = mL;
     cout << "WARNING:  read given too large a QVector, shrinking size to " << mL << "." << endl;
@@ -87,7 +89,7 @@ QueryResult *Cache::read(unsigned int address, unsigned int length){
   // Get these values into the cache if they are not already.
   double fetchWait = 0;
   QVector<int> *data = new QVector<int>();
-  for(int i = address; i < address+length; i++) {
+  for(unsigned int i = address; i < address+length; i++) {
     // TODO May be able to be optimized later; often tag and index won't change for long periods of time.
     fetchWait = max(fetchWait, fetch(i));
     // Now at front of LRU queue
@@ -197,60 +199,61 @@ double Cache::write(int input, unsigned int address){
 }
 
 QString *Cache::save(){
-  QString *result = new QString();
+  QVector<int> v;
   for(int ind = 0; ind < contents->size(); ind++) {
     for(int way = 0; way < contents->at(0)->size(); way++) {
       // Record contents
       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-        *result += contents->at(ind)->at(way)->at(offset);
+        v.push_back(contents->at(ind)->at(way)->at(offset));
       }
       // Record dirty
-      *result += dirty->at(ind)->at(way);
+      v.push_back(dirty->at(ind)->at(way));
       // Record LRU
-      *result += LRU->at(ind)->at(way);
+      v.push_back(LRU->at(ind)->at(way));
       // Record tag
-      *result += tags->at(ind)->at(way);
+      v.push_back(tags->at(ind)->at(way));
       // Record valid
-      *result += valid->at(ind)->at(way);
+      v.push_back(valid->at(ind)->at(way));
     }
   }
-  return result;
+  return serialize(&v);
 }
 
 void Cache::restore(QString *state){
   if(!state) {
     return;
   }
+  QVector<int> *s = deserialize(state);
   int stateIndex = 0;
   for(int ind = 0; ind < contents->size(); ind++) {
     for(int way = 0; way < contents->at(0)->size(); way++) {
       // Place contents.
       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-        if(stateIndex == state->size()) {
+        if(stateIndex == s->size()) {
           return;
         }
-        contents->at(ind)->at(way)->replace(offset,state->at(stateIndex++).digitValue());
+        contents->at(ind)->at(way)->replace(offset,s->at(stateIndex++));
       }
       // Place in dirty.
-      if(stateIndex == state->size()) {
+      if(stateIndex == s->size()) {
         return;
       }
-      dirty->at(ind)->replace(way,state->at(stateIndex++).digitValue());
+      dirty->at(ind)->replace(way,s->at(stateIndex++));
       // Place in LRU.
-      if(stateIndex == state->size()) {
+      if(stateIndex == s->size()) {
         return;
       }
-      LRU->at(ind)->replace(way,state->at(stateIndex++).digitValue());
+      LRU->at(ind)->replace(way,s->at(stateIndex++));
       // Place in tag.
-      if(stateIndex == state->size()) {
+      if(stateIndex == s->size()) {
         return;
       }
-      tags->at(ind)->replace(way,state->at(stateIndex++).digitValue());
+      tags->at(ind)->replace(way,s->at(stateIndex++));
       // Place in valid.
-      if(stateIndex == state->size()) {
+      if(stateIndex == s->size()) {
         return;
       }
-      valid->at(ind)->replace(way,state->at(stateIndex++).digitValue());
+      valid->at(ind)->replace(way,s->at(stateIndex++));
     }
   }
 }
@@ -348,27 +351,27 @@ QVector<int> *Cache::splitAddress(unsigned int address){
   return result;
 }
 
-// QString Cache::toTable() {
-//   QStringstream result;
-//   result << "tag\tind\tdirty\tLRU\tvalid\tD0add\t";
-//   for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-//     result << "D" << offset << "\t";
-//   }
-//   result << endl;
-//   for(int ind = 0; ind < contents->size(); ind++) {
-//     for(int way = 0; way < contents->at(0)->size(); way++) {
-//       result
-//         << tags->at(ind)->at(way) << "\t"
-//         << ind << "\t"
-//         << dirty->at(ind)->at(way) << "\t"
-//         << LRU->at(ind)->at(way) << "\t"
-//         << valid->at(ind)->at(way) << "\t"
-//         << buildAddress(tags->at(ind)->at(way), ind, 0) << "\t";
-//       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-//         result << contents->at(ind)->at(way)->at(offset) << "\t";
-//       }
-//       result << endl;
-//     }
-//   }
-//   return result.str();
-/* } */
+QString Cache::toTable() {
+  stringstream result;
+  result << "tag\tind\tdirty\tLRU\tvalid\tD0add\t";
+  for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
+    result << "D" << offset << "\t";
+  }
+  result << endl;
+  for(int ind = 0; ind < contents->size(); ind++) {
+    for(int way = 0; way < contents->at(0)->size(); way++) {
+      result
+        << tags->at(ind)->at(way) << "\t"
+        << ind << "\t"
+        << dirty->at(ind)->at(way) << "\t"
+        << LRU->at(ind)->at(way) << "\t"
+        << valid->at(ind)->at(way) << "\t"
+        << buildAddress(tags->at(ind)->at(way), ind, 0) << "\t";
+      for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
+        result << contents->at(ind)->at(way)->at(offset) << "\t";
+      }
+      result << endl;
+    }
+  }
+  return QString(result.str().c_str());
+}

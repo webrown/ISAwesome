@@ -6,9 +6,11 @@ HEADERS += MemoryInterface.h
 HEADERS += QueryResult.h
 HEADERS += Register.h
 HEADERS += ../architecture.h
+HEADERS += serialization.h
 
 SOURCES += Cache.cpp
 SOURCES += MainMemory.cpp
-SOURCES += mainMemoryTest.cpp
+SOURCES += test.cpp
 SOURCES += QueryResult.cpp
 SOURCES += Register.cpp
+SOURCES += serialization.cpp

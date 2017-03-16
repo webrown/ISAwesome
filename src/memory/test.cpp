@@ -8,7 +8,7 @@ int main() {
   {
     cout << "splitAddress tests:" << endl;
     Cache l1Cache(3, 2, 2, 10, NULL);
-    vector<int> *result = l1Cache.splitAddress(1023);
+    QVector<int> *result = l1Cache.splitAddress(1023);
     if(result->at(0) != 31 || result->at(1) != 7 || result->at(2) != 3) {
       cout << "FAIL:  result[0]=" << result->at(0)
            << "result[1]=" << result->at(1)
@@ -33,7 +33,7 @@ int main() {
   {
     cout << "buildAddress tests:" << endl;
     Cache l1Cache(3,2, 2, 10, NULL);
-    vector<int> *split = l1Cache.splitAddress(1023);
+    QVector<int> *split = l1Cache.splitAddress(1023);
     int result = l1Cache.buildAddress(split->at(0), split->at(1), split->at(2));
     if(result == 1023) {
       cout << "PASS" << endl;
@@ -64,7 +64,7 @@ int main() {
       cout << "FAIL: RETURNED " << result << " on invalid but good tag" << endl;
     }
     // Now we're valid, but bad tag.
-    l1Cache.valid->at(0)->at(2) = 1;
+    (*l1Cache.valid->at(0))[2] = 1;
     result = l1Cache.addressWay(4294967295);
     if(result == -1) {
       cout << "PASS" << endl;
@@ -91,12 +91,12 @@ int main() {
     else {
       cout << "FAIL: getLRUWay = " << l1Cache.getLRUWay(0) << endl;
     }
-    l1Cache.valid->at(0)->at(0) = 1;
-    l1Cache.valid->at(0)->at(1) = 1;
-    l1Cache.valid->at(0)->at(2) = 1;
-    l1Cache.valid->at(0)->at(3) = 1;
+    (*l1Cache.valid->at(0))[0] = 1;
+    (*l1Cache.valid->at(0))[1] = 1;
+    (*l1Cache.valid->at(0))[2] = 1;
+    (*l1Cache.valid->at(0))[3] = 1;
     for(int i = 0; i < 4; i++) {
-      l1Cache.tags->at(0)->at(i) = i;
+      (*l1Cache.tags->at(0))[i] = i;
     }
     l1Cache.updateLRU(0);
     if(l1Cache.getLRUWay(0) == 1) {
@@ -163,7 +163,7 @@ int main() {
     l1Cache.nextCache = &l2Cache;
 
     l1Cache.write(1234, 22);
-    CacheResult *muffins = l1Cache.read(22);
+    QueryResult *muffins = l1Cache.read(22);
     if(!muffins) {
       cout << "FAIL: l1Cache.read returned a null!!!" << endl;
     }
@@ -175,7 +175,7 @@ int main() {
     }
     delete muffins;
     // Now let's see if I can read and write vectors.
-    vector<int> *testVec = new vector<int>();
+    QVector<int> *testVec = new QVector<int>();
     for(int i = 0; i < 32; i++) {
       testVec->push_back(i);
     }
@@ -201,7 +201,7 @@ int main() {
     }
     delete muffins;
     // Now make sure vector realism safeties in place.
-    testVec = new vector<int>(64, 42);
+    testVec = new QVector<int>(64, 42);
     l1Cache.write(testVec, 22);
     delete testVec;
     muffins = l1Cache.read(22, 64);
@@ -213,7 +213,7 @@ int main() {
     }
     delete muffins;
     // Make sure you can read through layers of cache.
-    testVec = new vector<int>();
+    testVec = new QVector<int>();
     for(int i = 0; i < 32; i++) {
       testVec->push_back(i);
     }
@@ -239,7 +239,7 @@ int main() {
     delete muffins;
     delete testVec;
     // Now push modified versions of these values down the caches.
-    vector<int> *modifiedVec = new vector<int>();
+    QVector<int> *modifiedVec = new QVector<int>();
     for(int i = 0; i < 32; i++) {
       modifiedVec->push_back(i*2+1);
     }
@@ -250,7 +250,7 @@ int main() {
     cout << l2Cache.toTable() << endl;
     cout << l3Cache.toTable() << endl;
 #endif
-    testVec = new vector<int>();
+    testVec = new QVector<int>();
     for(int i = 0; i < 32; i++) {
       testVec->push_back(i);
     }
@@ -294,15 +294,16 @@ int main() {
     cout << "save restore tests:" << endl;
     Cache l1Cache(2,1, 1, 10, NULL);
     Cache l2Cache(2,1, 1, 10, NULL);
-    vector<int> *testVec = new vector<int>();
+    QVector<int> *testVec = new QVector<int>();
     for(int i = 0; i < 10; i++) {
       testVec->push_back(i);
     }
     l1Cache.write(testVec, 2);
-    string *state = l1Cache.save();
+    l1Cache.write(-42, 19);
+    QString *state = l1Cache.save();
     l2Cache.restore(state);
-    CacheResult *muffins1 = l1Cache.read(2, 16);
-    CacheResult *muffins2 = l2Cache.read(2, 16);
+    QueryResult *muffins1 = l1Cache.read(2, 16);
+    QueryResult *muffins2 = l2Cache.read(2, 16);
     int broke = 0;
     for(int i = 0; i < 16; i++) {
       if(muffins1->at(i) != muffins2->at(i)) {
@@ -310,10 +311,9 @@ int main() {
       }
     }
     if(broke) {
-      cout << "FAIL: Failed to recover l1: ";
-      for(int i = 0; i < 32; i++) {
-        cout << i << muffins1->at(i) << " " << muffins2->at(i) << endl;
-      }
+      cout << "FAIL: Failed to recover l1: " << endl;
+      cout << l1Cache.toTable().toUtf8().constData() << endl;
+      cout << l2Cache.toTable().toUtf8().constData() << endl;
     }
     else {
       cout << "PASS: Can recover l1" << endl;

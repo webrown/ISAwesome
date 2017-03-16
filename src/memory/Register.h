@@ -13,7 +13,7 @@ class Register : MemoryInterface{
         QVector<float> _fScas;
         QVector< QVector <int> > _iVecs;
         QVector< QVector <float> > _fVecs;
-        const double delay = 0;
+        static const double delay = 0;
 
         Register();
         ~Register();

@@ -28,3 +28,19 @@ double MainMemory::write(QVector<int> *value, unsigned int address){
     return 0;
 }
 
+double MainMemory::write(int input, unsigned int address){
+  QVector<int> *tinyQVector = new QVector<int>(1, input);
+  double result = write(tinyQVector, address);
+  delete tinyQVector;
+  return result;
+}
+
+
+QString *MainMemory::save(){
+  return new QString("");
+}
+
+void MainMemory::restore(QString *state){
+  qDebug() << state << endl;
+}
+
