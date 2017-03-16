@@ -218,7 +218,7 @@ int main() {
           // Print what you found.
           cout << "After a wait of " << res->time << ", got < ";
           for(size_t i = 0; i < res->size(); i++) {
-            cout << res->at(i) << " ";
+            cout << res->at(i).asInt << " ";
           }
           cout << ">." << endl;
           delete res;
