@@ -1,13 +1,16 @@
 #include "MainMemory.h"
 #include "../architecture.h"
 #include <QDebug>
+#include <QtGlobal>
+#include "serialization.h"
 
-MainMemory::MainMemory(){
-    qDebug() << "MainMemory generated" << endl;
+MainMemory::MainMemory(double delay){
+    this->delay = delay;
+    // Build the stating array.
+    _contents.resize(MEMORY_CHUNKS);
 }
 
 MainMemory::~MainMemory(){
-    qDebug() << "MainMemory destroyed" << endl;
 }
 
 QueryResult* MainMemory::read(unsigned int address, unsigned int length){
@@ -15,32 +18,101 @@ QueryResult* MainMemory::read(unsigned int address, unsigned int length){
         qDebug() << "Invalid Access: length has to be 1 or " << VECTOR_SIZE << endl;
         exit(-1);
     }
-    qDebug() << address << length << endl;
-    return NULL;
+    QVector<Value> result;
+    int startInd1;
+    int startInd2;
+    int endInd1;
+    int endInd2;
+    indexPair(address, &startInd1, &startInd2);
+    indexPair(address+length-1, &endInd1, &endInd2);
+    // Load in first.
+    if(_contents.at(startInd1).size() == 0) {
+        // This memory is yet to be written to.
+        Value zero = {0};
+        result = QVector<Value>(qMin((int)length, (int)MEMORY_CHUNK_SIZE), zero);
+    }
+    else {
+        // This memory has been written to.
+        result = _contents.at(startInd1).mid(startInd2, length);
+    }
+    startInd1++;
+    // Load in bits in future vector.
+    while(startInd1 <= endInd1) {
+        if(_contents.at(startInd1).size() == 0) {
+            // This memory is yet to be written to.
+            Value zero = {0};
+            result += QVector<Value>(qMin((int)(length-result.size()), (int)MEMORY_CHUNK_SIZE), zero);
+        }
+        else {
+            // This memory has been written to.
+            result += _contents.at(startInd1).mid(0, length-result.size());
+        }
+        startInd1++;
+    }
+    return new QueryResult(result, delay);
 }
 
 QueryResult* MainMemory::read(unsigned int address){
     return read(address, 1);
 }
 
-double MainMemory::write(QVector<int> *value, unsigned int address){
-    qDebug() << value << address << endl;
-    return 0;
+double MainMemory::write(QVector<Value> *value, unsigned int address){
+    for(int i = 0; i < value->size(); i++) {
+      int ind1;
+      int ind2;
+      indexPair(address+i, &ind1, &ind2);
+      if(_contents.at(ind1).size() == 0) {
+        // Ooops!  This memory chunk has not been instantiated yet!
+        _contents[ind1].resize(MEMORY_CHUNK_SIZE);
+      }
+      _contents[ind1].replace(ind2, value->at(i));
+    }
+    return delay;
 }
 
-double MainMemory::write(int input, unsigned int address){
-  QVector<int> *tinyQVector = new QVector<int>(1, input);
-  double result = write(tinyQVector, address);
-  delete tinyQVector;
-  return result;
+double MainMemory::write(Value input, unsigned int address){
+    QVector<Value> *tinyQVector = new QVector<Value>(1, input);
+    double result = write(tinyQVector, address);
+    delete tinyQVector;
+    return result;
 }
-
 
 QString *MainMemory::save(){
-  return new QString("");
+    QVector<int> result;
+    for(int i = 0; i < _contents.size(); i++) {
+        result.push_back(_contents.at(i).size());
+        for(int j = 0; j < _contents.at(i).size(); j++) {
+            result.push_back(_contents.at(i).at(j).i);
+        }
+    }
+    return serialize(&result);
 }
 
 void MainMemory::restore(QString *state){
-  qDebug() << state << endl;
+    QVector<int> *stateVector = deserialize(state);
+
+    // Remove old contents.
+    _contents = QVector<QVector<Value> >();
+    // Load in new contents.
+    size_t remainingElements = 0;
+    for(int stateIndex = 0; stateIndex < stateVector->size(); stateIndex++) {
+        int nextVal = stateVector->at(stateIndex);
+        if(remainingElements == 0) {
+            // Looks like it's time for a new vector!
+            _contents.push_back(QVector<Value>());
+            remainingElements = nextVal;
+        }
+        else {
+            // Add to the last vector.
+            Value v = {nextVal};
+            _contents.last().push_back(v);
+            remainingElements--;
+        }
+    }
+}
+
+void MainMemory::indexPair(unsigned int address, int *firstIndex, int *secondIndex){
+    *firstIndex = address >> 16;
+    *secondIndex = address & 0xffff;
 }
 

@@ -1,6 +1,7 @@
 #include "Cache.h"
 #include <stdlib.h>
 #include <iostream>
+#include "MainMemory.h"
 
 using namespace std;
 
@@ -354,6 +355,133 @@ int main() {
       cout << "PASS:  Floats could be written/read." << endl;
     }
     cout << "END:  Test floats" << endl;
+  }
+  {
+    cout << "BEGIN: MainMemory tests." << endl;
+    MainMemory m(100);
+    QueryResult *result = NULL;
+    result = m.read(100);
+    if(result->result.size() == 1) {
+      cout << "PASS:  Single read when empty gave single result." << endl;
+    }
+    else {
+      cout << "FAIL:  Single read when empty gave vector of size " << result->result.size() << "." << endl;
+    }
+    if(result->result.at(0).i == 0) {
+      cout << "PASS:  Single read when empty gave zero result." << endl;
+    }
+    else {
+      cout << "FAIL:  Single read when empty gave " << result->result.at(0).i << "." << endl;
+      for(int i = 0; i < result->result.size(); i++) cout << result->result.at(i).i << endl;
+    }
+    delete result;
+
+    result = m.read(2, 64);
+    if(result->result.size() == 64) {
+      cout << "PASS:  64 read when empty gave 64 results." << endl;
+    }
+    else {
+      cout << "FAIL:  64 read when empty gave vector of size " << result->result.size() << "." << endl;
+    }
+    if(result->result.at(63).i == 0) {
+      cout << "PASS:  64 read when empty gave zero result." << endl;
+    }
+    else {
+      cout << "FAIL:  64 read when empty gave " << result->result.at(63).i << "." << endl;
+      for(int i = 0; i < result->result.size(); i++) cout << result->result.at(i).i << endl;
+    }
+    delete result;
+
+    result = m.read(MainMemory::MEMORY_CHUNK_SIZE-3, 64);
+    if(result->result.size() == 64) {
+      cout << "PASS:  64 boundary read when empty gave 64 results." << endl;
+    }
+    else {
+      cout << "FAIL:  64 boundary read when empty gave vector of size " << result->result.size() << "." << endl;
+    }
+    if(result->result.at(63).i == 0) {
+      cout << "PASS:  64 boundary read when empty gave zero result." << endl;
+    }
+    else {
+      cout << "FAIL:  64 boundary read when empty gave " << result->result.at(63).i << "." << endl;
+      for(int i = 0; i < result->result.size(); i++) cout << result->result.at(i).i << endl;
+    }
+    delete result;
+
+    m.write(42, 100);
+    result = m.read(100);
+    if(result->result.size() == 1) {
+      cout << "PASS:  Single read with contents gave single result." << endl;
+    }
+    else {
+      cout << "FAIL:  Single read with contents gave vector of size " << result->result.size() << "." << endl;
+    }
+    if(result->result.at(0).i == 42) {
+      cout << "PASS:  Single read with contents gave right result." << endl;
+    }
+    else {
+      cout << "FAIL:  Single read with contents gave " << result->result.at(0).i << ", not 42." << endl;
+      for(int i = 0; i < result->result.size(); i++) cout << result->result.at(i).i << endl;
+    }
+    delete result;
+
+    m.write(42, 3);
+    result = m.read(2, 64);
+    if(result->result.size() == 64) {
+      cout << "PASS:  64 read with contents gave 64 results." << endl;
+    }
+    else {
+      cout << "FAIL:  64 read with contents gave vector of size " << result->result.size() << "." << endl;
+    }
+    if(result->result.at(1).i == 42) {
+      cout << "PASS:  64 read with contents gave correct result." << endl;
+    }
+    else {
+      cout << "FAIL:  64 read with contents gave " << result->result.at(63).i << ", not 42." << endl;
+      for(int i = 0; i < result->result.size(); i++) cout << result->result.at(i).i << endl;
+    }
+    delete result;
+
+    m.write(42, MainMemory::MEMORY_CHUNK_SIZE-3);
+    m.write(42, MainMemory::MEMORY_CHUNK_SIZE-1);
+    m.write(42, MainMemory::MEMORY_CHUNK_SIZE+3);
+    result = m.read(MainMemory::MEMORY_CHUNK_SIZE-3, 64);
+    if(result->result.size() == 64) {
+      cout << "PASS:  64 boundary read with contents gave 64 results." << endl;
+    }
+    else {
+      cout << "FAIL:  64 boundary read with contents gave vector of size " << result->result.size() << "." << endl;
+    }
+    if(result->result.at(0).i == 42 && result->result.at(2).i == 42 && result->result.at(6).i == 42) {
+      cout << "PASS:  64 boundary read with contents gave right results." << endl;
+    }
+    else {
+      cout << "FAIL:  64 boundary read with contents gave " << result->result.at(0).i << " and " << result->result.at(2).i << " and " << result->result.at(6).i << "." << endl;
+      for(int i = 0; i < result->result.size(); i++) cout << result->result.at(i).i << endl;
+    }
+    delete result;
+
+    MainMemory m2(100);
+    m2.write(1000, 1000);
+    QString *state = m.save();
+    m2.restore(state);
+    delete state;
+    bool broke = false;
+    for(int i = 0; i < m2._contents.size(); i++) {
+        for(int j = 0; j < m2._contents.at(i).size(); j++) {
+            if(m._contents.at(i).at(j).toInt != m2._contents.at(i).at(j).toInt) {
+                broke = true;
+            }
+        }
+    }
+    if(broke) {
+        cout << "FAIL: save/restore broke things." << endl;
+    }
+    else {
+        cout << "PASS: save/restore worked." << endl;
+    }
+
+    cout << "END: MainMemory tests." << endl;
   }
   return 0;
 }
