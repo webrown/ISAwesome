@@ -59,6 +59,8 @@ QueryResult* Register::read(unsigned int address){
         vec[0] = _fScas[address-NUMBER_OF_INTEGER_SCALAR_REGISTER- NUMBER_OF_FLOAT_SCALAR_REGISTER];
         return new QueryResult(vec, delay);
     }
+    qDebug() << "Register address " << address << " does not exist!";
+    exit(-1);
 }
 
 
@@ -83,13 +85,22 @@ double Register::write(QVector<int> *value, unsigned int address){
         _fVecs[address-NUMBER_OF_INTEGER_VECTOR].replace(0,value->at(i));
         }
     }
+    qDebug() << "Register address " << address << " does not exist!";
+    exit(-1);
 }
 
-//TODO implemnt
-double Register::write(int value, unsigned int address){
+
+double Register::write(int input, unsigned int address){
+  QVector<int> *tinyQVector = new QVector<int>(1, input);
+  double result = write(tinyQVector, address);
+  delete tinyQVector;
+  return result;
 }
 
-QString* Register::save(){
+QString *Register::save(){
+  return new QString("");
 }
+
 void Register::restore(QString *state){
+  qDebug() << state << endl;
 }

@@ -1,14 +1,29 @@
 #include "QueryResult.h"
+#include <QDebug>
 QueryResult::QueryResult(QVector<int> result, double time) {
+  QVector<Value> newResult(result.size());
+  for(int i = 0; i < result.size(); i++) {
+    newResult[i].asInt = result.at(i);
+  }
+  this->result = newResult;
+  this->time = time;
+}
+
+QueryResult::QueryResult(QVector<float> result, double time){
+  QVector<Value> newResult(result.size());
+  for(int i = 0; i < result.size(); i++) {
+    newResult[i].asFloat = result.at(i);
+  }
+  this->result = newResult;
+  this->time = time;
+}
+
+QueryResult::QueryResult(QVector<Value> result, double time){
   this->result = result;
   this->time = time;
 }
-QueryResult::QueryResult(QVector<float> result, double time){
-    this->result2 = result;
-    this->time = time;
-}
 
-int QueryResult::at(int i) {
+Value QueryResult::at(int i) {
   return this->result.at(i);
 }
 

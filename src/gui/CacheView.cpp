@@ -38,7 +38,7 @@ void CacheView::update(){
             this->setItem(ind * cache->contents->at(0)->size() + way, 4, new QTableWidgetItem(QString::number(cache->valid->at(ind)->at(way))));
 
             for(int offset = 0; offset < cache->contents->at(0)->at(0)->size(); offset++) {
-                this->setItem(ind * cache->contents->at(0)->size() + way, NUMBER_OF_DEFAULT_HEADERS + offset, new QTableWidgetItem(QString::number(cache->contents->at(ind)->at(way)->at(offset))));
+                // this->setItem(ind * cache->contents->at(0)->size() + way, NUMBER_OF_DEFAULT_HEADERS + offset, new QTableWidgetItem(QString::number(cache->contents->at(ind)->at(way)->at(offset))));
             }
         }
     }
