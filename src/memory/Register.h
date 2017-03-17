@@ -4,7 +4,7 @@
 #include "QueryResult.h"
 #include "MemoryInterface.h"
 #include <QString>
-#include "../architecture.h"
+#include "../Architecture.h"
 
 class Register : MemoryInterface{
     public:

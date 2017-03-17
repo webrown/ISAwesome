@@ -1,7 +1,7 @@
 #ifndef CONDITIONRESOLVER_H
 #define CONDITIONRESOLVER_H
 #include <QMap>
-#include "../utility.h"
+#include "../Utility.h"
 
 
 

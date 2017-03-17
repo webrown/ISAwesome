@@ -11,6 +11,22 @@
     <file>img/play.png</file>
     <file>img/save.png</file>
   </qresource>
+  <qresource prefix="menu_icon2">
+    <file>img/backward2.png</file>
+    <file>img/build_all2.png</file>
+    <file>img/build2.png</file>
+    <file>img/forward2.png</file>
+    <file>img/new2.png</file>
+    <file>img/open2.png</file>
+    <file>img/pause2.png</file>
+    <file>img/play2.png</file>
+    <file>img/save_all2.png</file>
+    <file>img/save2.png</file>
+    <file>img/stop2.png</file>
+    <file>img/open2.png</file>
+    <file>img/new2.png</file>
+    <file>img/save2.png</file>
+  </qresource>
   <qresource prefix="icon">
     <file>img/icon.png</file>
   </qresource>

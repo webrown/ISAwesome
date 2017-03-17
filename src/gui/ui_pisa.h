@@ -27,6 +27,7 @@
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "EditorTab.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -76,6 +77,7 @@ public:
     QAction *acitonFlushAllCache;
     QAction *actionPreference;
     QAction *actionAssemblerConfiguration;
+    QAction *actionSave_all;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *verticalLayout_2;
@@ -88,7 +90,7 @@ public:
     QWidget *Track;
     QVBoxLayout *verticalLayout_8;
     QListWidget *tracker;
-    QTabWidget *tabWidget_editor;
+    EditorTab *editorTab;
     QTabWidget *tabWidget_output;
     QWidget *tab_problems;
     QVBoxLayout *verticalLayout_5;
@@ -124,7 +126,6 @@ public:
     QMenu *menuHelp;
     QMenu *menuSettings;
     QToolBar *toolBar;
-    QToolBar *toolBar_2;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -158,7 +159,7 @@ public:
         actionRun = new QAction(MainWindow);
         actionRun->setObjectName(QStringLiteral("actionRun"));
         QIcon icon1;
-        icon1.addFile(QStringLiteral(":/menu_icon/img/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QStringLiteral(":/menu_icon2/img/play2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionRun->setIcon(icon1);
         actionConsole = new QAction(MainWindow);
         actionConsole->setObjectName(QStringLiteral("actionConsole"));
@@ -169,47 +170,47 @@ public:
         actionnew = new QAction(MainWindow);
         actionnew->setObjectName(QStringLiteral("actionnew"));
         QIcon icon2;
-        icon2.addFile(QStringLiteral(":/menu_icon/img/new.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon2.addFile(QStringLiteral(":/menu_icon2/img/new2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionnew->setIcon(icon2);
         actionopen = new QAction(MainWindow);
         actionopen->setObjectName(QStringLiteral("actionopen"));
         QIcon icon3;
-        icon3.addFile(QStringLiteral(":/menu_icon/img/open.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon3.addFile(QStringLiteral(":/menu_icon2/img/open2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionopen->setIcon(icon3);
         actionsave = new QAction(MainWindow);
         actionsave->setObjectName(QStringLiteral("actionsave"));
         QIcon icon4;
-        icon4.addFile(QStringLiteral(":/menu_icon/img/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon4.addFile(QStringLiteral(":/menu_icon2/img/save2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionsave->setIcon(icon4);
         actionstop = new QAction(MainWindow);
         actionstop->setObjectName(QStringLiteral("actionstop"));
         QIcon icon5;
-        icon5.addFile(QStringLiteral(":/menu_icon/img/stop.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon5.addFile(QStringLiteral(":/menu_icon2/img/stop2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionstop->setIcon(icon5);
         actionpause = new QAction(MainWindow);
         actionpause->setObjectName(QStringLiteral("actionpause"));
         QIcon icon6;
-        icon6.addFile(QStringLiteral(":/menu_icon/img/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon6.addFile(QStringLiteral(":/menu_icon2/img/pause2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionpause->setIcon(icon6);
         actionforward = new QAction(MainWindow);
         actionforward->setObjectName(QStringLiteral("actionforward"));
         QIcon icon7;
-        icon7.addFile(QStringLiteral(":/menu_icon/img/forward.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon7.addFile(QStringLiteral(":/menu_icon2/img/forward2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionforward->setIcon(icon7);
         actionrewind = new QAction(MainWindow);
         actionrewind->setObjectName(QStringLiteral("actionrewind"));
         QIcon icon8;
-        icon8.addFile(QStringLiteral(":/menu_icon/img/backward.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon8.addFile(QStringLiteral(":/menu_icon2/img/backward2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionrewind->setIcon(icon8);
         actionbuild = new QAction(MainWindow);
         actionbuild->setObjectName(QStringLiteral("actionbuild"));
         QIcon icon9;
-        icon9.addFile(QStringLiteral(":/menu_icon/img/build.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon9.addFile(QStringLiteral(":/menu_icon2/img/build2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionbuild->setIcon(icon9);
         actionbuild_all = new QAction(MainWindow);
         actionbuild_all->setObjectName(QStringLiteral("actionbuild_all"));
         QIcon icon10;
-        icon10.addFile(QStringLiteral(":/menu_icon/img/build_all.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon10.addFile(QStringLiteral(":/menu_icon2/img/build_all2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionbuild_all->setIcon(icon10);
         actionUndo = new QAction(MainWindow);
         actionUndo->setObjectName(QStringLiteral("actionUndo"));
@@ -257,6 +258,11 @@ public:
         actionPreference->setObjectName(QStringLiteral("actionPreference"));
         actionAssemblerConfiguration = new QAction(MainWindow);
         actionAssemblerConfiguration->setObjectName(QStringLiteral("actionAssemblerConfiguration"));
+        actionSave_all = new QAction(MainWindow);
+        actionSave_all->setObjectName(QStringLiteral("actionSave_all"));
+        QIcon icon11;
+        icon11.addFile(QStringLiteral(":/menu_icon2/img/save_all2.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSave_all->setIcon(icon11);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         sizePolicy.setHeightForWidth(centralwidget->sizePolicy().hasHeightForWidth());
@@ -301,13 +307,13 @@ public:
 
         horizontalLayout_2->addWidget(leftBoard);
 
-        tabWidget_editor = new QTabWidget(centralwidget);
-        tabWidget_editor->setObjectName(QStringLiteral("tabWidget_editor"));
-        sizePolicy.setHeightForWidth(tabWidget_editor->sizePolicy().hasHeightForWidth());
-        tabWidget_editor->setSizePolicy(sizePolicy);
-        tabWidget_editor->setTabsClosable(true);
+        editorTab = new EditorTab(centralwidget);
+        editorTab->setObjectName(QStringLiteral("editorTab"));
+        sizePolicy.setHeightForWidth(editorTab->sizePolicy().hasHeightForWidth());
+        editorTab->setSizePolicy(sizePolicy);
+        editorTab->setTabsClosable(true);
 
-        horizontalLayout_2->addWidget(tabWidget_editor);
+        horizontalLayout_2->addWidget(editorTab);
 
         horizontalLayout_2->setStretch(0, 1);
         horizontalLayout_2->setStretch(1, 3);
@@ -524,9 +530,6 @@ public:
         toolBar = new QToolBar(MainWindow);
         toolBar->setObjectName(QStringLiteral("toolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
-        toolBar_2 = new QToolBar(MainWindow);
-        toolBar_2->setObjectName(QStringLiteral("toolBar_2"));
-        MainWindow->addToolBar(Qt::TopToolBarArea, toolBar_2);
         QWidget::setTabOrder(tabWidget_pipeline, tabWidget_memory);
 
         menubar->addAction(menuFile->menuAction());
@@ -569,13 +572,14 @@ public:
         toolBar->addAction(actionnew);
         toolBar->addAction(actionopen);
         toolBar->addAction(actionsave);
+        toolBar->addAction(actionSave_all);
+        toolBar->addSeparator();
+        toolBar->addAction(actionbuild);
+        toolBar->addAction(actionbuild_all);
         toolBar->addSeparator();
         toolBar->addAction(actionRun);
         toolBar->addAction(actionpause);
         toolBar->addAction(actionstop);
-        toolBar->addSeparator();
-        toolBar->addAction(actionbuild);
-        toolBar->addAction(actionbuild_all);
         toolBar->addSeparator();
         toolBar->addAction(actionrewind);
         toolBar->addAction(actionforward);
@@ -597,14 +601,15 @@ public:
         QObject::connect(actionRemoveCache, SIGNAL(triggered()), MainWindow, SLOT(handleRemoveCache()));
         QObject::connect(actionFlushCache, SIGNAL(triggered()), MainWindow, SLOT(handleFlushCache()));
         QObject::connect(acitonFlushAllCache, SIGNAL(triggered()), MainWindow, SLOT(handleFlushAllCache()));
-        QObject::connect(tabWidget_editor, SIGNAL(tabCloseRequested(int)), MainWindow, SLOT(handleCloseTab(int)));
+        QObject::connect(editorTab, SIGNAL(tabCloseRequested(int)), editorTab, SLOT(closeTab(int)));
         QObject::connect(actionPreference, SIGNAL(triggered()), MainWindow, SLOT(handlePreference()));
         QObject::connect(actionAssemblerConfiguration, SIGNAL(triggered()), MainWindow, SLOT(handleAssemblerConfiguration()));
         QObject::connect(actionbuild, SIGNAL(triggered()), MainWindow, SLOT(handleBuild()));
         QObject::connect(actionbuild_all, SIGNAL(triggered()), MainWindow, SLOT(handleBuildAll()));
+        QObject::connect(actionSave_all, SIGNAL(triggered()), MainWindow, SLOT(handleSaveAll()));
 
-        leftBoard->setCurrentIndex(2);
-        tabWidget_editor->setCurrentIndex(-1);
+        leftBoard->setCurrentIndex(1);
+        editorTab->setCurrentIndex(-1);
         tabWidget_output->setCurrentIndex(0);
         tabWidget_pipeline->setCurrentIndex(1);
         tabWidget_memory->setCurrentIndex(2);
@@ -615,7 +620,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "PISA", Q_NULLPTR));
         actionOpen->setText(QApplication::translate("MainWindow", "&Open", Q_NULLPTR));
         actionSave->setText(QApplication::translate("MainWindow", "&Save", Q_NULLPTR));
         actionSave_As->setText(QApplication::translate("MainWindow", "Sa&ve As", Q_NULLPTR));
@@ -693,6 +698,7 @@ public:
         acitonFlushAllCache->setText(QApplication::translate("MainWindow", "F&lush All", Q_NULLPTR));
         actionPreference->setText(QApplication::translate("MainWindow", "&Preference...", Q_NULLPTR));
         actionAssemblerConfiguration->setText(QApplication::translate("MainWindow", "&Configuration", Q_NULLPTR));
+        actionSave_all->setText(QApplication::translate("MainWindow", "Save_all", Q_NULLPTR));
         leftBoard->setTabText(leftBoard->indexOf(tab_navigation), QApplication::translate("MainWindow", "Navigation", Q_NULLPTR));
         leftBoard->setTabText(leftBoard->indexOf(tab_performance), QApplication::translate("MainWindow", "Performance", Q_NULLPTR));
         leftBoard->setTabText(leftBoard->indexOf(Track), QApplication::translate("MainWindow", "Tracker", Q_NULLPTR));
@@ -753,7 +759,6 @@ public:
         menuHelp->setTitle(QApplication::translate("MainWindow", "Help", Q_NULLPTR));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Setti&ngs", Q_NULLPTR));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
-        toolBar_2->setWindowTitle(QApplication::translate("MainWindow", "toolBar_2", Q_NULLPTR));
     } // retranslateUi
 
 };

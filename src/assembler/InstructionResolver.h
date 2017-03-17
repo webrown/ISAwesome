@@ -2,7 +2,7 @@
 #define INSTRUCTIONRESOLVER_H
 #include <QMap>
 #include <QVector>
-#include "../utility.h"
+#include "../Utility.h"
 #include "../assembler/Error.h"
 #include "../assembler/Warning.h"
 

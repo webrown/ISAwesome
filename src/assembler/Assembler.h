@@ -12,7 +12,7 @@
 #include <QFile>
 #include "Error.h"
 #include "Warning.h"
-#include "../architecture.h"
+#include "../Architecture.h"
 #include "InstructionResolver.h"
 #include "ConditionResolver.h"
 

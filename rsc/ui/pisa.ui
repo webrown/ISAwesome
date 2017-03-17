@@ -56,7 +56,7 @@
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab_navigation">
            <attribute name="title">
@@ -99,7 +99,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTabWidget" name="tabWidget_editor">
+         <widget class="EditorTab" name="editorTab">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -541,28 +541,18 @@
    <addaction name="actionnew"/>
    <addaction name="actionopen"/>
    <addaction name="actionsave"/>
+   <addaction name="actionSave_all"/>
+   <addaction name="separator"/>
+   <addaction name="actionbuild"/>
+   <addaction name="actionbuild_all"/>
    <addaction name="separator"/>
    <addaction name="actionRun"/>
    <addaction name="actionpause"/>
    <addaction name="actionstop"/>
    <addaction name="separator"/>
-   <addaction name="actionbuild"/>
-   <addaction name="actionbuild_all"/>
-   <addaction name="separator"/>
    <addaction name="actionrewind"/>
    <addaction name="actionforward"/>
    <addaction name="separator"/>
-  </widget>
-  <widget class="QToolBar" name="toolBar_2">
-   <property name="windowTitle">
-    <string>toolBar_2</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -602,7 +592,7 @@
   <action name="actionRun">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/play.png</normaloff>:/menu_icon/img/play.png</iconset>
+     <normaloff>:/menu_icon2/img/play2.png</normaloff>:/menu_icon2/img/play2.png</iconset>
    </property>
    <property name="text">
     <string>Run</string>
@@ -629,7 +619,7 @@
   <action name="actionnew">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/new.png</normaloff>:/menu_icon/img/new.png</iconset>
+     <normaloff>:/menu_icon2/img/new2.png</normaloff>:/menu_icon2/img/new2.png</iconset>
    </property>
    <property name="text">
     <string>new</string>
@@ -641,7 +631,7 @@
   <action name="actionopen">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/open.png</normaloff>:/menu_icon/img/open.png</iconset>
+     <normaloff>:/menu_icon2/img/open2.png</normaloff>:/menu_icon2/img/open2.png</iconset>
    </property>
    <property name="text">
     <string>open</string>
@@ -653,7 +643,7 @@
   <action name="actionsave">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/save.png</normaloff>:/menu_icon/img/save.png</iconset>
+     <normaloff>:/menu_icon2/img/save2.png</normaloff>:/menu_icon2/img/save2.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -665,7 +655,7 @@
   <action name="actionstop">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/stop.png</normaloff>:/menu_icon/img/stop.png</iconset>
+     <normaloff>:/menu_icon2/img/stop2.png</normaloff>:/menu_icon2/img/stop2.png</iconset>
    </property>
    <property name="text">
     <string>stop</string>
@@ -677,7 +667,7 @@
   <action name="actionpause">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/pause.png</normaloff>:/menu_icon/img/pause.png</iconset>
+     <normaloff>:/menu_icon2/img/pause2.png</normaloff>:/menu_icon2/img/pause2.png</iconset>
    </property>
    <property name="text">
     <string>pause</string>
@@ -689,7 +679,7 @@
   <action name="actionforward">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/forward.png</normaloff>:/menu_icon/img/forward.png</iconset>
+     <normaloff>:/menu_icon2/img/forward2.png</normaloff>:/menu_icon2/img/forward2.png</iconset>
    </property>
    <property name="text">
     <string>forward</string>
@@ -701,7 +691,7 @@
   <action name="actionrewind">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/backward.png</normaloff>:/menu_icon/img/backward.png</iconset>
+     <normaloff>:/menu_icon2/img/backward2.png</normaloff>:/menu_icon2/img/backward2.png</iconset>
    </property>
    <property name="text">
     <string>rewind</string>
@@ -713,7 +703,7 @@
   <action name="actionbuild">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/build.png</normaloff>:/menu_icon/img/build.png</iconset>
+     <normaloff>:/menu_icon2/img/build2.png</normaloff>:/menu_icon2/img/build2.png</iconset>
    </property>
    <property name="text">
     <string>build</string>
@@ -725,7 +715,7 @@
   <action name="actionbuild_all">
    <property name="icon">
     <iconset resource="../pisa.qrc">
-     <normaloff>:/menu_icon/img/build_all.png</normaloff>:/menu_icon/img/build_all.png</iconset>
+     <normaloff>:/menu_icon2/img/build_all2.png</normaloff>:/menu_icon2/img/build_all2.png</iconset>
    </property>
    <property name="text">
     <string>build all</string>
@@ -861,7 +851,27 @@
     <string>&amp;Configuration</string>
    </property>
   </action>
+  <action name="actionSave_all">
+   <property name="icon">
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon2/img/save_all2.png</normaloff>:/menu_icon2/img/save_all2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save_all</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>EditorTab</class>
+   <extends>QTabWidget</extends>
+   <header>EditorTab.h</header>
+   <container>1</container>
+   <slots>
+    <slot>closeTab(int)</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>tabWidget_pipeline</tabstop>
   <tabstop>tabWidget_memory</tabstop>
@@ -1111,18 +1121,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>tabWidget_editor</sender>
+   <sender>editorTab</sender>
    <signal>tabCloseRequested(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>handleCloseTab(int)</slot>
+   <receiver>editorTab</receiver>
+   <slot>closeTab(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>738</x>
      <y>446</y>
     </hint>
     <hint type="destinationlabel">
-     <x>959</x>
-     <y>539</y>
+     <x>738</x>
+     <y>446</y>
     </hint>
    </hints>
   </connection>
@@ -1190,6 +1200,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSave_all</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleSaveAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>handleNewButton()</slot>
@@ -1209,5 +1235,6 @@
   <slot>handleAssemblerConfiguration()</slot>
   <slot>handleBuild()</slot>
   <slot>handleBuildAll()</slot>
+  <slot>handleSaveAll()</slot>
  </slots>
 </ui>

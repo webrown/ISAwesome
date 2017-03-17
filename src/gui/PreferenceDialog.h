@@ -4,7 +4,7 @@
 #include <QDialog>
 #include "ui_preferencedialog.h"
 #include <QStandardPaths>
-#include "mainwindow.h"
+#include "MainWindow.h"
 class MainWindow;
 class PreferenceDialog : public QDialog
 {

@@ -1,7 +1,8 @@
 #include "Assembler.h" 
 
 Assembler::Assembler(){
-    //Do nothing
+    qRegisterMetaType<AssemblerConfiguration>();
+    qRegisterMetaType<Assembled>();
 }
 
 Assembler::~Assembler(){
