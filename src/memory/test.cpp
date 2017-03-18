@@ -537,6 +537,9 @@ int main() {
         delete qr;
     }
 
+    // Just make sure we can do this syntax...
+    r.read(Register::PC);
+
     cout << "END:  Register tests." << endl;
   }
   return 0;
