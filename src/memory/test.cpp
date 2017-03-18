@@ -539,6 +539,7 @@ int main() {
 
     // Just make sure we can do this syntax...
     r.read(Register::PC);
+    r.read(Register::scalarFloats+3);
 
     cout << "END:  Register tests." << endl;
   }

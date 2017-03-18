@@ -26,6 +26,12 @@ class Register : MemoryInterface{
         QString *save();
         void restore(QString *state);
 
+        static const unsigned int scalarIntegers = 0;
+        static const unsigned int scalarFloats = 10;
+        static const unsigned int specials = 20;
+        static const unsigned int vectorIntegers = 24;
+        static const unsigned int vectorFloats = 28;
+
         static const unsigned int LR = 20;
         static const unsigned int SP = 21;
         static const unsigned int BP = 22;
