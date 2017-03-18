@@ -2,21 +2,28 @@
 #include <QDebug>
 
 Register::Register(){
-    _iScas.fill(0,NUMBER_OF_INTEGER_SCALAR_REGISTER);
-    _fScas.fill(0,NUMBER_OF_FLOAT_SCALAR_REGISTER);
+    Value intZero = {0};
+    Value floatZero;
+    floatZero.f = 0;
+
+    _iScas.fill(intZero, NUMBER_OF_INTEGER_SCALAR_REGISTER);
+    _fScas.fill(floatZero, NUMBER_OF_FLOAT_SCALAR_REGISTER);
+    _sRegs.fill(intZero, NUMBER_OF_SYSTEM_REGISTER);
 
     for(int i = 0; i < NUMBER_OF_INTEGER_VECTOR; i++){
-        QVector<int> vec;
-        vec.fill(0,VECTOR_SIZE);
+        QVector<Value> vec;
+        vec.fill(intZero,VECTOR_SIZE);
         _iVecs.append(vec);
     }
 
     for(int i = 0; i < NUMBER_OF_FLOAT_VECTOR; i++){
-        QVector<float> vec;
-        vec.fill(0,VECTOR_SIZE);
+        QVector<Value> vec;
+        vec.fill(floatZero,VECTOR_SIZE);
         _fVecs.append(vec);
     }
-    qDebug() << "Registers generated" << endl;
+}
+
+Register::~Register() {
 }
 
 QueryResult* Register::read(unsigned int address, unsigned int length){
@@ -40,19 +47,19 @@ QueryResult* Register::read(unsigned int address, unsigned int length){
 
 QueryResult* Register::read(unsigned int address){
     if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER){
-        QVector<int> vec;
-        vec[0] = _iScas[address];
+        QVector<Value> vec;
+        vec.push_back(_iScas[address]);
         return new QueryResult(vec, delay);
     }
     else if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER){
-        QVector<float> vec;
-        vec[0] = _fScas[address-NUMBER_OF_INTEGER_SCALAR_REGISTER];
+        QVector<Value> vec;
+        vec.push_back(_fScas[address-NUMBER_OF_INTEGER_SCALAR_REGISTER]);
         return new QueryResult(vec, delay);
 
     }
     else if(address <  NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER + NUMBER_OF_SYSTEM_REGISTER){
-        QVector<int> vec;
-        vec[0] = _fScas[address-NUMBER_OF_INTEGER_SCALAR_REGISTER- NUMBER_OF_FLOAT_SCALAR_REGISTER];
+        QVector<Value> vec;
+        vec.push_back(_sRegs[address-NUMBER_OF_INTEGER_SCALAR_REGISTER- NUMBER_OF_FLOAT_SCALAR_REGISTER]);
         return new QueryResult(vec, delay);
     }
     qDebug() << "Register address " << address << " does not exist!";
@@ -60,7 +67,7 @@ QueryResult* Register::read(unsigned int address){
 }
 
 
-double Register::write(QVector<int> *value, unsigned int address){
+double Register::write(QVector<Value> *value, unsigned int address){
     if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER|| address >= TOTAL_NUMBER_OF_REGISTERS){
         qDebug()<< "Invalid Access: address has to be between 24 to 31" << endl;
         exit(-1);
@@ -73,24 +80,37 @@ double Register::write(QVector<int> *value, unsigned int address){
     address -= NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER;
     if(address < NUMBER_OF_INTEGER_VECTOR){
         for(int i = 0; i < VECTOR_SIZE;i++){
-        _iVecs[address].replace(0,value->at(i));
+        _iVecs[address].replace(i,value->at(i));
         }
     }
     else{
         for(int i = 0; i < VECTOR_SIZE;i++){
-        _fVecs[address-NUMBER_OF_INTEGER_VECTOR].replace(0,value->at(i));
+        _fVecs[address-NUMBER_OF_INTEGER_VECTOR].replace(i,value->at(i));
         }
     }
-    qDebug() << "Register address " << address << " does not exist!";
-    exit(-1);
+    return delay;
 }
 
 
-double Register::write(int input, unsigned int address){
-  QVector<int> *tinyQVector = new QVector<int>(1, input);
-  double result = write(tinyQVector, address);
-  delete tinyQVector;
-  return result;
+double Register::write(Value input, unsigned int address){
+    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER) {
+        _iScas.replace(address,input);
+        return delay;
+    }
+    address -= NUMBER_OF_INTEGER_SCALAR_REGISTER;
+
+    if(address < NUMBER_OF_FLOAT_SCALAR_REGISTER) {
+        _fScas.replace(address,input);
+        return delay;
+    }
+    address -= NUMBER_OF_FLOAT_SCALAR_REGISTER;
+
+    if(address < NUMBER_OF_SYSTEM_REGISTER) {
+        _sRegs.replace(address,input);
+        return delay;
+    }
+    qDebug()<< "Invalid Access: address has to be between 0 to " << (NUMBER_OF_INTEGER_SCALAR_REGISTER+NUMBER_OF_FLOAT_SCALAR_REGISTER+NUMBER_OF_SYSTEM_REGISTER) << endl;
+    exit(-1);
 }
 
 QString *Register::save(){

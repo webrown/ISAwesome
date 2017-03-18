@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "MainMemory.h"
+#include "Register.h"
 
 using namespace std;
 
@@ -482,6 +483,61 @@ int main() {
     }
 
     cout << "END: MainMemory tests." << endl;
+  }
+  {
+    cout << "BEGIN:  Register tests." << endl;
+    Register r;
+    r.write(42, 10);
+    QueryResult *qr = r.read(10);
+    if(qr->result.at(0).i == 42) {
+      cout << "PASS:  Can write/read a single integer scalar value." << endl;
+    }
+    else {
+      cout << "FAIL:  Cannot write/read a single integer scalar value." << qr->result.at(0).i << endl;
+    }
+    delete qr;
+
+    for(int i = 0; i < 24; i++) {
+        Value v;
+        v.f = i;
+        r.write(v,i);
+    }
+    for(int i = 0; i < 24; i++) {
+        QueryResult *qr = r.read(i);
+        if(qr->result.at(0).f == i) {
+          cout << "PASS:  Can write/read to address " << i << endl;
+        }
+        else {
+          cout << "FAIL:  Cannot write/read to address " << i << endl;
+        }
+        delete qr;
+    }
+
+    Value counter = {0};
+    for(int i = 24; i < 32; i++) {
+        QVector<Value> vec;
+        for(int j = 0; j < 64; j++) {
+            vec.push_back(counter);
+            counter.i++;
+        }
+        r.write(&vec,i);
+    }
+    counter.i = 0;
+    for(unsigned int i = 24; i < 32; i++) {
+        QueryResult *qr = r.read(i, 64);
+        for(int j = 0; j < 64; j++) {
+            if(qr->result.at(j).i == counter.i) {
+              cout << "PASS:  Can write/read to vector word " << counter.i << "." << endl;
+            }
+            else {
+              cout << "FAIL:  Cannot write/read to vector word " << counter.i << "." << qr->result.at(j).i << endl;
+            }
+            counter.i++;
+        }
+        delete qr;
+    }
+
+    cout << "END:  Register tests." << endl;
   }
   return 0;
 }
