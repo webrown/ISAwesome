@@ -100,63 +100,63 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="1">
-           <widget class="QCheckBox" name="checkBox_4">
+           <widget class="QCheckBox" name="globalMacroCheckBox">
             <property name="text">
              <string>Global Macro</string>
             </property>
            </widget>
           </item>
           <item row="0" column="2">
-           <widget class="QCheckBox" name="checkBox_7">
+           <widget class="QCheckBox" name="wallCheckBox">
             <property name="text">
              <string>Wall</string>
             </property>
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QCheckBox" name="checkBox_5">
+           <widget class="QCheckBox" name="somethingCheckBox1">
             <property name="text">
              <string>Something</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QCheckBox" name="checkBox_2">
+           <widget class="QCheckBox" name="defaultAliasCheckBox">
             <property name="text">
              <string>Use Default Alias</string>
             </property>
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QCheckBox" name="checkBox_9">
+           <widget class="QCheckBox" name="seomthingCheckBox2">
             <property name="text">
              <string>Somthing</string>
             </property>
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="defaultMacroCheckBox">
             <property name="text">
              <string>Use Default Macro</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QCheckBox" name="checkBox_6">
+           <widget class="QCheckBox" name="mainEntryCheckBox">
             <property name="text">
              <string>Main Entry</string>
             </property>
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QCheckBox" name="checkBox_8">
+           <widget class="QCheckBox" name="preserveCommetnCheckBox">
             <property name="text">
              <string>Preserve Comment</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QCheckBox" name="checkBox_3">
+           <widget class="QCheckBox" name="globalAliasCheckBox">
             <property name="text">
              <string>Global Alias</string>
             </property>

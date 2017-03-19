@@ -135,13 +135,38 @@ NewFileDialog::~NewFileDialog(){
 }
 
 QString NewFileDialog::getFileName(){
-    QString fullName = _ui.lineEdit_directory->text() + _ui.lineEdit_fileName->text();
-    QFile file(fullName);
-    if(file.exists()){
-        return "";
+    QString fullPath = _ui.lineEdit_directory->text() + _ui.lineEdit_fileName->text();
+    return fullPath;
+}
+
+void NewFileDialog::accept(){
+    if(_ui.lineEdit_fileName->text() == ""){
+       //  QErrorMessage msg(this); */
+        // msg.showMessage("Empty string can't be a file name");
+       // msg.exec();
+        return;
+    }
+    QFile file(getFileName());
+    if(file.exists() == true){
+        QMessageBox msgBox;
+        msgBox.setText(getFileName() + " already exists.");
+        msgBox.setInformativeText("Do you want to proceed?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Save);
+        int ret = msgBox.exec();
+        if(ret == QMessageBox::Yes){
+            QDialog::accept();
+        }
+        else if (ret == QMessageBox::No){
+            //Nothing
+        }
+        else if (ret == QMessageBox::Cancel){
+            QDialog::reject();
+        }
+            
     }
     else{
-        return fullName;
+        QDialog::accept();
     }
 }
 

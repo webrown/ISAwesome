@@ -2,6 +2,7 @@
 #define DISASSEMBLER_H 
 
 #include "InstructionResolver.h"
+#include <QDebug>
 #include "ConditionResolver.h"
 
 

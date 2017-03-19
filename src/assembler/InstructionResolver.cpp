@@ -1,9 +1,11 @@
 #include "InstructionResolver.h"
+#define L_BIT toB("1000000000000000000000")
+#include <QDebug>
 
 QRegExp intReg("^R([0-9]|2[0-3])$");
 QRegExp floatReg("^R1[0-9]$");
 QRegExp intVec("^R2[4-7]$");
-QRegExp floatVec("^(R28|R29|R30|R31)$"); 
+QRegExp floatVec("^R28|R29|R30|R31$"); 
 
 bool _checkSize(QStringList tokens, ParseResult* result, int size){
     if(tokens.size() != size){
@@ -48,6 +50,24 @@ bool _parse2(QStringList tokens, ParseResult* result, QRegExp destI, QRegExp des
     result->parsed = (src << 5) |dest;
     return true;
 }
+bool _parse3(QStringList tokens, ParseResult* result, QRegExp srcI, QRegExp srcF, QRegExp destI, QRegExp destF){
+    short statusI;
+    short statusF;
+    statusI = srcI.exactMatch(tokens[0])  + destI.exactMatch(tokens[1]);
+    statusF = srcF.exactMatch(tokens[0])  + destF.exactMatch(tokens[1]);
+    if(statusI + statusF < 2){
+        return false;
+    } 
+    if(statusI == 2 && statusF == 2){ 
+        result->warning = "Same type";
+        result->failureLocation = 1;
+    }
+    uint src= tokens[0].remove(0,1).toInt();
+    uint dest =tokens[1].remove(0,1).toInt();
+    result->parsed = (((1 << 16) | src) << 5) |dest;
+    return true;
+}
+
 bool RR(QStringList tokens, ParseResult* result){
     return _parse(tokens, result, intReg, floatReg, intReg, floatReg);
 }
@@ -73,10 +93,10 @@ ParseResult parseArith1(QStringList tokens){
         return result;
     }
     if(RR(tokens, &result)) ;
-    else if(IR(tokens, &result)) ;
     else if(RV(tokens, &result)) ;
-    else if(IV(tokens, &result)) ; 
     else if(VV(tokens, &result)) ;
+    else if(IR(tokens, &result)) ;
+    else if(IV(tokens, &result)) ; 
     else{
         result.error = "Invalid argument";
         result.failureLocation = 1;
@@ -100,6 +120,21 @@ ParseResult parseArith2(QStringList tokens){
 
 }
 
+
+ParseResult parseArith3(QStringList tokens){
+    ParseResult result;
+    if(_checkSize(tokens, &result, 2) == false){
+        return result;
+    }
+    if(_parse3(tokens,&result, intReg, floatReg, intReg, floatReg));
+    else if(_parse3(tokens,&result, intVec, floatVec, intVec, floatVec));
+    else{
+        result.error = "Invalid argument";
+        result.failureLocation = 1;
+    }
+    return result;
+
+}
 ParseResult parseVR(QStringList tokens){
     ParseResult result;
     if(_checkSize(tokens, &result, 2) == false){
@@ -118,8 +153,8 @@ ParseResult parseMVX(QStringList tokens){
         return result;
     }
     if(RV(tokens, &result)) ;
-    else if(IV(tokens, &result)) ; 
     else if(VV(tokens, &result)) ;
+    else if(IV(tokens, &result)) ; 
     else{
         result.error = "Invalid argument";
         result.failureLocation = 1;
@@ -174,10 +209,11 @@ ParseResult parseCPY(QStringList tokens){
     if(_checkSize(tokens, &result, 2) == false){
         return result;
     }
-    if(IR(tokens, &result)) ;
-    else if(RR(tokens, &result)) ;
+    if(RR(tokens, &result)) ;
     else if(VV(tokens, &result)) ;
     else if(RV(tokens, &result)) ; 
+    else if(IR(tokens, &result)) ;
+
     else{
         result.error = "Invalid argument";
         result.failureLocation = 1;
@@ -217,18 +253,186 @@ ParseResult parseBL(QStringList tokens){
         return result;
     }
     tokens[0].remove(0,1);
-    result.parsed = tokens[0].toInt();
+    result.parsed = L_BIT | tokens[0].toInt();
+
+    return result;
+}
+ParseResult parseSEQ(QStringList tokens){
+    ParseResult result;
+    if(_checkSize(tokens, &result, 1) == false){
+        return result;
+    }
+    if(intVec.exactMatch(tokens[0])){
+        //do nothing
+    }
+    else if(floatVec.exactMatch(tokens[0])){
+        result.failureLocation = 1;
+        result.warning = "Float Vector?";
+    }
+    else{
+        result.failureLocation = 1;
+        result.error = "Invalid argument";
+        return result;
+    }
+    tokens[0].remove(0,1);
+    result.parsed = L_BIT | tokens[0].toInt();
 
     return result;
 }
 
-#define L_BIT toB("1000000000000000000000")
+#define FIRST_ARG_IN_TERNARY = toB("111111000000000000000")
+#define SECOND_ARG_IN_TERNARY = toB("000000011111100000000")
+ParseResult parseWVE(QStringList tokens){
+    ParseResult result;
+    if(_checkSize(tokens, &result, 3) == false){
+        return result;
+    }
+    if(intReg.exactMatch(tokens[0])){
+        if(intVec.exactMatch(tokens[2])){
+            //Do nothing
+        }
+        else if(floatVec.exactMatch(tokens[2])){
+            result.warning = "Type mix warning";
+            result.failureLocation = 3;
+        }
+        else{
+            result.failureLocation = 3;
+            result.error = "Invalid argument";
+            return result;
+        }
+    }
+    else if(floatReg.exactMatch(tokens[0])){
+       if(floatVec.exactMatch(tokens[2])){
+            //Do nothing
+        }
+        else if(intVec.exactMatch(tokens[2])){
+            result.warning = "Type mix warning";
+            result.failureLocation = 3;
+        }
+        else{
+            result.failureLocation = 3;
+            result.error = "Invalid argument";
+            return result;
+        } 
+    }
+    else{
+        result.failureLocation = 1;
+        result.error = "Invalid argument";
+        return result;
+    }
+    bool ok;
+        qDebug() << tokens[1];
+
+    QString copy(tokens[1]);
+    uint src = copy.toInt(&ok);
+    if(ok == false || src >= ( 1<< 17)){
+        qDebug() << tokens[1];
+        if(intReg.exactMatch(tokens[1])){
+            tokens[1].remove(0,1);
+            result.parsed = L_BIT;
+            
+        }
+        else if(floatReg.exactMatch(tokens[1])){
+            tokens[1].remove(0,1);
+            result.warning = "WHAT?";
+            result.failureLocation = 1;
+            result.parsed = L_BIT;
+            
+        }
+        else{
+            result.failureLocation = 2;
+            result.error = "Invalid argument";
+            return result;
+        }
+    }
+    else{
+        tokens[1] = QString::number(src,10);
+    }
+    tokens[0].remove(0,1);
+    tokens[2].remove(0,1);
+    result.parsed |= (tokens[0].toInt() << 15) | (tokens[1].toInt() <<8) | (tokens[2].toInt());
+
+    return result;
+
+}
+ParseResult parseRVE(QStringList tokens){
+    ParseResult result;
+    if(_checkSize(tokens, &result, 3) == false){
+        return result;
+    }
+    if(intVec.exactMatch(tokens[0])){
+        if(intReg.exactMatch(tokens[2])){
+            //Do nothing
+        }
+        else if(floatReg.exactMatch(tokens[2])){
+            result.warning = "Type mix warning";
+            result.failureLocation = 2;
+        }
+        else{
+            result.failureLocation = 2;
+            result.error = "Invalid argument";
+            return result;
+        }
+    }
+    else if(floatVec.exactMatch(tokens[0])){
+       if(floatReg.exactMatch(tokens[2])){
+            //Do nothing
+        }
+        else if(intReg.exactMatch(tokens[2])){
+            result.warning = "Type mix warning";
+            result.failureLocation = 2;
+        }
+        else{
+            result.failureLocation = 2;
+            result.error = "Invalid argument";
+            return result;
+        } 
+    }
+    else{
+        result.failureLocation = 1;
+        result.error = "Invalid argument";
+        return result;
+    }
+    bool ok;
+    QString copy(tokens[1]);
+    uint src = copy.toInt(&ok);
+    if(ok == false || src >= ( 1<< 17)){
+        if(intReg.exactMatch(tokens[1])){
+            tokens[1].remove(0,1);
+            result.parsed = L_BIT;
+            
+        }
+        else if(floatReg.exactMatch(tokens[1])){
+            tokens[1].remove(0,1);
+            result.warning = "WHAT?";
+            result.failureLocation = 1;
+            result.parsed = L_BIT;
+            
+        }
+        else{
+            result.failureLocation = 2;
+            result.error = "Invalid argument";
+            return result;
+        }
+    }
+    else{
+        tokens[1] = QString::number(src,10);
+    }
+    tokens[0].remove(0,1);
+    tokens[2].remove(0,1);
+    result.parsed |= (tokens[0].toInt() << 15) | (tokens[1].toInt() << 8) | (tokens[2].toInt());
+
+    return result;
+
+}
+//UNPARSE----------------------------------------------------
 ParseResult unparseB(uint args){
     ParseResult result;
-    result.unparsed = "0X" + QString::number(args, 16);
+    result.unparsed = "#0X" + QString::number(args, 16);
     return result;
 }
 
+//This also works for SEQ
 ParseResult unparseBL(uint args){
     ParseResult result;
     result.unparsed = "R" + QString::number((args & ((1<<5)-1)));
@@ -243,28 +447,53 @@ ParseResult unparseUnary(uint args){
     }
     //immediate
     else{
-        result.unparsed = "#0X" +QString::number((args & !L_BIT),16);
+        result.unparsed = "#0X" +QString::number((args & ~L_BIT),16);
     }
     return result;
 }
 
 ParseResult unparseBinary(uint args){
+    qDebug()<< "ENDTER";
     ParseResult result;
-    uint firstArg = ((args & !L_BIT)& !((1<<5)-1)) >> 5;
+    uint firstArg = (args & ((((1<<16)-1))<<5)) >> 5;
     //register
     
+    qDebug() <<"A";
     if((args & L_BIT) == L_BIT){
-        result.unparsed = "R" + QString::number(firstArg & ((1<<5)-1),16) + " ";
+        result.unparsed = "R" + QString::number(firstArg & ((1<<5)-1),10) + " ";
     }
     //immediate
     else{
         result.unparsed = "#0X" + QString::number(firstArg,16) + " ";
+    }
+    qDebug() << "B";
+    result.unparsed += " R" + QString::number((args & ((1<<5)-1)));
+
+    return result;
+
+}
+
+ParseResult unparseTernary(uint args){
+    ParseResult result;
+    uint firstArg = ((args & ~L_BIT)& ((((1<<5)-1))<<15)) >> 15;
+    result.unparsed = "R" + QString::number(firstArg & ((1<<5)-1),10) + " ";
+
+    uint secondArg = ((args & ~L_BIT)& (((1<<5)-1) << 8)) >> 8;
+
+    //register
+    if((args & L_BIT) == L_BIT){
+        result.unparsed += "R" + QString::number(secondArg & ((1<<5)-1),10) + " ";
+    }
+    //immediate
+    else{
+        result.unparsed += "#0X" + QString::number(secondArg,16) ;
     }
     result.unparsed += " R" + QString::number((args & ((1<<5)-1)));
 
     return result;
 
 }
+
 
 InstructionResolver::InstructionResolver(){
 
@@ -287,10 +516,10 @@ InstructionResolver::InstructionResolver(){
     set("STO", 0x6, parseSTO,unparseBinary);
 
     // RVE
-    // set("RVE",0x8,VIR|VRR);
+    set("RVE",0x8,parseRVE,unparseTernary);
 
     // Write vector
-    // set("WVE",0x9,RVR |RVI);
+    set("WVE",0x9,parseWVE ,unparseTernary);
 
     //Move down
     set("MVD",0xA,parseMVX, unparseBinary);
@@ -302,7 +531,7 @@ InstructionResolver::InstructionResolver(){
     set("ARR",0xC,parseARR, unparseBinary);
 
     //Sequence
-    // set("SEQ",0xD,V);
+    set("SEQ",0xD,parseSEQ, unparseBL);
     //Mulptiply elements
     set("MOE",0xE,parseVR, unparseBinary);
 
@@ -424,11 +653,13 @@ InstructionResolver::InstructionResolver(){
     set("NOTS", toB("111011"),parseArith2,unparseBinary);
 
     //To Integer
-    set("TOI",toB("111100"), parseArith2, unparseBinary);
+    set("TOI",toB("111100"), parseArith3, unparseBinary);
 
     //To float
-    set("TOF",toB("111101"), parseArith2, unparseBinary );
-    set("NOP",toB("000011"), NULL, NULL);
+    set("TOF",toB("111101"), parseArith3, unparseBinary );
+
+    //NOP!
+    set("NOP",toB("000010"), NULL, NULL);
 }
 InstructionResolver::~InstructionResolver(){
     for(InstructionDefinition* def : nameTable.values()){

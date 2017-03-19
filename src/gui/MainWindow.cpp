@@ -13,7 +13,7 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     assembler->moveToThread(&assemblyThread);
     connect(&assemblyThread, &QThread::finished, assembler, &QObject::deleteLater);
     connect(this, &MainWindow::startBuild, assembler, &Assembler::assemble);
-    connect(assembler, &Assembler::resultReady, this, &MainWindow::finishBuild);
+    connect(assembler, &Assembler::resultReady, this, &MainWindow::finishAssemble);
     assemblyThread.start();
 
     //add element on toolbar
@@ -68,11 +68,15 @@ void MainWindow::handleNewButton(){
 
     connect(widget, SIGNAL(undoAvailable(bool)), this, SLOT(updateUndo(bool)));
     connect(widget, SIGNAL(redoAvailable(bool)), this, SLOT(updateRedo(bool)));
+    qDebug() << str ;
+    printlnConsole(str + " is opened");
+
 }
 
 //handle Open Event
 void MainWindow::handleOpenButton()
 {
+    qDebug() << "Open Button is clicked!";
     QString docLoc = settings.value("general/workdirectory",getDocDir()).toString();
     QStringList fileNames = QFileDialog::getOpenFileNames(
             this,
@@ -83,26 +87,39 @@ void MainWindow::handleOpenButton()
         CodeEditor* widget = _ui.editorTab->openTab(fileName);
         connect(widget, SIGNAL(undoAvailable(bool)), this, SLOT(updateUndo(bool)));
         connect(widget, SIGNAL(redoAvailable(bool)), this, SLOT(updateRedo(bool)));
+        printlnConsole(fileName + " is opened");
     }
 }
 
 //handle Save event
 void MainWindow::handleSaveButton()
 {
+    qDebug() << "Save button is clicked";
     if(_ui.editorTab->saveTab()){
-
+        printlnConsole(_ui.editorTab->currentEditor()->sourceFile->fileName() + " is saved");
+    }
+    else{
+        printlnConsole("save failed");
     }
 }
 
 void MainWindow::handleSaveAllButton()
 {
+    qDebug() << "Save all button is clicked";
     if(_ui.editorTab->saveAllTab()){
+        for(int i =0; i < _ui.editorTab->count(); i++){
+            printlnConsole(((CodeEditor*)_ui.editorTab->widget(i))->sourceFile->fileName() + " is saved");
+        }
+    }
+    else{
+        printlnConsole("save failed");
     }
 }
 
 //handle Save As event
 void MainWindow::handleSaveAsButton()
 {
+    qDebug() << "Save As button is clicked";
     NewFileDialog dialog(settings.value("general/workdirectory",getDocDir()).toString(),this);
     int result = dialog.exec();
     if(result != QDialog::Accepted){
@@ -110,30 +127,38 @@ void MainWindow::handleSaveAsButton()
     }
     QString str = dialog.getFileName();
     if(_ui.editorTab->saveAsTab(str)){
+        printlnConsole(_ui.editorTab->currentEditor()->sourceFile->fileName()+ str.section("/",-1,-1));
+    }
+    else{
+        printlnConsole("save failed");
     }
 }
 
 //handle Undo Event
 void MainWindow::handleUndoButton()
 {
+    qDebug() << "Undo button is clicked";
+
     ((CodeEditor*)_ui.editorTab->currentWidget())->undo();
 }
 
 void MainWindow::handleRedoButton()
 {
+    qDebug() << "Redo button is clicked";
     ((CodeEditor*)_ui.editorTab->currentWidget())->redo();
-
 }
 
 //hande about pisa event
 void MainWindow::handleAboutPISAButton()
 {
+    qDebug() << "About PISA button is clicked";
     QString link = "https://github.com/webrown/PISA";
     QDesktopServices::openUrl(QUrl(link));
 }
 
 
 void MainWindow::handleAddCache(){ 
+    qDebug() << "Add Cache button is clicked";
     NewCacheDialog dialog(computer->topCache, this);
     int result = dialog.exec();
     if(result == QDialog::Accepted){
@@ -159,16 +184,21 @@ void MainWindow::handleAddCache(){
 }
 
 void MainWindow::handleRemoveCache(){
+    qDebug() << "Remove Cache button is clicked";
 }
 
 void MainWindow::handleClearCache(){
+    qDebug() << "Clear Cache button is clicked";
 } 
 void MainWindow::handleFlushCache(){
+    qDebug() << "Flush Cache button is clicked";
 }
 
 void MainWindow::handleFlushAllCache(){
+    qDebug() << "Flush All cache button is clicked";
 }
 void MainWindow::handleBuild(){
+    qDebug() << "Build button is clicked";
     //Nothing to build
     //TODO output?
     int index = _ui.editorTab->currentIndex();
@@ -176,66 +206,137 @@ void MainWindow::handleBuild(){
         _ui.consoleTextEdit->appendPlainText("Nothing to build...");
         return;
     }
-    handleSaveButton();
+    //Save file: I don't know but eclipse does this, so I guess there is some reason why we need to save file before assembly
 
+   assemble(_ui.editorTab->currentEditor()->sourceFile->fileName(), false); 
+}
+
+void MainWindow::assemble(QString fileName, bool runAfter){
+    handleSaveButton();
     AssemblerConfiguration config;
     config.useDefaultMacro = settings.value("assembly/useDefaultMacro", true).toBool();
     config.useDefaultAlias = settings.value("assembly/useDefaultAlias", true).toBool();
     config.useGlobalMacro = settings.value("assembly/useGlobalMacro", true).toBool();
     config.useGlobalAlias = settings.value("assembly/useGlobalAlias", true).toBool();
     config.useMainEntry = settings.value("assembly/useMainEntry", true).toBool();
+    config.useWall =  settings.value("assembly/useWall", true).toBool();
    
-    startBuild(((CodeEditor*)_ui.editorTab->currentWidget())->sourceFile->fileName(), config);
+    startBuild(fileName, config, runAfter);
+}
+void MainWindow::finishAssemble(Assembled* assembled, bool runAfter){
+    clearConsole();
+    //remove this
+    _ui.tracker->clear();
+    displayProblems(assembled->problemLog);
+
+    bool isAssembled = assembled->isAssembled;
+    QString fileName = assembled->fileName;
+    if(isAssembled == true){
+        printlnConsole("Build succeeded.");
+        ProgramManagerX::saveProgram(fileName +".out", assembled->instructions);
+        printlnConsole(fileName + " is saved.");
+    }
+    else{
+        printlnConsole("Build failed...");
+    }
+
+    printlnConsole("Time elasped: " + QString::number(assembled->elaspedTime) + " msec");
+    delete assembled;
+    if((isAssembled & runAfter) == true){
+        launchProgram(fileName + ".out");
+    }
 }
 
-void MainWindow::finishBuild(Assembled* assembled){
+void MainWindow::displayProblems(QList<Problem>* problemLog){
+    //Clear problem view
     _ui.problemTable->clearContents();
-    _ui.problemTable->setRowCount(0);
-    _ui.tracker->clear();
+    _ui.problemTable->setRowCount(problemLog->size());
 
-   if(assembled->isAssembled){
-       _ui.consoleTextEdit->appendPlainText("Build succeeded.");
-       for(int i = 0; i < assembled->instructions->size(); i++){
-           _ui.tracker->addItem(disassembler->disassemble(assembled->instructions->at(i)));
-       }
-
-       delete assembled->instructions;
-   }
-   else{
-       _ui.consoleTextEdit->appendPlainText("Build failed...");
-       _ui.problemTable->setRowCount(assembled->errorLog->size());
-       for(int i =0; i < assembled->errorLog->size(); i++){
-           qDebug() << "printing out error";
-           Error error = assembled->errorLog->at(i);
-           qDebug() << error.fileName;
-           QTableWidgetItem *typeItem = new QTableWidgetItem("Error");
-           _ui.problemTable->setItem(i,0,typeItem);
-           QTableWidgetItem *fileItem = new QTableWidgetItem(error.fileName);
-           _ui.problemTable->setItem(i,1,fileItem);
-           QTableWidgetItem *lineItem = new QTableWidgetItem(QString::number(error.lineNumber+1));
-           _ui.problemTable->setItem(i,2,lineItem);
-           QTableWidgetItem *wordItem = new QTableWidgetItem(QString::number(error.wordNumber+1));
-           _ui.problemTable->setItem(i,3,wordItem);
-           QTableWidgetItem *causeItem = new QTableWidgetItem(error.cause);
-           _ui.problemTable->setItem(i,4,causeItem);
-       }
-       delete assembled->errorLog;
-   }
-
-   _ui.consoleTextEdit->appendPlainText("Time elasped: " + QString::number(assembled->elaspedTime) + " msec");
-    delete assembled->warningLog;
-    delete assembled;
-
+    for(int i =0; i < problemLog->size(); i++){
+        Problem problem = problemLog->at(i);
+        QString type = (problem.type == WARNING ? "Warning" :(problem.type == ERROR ? "Error" : "???"));
+        _ui.problemTable->setItem(i,0,new QTableWidgetItem(type));
+        _ui.problemTable->setItem(i,1,new QTableWidgetItem(problem.fileName));
+        _ui.problemTable->setItem(i,2,new QTableWidgetItem(QString::number(problem.lineNumber+1)));
+        _ui.problemTable->setItem(i,3,new QTableWidgetItem(QString::number(problem.wordNumber+1)));
+        _ui.problemTable->setItem(i,4,new QTableWidgetItem(problem.cause));
+    }
 }
 void MainWindow::handleBuildAll(){
+    qDebug() << "Build All button is clicked";
 }
 
 void MainWindow::handlePreference(){
+    qDebug() << "Preference button is clicked";
     PreferenceDialog dialog(this);
     dialog.exec();
 }
-void MainWindow::handleAssemblerConfiguration(){
+
+void MainWindow::handleForward(){
 }
+void MainWindow::handleBackward(){
+}
+void MainWindow::handlePlay(){
+    qDebug() << "Run button is clicked";
+    //Nothing to build
+    //TODO output?
+    if(_ui.editorTab->isEmpty()){ 
+        _ui.consoleTextEdit->appendPlainText("Nothing to build...");
+        return;
+    }
+    if(shouldIAssemble() == true){
+        qDebug() << "Well, I guess I have to assemble then";
+        QString fileName = _ui.editorTab->currentEditor()->sourceFile->fileName() ;
+        assemble(fileName, true);
+    }
+    else{
+        qDebug() << "HA, no assemble";
+        QString fileName = _ui.editorTab->currentEditor()->sourceFile->fileName() + ".out";
+        launchProgram(fileName);
+    }
+}
+
+void MainWindow::launchProgram(QString fileName){
+    clearConsole();
+    printlnConsole("Run: " + fileName);
+    QVector<uint>* instructions = ProgramManagerX::loadProgram(fileName);
+    //change this code
+    _ui.tracker->clear();
+    for(int i = 0; i < instructions->size(); i++){
+        QString address = QString::number(INSTRUCTION_SIZE  * i,16).rightJustified(8, '0');
+        QString instruction =disassembler->disassemble(instructions->at(i)); 
+        _ui.tracker->addItem(address + "\t" + instruction);
+        
+    }
+}
+
+bool MainWindow::shouldIAssemble(){
+    QString fileName = _ui.editorTab->currentEditor()->sourceFile->fileName();
+    QString outputFileName = fileName + ".out"; 
+    QFile outputFile(outputFileName);
+    if(outputFile.exists() == false){
+        qDebug() << "1";
+        return true;
+    }
+    QFileInfo outputFileInfo(outputFile);
+    QFileInfo sourceFileInfo(*(_ui.editorTab->currentEditor()->sourceFile));
+    if(outputFileInfo.lastModified() < sourceFileInfo.lastModified()){
+        qDebug() << "2";
+
+        return true;
+    }
+    if(_ui.editorTab->isCurrentSaved() == false){
+        qDebug() << "3";
+
+        return true;
+    }
+    return false;
+}
+void MainWindow::handlePause(){
+}
+void MainWindow::handleStop(){
+}
+
 //update undo button
 void MainWindow::updateUndo(bool avail)
 {
@@ -246,4 +347,20 @@ void MainWindow::updateUndo(bool avail)
 void MainWindow::updateRedo(bool avail)
 {
     _ui.actionRedo->setEnabled(avail);
+}
+
+void MainWindow::printConsole(QString line){
+    qDebug() << "Printed on console: " << line ;
+    _ui.tabWidget_output->setCurrentWidget(_ui.tab_console);
+    _ui.consoleTextEdit->insertPlainText(line);
+}
+void MainWindow::printlnConsole(QString line){
+    qDebug() << "Printed with line on console: " << line;
+    _ui.tabWidget_output->setCurrentWidget(_ui.tab_console);
+    _ui.consoleTextEdit->appendPlainText(line);
+}
+void MainWindow::clearConsole(){
+    qDebug() << "Clear Console";
+    _ui.tabWidget_output->setCurrentWidget(_ui.tab_console);
+    _ui.consoleTextEdit->clear();
 }

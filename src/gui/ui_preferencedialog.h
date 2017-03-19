@@ -54,15 +54,15 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QGroupBox *groupBox;
     QGridLayout *gridLayout_2;
-    QCheckBox *checkBox_4;
-    QCheckBox *checkBox_7;
-    QCheckBox *checkBox_5;
-    QCheckBox *checkBox_2;
-    QCheckBox *checkBox_9;
-    QCheckBox *checkBox;
-    QCheckBox *checkBox_6;
-    QCheckBox *checkBox_8;
-    QCheckBox *checkBox_3;
+    QCheckBox *globalMacroCheckBox;
+    QCheckBox *wallCheckBox;
+    QCheckBox *somethingCheckBox1;
+    QCheckBox *defaultAliasCheckBox;
+    QCheckBox *seomthingCheckBox2;
+    QCheckBox *defaultMacroCheckBox;
+    QCheckBox *mainEntryCheckBox;
+    QCheckBox *preserveCommetnCheckBox;
+    QCheckBox *globalAliasCheckBox;
     QWidget *tab;
     QDialogButtonBox *buttonBox;
 
@@ -142,50 +142,50 @@ public:
         groupBox->setObjectName(QStringLiteral("groupBox"));
         gridLayout_2 = new QGridLayout(groupBox);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
-        checkBox_4 = new QCheckBox(groupBox);
-        checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
+        globalMacroCheckBox = new QCheckBox(groupBox);
+        globalMacroCheckBox->setObjectName(QStringLiteral("globalMacroCheckBox"));
 
-        gridLayout_2->addWidget(checkBox_4, 0, 1, 1, 1);
+        gridLayout_2->addWidget(globalMacroCheckBox, 0, 1, 1, 1);
 
-        checkBox_7 = new QCheckBox(groupBox);
-        checkBox_7->setObjectName(QStringLiteral("checkBox_7"));
+        wallCheckBox = new QCheckBox(groupBox);
+        wallCheckBox->setObjectName(QStringLiteral("wallCheckBox"));
 
-        gridLayout_2->addWidget(checkBox_7, 0, 2, 1, 1);
+        gridLayout_2->addWidget(wallCheckBox, 0, 2, 1, 1);
 
-        checkBox_5 = new QCheckBox(groupBox);
-        checkBox_5->setObjectName(QStringLiteral("checkBox_5"));
+        somethingCheckBox1 = new QCheckBox(groupBox);
+        somethingCheckBox1->setObjectName(QStringLiteral("somethingCheckBox1"));
 
-        gridLayout_2->addWidget(checkBox_5, 2, 0, 1, 1);
+        gridLayout_2->addWidget(somethingCheckBox1, 2, 0, 1, 1);
 
-        checkBox_2 = new QCheckBox(groupBox);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        defaultAliasCheckBox = new QCheckBox(groupBox);
+        defaultAliasCheckBox->setObjectName(QStringLiteral("defaultAliasCheckBox"));
 
-        gridLayout_2->addWidget(checkBox_2, 1, 0, 1, 1);
+        gridLayout_2->addWidget(defaultAliasCheckBox, 1, 0, 1, 1);
 
-        checkBox_9 = new QCheckBox(groupBox);
-        checkBox_9->setObjectName(QStringLiteral("checkBox_9"));
+        seomthingCheckBox2 = new QCheckBox(groupBox);
+        seomthingCheckBox2->setObjectName(QStringLiteral("seomthingCheckBox2"));
 
-        gridLayout_2->addWidget(checkBox_9, 2, 2, 1, 1);
+        gridLayout_2->addWidget(seomthingCheckBox2, 2, 2, 1, 1);
 
-        checkBox = new QCheckBox(groupBox);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
+        defaultMacroCheckBox = new QCheckBox(groupBox);
+        defaultMacroCheckBox->setObjectName(QStringLiteral("defaultMacroCheckBox"));
 
-        gridLayout_2->addWidget(checkBox, 0, 0, 1, 1);
+        gridLayout_2->addWidget(defaultMacroCheckBox, 0, 0, 1, 1);
 
-        checkBox_6 = new QCheckBox(groupBox);
-        checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
+        mainEntryCheckBox = new QCheckBox(groupBox);
+        mainEntryCheckBox->setObjectName(QStringLiteral("mainEntryCheckBox"));
 
-        gridLayout_2->addWidget(checkBox_6, 2, 1, 1, 1);
+        gridLayout_2->addWidget(mainEntryCheckBox, 2, 1, 1, 1);
 
-        checkBox_8 = new QCheckBox(groupBox);
-        checkBox_8->setObjectName(QStringLiteral("checkBox_8"));
+        preserveCommetnCheckBox = new QCheckBox(groupBox);
+        preserveCommetnCheckBox->setObjectName(QStringLiteral("preserveCommetnCheckBox"));
 
-        gridLayout_2->addWidget(checkBox_8, 1, 2, 1, 1);
+        gridLayout_2->addWidget(preserveCommetnCheckBox, 1, 2, 1, 1);
 
-        checkBox_3 = new QCheckBox(groupBox);
-        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+        globalAliasCheckBox = new QCheckBox(groupBox);
+        globalAliasCheckBox->setObjectName(QStringLiteral("globalAliasCheckBox"));
 
-        gridLayout_2->addWidget(checkBox_3, 1, 1, 1, 1);
+        gridLayout_2->addWidget(globalAliasCheckBox, 1, 1, 1, 1);
 
 
         verticalLayout_7->addWidget(groupBox);
@@ -223,15 +223,15 @@ public:
         label_4->setText(QApplication::translate("PreferenceDialog", "Font:", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_general), QApplication::translate("PreferenceDialog", "General", Q_NULLPTR));
         groupBox->setTitle(QApplication::translate("PreferenceDialog", "Misc. Setting", Q_NULLPTR));
-        checkBox_4->setText(QApplication::translate("PreferenceDialog", "Global Macro", Q_NULLPTR));
-        checkBox_7->setText(QApplication::translate("PreferenceDialog", "Wall", Q_NULLPTR));
-        checkBox_5->setText(QApplication::translate("PreferenceDialog", "Something", Q_NULLPTR));
-        checkBox_2->setText(QApplication::translate("PreferenceDialog", "Use Default Alias", Q_NULLPTR));
-        checkBox_9->setText(QApplication::translate("PreferenceDialog", "Somthing", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("PreferenceDialog", "Use Default Macro", Q_NULLPTR));
-        checkBox_6->setText(QApplication::translate("PreferenceDialog", "Main Entry", Q_NULLPTR));
-        checkBox_8->setText(QApplication::translate("PreferenceDialog", "Preserve Comment", Q_NULLPTR));
-        checkBox_3->setText(QApplication::translate("PreferenceDialog", "Global Alias", Q_NULLPTR));
+        globalMacroCheckBox->setText(QApplication::translate("PreferenceDialog", "Global Macro", Q_NULLPTR));
+        wallCheckBox->setText(QApplication::translate("PreferenceDialog", "Wall", Q_NULLPTR));
+        somethingCheckBox1->setText(QApplication::translate("PreferenceDialog", "Something", Q_NULLPTR));
+        defaultAliasCheckBox->setText(QApplication::translate("PreferenceDialog", "Use Default Alias", Q_NULLPTR));
+        seomthingCheckBox2->setText(QApplication::translate("PreferenceDialog", "Somthing", Q_NULLPTR));
+        defaultMacroCheckBox->setText(QApplication::translate("PreferenceDialog", "Use Default Macro", Q_NULLPTR));
+        mainEntryCheckBox->setText(QApplication::translate("PreferenceDialog", "Main Entry", Q_NULLPTR));
+        preserveCommetnCheckBox->setText(QApplication::translate("PreferenceDialog", "Preserve Comment", Q_NULLPTR));
+        globalAliasCheckBox->setText(QApplication::translate("PreferenceDialog", "Global Alias", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_assembly), QApplication::translate("PreferenceDialog", "Assembly", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("PreferenceDialog", "Disassembly", Q_NULLPTR));
     } // retranslateUi

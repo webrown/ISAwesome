@@ -1,4 +1,4 @@
 #definemacro
-MV $0 $1
-   CPY $0 $1   
+MOV $0 $1
+CPY $0 $1   
 #endmacro

@@ -56,7 +56,7 @@
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="tab_navigation">
            <attribute name="title">
@@ -454,11 +454,12 @@
     <property name="title">
      <string>Fi&amp;le</string>
     </property>
-    <addaction name="actionNew"/>
-    <addaction name="actionOpen"/>
+    <addaction name="actionnew"/>
+    <addaction name="actionopen"/>
     <addaction name="separator"/>
-    <addaction name="actionSave"/>
+    <addaction name="actionsave"/>
     <addaction name="actionSave_As"/>
+    <addaction name="actionSave_all"/>
     <addaction name="separator"/>
     <addaction name="actionLoad_state"/>
     <addaction name="actionRestore_State"/>
@@ -477,8 +478,13 @@
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
-     <string>V&amp;iew</string>
+     <string>Run</string>
     </property>
+    <addaction name="actionstop"/>
+    <addaction name="actionpause"/>
+    <addaction name="separator"/>
+    <addaction name="actionbuild"/>
+    <addaction name="actionbuild_all"/>
    </widget>
    <widget class="QMenu" name="menuWindow_2">
     <property name="title">
@@ -554,24 +560,9 @@
    <addaction name="actionforward"/>
    <addaction name="separator"/>
   </widget>
-  <action name="actionOpen">
-   <property name="text">
-    <string>&amp;Open</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>&amp;Save</string>
-   </property>
-  </action>
   <action name="actionSave_As">
    <property name="text">
     <string>Sa&amp;ve As</string>
-   </property>
-  </action>
-  <action name="actionNew">
-   <property name="text">
-    <string>&amp;New</string>
    </property>
   </action>
   <action name="actionPipeline">
@@ -584,11 +575,6 @@
     <string>&amp;Disassembler</string>
    </property>
   </action>
-  <action name="actionRegister">
-   <property name="text">
-    <string>&amp;Register</string>
-   </property>
-  </action>
   <action name="actionRun">
    <property name="icon">
     <iconset resource="../pisa.qrc">
@@ -599,11 +585,6 @@
    </property>
    <property name="toolTip">
     <string>Run Program</string>
-   </property>
-  </action>
-  <action name="actionConsole">
-   <property name="text">
-    <string>C&amp;onsole</string>
    </property>
   </action>
   <action name="actionAbout_PISA">
@@ -622,10 +603,13 @@
      <normaloff>:/menu_icon2/img/new2.png</normaloff>:/menu_icon2/img/new2.png</iconset>
    </property>
    <property name="text">
-    <string>new</string>
+    <string>&amp;New</string>
    </property>
    <property name="toolTip">
     <string>Create New File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionopen">
@@ -634,10 +618,13 @@
      <normaloff>:/menu_icon2/img/open2.png</normaloff>:/menu_icon2/img/open2.png</iconset>
    </property>
    <property name="text">
-    <string>open</string>
+    <string>&amp;open</string>
    </property>
    <property name="toolTip">
     <string>Open File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
   <action name="actionsave">
@@ -646,10 +633,13 @@
      <normaloff>:/menu_icon2/img/save2.png</normaloff>:/menu_icon2/img/save2.png</iconset>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
    <property name="toolTip">
     <string>Save File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionstop">
@@ -658,7 +648,7 @@
      <normaloff>:/menu_icon2/img/stop2.png</normaloff>:/menu_icon2/img/stop2.png</iconset>
    </property>
    <property name="text">
-    <string>stop</string>
+    <string>&amp;stop</string>
    </property>
    <property name="toolTip">
     <string>Stop Program</string>
@@ -670,7 +660,7 @@
      <normaloff>:/menu_icon2/img/pause2.png</normaloff>:/menu_icon2/img/pause2.png</iconset>
    </property>
    <property name="text">
-    <string>pause</string>
+    <string>&amp;pause</string>
    </property>
    <property name="toolTip">
     <string>Pause Program</string>
@@ -706,7 +696,7 @@
      <normaloff>:/menu_icon2/img/build2.png</normaloff>:/menu_icon2/img/build2.png</iconset>
    </property>
    <property name="text">
-    <string>build</string>
+    <string>&amp;build</string>
    </property>
    <property name="toolTip">
     <string>Build Current File</string>
@@ -718,7 +708,7 @@
      <normaloff>:/menu_icon2/img/build_all2.png</normaloff>:/menu_icon2/img/build_all2.png</iconset>
    </property>
    <property name="text">
-    <string>build all</string>
+    <string>b&amp;uild all</string>
    </property>
    <property name="toolTip">
     <string>Build All Files</string>
@@ -736,6 +726,9 @@
    <property name="text">
     <string>&amp;Redo</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
+   </property>
   </action>
   <action name="actionCut">
    <property name="text">
@@ -749,13 +742,16 @@
    <property name="text">
     <string>C&amp;opy</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionPaste">
    <property name="text">
     <string>&amp;Paste</string>
    </property>
    <property name="shortcut">
-    <string/>
+    <string>Ctrl+V</string>
    </property>
   </action>
   <action name="actionDelete">
@@ -763,17 +759,7 @@
     <string>&amp;Delete</string>
    </property>
    <property name="shortcut">
-    <string/>
-   </property>
-  </action>
-  <action name="actionSave_State">
-   <property name="text">
-    <string>Save State</string>
-   </property>
-  </action>
-  <action name="actionSave_State_As">
-   <property name="text">
-    <string>Save State As</string>
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionLoad_state">
@@ -784,26 +770,6 @@
   <action name="actionRestore_State">
    <property name="text">
     <string>&amp;Restore State</string>
-   </property>
-  </action>
-  <action name="actionNew_2">
-   <property name="text">
-    <string>Add</string>
-   </property>
-  </action>
-  <action name="actionLoad">
-   <property name="text">
-    <string>Default</string>
-   </property>
-  </action>
-  <action name="actionRestore">
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionSave_As_2">
-   <property name="text">
-    <string>Save As</string>
    </property>
   </action>
   <action name="actionAddCache">
@@ -857,7 +823,10 @@
      <normaloff>:/menu_icon2/img/save_all2.png</normaloff>:/menu_icon2/img/save_all2.png</iconset>
    </property>
    <property name="text">
-    <string>Save_all</string>
+    <string>Sav&amp;e_all</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
  </widget>
@@ -881,42 +850,10 @@
  </resources>
  <connections>
   <connection>
-   <sender>actionNew</sender>
+   <sender>actionnew</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>handleNewButton()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>959</x>
-     <y>539</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionNew_2</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>handleNewButton()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>959</x>
-     <y>539</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionOpen</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>handleOpenButton()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -933,22 +870,6 @@
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>handleOpenButton()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>959</x>
-     <y>539</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSave</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>handleSaveButton()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -1153,22 +1074,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionAssemblerConfiguration</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>handleAssemblerConfiguration()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>959</x>
-     <y>539</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionbuild</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -1207,8 +1112,88 @@
    <slot>handleSaveAll()</slot>
    <hints>
     <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
      <x>959</x>
      <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRun</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handlePlay()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionpause</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handlePause()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionrewind</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleBackward()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionstop</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleStop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionforward</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleForward()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -1232,9 +1217,13 @@
   <slot>handleFlushAllCache()</slot>
   <slot>handleCloseTab(int)</slot>
   <slot>handlePreference()</slot>
-  <slot>handleAssemblerConfiguration()</slot>
   <slot>handleBuild()</slot>
   <slot>handleBuildAll()</slot>
   <slot>handleSaveAll()</slot>
+  <slot>handlePlay()</slot>
+  <slot>handlePause()</slot>
+  <slot>handleStop()</slot>
+  <slot>handleForward()</slot>
+  <slot>handleBackward()</slot>
  </slots>
 </ui>

@@ -3,8 +3,6 @@
 #include <QMap>
 #include <QVector>
 #include "../Utility.h"
-#include "../assembler/Error.h"
-#include "../assembler/Warning.h"
 
 class ParseResult{
     public:

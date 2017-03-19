@@ -17,6 +17,7 @@
 #include <QFileSystemModel>
 #include <QSettings>
 #include <QThread>
+#include <QFileInfo>
 #include "ui_pisa.h"
 #include "CodeEditor.h"
 #include "../Computer.h"
@@ -25,6 +26,7 @@
 #include "CacheView.h"
 #include "../assembler/Assembler.h"
 #include "../assembler/Disassembler.h"
+#include "../assembler/ProgramManagerX.h"
 #include "HexSpinBox.h"
 
 class MainWindow : public QMainWindow
@@ -38,6 +40,16 @@ class MainWindow : public QMainWindow
         Disassembler* disassembler;
         QSettings settings;
 
+        void printConsole(QString line);
+        void printlnConsole(QString line);
+        void clearConsole();
+
+        void displayProblems(QList<Problem>* problemLog);
+
+        void launchProgram(QString fileName);
+
+        bool shouldIAssemble(); 
+        void assemble(QString fileName, bool runAfter);
 
     public slots:
         //Handlers
@@ -54,16 +66,21 @@ class MainWindow : public QMainWindow
         void handleFlushCache();
         void handleFlushAllCache();
         void handlePreference();
-        void handleAssemblerConfiguration();
         void handleSaveAllButton();
         void handleBuild();
         void handleBuildAll();
+        void handleForward();
+        void handleBackward();
+        void handlePlay();
+        void handlePause();
+        void handleStop();
+
 
         void updateUndo(bool avail);
         void updateRedo(bool avail);
-        void finishBuild(Assembled* assembled);
+        void finishAssemble(Assembled* assembled, bool runAfter);
 signals:
-        void startBuild(QString fileName, AssemblerConfiguration config);
+        void startBuild(QString fileName, AssemblerConfiguration config, bool runAfter);
 
     private:
         QThread assemblyThread;

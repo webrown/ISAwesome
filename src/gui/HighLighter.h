@@ -19,7 +19,8 @@
 ** as follows:
 **
 ** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are ** met:
+** modification, are permitted provided that the following conditions are
+** met:
 **   * Redistributions of source code must retain the above copyright
 **     notice, this list of conditions and the following disclaimer.
 **   * Redistributions in binary form must reproduce the above copyright
@@ -47,74 +48,42 @@
 **
 ****************************************************************************/
 
-#ifndef CODEEDITOR_H
-#define CODEEDITOR_H
+#ifndef HIGHLIGHTER_H
+#define HIGHLIGHTER_H
 
-#include <QPlainTextEdit>
-#include <QObject>
-#include <QtWidgets>
-#include <QFrame>
-#include <QTextStream>
-#include "HighLighter.h"
+#include <QSyntaxHighlighter>
+#include <QTextCharFormat>
 
+class QTextDocument;
 
-class QPaintEvent;
-class QResizeEvent;
-class QSize;
-class QWidget;
-
-class LineNumberArea;
-
-
-class CodeEditor : public QPlainTextEdit
+class Highlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 
 public:
-    QFile* sourceFile;
-    Highlighter* highlighter;
-
-    CodeEditor(QFile* sf = NULL,bool open = false, QWidget *parent = 0);
-    ~CodeEditor();
-    void lineNumberAreaPaintEvent(QPaintEvent *event);
-    int lineNumberAreaWidth();
-    void read();
-    void write();
-    void writeAs(QString s);
+    Highlighter(QTextDocument *parent = 0);
 
 protected:
-    void resizeEvent(QResizeEvent *event) override;
-
-private slots:
-    void updateLineNumberAreaWidth(int newBlockCount);
-    void highlightCurrentLine();
-    void updateLineNumberArea(const QRect &, int);
+    void highlightBlock(const QString &text) override;
 
 private:
-    QWidget *lineNumberArea;
-    
+    struct HighlightingRule
+    {
+        QRegExp pattern;
+        QTextCharFormat format;
+    };
+    QVector<HighlightingRule> highlightingRules;
+
+    QRegExp commentStartExpression;
+    QRegExp commentEndExpression;
+
+    QTextCharFormat preprocessFormat;
+    QTextCharFormat conditionFormat;
+    QTextCharFormat labelFormat;
+    QTextCharFormat singleLineCommentFormat;
+    QTextCharFormat immediateFormat;
+    QTextCharFormat registerFormat;
+    QTextCharFormat functionFormat;
 };
 
-
-class LineNumberArea : public QWidget
-{
-public:
-    LineNumberArea(CodeEditor *editor) : QWidget(editor) {
-        codeEditor = editor;
-    }
-
-    QSize sizeHint() const override {
-        return QSize(codeEditor->lineNumberAreaWidth(), 0);
-    }
-
-protected:
-    void paintEvent(QPaintEvent *event) override {
-        codeEditor->lineNumberAreaPaintEvent(event);
-    }
-
-private:
-    CodeEditor *codeEditor;
-};
-
-
-#endif
+#endif // HIGHLIGHTER_H

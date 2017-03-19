@@ -4,7 +4,9 @@
 #include <QDialog>
 #include <QStandardPaths>
 #include <QFileDialog>
+#include <QErrorMessage>
 #include <cstdlib>
+#include <QMessageBox>
 #include <QDebug>
 #include "ui_newcachedialog.h"
 #include "ui_newfiledialog.h"
@@ -45,6 +47,7 @@ class NewFileDialog : public QDialog
     public slots:
         void handleOpenButton();
         void handleRandomButton();
+        void accept();
 
     private:
         Ui::NewFileDialog _ui;

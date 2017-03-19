@@ -34,15 +34,10 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-    QAction *actionOpen;
-    QAction *actionSave;
     QAction *actionSave_As;
-    QAction *actionNew;
     QAction *actionPipeline;
     QAction *actionDisassembler;
-    QAction *actionRegister;
     QAction *actionRun;
-    QAction *actionConsole;
     QAction *actionAbout_PISA;
     QAction *actionPISA_Help;
     QAction *actionnew;
@@ -60,14 +55,8 @@ public:
     QAction *actionCopy;
     QAction *actionPaste;
     QAction *actionDelete;
-    QAction *actionSave_State;
-    QAction *actionSave_State_As;
     QAction *actionLoad_state;
     QAction *actionRestore_State;
-    QAction *actionNew_2;
-    QAction *actionLoad;
-    QAction *actionRestore;
-    QAction *actionSave_As_2;
     QAction *actionAddCache;
     QAction *actionRemoveCache;
     QAction *actionClearCache;
@@ -142,27 +131,17 @@ public:
         icon.addFile(QStringLiteral(":/icon/img/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
         MainWindow->setIconSize(QSize(22, 22));
-        actionOpen = new QAction(MainWindow);
-        actionOpen->setObjectName(QStringLiteral("actionOpen"));
-        actionSave = new QAction(MainWindow);
-        actionSave->setObjectName(QStringLiteral("actionSave"));
         actionSave_As = new QAction(MainWindow);
         actionSave_As->setObjectName(QStringLiteral("actionSave_As"));
-        actionNew = new QAction(MainWindow);
-        actionNew->setObjectName(QStringLiteral("actionNew"));
         actionPipeline = new QAction(MainWindow);
         actionPipeline->setObjectName(QStringLiteral("actionPipeline"));
         actionDisassembler = new QAction(MainWindow);
         actionDisassembler->setObjectName(QStringLiteral("actionDisassembler"));
-        actionRegister = new QAction(MainWindow);
-        actionRegister->setObjectName(QStringLiteral("actionRegister"));
         actionRun = new QAction(MainWindow);
         actionRun->setObjectName(QStringLiteral("actionRun"));
         QIcon icon1;
         icon1.addFile(QStringLiteral(":/menu_icon2/img/play2.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionRun->setIcon(icon1);
-        actionConsole = new QAction(MainWindow);
-        actionConsole->setObjectName(QStringLiteral("actionConsole"));
         actionAbout_PISA = new QAction(MainWindow);
         actionAbout_PISA->setObjectName(QStringLiteral("actionAbout_PISA"));
         actionPISA_Help = new QAction(MainWindow);
@@ -224,22 +203,10 @@ public:
         actionPaste->setObjectName(QStringLiteral("actionPaste"));
         actionDelete = new QAction(MainWindow);
         actionDelete->setObjectName(QStringLiteral("actionDelete"));
-        actionSave_State = new QAction(MainWindow);
-        actionSave_State->setObjectName(QStringLiteral("actionSave_State"));
-        actionSave_State_As = new QAction(MainWindow);
-        actionSave_State_As->setObjectName(QStringLiteral("actionSave_State_As"));
         actionLoad_state = new QAction(MainWindow);
         actionLoad_state->setObjectName(QStringLiteral("actionLoad_state"));
         actionRestore_State = new QAction(MainWindow);
         actionRestore_State->setObjectName(QStringLiteral("actionRestore_State"));
-        actionNew_2 = new QAction(MainWindow);
-        actionNew_2->setObjectName(QStringLiteral("actionNew_2"));
-        actionLoad = new QAction(MainWindow);
-        actionLoad->setObjectName(QStringLiteral("actionLoad"));
-        actionRestore = new QAction(MainWindow);
-        actionRestore->setObjectName(QStringLiteral("actionRestore"));
-        actionSave_As_2 = new QAction(MainWindow);
-        actionSave_As_2->setObjectName(QStringLiteral("actionSave_As_2"));
         actionAddCache = new QAction(MainWindow);
         actionAddCache->setObjectName(QStringLiteral("actionAddCache"));
         actionRemoveCache = new QAction(MainWindow);
@@ -538,11 +505,12 @@ public:
         menubar->addAction(menuSettings->menuAction());
         menubar->addAction(menuWindow_2->menuAction());
         menubar->addAction(menuHelp->menuAction());
-        menuFile->addAction(actionNew);
-        menuFile->addAction(actionOpen);
+        menuFile->addAction(actionnew);
+        menuFile->addAction(actionopen);
         menuFile->addSeparator();
-        menuFile->addAction(actionSave);
+        menuFile->addAction(actionsave);
         menuFile->addAction(actionSave_As);
+        menuFile->addAction(actionSave_all);
         menuFile->addSeparator();
         menuFile->addAction(actionLoad_state);
         menuFile->addAction(actionRestore_State);
@@ -553,6 +521,11 @@ public:
         menuEdt->addAction(actionCopy);
         menuEdt->addAction(actionPaste);
         menuEdt->addAction(actionDelete);
+        menuWindow->addAction(actionstop);
+        menuWindow->addAction(actionpause);
+        menuWindow->addSeparator();
+        menuWindow->addAction(actionbuild);
+        menuWindow->addAction(actionbuild_all);
         menuWindow_2->addAction(menu_Cache->menuAction());
         menuWindow_2->addAction(actionPipeline);
         menuWindow_2->addAction(menuAssembler->menuAction());
@@ -586,11 +559,8 @@ public:
         toolBar->addSeparator();
 
         retranslateUi(MainWindow);
-        QObject::connect(actionNew, SIGNAL(triggered()), MainWindow, SLOT(handleNewButton()));
-        QObject::connect(actionNew_2, SIGNAL(triggered()), MainWindow, SLOT(handleNewButton()));
-        QObject::connect(actionOpen, SIGNAL(triggered()), MainWindow, SLOT(handleOpenButton()));
+        QObject::connect(actionnew, SIGNAL(triggered()), MainWindow, SLOT(handleNewButton()));
         QObject::connect(actionopen, SIGNAL(triggered()), MainWindow, SLOT(handleOpenButton()));
-        QObject::connect(actionSave, SIGNAL(triggered()), MainWindow, SLOT(handleSaveButton()));
         QObject::connect(actionsave, SIGNAL(triggered()), MainWindow, SLOT(handleSaveButton()));
         QObject::connect(actionRedo, SIGNAL(triggered()), MainWindow, SLOT(handleRedoButton()));
         QObject::connect(actionUndo, SIGNAL(triggered()), MainWindow, SLOT(handleUndoButton()));
@@ -603,12 +573,16 @@ public:
         QObject::connect(acitonFlushAllCache, SIGNAL(triggered()), MainWindow, SLOT(handleFlushAllCache()));
         QObject::connect(editorTab, SIGNAL(tabCloseRequested(int)), editorTab, SLOT(closeTab(int)));
         QObject::connect(actionPreference, SIGNAL(triggered()), MainWindow, SLOT(handlePreference()));
-        QObject::connect(actionAssemblerConfiguration, SIGNAL(triggered()), MainWindow, SLOT(handleAssemblerConfiguration()));
         QObject::connect(actionbuild, SIGNAL(triggered()), MainWindow, SLOT(handleBuild()));
         QObject::connect(actionbuild_all, SIGNAL(triggered()), MainWindow, SLOT(handleBuildAll()));
         QObject::connect(actionSave_all, SIGNAL(triggered()), MainWindow, SLOT(handleSaveAll()));
+        QObject::connect(actionRun, SIGNAL(triggered()), MainWindow, SLOT(handlePlay()));
+        QObject::connect(actionpause, SIGNAL(triggered()), MainWindow, SLOT(handlePause()));
+        QObject::connect(actionrewind, SIGNAL(triggered()), MainWindow, SLOT(handleBackward()));
+        QObject::connect(actionstop, SIGNAL(triggered()), MainWindow, SLOT(handleStop()));
+        QObject::connect(actionforward, SIGNAL(triggered()), MainWindow, SLOT(handleForward()));
 
-        leftBoard->setCurrentIndex(1);
+        leftBoard->setCurrentIndex(2);
         editorTab->setCurrentIndex(-1);
         tabWidget_output->setCurrentIndex(0);
         tabWidget_pipeline->setCurrentIndex(1);
@@ -621,37 +595,35 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "PISA", Q_NULLPTR));
-        actionOpen->setText(QApplication::translate("MainWindow", "&Open", Q_NULLPTR));
-        actionSave->setText(QApplication::translate("MainWindow", "&Save", Q_NULLPTR));
         actionSave_As->setText(QApplication::translate("MainWindow", "Sa&ve As", Q_NULLPTR));
-        actionNew->setText(QApplication::translate("MainWindow", "&New", Q_NULLPTR));
         actionPipeline->setText(QApplication::translate("MainWindow", "&Pipeline", Q_NULLPTR));
         actionDisassembler->setText(QApplication::translate("MainWindow", "&Disassembler", Q_NULLPTR));
-        actionRegister->setText(QApplication::translate("MainWindow", "&Register", Q_NULLPTR));
         actionRun->setText(QApplication::translate("MainWindow", "Run", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionRun->setToolTip(QApplication::translate("MainWindow", "Run Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionConsole->setText(QApplication::translate("MainWindow", "C&onsole", Q_NULLPTR));
         actionAbout_PISA->setText(QApplication::translate("MainWindow", "&About PISA", Q_NULLPTR));
         actionPISA_Help->setText(QApplication::translate("MainWindow", "&PISA Help", Q_NULLPTR));
-        actionnew->setText(QApplication::translate("MainWindow", "new", Q_NULLPTR));
+        actionnew->setText(QApplication::translate("MainWindow", "&New", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionnew->setToolTip(QApplication::translate("MainWindow", "Create New File", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionopen->setText(QApplication::translate("MainWindow", "open", Q_NULLPTR));
+        actionnew->setShortcut(QApplication::translate("MainWindow", "Ctrl+N", Q_NULLPTR));
+        actionopen->setText(QApplication::translate("MainWindow", "&open", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionopen->setToolTip(QApplication::translate("MainWindow", "Open File", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionsave->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
+        actionopen->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+N", Q_NULLPTR));
+        actionsave->setText(QApplication::translate("MainWindow", "&Save", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionsave->setToolTip(QApplication::translate("MainWindow", "Save File", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionstop->setText(QApplication::translate("MainWindow", "stop", Q_NULLPTR));
+        actionsave->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", Q_NULLPTR));
+        actionstop->setText(QApplication::translate("MainWindow", "&stop", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionstop->setToolTip(QApplication::translate("MainWindow", "Stop Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionpause->setText(QApplication::translate("MainWindow", "pause", Q_NULLPTR));
+        actionpause->setText(QApplication::translate("MainWindow", "&pause", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionpause->setToolTip(QApplication::translate("MainWindow", "Pause Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
@@ -663,32 +635,28 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionrewind->setToolTip(QApplication::translate("MainWindow", "Rewind Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionbuild->setText(QApplication::translate("MainWindow", "build", Q_NULLPTR));
+        actionbuild->setText(QApplication::translate("MainWindow", "&build", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionbuild->setToolTip(QApplication::translate("MainWindow", "Build Current File", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionbuild_all->setText(QApplication::translate("MainWindow", "build all", Q_NULLPTR));
+        actionbuild_all->setText(QApplication::translate("MainWindow", "b&uild all", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionbuild_all->setToolTip(QApplication::translate("MainWindow", "Build All Files", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         actionUndo->setText(QApplication::translate("MainWindow", "&Undo", Q_NULLPTR));
         actionUndo->setShortcut(QApplication::translate("MainWindow", "Ctrl+Z", Q_NULLPTR));
         actionRedo->setText(QApplication::translate("MainWindow", "&Redo", Q_NULLPTR));
+        actionRedo->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+Z", Q_NULLPTR));
         actionCut->setText(QApplication::translate("MainWindow", "&Cut", Q_NULLPTR));
         actionCut->setShortcut(QApplication::translate("MainWindow", "Ctrl+X", Q_NULLPTR));
         actionCopy->setText(QApplication::translate("MainWindow", "C&opy", Q_NULLPTR));
+        actionCopy->setShortcut(QApplication::translate("MainWindow", "Ctrl+C", Q_NULLPTR));
         actionPaste->setText(QApplication::translate("MainWindow", "&Paste", Q_NULLPTR));
-        actionPaste->setShortcut(QString());
+        actionPaste->setShortcut(QApplication::translate("MainWindow", "Ctrl+V", Q_NULLPTR));
         actionDelete->setText(QApplication::translate("MainWindow", "&Delete", Q_NULLPTR));
-        actionDelete->setShortcut(QString());
-        actionSave_State->setText(QApplication::translate("MainWindow", "Save State", Q_NULLPTR));
-        actionSave_State_As->setText(QApplication::translate("MainWindow", "Save State As", Q_NULLPTR));
+        actionDelete->setShortcut(QApplication::translate("MainWindow", "Ctrl+D", Q_NULLPTR));
         actionLoad_state->setText(QApplication::translate("MainWindow", "&Load State", Q_NULLPTR));
         actionRestore_State->setText(QApplication::translate("MainWindow", "&Restore State", Q_NULLPTR));
-        actionNew_2->setText(QApplication::translate("MainWindow", "Add", Q_NULLPTR));
-        actionLoad->setText(QApplication::translate("MainWindow", "Default", Q_NULLPTR));
-        actionRestore->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
-        actionSave_As_2->setText(QApplication::translate("MainWindow", "Save As", Q_NULLPTR));
         actionAddCache->setText(QApplication::translate("MainWindow", "&Add Cache", Q_NULLPTR));
         actionRemoveCache->setText(QApplication::translate("MainWindow", "&Remove Cache", Q_NULLPTR));
         actionClearCache->setText(QApplication::translate("MainWindow", "&Clear Cache", Q_NULLPTR));
@@ -698,7 +666,8 @@ public:
         acitonFlushAllCache->setText(QApplication::translate("MainWindow", "F&lush All", Q_NULLPTR));
         actionPreference->setText(QApplication::translate("MainWindow", "&Preference...", Q_NULLPTR));
         actionAssemblerConfiguration->setText(QApplication::translate("MainWindow", "&Configuration", Q_NULLPTR));
-        actionSave_all->setText(QApplication::translate("MainWindow", "Save_all", Q_NULLPTR));
+        actionSave_all->setText(QApplication::translate("MainWindow", "Sav&e_all", Q_NULLPTR));
+        actionSave_all->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+S", Q_NULLPTR));
         leftBoard->setTabText(leftBoard->indexOf(tab_navigation), QApplication::translate("MainWindow", "Navigation", Q_NULLPTR));
         leftBoard->setTabText(leftBoard->indexOf(tab_performance), QApplication::translate("MainWindow", "Performance", Q_NULLPTR));
         leftBoard->setTabText(leftBoard->indexOf(Track), QApplication::translate("MainWindow", "Tracker", Q_NULLPTR));
@@ -752,7 +721,7 @@ public:
         tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_memory), QApplication::translate("MainWindow", "Memory", Q_NULLPTR));
         menuFile->setTitle(QApplication::translate("MainWindow", "Fi&le", Q_NULLPTR));
         menuEdt->setTitle(QApplication::translate("MainWindow", "E&dt", Q_NULLPTR));
-        menuWindow->setTitle(QApplication::translate("MainWindow", "V&iew", Q_NULLPTR));
+        menuWindow->setTitle(QApplication::translate("MainWindow", "Run", Q_NULLPTR));
         menuWindow_2->setTitle(QApplication::translate("MainWindow", "Mod&ule", Q_NULLPTR));
         menu_Cache->setTitle(QApplication::translate("MainWindow", "&Cache", Q_NULLPTR));
         menuAssembler->setTitle(QApplication::translate("MainWindow", "&Assembler", Q_NULLPTR));

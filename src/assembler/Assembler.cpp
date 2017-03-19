@@ -14,12 +14,11 @@ void Assembler::init(){
     _success = true;
     uint mainAddress = 0;
 
-    _labelTable = new QMap<QString, uint>();
+    _labelTable = new QMap<QString, QString>();
     _aliasTable = new QMap<QString, QString>();
     _macroTable = new QMap<QString, QStringList>();
 
-    _errorLog = new QList<Error>();
-    _warningLog = new QList<Warning>();
+    _problemLog = new QList<Problem>();
 
     _preprocessedQueue = new QList<Preprocessed>();
     _instructions = new QVector<uint>();
@@ -48,13 +47,12 @@ void Assembler::clear(){
         _preprocessedQueue = NULL;
     }
 
-    _errorLog = NULL;
+    _problemLog = NULL;
     _instructions = NULL;
-    _warningLog = NULL;
     qDebug() << "Assembler is cleared";
 }
 
-void Assembler::assemble(QString fileName, AssemblerConfiguration config){
+void Assembler::assemble(QString fileName, AssemblerConfiguration config, bool runAfter){
     //Start time to measure how long it took to compile
     QTime timer;
     timer.start();
@@ -89,28 +87,28 @@ void Assembler::assemble(QString fileName, AssemblerConfiguration config){
 
     qDebug() << "----------Assembly Result---------------" ;
 
+    //Consider wall option
+    _success = (config.useWall == false)| (_problemLog->isEmpty() == true);
     Assembled* assembled = new Assembled();
-    assembled->warningLog = _warningLog;
+    assembled->fileName = fileName;
+    assembled->problemLog = _problemLog;
     //if we succeed to assemble, then remove error list
     if(_success){
         qDebug() << "Success: true";
         assembled->isAssembled = true;
         assembled->instructions = _instructions; 
-        delete assembled->errorLog;
     }
     //else we failed to assemble, then remvoe assembly part
     else{
         qDebug() << "Success: false";
         assembled->isAssembled = false;
-        assembled->errorLog = _errorLog;
-        delete assembled->instructions;
     }
     assembled->elaspedTime = timer.elapsed();
 
     qDebug() << "Elasped time: " << assembled->elaspedTime << " msec";
     clear();
 
-    emit resultReady(assembled);
+    emit resultReady(assembled, runAfter );
     return;
 }
 
@@ -141,7 +139,7 @@ void Assembler::preprocessDocument(QStringList document, QString fileName){
         qDebug() << "Line: " << line;
 
         //remove extra white space and comment
-        line = line.trimmed().split(";").at(0).toUpper();
+        line = line.split(";").at(0).trimmed().toUpper();
         qDebug() << "Simplified: " << line ;
 
         if(line == "#ENDMACRO"){
@@ -154,13 +152,20 @@ void Assembler::preprocessDocument(QStringList document, QString fileName){
                 continue;
             }
             QStringList tokens = macroBuffer.first().split(QRegExp("\\s+"));
+
+            QString header = tokens.takeFirst();
             QRegExp re("^[a-zA-Z_][a-zA-Z0-9_]*");
-            if(!re.exactMatch(tokens[0])){
+            if(!re.exactMatch(header)){
                 throwError(fileName, lineNumber - macroBuffer.size(), 0, "Invalid Formant: Not valid symbol");
                 continue;
             }
-            qDebug() << "New Macro defined" << tokens[0] ;
-            _macroTable->insert(tokens[0], macroBuffer);
+            QString arguments;
+            for(QString token : tokens){
+                arguments += token+ " ";
+            }
+            macroBuffer.replace(0, arguments.simplified());
+            _macroTable->insert(header, macroBuffer);
+            qDebug() << "New Macro defined" << header  << macroBuffer;
             macroBuffer = QStringList();
             continue;
         }
@@ -198,18 +203,19 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         return;
     }
 
-    //Check import;
-    if(line.startsWith("#IMPORT")){
-        QDir dir(fileName); 
-        QString path = dir.filePath(line.remove(0,8));
+    //Check Merge;
+    if(line.startsWith("#MERGE")){
+        QFileInfo info(fileName); 
+        QString path = info.dir().absolutePath() + "/"+  line.remove(0,6).toLower().simplified();
+        qDebug() << "Merge this file: " << path;
         QFile file(path);
         if(file.exists() == false){
-            throwError(fileName, lineNumber, 1, "Import failed: file doesn't exist");
+            throwError(fileName, lineNumber, 1, "Merge failed: file doesn't exist");
             return;
         }
         this->processFile(path);
+        return;
     }
-
     //Process alias
     if(line.startsWith("#ALIAS")){
         qDebug() << "Defining alias" ;
@@ -236,7 +242,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
     if(line.startsWith("#UNALIAS")){
         qDebug() << "Removing local alias" ;
         line.remove("#UNALIAS");
-        QStringList tokens = line.split(QRegExp("\\s+"));
+        QStringList tokens = line.simplified().split(QRegExp("\\s+"));
         if(tokens.size() != 1){
             throwError(fileName ,lineNumber, tokens.size(), "InvalidFormat: Wrong number of argument for unalias");
             return;
@@ -266,17 +272,40 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
     //get next address 
     uint nextAddress;
     if(_preprocessedQueue->empty()){
-        nextAddress = 0;
+        nextAddress = _config.useMainEntry ? 4 : 0;
     }
     else{
         nextAddress = _preprocessedQueue->last().address + INSTRUCTION_SIZE;
     }
 
+    //Check import
+    if(line.startsWith("#IMPORT")){
+        QFileInfo info(fileName); 
+        QString path = info.dir().absolutePath() + "/"+  line.remove(0,7).simplified();
+        qDebug() << "Import this file: " << path << "later";
+        QFile file(path);
+        if(file.exists() == false){
+            throwError(fileName, lineNumber, 1, "Import failed: file doesn't exist");
+            return;
+        }
+
+        qDebug() << "NOT implemented";
+
+        //Preprcoessed data will be stored here
+/*         Preprocessed preprocessed; */
+        // preprocessed.fileName = path;
+        // preprocessed.lineNumber = -1;
+        // preprocessed.address = nextAddress;
+        // preprocessed.tokens = tokens;
+/*         _ preprocessedQueue->append(preprocessed);*/
+        return;
+    }
+
     //check whether the statement is label
     if(tokens.at(0).endsWith(":")){
         qDebug() << "Label detected" ;
-        if(tokens.size() >= 1){
-            throwError(fileName, lineNumber, 1,"Invalid Format; Not a Label" );
+        if(tokens.size() > 1){
+            throwError(fileName, lineNumber, 1,"Invalid Format: Not a Label" );
             return;
         }
 
@@ -297,10 +326,92 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         }
 
         qDebug() << "Symbol added: " << label << " = " << nextAddress ;
-        _labelTable->insert(label, nextAddress);
+        _labelTable->insert(label, QString::number(nextAddress));
+        //Collect main Address
+        if(_config.useMainEntry && label == "MAIN"){
+            mainAddress = nextAddress;
+        }
         return;
     }
     else{
+        //find out instruction location
+        int instructionLoc =0;
+        if(CRS.nameTable.contains(tokens[0])){
+            instructionLoc = 1;
+        }
+        if(_macroTable->contains(tokens[instructionLoc])){
+            qDebug() << "Macro detected!";
+            QStringList macroDef = _macroTable->value(tokens[instructionLoc]);
+            QStringList args = macroDef.first().split(QRegExp("\\s+"));
+
+            int requiredNumberOfArgument = args.size();
+            int numberOfArgument = tokens.size() - instructionLoc -1;
+            // qDebug() << args;
+            // qDebug() << QString::number(requiredNumberOfArgument) << QString::number(numberOfArgument);
+            if(numberOfArgument != requiredNumberOfArgument){
+                throwError(fileName, lineNumber, instructionLoc + numberOfArgument, "Invalid Number of arguments for macro");
+                return;
+            }
+            qDebug() << "Build replace Map";
+            //build replaceMap
+            QMap<QString, QString> _replaceMap;
+            for(int i = 0; i < requiredNumberOfArgument; i++){
+                _replaceMap[args[i]] = tokens[i + instructionLoc + 1];
+            }
+            qDebug() << _replaceMap;
+            qDebug() << "Replace begins";
+            for(int i =1; i < macroDef.size(); i++){
+                QString line = macroDef[i];
+                for(QString key : _replaceMap.keys()){
+                    line.replace(key, _replaceMap[key]);
+                }
+                QStringList tokens = line.split(QRegExp("\\s+"));
+
+                //-------------------------Yeah, I m gonna fix this
+
+                //process through aliasTable
+                //And convert immediate to decimal
+                for(int i = 0; i < tokens.size(); i++){
+                    QString str = tokens[i];
+                    if(_aliasTable->contains(str)){
+                        tokens[i] = _aliasTable->value(str);
+                        qDebug() <<"Alias resolved: " << str << " -> " << tokens[i] ;
+                    }
+
+                    if(str.startsWith("#0X")){
+                        str.remove(0,3);
+                        bool success;
+                        tokens[i] = QString::number(str.toInt(&success, 16));
+                        qDebug() << "HEX to DEC: " << str ;
+                        if(success == false){
+                            throwError(fileName, lineNumber, i, "Invalid Format:  Not Hexadecimal");
+                            return;
+                        }
+                    }
+                    if(str.startsWith("#0B")){
+                        str.remove(0,3);
+                        bool success;
+                        tokens[i] = QString::number(str.toInt(&success, 2));
+                        qDebug() << "BIN to DEC: " << str;
+                        if(success == false){
+                            throwError(fileName ,lineNumber, i, "Invalid Format: Not Binary");
+                            return;
+                        }
+                    }
+                }
+                //-----------------------But not now
+
+                //Preprcoessed data will be stored here
+                Preprocessed preprocessed;
+                preprocessed.fileName = fileName;
+                preprocessed.lineNumber = lineNumber;
+                preprocessed.address = nextAddress;
+                preprocessed.tokens = tokens;
+                _preprocessedQueue->append(preprocessed);
+                nextAddress += INSTRUCTION_SIZE;
+            }
+            return;
+        }
 
         //process through aliasTable
         //And convert immediate to decimal
@@ -310,19 +421,22 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
                 tokens[i] = _aliasTable->value(str);
                 qDebug() <<"Alias resolved: " << str << " -> " << tokens[i] ;
             }
+
             if(str.startsWith("#0X")){
-                str.remove(0,2);
+                str.remove(0,3);
                 bool success;
-                tokens[i] = str.toInt(&success, 16);
+                tokens[i] = QString::number(str.toInt(&success, 16));
+                qDebug() << "HEX to DEC: " << str ;
                 if(success == false){
-                    throwError(fileName, lineNumber, i, "Invalid Format: Not Hexadecimal");
+                    throwError(fileName, lineNumber, i, "Invalid Format:  Not Hexadecimal");
                     return;
                 }
             }
             if(str.startsWith("#0B")){
-                str.remove(0,2);
+                str.remove(0,3);
                 bool success;
-                tokens[i] = str.toInt(&success, 2);
+                tokens[i] = QString::number(str.toInt(&success, 2));
+                qDebug() << "BIN to DEC: " << str;
                 if(success == false){
                     throwError(fileName ,lineNumber, i, "Invalid Format: Not Binary");
                     return;
@@ -344,6 +458,17 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
 }
 
 void Assembler::processLines(){
+    if(_config.useMainEntry){
+        //Create main entry jump
+        Preprocessed preprocessed;
+        preprocessed.fileName = "System";
+        preprocessed.lineNumber = -1;
+        preprocessed.address = 0;
+        QStringList instruction;
+        instruction << "B" << QString::number(mainAddress);
+        preprocessed.tokens = instruction;
+        _preprocessedQueue->insert(0,preprocessed);
+    }
     for(Preprocessed preprocessed : *_preprocessedQueue){
         //process each line
         processLine(preprocessed);
@@ -365,7 +490,7 @@ void Assembler::processLine(Preprocessed prep){
     QString token1 = tokens.takeFirst();
 
     uint flag = CRS.nameTable["AL"];
-    uint opcode = 000011; //=NOP
+    uint opcode = IRS.nameTable["NOP"]->opcode; //=NOP
     InstructionDefinition* def;
     int operandTokenNumber = 0;
 
@@ -400,6 +525,15 @@ void Assembler::processLine(Preprocessed prep){
         operandTokenNumber =2;
     }
     opcode = def->opcode;
+    qDebug() << "Argument: " << tokens ;
+
+    for(int i =0; i < tokens.size(); i++){
+        QString str = tokens[i];
+        if(_labelTable->contains(str)){
+            tokens[i] = _labelTable->value(str);
+            qDebug() <<"Label resolved: " << str << " -> " << tokens[i] ;
+        }
+    }
 
     ParseResult result = def->parse(tokens);
     if(result.error != "None"){
@@ -421,12 +555,12 @@ void Assembler::processLine(Preprocessed prep){
 
 
 void Assembler::throwError(QString fileName, int lineNumber, int wordNumber, QString cause){
-    Error error(cause, fileName, lineNumber, wordNumber);
-    _errorLog->append(error);
+    Problem problem(ERROR, cause, fileName, lineNumber, wordNumber);
+    _problemLog->append(problem);
     _success=false;
 }
 
 void Assembler::throwWarning(QString fileName, int lineNumber, int wordNumber, QString cause){
-    Warning warning(cause, fileName, lineNumber,wordNumber);
-    _warningLog->append(warning);
+    Problem warning(WARNING, cause, fileName, lineNumber,wordNumber);
+    _problemLog->append(warning);
 }

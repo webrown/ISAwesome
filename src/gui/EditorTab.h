@@ -10,7 +10,13 @@ class EditorTab : public QTabWidget
 
     public:
         explicit EditorTab(QWidget* parent = 0);
-        CodeEditor* newTab(QString fileName);
+
+        QString currentTitle();
+        CodeEditor* currentEditor();
+        bool isCurrentSaved();
+            
+        bool isEmpty();
+        CodeEditor* newTab(QString fileName, bool open = false);
         CodeEditor* openTab(QString fileName);
         bool saveTab();
         bool saveAllTab();

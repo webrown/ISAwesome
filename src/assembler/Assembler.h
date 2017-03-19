@@ -10,8 +10,7 @@
 #include <QMap>
 #include <QDir>
 #include <QFile>
-#include "Error.h"
-#include "Warning.h"
+#include "Problem.h"
 #include "../Architecture.h"
 #include "InstructionResolver.h"
 #include "ConditionResolver.h"
@@ -24,12 +23,16 @@
  */
 class Assembled{
   public:
+      ~Assembled(){
+          delete instructions;
+          delete problemLog;
+      }
+    QString fileName;
     bool isAssembled; 
     int elaspedTime;
 
     QVector<uint>* instructions;
-    QList<Error>* errorLog;
-    QList<Warning>* warningLog;
+    QList<Problem>* problemLog;
 };
 Q_DECLARE_METATYPE(Assembled);
 
@@ -37,7 +40,7 @@ Q_DECLARE_METATYPE(Assembled);
 class Preprocessed{
   public:
       QString fileName;
-    int lineNumber; //nth line
+      int lineNumber; //nth line
 
     int address;
     QStringList tokens;
@@ -51,6 +54,7 @@ class AssemblerConfiguration{
         bool useDefaultAlias = true;
         bool useGlobalAlias = true;
         bool useMainEntry = true;
+        bool useWall = true;
 };
 Q_DECLARE_METATYPE(AssemblerConfiguration);
 
@@ -68,19 +72,18 @@ class Assembler: public QObject{
 
     //Fields
     bool _success;
-    uint mainAddress;
+    uint mainAddress = INSTRUCTION_SIZE;
 
     const InstructionResolver IRS;
     const ConditionResolver CRS;
 
     //Symbol table related
-    QMap<QString, uint>* _labelTable = NULL;
+    QMap<QString, QString>* _labelTable = NULL;
     QMap<QString, QString>* _aliasTable = NULL;
     QMap<QString, QStringList>* _macroTable = NULL;
 
     //Log purpose
-    QList<Error>* _errorLog = NULL;
-    QList<Warning>* _warningLog = NULL;
+    QList<Problem>* _problemLog;
 
     //Data processing related
     QList<Preprocessed>* _preprocessedQueue = NULL;
@@ -90,10 +93,10 @@ class Assembler: public QObject{
     AssemblerConfiguration _config;
 
 public slots:
-    void assemble(QString fileName, AssemblerConfiguration config);
+    void assemble(QString fileName, AssemblerConfiguration config, bool runAfter);
 
 signals:
-void resultReady(Assembled* assembled);
+void resultReady(Assembled* assembled, bool runAfter);
 
   private:
 

@@ -48,7 +48,7 @@
  ****************************************************************************/
 #include "CodeEditor.h"
 
-CodeEditor::CodeEditor(QFile* sourceFile, QFile* codeFile, QWidget *parent) : QPlainTextEdit(parent)
+CodeEditor::CodeEditor(QFile* sourceFile, bool open, QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
 
@@ -61,14 +61,18 @@ CodeEditor::CodeEditor(QFile* sourceFile, QFile* codeFile, QWidget *parent) : QP
 
     this->setFrameStyle(QFrame::NoFrame);
     this->setUndoRedoEnabled(true);
-
+    
+    highlighter = new Highlighter(this->document());
     this->sourceFile = sourceFile;
-    this->codeFile = codeFile;
+
+    if(open == true){
+        read();
+    }
 }
 
 CodeEditor::~CodeEditor(){
     delete sourceFile;
-    delete codeFile;
+    delete highlighter;
 }
 
 //read data on editor to file
@@ -114,7 +118,7 @@ int CodeEditor::lineNumberAreaWidth()
         ++digits;
     }
 
-    int space = 3 + fontMetrics().width(QLatin1Char('0')) * digits;
+    int space = 13 + fontMetrics().width(QLatin1Char('0')) * digits;
 
     return space;
 }
