@@ -8,22 +8,13 @@
 
 class Register : MemoryInterface{
     public:
-<<<<<<< HEAD
-        QVector<int> _iScas;
-        QVector<int> _sRegs;
-        QVector<float> _fScas;
-        QVector< QVector <int> > _iVecs;
-        QVector< QVector <float> > _fVecs;
-        const double delay = 0;
-=======
         using MemoryInterface::write;
         QVector<Value> _iScas;
         QVector<Value> _sRegs;
         QVector<Value> _fScas;
         QVector< QVector <Value> > _iVecs;
         QVector< QVector <Value> > _fVecs;
-        static const double delay = 0;
->>>>>>> 339ecf0787838d644c43f9128079d2177e8a57f8
+        static constexpr double delay = 0;
 
         Register();
         ~Register();

@@ -61,8 +61,10 @@ SOURCES       = src/Computer.cpp \
 		src/gui/EditorTab.cpp \
 		src/gui/HighLighter.cpp \
 		src/gui/MainWindow.cpp \
+		src/gui/MemoryView.cpp \
 		src/gui/MiscDialog.cpp \
 		src/gui/PreferenceDialog.cpp \
+		src/gui/RegisterView.cpp \
 		src/memory/Cache.cpp \
 		src/memory/MainMemory.cpp \
 		src/memory/MemoryInterface.cpp \
@@ -77,8 +79,10 @@ SOURCES       = src/Computer.cpp \
 		build/moc_EditorTab.cpp \
 		build/moc_HighLighter.cpp \
 		build/moc_MainWindow.cpp \
+		build/moc_MemoryView.cpp \
 		build/moc_MiscDialog.cpp \
-		build/moc_PreferenceDialog.cpp
+		build/moc_PreferenceDialog.cpp \
+		build/moc_RegisterView.cpp
 OBJECTS       = build/Computer.o \
 		build/main.o \
 		build/Utility.o \
@@ -92,8 +96,10 @@ OBJECTS       = build/Computer.o \
 		build/EditorTab.o \
 		build/HighLighter.o \
 		build/MainWindow.o \
+		build/MemoryView.o \
 		build/MiscDialog.o \
 		build/PreferenceDialog.o \
+		build/RegisterView.o \
 		build/Cache.o \
 		build/MainMemory.o \
 		build/MemoryInterface.o \
@@ -109,8 +115,10 @@ OBJECTS       = build/Computer.o \
 		build/moc_EditorTab.o \
 		build/moc_HighLighter.o \
 		build/moc_MainWindow.o \
+		build/moc_MemoryView.o \
 		build/moc_MiscDialog.o \
-		build/moc_PreferenceDialog.o
+		build/moc_PreferenceDialog.o \
+		build/moc_RegisterView.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -321,15 +329,20 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/HexSpinBox.h \
 		src/gui/HighLighter.h \
 		src/gui/MainWindow.h \
+		src/gui/MemoryView.h \
 		src/gui/MiscDialog.h \
 		src/gui/PreferenceDialog.h \
+		src/gui/RegisterView.h \
 		src/memory/Cache.h \
 		src/memory/MainMemory.h \
 		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/Register.h \
 		src/memory/serialization.h \
-		src/memory/Value.h src/Computer.cpp \
+		src/memory/Value.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/StageData.h src/Computer.cpp \
 		src/main.cpp \
 		src/Utility.cpp \
 		test/TestAssembler.cpp \
@@ -342,8 +355,10 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/EditorTab.cpp \
 		src/gui/HighLighter.cpp \
 		src/gui/MainWindow.cpp \
+		src/gui/MemoryView.cpp \
 		src/gui/MiscDialog.cpp \
 		src/gui/PreferenceDialog.cpp \
+		src/gui/RegisterView.cpp \
 		src/memory/Cache.cpp \
 		src/memory/MainMemory.cpp \
 		src/memory/MemoryInterface.cpp \
@@ -775,8 +790,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Architecture.h src/Computer.h src/Utility.h test/TestAssembler.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/assembler/Warning.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MiscDialog.h src/gui/PreferenceDialog.h src/memory/Cache.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/Computer.cpp src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/memory/Cache.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/Architecture.h src/Computer.h src/Utility.h test/TestAssembler.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/assembler/Warning.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/memory/Cache.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/StageData.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/Computer.cpp src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/memory/Cache.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -817,6 +832,7 @@ build/qrc_pisa.cpp: rsc/pisa.qrc \
 		rsc/img/new2.png \
 		rsc/img/new2.png \
 		rsc/img/play2.png \
+		rsc/img/upload2.png \
 		rsc/img/build_all2.png \
 		rsc/img/build2.png \
 		rsc/img/save2.png \
@@ -844,9 +860,9 @@ compiler_moc_predefs_clean:
 build/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -dM -E -o build/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp
+compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp
+	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp
 build/moc_TestAssembler.cpp: src/assembler/Assembler.h \
 		src/assembler/Problem.h \
 		src/Architecture.h \
@@ -885,6 +901,7 @@ build/moc_CacheView.cpp: src/memory/Cache.h \
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/CacheView.h -o build/moc_CacheView.cpp
 
 build/moc_CodeEditor.cpp: src/gui/HighLighter.h \
+		src/assembler/Problem.h \
 		src/gui/CodeEditor.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -892,6 +909,7 @@ build/moc_CodeEditor.cpp: src/gui/HighLighter.h \
 
 build/moc_EditorTab.cpp: src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
+		src/assembler/Problem.h \
 		src/gui/EditorTab.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -903,16 +921,21 @@ build/moc_HighLighter.cpp: src/gui/HighLighter.h \
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/HighLighter.h -o build/moc_HighLighter.cpp
 
 build/moc_MainWindow.cpp: src/gui/ui_pisa.h \
+		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
-		src/Computer.h \
-		src/memory/Cache.h \
+		src/assembler/Problem.h \
+		src/gui/HexSpinBox.h \
+		src/gui/MemoryView.h \
+		src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
-		src/memory/MemoryInterface.h \
+		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/Architecture.h \
-		src/memory/MainMemory.h \
+		src/Computer.h \
+		src/memory/Cache.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -921,17 +944,25 @@ build/moc_MainWindow.cpp: src/gui/ui_pisa.h \
 		src/gui/MainWindow.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
 		src/assembler/ProgramManagerX.h \
-		src/gui/HexSpinBox.h \
 		src/gui/MainWindow.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/MainWindow.h -o build/moc_MainWindow.cpp
+
+build/moc_MemoryView.cpp: src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/gui/HexSpinBox.h \
+		src/gui/MemoryView.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/MemoryView.h -o build/moc_MemoryView.cpp
 
 build/moc_MiscDialog.cpp: src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -947,33 +978,46 @@ build/moc_MiscDialog.cpp: src/gui/ui_newcachedialog.h \
 build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/gui/MainWindow.h \
 		src/gui/ui_pisa.h \
+		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
-		src/Computer.h \
-		src/memory/Cache.h \
+		src/assembler/Problem.h \
+		src/gui/HexSpinBox.h \
+		src/gui/MemoryView.h \
+		src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
-		src/memory/MemoryInterface.h \
+		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/Architecture.h \
-		src/memory/MainMemory.h \
+		src/Computer.h \
+		src/memory/Cache.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
 		src/assembler/ProgramManagerX.h \
-		src/gui/HexSpinBox.h \
 		src/gui/PreferenceDialog.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/PreferenceDialog.h -o build/moc_PreferenceDialog.cpp
+
+build/moc_RegisterView.cpp: src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/Architecture.h \
+		src/gui/RegisterView.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/RegisterView.h -o build/moc_RegisterView.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -991,8 +1035,22 @@ src/gui/ui_newfiledialog.h: rsc/ui/newfiledialog.ui \
 src/gui/ui_pisa.h: rsc/ui/pisa.ui \
 		/usr/bin/uic \
 		src/gui/EditorTab.h \
+		src/gui/HexSpinBox.h \
+		src/gui/MemoryView.h \
+		src/gui/RegisterView.h \
 		src/gui/CodeEditor.h \
-		src/gui/HighLighter.h
+		src/gui/HighLighter.h \
+		src/assembler/Problem.h \
+		src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/gui/HexSpinBox.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/Architecture.h
 	/usr/bin/uic rsc/ui/pisa.ui -o src/gui/ui_pisa.h
 
 src/gui/ui_preferencedialog.h: rsc/ui/preferencedialog.ui \
@@ -1021,16 +1079,21 @@ build/Computer.o: src/Computer.cpp src/Computer.h \
 
 build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/gui/ui_pisa.h \
+		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
-		src/Computer.h \
-		src/memory/Cache.h \
+		src/assembler/Problem.h \
+		src/gui/HexSpinBox.h \
+		src/gui/MemoryView.h \
+		src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
-		src/memory/MemoryInterface.h \
+		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/Architecture.h \
-		src/memory/MainMemory.h \
+		src/Computer.h \
+		src/memory/Cache.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1038,13 +1101,11 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h \
-		src/gui/HexSpinBox.h
+		src/assembler/ProgramManagerX.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/main.o src/main.cpp
 
 build/Utility.o: src/Utility.cpp src/Utility.h
@@ -1090,12 +1151,14 @@ build/CacheView.o: src/gui/CacheView.cpp src/gui/CacheView.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CacheView.o src/gui/CacheView.cpp
 
 build/CodeEditor.o: src/gui/CodeEditor.cpp src/gui/CodeEditor.h \
-		src/gui/HighLighter.h
+		src/gui/HighLighter.h \
+		src/assembler/Problem.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CodeEditor.o src/gui/CodeEditor.cpp
 
 build/EditorTab.o: src/gui/EditorTab.cpp src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
-		src/gui/HighLighter.h
+		src/gui/HighLighter.h \
+		src/assembler/Problem.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/EditorTab.o src/gui/EditorTab.cpp
 
 build/HighLighter.o: src/gui/HighLighter.cpp src/gui/HighLighter.h
@@ -1103,16 +1166,21 @@ build/HighLighter.o: src/gui/HighLighter.cpp src/gui/HighLighter.h
 
 build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/gui/ui_pisa.h \
+		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
-		src/Computer.h \
-		src/memory/Cache.h \
+		src/assembler/Problem.h \
+		src/gui/HexSpinBox.h \
+		src/gui/MemoryView.h \
+		src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
-		src/memory/MemoryInterface.h \
+		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/Architecture.h \
-		src/memory/MainMemory.h \
+		src/Computer.h \
+		src/memory/Cache.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1120,14 +1188,20 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h \
-		src/gui/HexSpinBox.h
+		src/assembler/ProgramManagerX.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MainWindow.o src/gui/MainWindow.cpp
+
+build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
+		src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/gui/HexSpinBox.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryView.o src/gui/MemoryView.cpp
 
 build/MiscDialog.o: src/gui/MiscDialog.cpp src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
@@ -1142,29 +1216,40 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/gui/ui_preferencedialog.h \
 		src/gui/MainWindow.h \
 		src/gui/ui_pisa.h \
+		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
-		src/Computer.h \
-		src/memory/Cache.h \
+		src/assembler/Problem.h \
+		src/gui/HexSpinBox.h \
+		src/gui/MemoryView.h \
+		src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
-		src/memory/MemoryInterface.h \
+		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/Architecture.h \
-		src/memory/MainMemory.h \
+		src/Computer.h \
+		src/memory/Cache.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h \
-		src/gui/HexSpinBox.h
+		src/assembler/ProgramManagerX.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PreferenceDialog.o src/gui/PreferenceDialog.cpp
+
+build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/RegisterView.o src/gui/RegisterView.cpp
 
 build/Cache.o: src/memory/Cache.cpp src/memory/Cache.h \
 		src/memory/QueryResult.h \
@@ -1177,7 +1262,8 @@ build/MainMemory.o: src/memory/MainMemory.cpp src/memory/MainMemory.h \
 		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
-		src/Architecture.h
+		src/Architecture.h \
+		src/memory/serialization.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MainMemory.o src/memory/MainMemory.cpp
 
 build/MemoryInterface.o: src/memory/MemoryInterface.cpp src/memory/MemoryInterface.h \
@@ -1226,11 +1312,17 @@ build/moc_HighLighter.o: build/moc_HighLighter.cpp
 build/moc_MainWindow.o: build/moc_MainWindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_MainWindow.o build/moc_MainWindow.cpp
 
+build/moc_MemoryView.o: build/moc_MemoryView.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_MemoryView.o build/moc_MemoryView.cpp
+
 build/moc_MiscDialog.o: build/moc_MiscDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_MiscDialog.o build/moc_MiscDialog.cpp
 
 build/moc_PreferenceDialog.o: build/moc_PreferenceDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_PreferenceDialog.o build/moc_PreferenceDialog.cpp
+
+build/moc_RegisterView.o: build/moc_RegisterView.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_RegisterView.o build/moc_RegisterView.cpp
 
 ####### Install
 

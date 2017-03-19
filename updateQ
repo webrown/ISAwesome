@@ -17,12 +17,18 @@ QMAKE_EXTRA_TARGETS += first copydata
 " -after "
 test{
     message(Configuring test build...)
+    SOURCES -= src/main.cpp \
 
-    SOURCES -= src/main.cpp
 }
 else{
     message(Normal build)
-    SOURCES -= test/main.cpp
+    SOURCES -= test/main.cpp \
+        src/pipeline/Pipeline.h \
+        src/pipeline/StageData.h \
+        src/pipeline/PipelineGlobals.h \
+        src/pipeline/Pipeline.cpp \
+
+
 }" 
 
 

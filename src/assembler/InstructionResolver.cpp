@@ -458,7 +458,6 @@ ParseResult unparseBinary(uint args){
     uint firstArg = (args & ((((1<<16)-1))<<5)) >> 5;
     //register
     
-    qDebug() <<"A";
     if((args & L_BIT) == L_BIT){
         result.unparsed = "R" + QString::number(firstArg & ((1<<5)-1),10) + " ";
     }
@@ -466,7 +465,6 @@ ParseResult unparseBinary(uint args){
     else{
         result.unparsed = "#0X" + QString::number(firstArg,16) + " ";
     }
-    qDebug() << "B";
     result.unparsed += " R" + QString::number((args & ((1<<5)-1)));
 
     return result;

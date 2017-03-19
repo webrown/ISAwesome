@@ -13,8 +13,7 @@
 ** a written agreement between you and The Qt Company. For licensing terms
 ** and conditions see https://www.qt.io/terms-conditions. For further
 ** information use the contact form at https://www.qt.io/contact-us.
-**
-** BSD License Usage
+** ** BSD License Usage
 ** Alternatively, you may use this file under the terms of the BSD license
 ** as follows:
 **
@@ -56,6 +55,7 @@
 #include <QFrame>
 #include <QTextStream>
 #include "HighLighter.h"
+#include "../assembler/Problem.h"
 
 
 class QPaintEvent;
@@ -81,6 +81,9 @@ public:
     void read();
     void write();
     void writeAs(QString s);
+    
+    void mark(QList<Problem> problem);
+    void clearMarks();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -92,6 +95,10 @@ private slots:
 
 private:
     QWidget *lineNumberArea;
+
+    QTextCharFormat normalFormat;
+    QTextCharFormat errorFormat;
+    QTextCharFormat warningFormat;
     
 };
 

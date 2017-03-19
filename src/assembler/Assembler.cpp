@@ -167,16 +167,19 @@ void Assembler::preprocessDocument(QStringList document, QString fileName){
             _macroTable->insert(header, macroBuffer);
             qDebug() << "New Macro defined" << header  << macroBuffer;
             macroBuffer = QStringList();
+            lineNumber+=1;
             continue;
         }
         //Special subroutine for checking macro
         if(isProcessingMacro){
             macroBuffer << line;
+            lineNumber+=1;
             continue;
         }
         if(line == "#DEFINEMACRO"){
             qDebug() << "Enter special local macro subroutine :)" ;
             isProcessingMacro = true;
+            lineNumber +=1;
             continue;
         }
 
@@ -210,7 +213,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         qDebug() << "Merge this file: " << path;
         QFile file(path);
         if(file.exists() == false){
-            throwError(fileName, lineNumber, 1, "Merge failed: file doesn't exist");
+            throwError(fileName, lineNumber, 0, "Merge failed: file doesn't exist");
             return;
         }
         this->processFile(path);
@@ -248,7 +251,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
             return;
         }
         if(!_aliasTable->contains(tokens[0])){
-            throwError(fileName ,lineNumber, 0, "InvalidFormat: undefined alias");
+            throwError(fileName ,lineNumber, 1, "InvalidFormat: undefined alias");
             return;
         }
         qDebug() << "alias " << tokens[0] << " is removed." ;
@@ -305,7 +308,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
     if(tokens.at(0).endsWith(":")){
         qDebug() << "Label detected" ;
         if(tokens.size() > 1){
-            throwError(fileName, lineNumber, 1,"Invalid Format: Not a Label" );
+            throwError(fileName, lineNumber, tokens.size(),"Invalid Format: Not a Label" );
             return;
         }
 
@@ -485,15 +488,14 @@ void Assembler::processLine(Preprocessed prep){
     uint address = prep.address;
     QStringList tokens = prep.tokens;
 
-
-    // Grab the opcode and operands
-    QString token1 = tokens.takeFirst();
-
     uint flag = CRS.nameTable["AL"];
     uint opcode = IRS.nameTable["NOP"]->opcode; //=NOP
     InstructionDefinition* def;
     int operandTokenNumber = 0;
 
+
+    // Grab the opcode and operands
+    QString token1 = tokens.takeFirst();
 
     //IS token1 instruction?
     if(IRS.nameTable.contains(token1)){
@@ -537,11 +539,11 @@ void Assembler::processLine(Preprocessed prep){
 
     ParseResult result = def->parse(tokens);
     if(result.error != "None"){
-        throwError(fileName,lineNumber, result.failureLocation, result.error);
+        throwError(fileName,lineNumber, operandTokenNumber + result.failureLocation, result.error);
         return;
     }
     else if (result.warning != "None"){
-        throwWarning(fileName, lineNumber, result.failureLocation, result.warning);
+        throwWarning(fileName, lineNumber, operandTokenNumber + result.failureLocation, result.warning);
     }
     qDebug() << "Argument parsed: " << QString::number(result.parsed, 2).rightJustified(22,'0') ;
 

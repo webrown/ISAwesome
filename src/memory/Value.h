@@ -1,6 +1,7 @@
 #ifndef VALUE_H
 #define VALUE_H
 union Value{
+  unsigned int asUInt;
   int asInt;
   float asFloat;
   int toInt;

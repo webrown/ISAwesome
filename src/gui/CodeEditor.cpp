@@ -63,11 +63,17 @@ CodeEditor::CodeEditor(QFile* sourceFile, bool open, QWidget *parent) : QPlainTe
     this->setUndoRedoEnabled(true);
     
     highlighter = new Highlighter(this->document());
-    this->sourceFile = sourceFile;
+    normalFormat.setUnderlineStyle(QTextCharFormat::NoUnderline);
+    errorFormat.setUnderlineColor(QColor(Qt::red));
+    errorFormat.setUnderlineStyle( QTextCharFormat::WaveUnderline );
+    warningFormat.setUnderlineColor(QColor(Qt::blue));
+    warningFormat.setUnderlineStyle( QTextCharFormat::WaveUnderline );
 
+    this->sourceFile = sourceFile;
     if(open == true){
         read();
     }
+
 }
 
 CodeEditor::~CodeEditor(){
@@ -200,4 +206,36 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
         bottom = top + (int) blockBoundingRect(block).height();
         ++blockNumber;
     }
+}
+void CodeEditor::mark(QList<Problem> problems){
+    QTextDocument *doc = this->document();
+    QTextCursor cur(doc);
+    cur.movePosition(QTextCursor::Start);
+    int currLine = 0;
+    for(Problem problem : problems){
+        cur.movePosition(QTextCursor::StartOfLine);
+        int currWord = 0;
+        while(problem.lineNumber > currLine){
+            cur.movePosition(QTextCursor::Down);
+            currLine++;
+        }
+        while(problem.wordNumber > currWord){
+            cur.movePosition(QTextCursor::NextWord);
+            currWord++;
+        }
+        cur.movePosition(QTextCursor::EndOfWord,QTextCursor::KeepAnchor);
+        if(problem.type == ERROR){
+            cur.mergeCharFormat(errorFormat);
+        }
+        else if(problem.type == WARNING){
+            cur.mergeCharFormat(warningFormat);
+        }
+    }
+}
+void CodeEditor::clearMarks(){
+    QTextDocument *doc = this->document();
+    QTextCursor cur(doc);
+    cur.movePosition(QTextCursor::Start);
+    cur.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);     
+    cur.mergeCharFormat(normalFormat);
 }

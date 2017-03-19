@@ -40,6 +40,8 @@ class MainWindow : public QMainWindow
         Disassembler* disassembler;
         QSettings settings;
 
+        void updateNavigation();
+
         void printConsole(QString line);
         void printlnConsole(QString line);
         void clearConsole();
@@ -53,20 +55,20 @@ class MainWindow : public QMainWindow
 
     public slots:
         //Handlers
-        void handleNewButton();
-        void handleOpenButton();
-        void handleUndoButton();
-        void handleRedoButton();
-        void handleSaveButton();
-        void handleSaveAsButton();
-        void handleAboutPISAButton();
+        void handleNew();
+        void handleOpen();
+        void handleUndo();
+        void handleRedo();
+        void handleSave();
+        void handleSaveAs();
+        void handleSaveAll();
+        void handleAboutPISA();
         void handleAddCache();
         void handleRemoveCache();
         void handleClearCache();
         void handleFlushCache();
         void handleFlushAllCache();
         void handlePreference();
-        void handleSaveAllButton();
         void handleBuild();
         void handleBuildAll();
         void handleForward();
@@ -74,6 +76,11 @@ class MainWindow : public QMainWindow
         void handlePlay();
         void handlePause();
         void handleStop();
+        void handleOpenFromNavigation(QModelIndex index);
+        void handleCustomContextMenuForTracker(QPoint point);
+        void handleAddBreak();
+        void handleRemoveBreak();
+        void handleUpload();
 
 
         void updateUndo(bool avail);

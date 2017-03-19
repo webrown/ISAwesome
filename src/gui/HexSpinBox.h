@@ -2,6 +2,9 @@
  * Source: http://stackoverflow.com/questions/26581444/qspinbox-with-unsigned-int-for-hex-input
  * Author: ZX2C4
  * ********************************************************/
+#ifndef HEXSPINBOX_H
+#define HEXSPINBOX_H
+
 #include <QSpinBox>
 
 class HexSpinBox : public QSpinBox
@@ -10,8 +13,10 @@ class HexSpinBox : public QSpinBox
         HexSpinBox(bool only16Bits, QWidget *parent = 0) : QSpinBox(parent), m_only16Bits(only16Bits){
         setPrefix("0x");
         setDisplayIntegerBase(16);
-        if (only16Bits)
-            setRange(0, 0xFFFF);
+        if (only16Bits){
+            setRange(0, 0xFFFFFF);
+            setSuffix("XX");
+        }
         else
             setRange(INT_MIN, INT_MAX);
     }
@@ -26,7 +31,11 @@ class HexSpinBox : public QSpinBox
     protected:
         QString textFromValue(int value) const
         {
-            return QString::number(u(value), 16).toUpper();
+            if(m_only16Bits)
+                return QString::number(u(value), 16).toUpper().rightJustified(6,'0');
+            else
+                return QString::number(u(value), 16).toUpper().rightJustified(8,'0');
+
         }
         int valueFromText(const QString &text) const
         {
@@ -44,7 +53,7 @@ class HexSpinBox : public QSpinBox
             input = QString("0x") + copy.toUpper();
             bool okay;
             unsigned int val = copy.toUInt(&okay, 16);
-            if (!okay || (m_only16Bits && val > 0xFFFF))
+            if (!okay || (m_only16Bits && val > 0xFFFFFF))
                 return QValidator::Invalid;
             return QValidator::Acceptable;
         }
@@ -61,3 +70,5 @@ class HexSpinBox : public QSpinBox
         }
 
 };
+
+#endif

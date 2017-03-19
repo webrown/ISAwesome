@@ -64,7 +64,11 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QTreeView" name="fileSystemView"/>
+             <widget class="QTreeView" name="fileSystemView">
+              <property name="contextMenuPolicy">
+               <enum>Qt::NoContextMenu</enum>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -86,6 +90,9 @@
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
              <widget class="QListWidget" name="tracker">
+              <property name="contextMenuPolicy">
+               <enum>Qt::CustomContextMenu</enum>
+              </property>
               <property name="editTriggers">
                <set>QAbstractItemView::NoEditTriggers</set>
               </property>
@@ -134,7 +141,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_problems">
          <property name="sizePolicy">
@@ -151,6 +158,9 @@
            <widget class="QTableWidget" name="problemTable">
             <property name="editTriggers">
              <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
             </property>
             <attribute name="horizontalHeaderDefaultSectionSize">
              <number>100</number>
@@ -278,7 +288,7 @@
          <enum>QTabWidget::Triangular</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="documentMode">
          <bool>true</bool>
@@ -301,60 +311,107 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_memory">
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
-        <widget class="QWidget" name="tab_register">
+        <widget class="RegisterView" name="tab_register">
          <attribute name="title">
           <string>Register</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <item>
+           <widget class="QWidget" name="widget_3" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Type:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox">
+               <item>
+                <property name="text">
+                 <string>General Registers</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Integer Vector #0</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Integer Vector #1</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Integer Vector #2</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Integer Vector #3</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Float Vector #0</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Float Vector #1</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Float Vector #2</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Float Vector #3</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Flag Registers</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
            <widget class="QTableWidget" name="tableWidget_6">
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
             </property>
-            <attribute name="verticalHeaderVisible">
-             <bool>false</bool>
-            </attribute>
-            <column>
-             <property name="text">
-              <string>Address</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Binary</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Decimal</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Hex</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>ASC II</string>
-             </property>
-            </column>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="tab_flag">
-         <attribute name="title">
-          <string>Flag</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_9">
-          <item>
-           <widget class="QTableWidget" name="tableWidget_8">
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
             </property>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>120</number>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
             <attribute name="verticalHeaderVisible">
              <bool>false</bool>
             </attribute>
@@ -365,7 +422,7 @@
             </column>
             <column>
              <property name="text">
-              <string>Binary</string>
+              <string>Hex</string>
              </property>
             </column>
             <column>
@@ -375,31 +432,81 @@
             </column>
             <column>
              <property name="text">
-              <string>Hex</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>ASC II</string>
+              <string>Binary</string>
              </property>
             </column>
            </widget>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_memory">
+        <widget class="MemoryView" name="tab_memory">
          <attribute name="title">
           <string>Memory</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
+           <widget class="QWidget" name="widget_2" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Address: </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="HexSpinBox" name="spinBox"/>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>Search</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
            <widget class="QTableWidget" name="tableWidget_memory">
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
             </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
             <property name="rowCount">
              <number>0</number>
             </property>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>120</number>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
             <attribute name="verticalHeaderVisible">
              <bool>false</bool>
             </attribute>
@@ -410,7 +517,7 @@
             </column>
             <column>
              <property name="text">
-              <string>Binary</string>
+              <string>Hex</string>
              </property>
             </column>
             <column>
@@ -420,12 +527,7 @@
             </column>
             <column>
              <property name="text">
-              <string>Hex</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>ASC II</string>
+              <string>Binary</string>
              </property>
             </column>
            </widget>
@@ -447,8 +549,13 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>30</height>
+     <height>27</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Hack</family>
+    </font>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -480,6 +587,7 @@
     <property name="title">
      <string>Run</string>
     </property>
+    <addaction name="actionRun"/>
     <addaction name="actionstop"/>
     <addaction name="actionpause"/>
     <addaction name="separator"/>
@@ -503,16 +611,8 @@
      <addaction name="actionFlushCache"/>
      <addaction name="acitonFlushAllCache"/>
     </widget>
-    <widget class="QMenu" name="menuAssembler">
-     <property name="title">
-      <string>&amp;Assembler</string>
-     </property>
-     <addaction name="actionAssemblerConfiguration"/>
-    </widget>
     <addaction name="menu_Cache"/>
     <addaction name="actionPipeline"/>
-    <addaction name="menuAssembler"/>
-    <addaction name="actionDisassembler"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -551,6 +651,7 @@
    <addaction name="separator"/>
    <addaction name="actionbuild"/>
    <addaction name="actionbuild_all"/>
+   <addaction name="actionUpload"/>
    <addaction name="separator"/>
    <addaction name="actionRun"/>
    <addaction name="actionpause"/>
@@ -570,18 +671,13 @@
     <string>&amp;Pipeline</string>
    </property>
   </action>
-  <action name="actionDisassembler">
-   <property name="text">
-    <string>&amp;Disassembler</string>
-   </property>
-  </action>
   <action name="actionRun">
    <property name="icon">
     <iconset resource="../pisa.qrc">
      <normaloff>:/menu_icon2/img/play2.png</normaloff>:/menu_icon2/img/play2.png</iconset>
    </property>
    <property name="text">
-    <string>Run</string>
+    <string>&amp;Run</string>
    </property>
    <property name="toolTip">
     <string>Run Program</string>
@@ -792,11 +888,6 @@
     <string>&amp;Predefined</string>
    </property>
   </action>
-  <action name="actionDefault">
-   <property name="text">
-    <string>&amp;Default</string>
-   </property>
-  </action>
   <action name="actionFlushCache">
    <property name="text">
     <string>&amp;Flush</string>
@@ -829,6 +920,18 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
+  <action name="actionUpload">
+   <property name="icon">
+    <iconset resource="../pisa.qrc">
+     <normaloff>:/menu_icon2/img/upload2.png</normaloff>:/menu_icon2/img/upload2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Upload</string>
+   </property>
+   <property name="toolTip">
+    <string>Upload file</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -839,6 +942,27 @@
    <slots>
     <slot>closeTab(int)</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>HexSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>HexSpinBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MemoryView</class>
+   <extends>QWidget</extends>
+   <header>MemoryView.h</header>
+   <container>1</container>
+   <slots>
+    <slot>updateWithSpinBox()</slot>
+    <slot>updateWithSearch()</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>RegisterView</class>
+   <extends>QWidget</extends>
+   <header>RegisterView.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -853,7 +977,7 @@
    <sender>actionnew</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>handleNewButton()</slot>
+   <slot>handleNew()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -869,7 +993,7 @@
    <sender>actionopen</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>handleOpenButton()</slot>
+   <slot>handleOpen()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -885,7 +1009,7 @@
    <sender>actionsave</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>handleSaveButton()</slot>
+   <slot>handleSave()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -901,7 +1025,7 @@
    <sender>actionRedo</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>handleRedoButton()</slot>
+   <slot>handleRedo()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -917,7 +1041,7 @@
    <sender>actionUndo</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>handleUndoButton()</slot>
+   <slot>handleUndo()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -933,7 +1057,7 @@
    <sender>actionSave_As</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>handleSaveAsButton()</slot>
+   <slot>handleSaveAs()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -949,7 +1073,7 @@
    <sender>actionAbout_PISA</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>handleAboutPISAButton()</slot>
+   <slot>handleAboutPISA()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -1201,15 +1325,63 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>fileSystemView</sender>
+   <signal>doubleClicked(QModelIndex)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleOpenFromNavigation(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>152</x>
+     <y>460</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tracker</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleCustomContextMenuForTracker(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>152</x>
+     <y>458</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionUpload</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleUpload()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>handleNewButton()</slot>
-  <slot>handleOpenButton()</slot>
-  <slot>handleSaveButton()</slot>
-  <slot>handleUndoButton()</slot>
-  <slot>handleRedoButton()</slot>
-  <slot>handleSaveAsButton()</slot>
-  <slot>handleAboutPISAButton()</slot>
+  <slot>handleNew()</slot>
+  <slot>handleOpen()</slot>
+  <slot>handleSave()</slot>
+  <slot>handleUndo()</slot>
+  <slot>handleRedo()</slot>
+  <slot>handleSaveAs()</slot>
+  <slot>handleAboutPISA()</slot>
   <slot>handleAddCache()</slot>
   <slot>handleRemoveCache()</slot>
   <slot>handleClearCache()</slot>
@@ -1225,5 +1397,8 @@
   <slot>handleStop()</slot>
   <slot>handleForward()</slot>
   <slot>handleBackward()</slot>
+  <slot>handleOpenFromNavigation(QModelIndex)</slot>
+  <slot>handleCustomContextMenuForTracker(QPoint)</slot>
+  <slot>handleUpload()</slot>
  </slots>
 </ui>

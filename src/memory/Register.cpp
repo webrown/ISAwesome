@@ -23,8 +23,6 @@ Register::Register(){
     }
 }
 
-Register::~Register() {
-}
 
 Register::~Register(){
     //Do nothing

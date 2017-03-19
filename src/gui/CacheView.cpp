@@ -23,12 +23,8 @@ CacheView::CacheView(Cache* cache){
     }
     this->setHorizontalHeaderLabels(header);
     this->verticalHeader()->setVisible(false);
-    update();
-}
-CacheView::~CacheView(){
-}
 
-void CacheView::update(){
+    //Create tablewidget
     for(int ind = 0; ind < cache->contents->size(); ind++) {
         for(int way = 0; way < cache->contents->at(0)->size(); way++) {
             this->setItem(ind * cache->contents->at(0)->size() + way, 0, new QTableWidgetItem(QString::number(cache->tags->at(ind)->at(way))));
@@ -38,9 +34,29 @@ void CacheView::update(){
             this->setItem(ind * cache->contents->at(0)->size() + way, 4, new QTableWidgetItem(QString::number(cache->valid->at(ind)->at(way))));
 
             for(int offset = 0; offset < cache->contents->at(0)->at(0)->size(); offset++) {
-                // this->setItem(ind * cache->contents->at(0)->size() + way, NUMBER_OF_DEFAULT_HEADERS + offset, new QTableWidgetItem(QString::number(cache->contents->at(ind)->at(way)->at(offset))));
+                this->setItem(ind * cache->contents->at(0)->size() + way, NUMBER_OF_DEFAULT_HEADERS + offset, new QTableWidgetItem(QString::number(cache->contents->at(ind)->at(way)->at(offset).asInt)));
             }
         }
     }
 
+
+    update();
+}
+CacheView::~CacheView(){
+}
+
+void CacheView::update(){
+    for(int ind = 0; ind < cache->contents->size(); ind++) {
+        for(int way = 0; way < cache->contents->at(0)->size(); way++) {
+            this->item(ind * cache->contents->at(0)->size() + way, 0)->setText(QString::number(cache->tags->at(ind)->at(way)));
+            this->item(ind * cache->contents->at(0)->size() + way, 1)->setText(QString::number(ind));
+            this->item(ind * cache->contents->at(0)->size() + way, 2)->setText(QString::number(cache->dirty->at(ind)->at(way)));
+            this->item(ind * cache->contents->at(0)->size() + way, 3)->setText(QString::number(cache->LRU->at(ind)->at(way)));
+            this->item(ind * cache->contents->at(0)->size() + way, 4)->setText(QString::number(cache->valid->at(ind)->at(way)));
+
+            for(int offset = 0; offset < cache->contents->at(0)->at(0)->size(); offset++) {
+                this->item(ind * cache->contents->at(0)->size() + way, NUMBER_OF_DEFAULT_HEADERS + offset)->setText(QString::number(cache->contents->at(ind)->at(way)->at(offset).asInt));
+            }
+        }
+    }
 }

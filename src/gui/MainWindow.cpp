@@ -40,6 +40,12 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     _ui.fileSystemView->setColumnHidden( 1, true );
     _ui.fileSystemView->setColumnHidden( 2, true );
     _ui.fileSystemView->setColumnHidden( 3, true );
+    QModelIndex idx = fModel->index(settings.value("general/workdirectory",getDocDir()).toString());
+    _ui.fileSystemView->setRootIndex(idx);
+
+    _ui.tab_memory->init(computer->mem, _ui.tableWidget_memory,_ui.spinBox,_ui.pushButton, _ui.lineEdit);
+    _ui.tab_register->init(computer->regs, _ui.tableWidget_6,_ui.comboBox);
+
 
     qDebug() << "MainWindow is initialized...";
 }
@@ -54,10 +60,17 @@ MainWindow::~MainWindow()
     assemblyThread.wait();
     qDebug() << "Fin.";
 }
+void MainWindow::updateNavigation(){
+    QFileSystemModel* fModel = (QFileSystemModel*) _ui.fileSystemView->model();
+    fModel->setRootPath(settings.value("general/workdirectory",getDocDir()).toString());
+    _ui.fileSystemView->setModel(fModel);
+    QModelIndex idx = fModel->index(settings.value("general/workdirectory",getDocDir()).toString());
+    _ui.fileSystemView->setRootIndex(idx);
+}
 
 
 //handle New Event
-void MainWindow::handleNewButton(){
+void MainWindow::handleNew(){
     qDebug() << "New Button is clicked!";
     NewFileDialog dialog(settings.value("general/workdirectory",getDocDir()).toString(),this);
     if(dialog.exec() != QDialog::Accepted){
@@ -74,7 +87,7 @@ void MainWindow::handleNewButton(){
 }
 
 //handle Open Event
-void MainWindow::handleOpenButton()
+void MainWindow::handleOpen()
 {
     qDebug() << "Open Button is clicked!";
     QString docLoc = settings.value("general/workdirectory",getDocDir()).toString();
@@ -91,8 +104,25 @@ void MainWindow::handleOpenButton()
     }
 }
 
+void MainWindow::handleOpenFromNavigation(QModelIndex index){
+    qDebug() << "Open from navigation";
+    QString fileName = ((QFileSystemModel*)_ui.fileSystemView->model())->rootPath() + "/"+ index.data().toString();
+    QFile file(fileName);
+    QFileInfo fileInfo(file);
+    qDebug() << fileName;
+
+    //It's directory, do not open it.
+    if(file.exists() == false || fileInfo.isDir() == true){
+        return;
+    }
+    CodeEditor* widget = _ui.editorTab->openTab(fileName);
+    connect(widget, SIGNAL(undoAvailable(bool)), this, SLOT(updateUndo(bool)));
+    connect(widget, SIGNAL(redoAvailable(bool)), this, SLOT(updateRedo(bool)));
+    printlnConsole(fileName + " is opened");
+}
+
 //handle Save event
-void MainWindow::handleSaveButton()
+void MainWindow::handleSave()
 {
     qDebug() << "Save button is clicked";
     if(_ui.editorTab->saveTab()){
@@ -103,7 +133,7 @@ void MainWindow::handleSaveButton()
     }
 }
 
-void MainWindow::handleSaveAllButton()
+void MainWindow::handleSaveAll()
 {
     qDebug() << "Save all button is clicked";
     if(_ui.editorTab->saveAllTab()){
@@ -117,7 +147,7 @@ void MainWindow::handleSaveAllButton()
 }
 
 //handle Save As event
-void MainWindow::handleSaveAsButton()
+void MainWindow::handleSaveAs()
 {
     qDebug() << "Save As button is clicked";
     NewFileDialog dialog(settings.value("general/workdirectory",getDocDir()).toString(),this);
@@ -135,21 +165,21 @@ void MainWindow::handleSaveAsButton()
 }
 
 //handle Undo Event
-void MainWindow::handleUndoButton()
+void MainWindow::handleUndo()
 {
     qDebug() << "Undo button is clicked";
 
     ((CodeEditor*)_ui.editorTab->currentWidget())->undo();
 }
 
-void MainWindow::handleRedoButton()
+void MainWindow::handleRedo()
 {
     qDebug() << "Redo button is clicked";
     ((CodeEditor*)_ui.editorTab->currentWidget())->redo();
 }
 
 //hande about pisa event
-void MainWindow::handleAboutPISAButton()
+void MainWindow::handleAboutPISA()
 {
     qDebug() << "About PISA button is clicked";
     QString link = "https://github.com/webrown/PISA";
@@ -207,12 +237,12 @@ void MainWindow::handleBuild(){
         return;
     }
     //Save file: I don't know but eclipse does this, so I guess there is some reason why we need to save file before assembly
-
+    _ui.editorTab->currentEditor()->clearMarks();
    assemble(_ui.editorTab->currentEditor()->sourceFile->fileName(), false); 
 }
 
 void MainWindow::assemble(QString fileName, bool runAfter){
-    handleSaveButton();
+    handleSaveAll();
     AssemblerConfiguration config;
     config.useDefaultMacro = settings.value("assembly/useDefaultMacro", true).toBool();
     config.useDefaultAlias = settings.value("assembly/useDefaultAlias", true).toBool();
@@ -252,8 +282,12 @@ void MainWindow::displayProblems(QList<Problem>* problemLog){
     _ui.problemTable->clearContents();
     _ui.problemTable->setRowCount(problemLog->size());
 
+    QMultiMap<QString, Problem> problemMap;
+
     for(int i =0; i < problemLog->size(); i++){
         Problem problem = problemLog->at(i);
+
+        problemMap.insert(problem.fileName, problem);
         QString type = (problem.type == WARNING ? "Warning" :(problem.type == ERROR ? "Error" : "???"));
         _ui.problemTable->setItem(i,0,new QTableWidgetItem(type));
         _ui.problemTable->setItem(i,1,new QTableWidgetItem(problem.fileName));
@@ -261,29 +295,51 @@ void MainWindow::displayProblems(QList<Problem>* problemLog){
         _ui.problemTable->setItem(i,3,new QTableWidgetItem(QString::number(problem.wordNumber+1)));
         _ui.problemTable->setItem(i,4,new QTableWidgetItem(problem.cause));
     }
+
+    for(QString fileName : problemMap.keys()){
+        struct {
+            bool operator()(Problem a, Problem b)
+            {   
+                return a.lineNumber < b.lineNumber;
+            }   
+        } compare;
+        QList<Problem> problems = problemMap.values(fileName);
+        std::sort(problems.begin(), problems.end(), compare);
+        for(int i =0; i < _ui.editorTab->count(); i++){
+            CodeEditor* editor = (CodeEditor*)_ui.editorTab->widget(i);
+            if(editor->sourceFile->fileName() == fileName){
+                editor->mark(problems);
+            }
+        }
+    }
 }
 void MainWindow::handleBuildAll(){
     qDebug() << "Build All button is clicked";
+    _ui.editorTab->currentEditor()->clearMarks();
+
 }
 
 void MainWindow::handlePreference(){
     qDebug() << "Preference button is clicked";
     PreferenceDialog dialog(this);
     dialog.exec();
+
+    updateNavigation();
 }
 
 void MainWindow::handleForward(){
 }
 void MainWindow::handleBackward(){
 }
-void MainWindow::handlePlay(){
-    qDebug() << "Run button is clicked";
+void MainWindow::handleUpload(){
+    qDebug() << "Upload button is clicked";
     //Nothing to build
     //TODO output?
     if(_ui.editorTab->isEmpty()){ 
-        _ui.consoleTextEdit->appendPlainText("Nothing to build...");
+        printlnConsole("Nothing to build...");
         return;
     }
+    _ui.editorTab->currentEditor()->clearMarks();
     if(shouldIAssemble() == true){
         qDebug() << "Well, I guess I have to assemble then";
         QString fileName = _ui.editorTab->currentEditor()->sourceFile->fileName() ;
@@ -306,8 +362,9 @@ void MainWindow::launchProgram(QString fileName){
         QString address = QString::number(INSTRUCTION_SIZE  * i,16).rightJustified(8, '0');
         QString instruction =disassembler->disassemble(instructions->at(i)); 
         _ui.tracker->addItem(address + "\t" + instruction);
-        
     }
+    computer->init(instructions);
+    _ui.tab_memory->update();
 }
 
 bool MainWindow::shouldIAssemble(){
@@ -363,4 +420,46 @@ void MainWindow::clearConsole(){
     qDebug() << "Clear Console";
     _ui.tabWidget_output->setCurrentWidget(_ui.tab_console);
     _ui.consoleTextEdit->clear();
+}
+void MainWindow::handleCustomContextMenuForTracker(QPoint point){
+    QPoint globalPos = _ui.tracker->mapToGlobal(point);
+
+    QListWidgetItem* item = _ui.tracker->currentItem();
+    if(item == NULL){
+        return;
+    }
+    qDebug() <<item->background();
+
+    QMenu menu;
+    QAction *addBreakAction = new QAction("add break");
+    addBreakAction->setEnabled(item->background().style() ==Qt::BrushStyle::NoBrush);
+    connect(addBreakAction,SIGNAL(triggered()), this, SLOT(handleAddBreak()));
+    menu.addAction(addBreakAction);
+
+    QAction *removeBreakAction = new QAction("remove break");
+    removeBreakAction->setEnabled(item->background().color() ==Qt::red);
+    connect(removeBreakAction,SIGNAL(triggered()), this, SLOT(handleRemoveBreak()));
+    menu.addAction(removeBreakAction);
+
+    QAction* action = menu.exec(globalPos);
+}
+void MainWindow::handleAddBreak(){
+    QListWidgetItem* item = _ui.tracker->selectedItems().first();
+    if(item == NULL){
+        return;
+    }
+    item->setBackground(Qt::red);
+
+
+
+}
+void MainWindow::handleRemoveBreak(){
+    QListWidgetItem* item = _ui.tracker->selectedItems().first();
+    if(item == NULL){
+        return;
+    }
+    item->setBackground(Qt::BrushStyle::NoBrush);
+
+}
+void MainWindow::handlePlay(){
 }
