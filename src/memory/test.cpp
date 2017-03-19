@@ -538,8 +538,41 @@ int main() {
     }
 
     // Just make sure we can do this syntax...
+    r.write(-1, 0);
+cout << "1" << endl;
     r.read(Register::PC);
+cout << "2" << endl;
     r.read(Register::scalarFloats+3);
+
+cout << "3" << endl;
+    Register r2;
+    QString *state = r.save();
+cout << "4" << endl;
+    r2.restore(state);
+cout << "5" << endl;
+    delete state;
+    for(int i = 0; i < 24; i++) {
+        QueryResult *qr1 = r.read(i);
+        QueryResult *qr2 = r2.read(i);
+        if(qr1->result.at(0).i == qr2->result.at(0).i) {
+            cout << "PASS:  saved and restored " << qr1->result.at(0).i << " " << qr2->result.at(0).i << endl;
+        }
+        else {
+            cout << "FAIL:  cannot save and restore " << qr1->result.at(0).i << " " << qr2->result.at(0).i << endl;
+        }
+    }
+    for(int i = 24; i < 32; i++) {
+        QueryResult *qr1 = r.read(i, 64);
+        QueryResult *qr2 = r2.read(i, 64);
+        for(int j = 0; j < 64; j++) {
+            if(qr1->result.at(j).i == qr2->result.at(j).i) {
+                cout << "PASS:  saved and restored " << qr1->result.at(j).i << " " << qr2->result.at(j).i << endl;
+            }
+            else {
+                cout << "FAIL:  cannot save and restore " << qr1->result.at(j).i << " " << qr2->result.at(j).i << endl;
+            }
+        }
+    }
 
     cout << "END:  Register tests." << endl;
   }

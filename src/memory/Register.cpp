@@ -1,5 +1,6 @@
 #include "Register.h"
 #include <QDebug>
+#include "serialization.h"
 
 Register::Register(){
     Value intZero = {0};
@@ -114,9 +115,53 @@ double Register::write(Value input, unsigned int address){
 }
 
 QString *Register::save(){
-  return new QString("");
+    QVector<int> result;
+    for(int i = 0; i < _iScas.size(); i++) {
+        result += _iScas.at(i).i;
+    }
+    for(int i = 0; i < _fScas.size(); i++) {
+        result += _fScas.at(i).i;
+    }
+    for(int i = 0; i < _sRegs.size(); i++) {
+        result += _sRegs.at(i).i;
+    }
+    for(int i = 0; i < _iVecs.size(); i++) {
+        for(int j = 0; j < _iVecs.at(i).size(); j++) {
+            result += _iVecs.at(i).at(j).i;
+        }
+    }
+    for(int i = 0; i < _fVecs.size(); i++) {
+        for(int j = 0; j < _fVecs.at(i).size(); j++) {
+            result += _fVecs.at(i).at(j).i;
+        }
+    }
+    return serialize(&result);
 }
 
 void Register::restore(QString *state){
-  qDebug() << state << endl;
+    QVector<int> *stateVector = deserialize(state);
+    unsigned int vectorBoundary = vectorIntegers+_iVecs.size()*VECTOR_SIZE;
+    for(unsigned int i = 0; i < (unsigned int) stateVector->size(); i++) {
+        if(i < scalarFloats) {
+           _iScas[i].i = stateVector->at(i); 
+           continue;
+        }
+        if(i < specials) {
+           _fScas[i-scalarFloats].i = stateVector->at(i); 
+           continue;
+        }
+        if(i < vectorIntegers) {
+           _sRegs[i-specials].i = stateVector->at(i); 
+           continue;
+        }
+        if(i < vectorBoundary) {
+           _iVecs[(i-vectorIntegers)/VECTOR_SIZE][(i-vectorIntegers)%VECTOR_SIZE].i = stateVector->at(i); 
+           continue;
+        }
+        if(i < vectorBoundary+_iVecs.size()*VECTOR_SIZE) {
+           _fVecs[(i-vectorBoundary)/VECTOR_SIZE][(i-vectorBoundary)%VECTOR_SIZE].i = stateVector->at(i); 
+           continue;
+        }
+    }
+    delete stateVector;
 }
