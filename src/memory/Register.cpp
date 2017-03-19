@@ -10,6 +10,7 @@ Register::Register(){
     _iScas.fill(intZero, NUMBER_OF_INTEGER_SCALAR_REGISTER);
     _fScas.fill(floatZero, NUMBER_OF_FLOAT_SCALAR_REGISTER);
     _sRegs.fill(intZero, NUMBER_OF_SYSTEM_REGISTER);
+    _flagVec.fill(intZero, VECTOR_SIZE);
 
     for(int i = 0; i < NUMBER_OF_INTEGER_VECTOR; i++){
         QVector<Value> vec;
@@ -28,8 +29,8 @@ Register::~Register() {
 }
 
 QueryResult* Register::read(unsigned int address, unsigned int length){
-    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER|| address >= TOTAL_NUMBER_OF_REGISTERS){
-        qDebug()<< "Invalid Access: address has to be between 24 to 31" << endl;
+    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER|| address >= TOTAL_NUMBER_OF_REGISTERS+1){
+        qDebug()<< "Invalid Access: address has to be between " << (NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER) << " to " << (TOTAL_NUMBER_OF_REGISTERS+1) << endl;
         exit(-1);
     }
     if(length != VECTOR_SIZE){
@@ -41,8 +42,11 @@ QueryResult* Register::read(unsigned int address, unsigned int length){
     if(address < NUMBER_OF_INTEGER_VECTOR){
         return new QueryResult(_iVecs[address], delay);
     }
-    else{
+    else if(address < NUMBER_OF_INTEGER_VECTOR+NUMBER_OF_FLOAT_VECTOR){
         return new QueryResult(_fVecs[address - NUMBER_OF_INTEGER_VECTOR], delay);
+    }
+    else {
+        return new QueryResult(_flagVec, delay);
     }
 }
 
@@ -69,8 +73,8 @@ QueryResult* Register::read(unsigned int address){
 
 
 double Register::write(QVector<Value> *value, unsigned int address){
-    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER|| address >= TOTAL_NUMBER_OF_REGISTERS){
-        qDebug()<< "Invalid Access: address has to be between 24 to 31" << endl;
+    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER|| address >= TOTAL_NUMBER_OF_REGISTERS+1){
+        qDebug()<< "Invalid Access: address has to be between " << (NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER) << " to " << (TOTAL_NUMBER_OF_REGISTERS+1) << endl;
         exit(-1);
     }
     if(value->size() != VECTOR_SIZE){
@@ -81,12 +85,17 @@ double Register::write(QVector<Value> *value, unsigned int address){
     address -= NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER;
     if(address < NUMBER_OF_INTEGER_VECTOR){
         for(int i = 0; i < VECTOR_SIZE;i++){
-        _iVecs[address].replace(i,value->at(i));
+            _iVecs[address].replace(i,value->at(i));
         }
     }
-    else{
+    else if(address < NUMBER_OF_INTEGER_VECTOR+NUMBER_OF_FLOAT_VECTOR){
         for(int i = 0; i < VECTOR_SIZE;i++){
-        _fVecs[address-NUMBER_OF_INTEGER_VECTOR].replace(i,value->at(i));
+            _fVecs[address-NUMBER_OF_INTEGER_VECTOR].replace(i,value->at(i));
+        }
+    }
+    else {
+        for(int i = 0; i < VECTOR_SIZE;i++){
+            _flagVec.replace(i,value->at(i));
         }
     }
     return delay;
@@ -135,6 +144,9 @@ QString *Register::save(){
             result += _fVecs.at(i).at(j).i;
         }
     }
+    for(int i = 0; i < _flagVec.size(); i++) {
+        result += _flagVec.at(i).i;
+    }
     return serialize(&result);
 }
 
@@ -160,6 +172,10 @@ void Register::restore(QString *state){
         }
         if(i < vectorBoundary+_iVecs.size()*VECTOR_SIZE) {
            _fVecs[(i-vectorBoundary)/VECTOR_SIZE][(i-vectorBoundary)%VECTOR_SIZE].i = stateVector->at(i); 
+           continue;
+        }
+        if(i < vectorBoundary+_iVecs.size()*VECTOR_SIZE + VECTOR_SIZE) {
+           _flagVec[i-(vectorBoundary+_iVecs.size()*VECTOR_SIZE)].i = stateVector->at(i); 
            continue;
         }
     }

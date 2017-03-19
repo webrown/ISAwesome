@@ -512,18 +512,21 @@ int main() {
         }
         delete qr;
     }
+cout << "A" << endl;
 
     Value counter = {0};
-    for(int i = 24; i < 32; i++) {
+    for(int i = 24; i < 33; i++) {
         QVector<Value> vec;
         for(int j = 0; j < 64; j++) {
             vec.push_back(counter);
             counter.i++;
         }
+cout << "i=" << counter.i << endl;
         r.write(&vec,i);
     }
+cout << "B" << endl;
     counter.i = 0;
-    for(unsigned int i = 24; i < 32; i++) {
+    for(unsigned int i = 24; i < 33; i++) {
         QueryResult *qr = r.read(i, 64);
         for(int j = 0; j < 64; j++) {
             if(qr->result.at(j).i == counter.i) {
@@ -539,17 +542,13 @@ int main() {
 
     // Just make sure we can do this syntax...
     r.write(-1, 0);
-cout << "1" << endl;
     r.read(Register::PC);
-cout << "2" << endl;
     r.read(Register::scalarFloats+3);
 
-cout << "3" << endl;
+    // Save/restore
     Register r2;
     QString *state = r.save();
-cout << "4" << endl;
     r2.restore(state);
-cout << "5" << endl;
     delete state;
     for(int i = 0; i < 24; i++) {
         QueryResult *qr1 = r.read(i);
@@ -561,7 +560,7 @@ cout << "5" << endl;
             cout << "FAIL:  cannot save and restore " << qr1->result.at(0).i << " " << qr2->result.at(0).i << endl;
         }
     }
-    for(int i = 24; i < 32; i++) {
+    for(int i = 24; i < 33; i++) {
         QueryResult *qr1 = r.read(i, 64);
         QueryResult *qr2 = r2.read(i, 64);
         for(int j = 0; j < 64; j++) {

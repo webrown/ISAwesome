@@ -14,6 +14,7 @@ class Register : MemoryInterface{
         QVector<Value> _fScas;
         QVector< QVector <Value> > _iVecs;
         QVector< QVector <Value> > _fVecs;
+        QVector<Value> _flagVec;
         static const double delay = 0;
 
         Register();
@@ -31,6 +32,7 @@ class Register : MemoryInterface{
         static const unsigned int specials = 20;
         static const unsigned int vectorIntegers = 24;
         static const unsigned int vectorFloats = 28;
+        static const unsigned int flags = 33;
 
         static const unsigned int LR = 20;
         static const unsigned int SP = 21;
