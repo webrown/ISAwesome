@@ -2,3 +2,14 @@
 MOV $0 $1
 CPY $0 $1   
 #endmacro
+#definemacro
+PUSH $0
+STO $0 SP 
+ADD 4 SP
+#endmacro
+#definemacro
+POP $0
+SUB 4 SP
+LOD SP $0
+#endmacro
+

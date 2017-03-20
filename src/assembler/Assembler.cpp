@@ -12,7 +12,7 @@ Assembler::~Assembler(){
 void Assembler::init(){
     qDebug() << "Initiating Assembler variables" ;
     _success = true;
-    uint mainAddress = 0;
+    mainAddress = HEADER_BUFFER;
 
     _labelTable = new QMap<QString, QString>();
     _aliasTable = new QMap<QString, QString>();
@@ -275,7 +275,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
     //get next address 
     uint nextAddress;
     if(_preprocessedQueue->empty()){
-        nextAddress = _config.useMainEntry ? 4 : 0;
+        nextAddress = _config.useMainEntry ? HEADER_BUFFER : 0;
     }
     else{
         nextAddress = _preprocessedQueue->last().address + INSTRUCTION_SIZE;
@@ -462,15 +462,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
 
 void Assembler::processLines(){
     if(_config.useMainEntry){
-        //Create main entry jump
-        Preprocessed preprocessed;
-        preprocessed.fileName = "System";
-        preprocessed.lineNumber = -1;
-        preprocessed.address = 0;
-        QStringList instruction;
-        instruction << "B" << QString::number(mainAddress);
-        preprocessed.tokens = instruction;
-        _preprocessedQueue->insert(0,preprocessed);
+        writeHeader();
     }
     for(Preprocessed preprocessed : *_preprocessedQueue){
         //process each line
@@ -565,4 +557,66 @@ void Assembler::throwError(QString fileName, int lineNumber, int wordNumber, QSt
 void Assembler::throwWarning(QString fileName, int lineNumber, int wordNumber, QString cause){
     Problem warning(WARNING, cause, fileName, lineNumber,wordNumber);
     _problemLog->append(warning);
+}
+
+void Assembler::writeHeader(){
+    uint lastAddress;
+    if(_preprocessedQueue->empty()){
+        lastAddress = _config.useMainEntry ? HEADER_BUFFER : 0u;
+    }
+    else{
+        lastAddress = _preprocessedQueue->last().address + INSTRUCTION_SIZE;
+    }
+
+    uint a = lastAddress & ~((1u<<16u)-1u);
+    uint b = lastAddress & ((1u<<16u)-1u);
+    uint c = mainAddress & ~((1u<<16u)-1u);
+    uint d = mainAddress & ((1u<<16u)-1u);
+    QStringList header;
+    header 
+        << ("CPY " + QString::number(a) + " R21")
+        << ("LSL 16 R21")
+        << ("ADD " + QString::number(b) + " R21")
+        << ("CPY R21 R22")
+        << ("CPY " + QString::number(c) + " R20")
+        << ("LSL 16 R21")
+        << ("ADD " + QString::number(d) + " R20")
+        << ("BL R20");
+
+    int i =0;
+    for(QString line : header){
+        Preprocessed preprocessed;
+        preprocessed.fileName = "System";
+        preprocessed.lineNumber = i;
+        preprocessed.address = i * INSTRUCTION_SIZE;
+        preprocessed.tokens = line.split(QRegExp("\\s+"));
+        qDebug() << preprocessed.tokens;
+        _preprocessedQueue->insert(i++,preprocessed);
+    }
+}
+
+void Assembler::immiMacro(QString front, uint immi, QString end, uint nextAddress){
+    uint a = immi & ~((1<<16)-1);
+    uint b = immi & ((1<<16)-1);
+    QStringList macro;
+    macro 
+        << ("STO R0 R21")
+        << ("ADD 4 R21")
+        << ("CPY " + QString::number(a) + " R0")
+        << ("LSL 16 R0")
+        << ("ADD " + QString::number(b) + " R0")
+        << (front + " R0 " + end)
+        << ("SUB 4 R21")
+        << ("LOD R21 R0") 
+        ;
+    int i =0;
+    for(QString line : macro){
+        Preprocessed preprocessed;
+        preprocessed.fileName = "System";
+        preprocessed.lineNumber = i;
+        preprocessed.address = i * INSTRUCTION_SIZE;
+        preprocessed.tokens = line.split(QRegExp("\\s+"));
+        qDebug() << preprocessed.tokens;
+        _preprocessedQueue->insert(i++,preprocessed);
+    }
 }

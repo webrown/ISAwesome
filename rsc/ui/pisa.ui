@@ -56,7 +56,7 @@
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab_navigation">
            <attribute name="title">
@@ -607,9 +607,6 @@
      <addaction name="actionAddCache"/>
      <addaction name="actionRemoveCache"/>
      <addaction name="actionClearCache"/>
-     <addaction name="separator"/>
-     <addaction name="actionFlushCache"/>
-     <addaction name="acitonFlushAllCache"/>
     </widget>
     <addaction name="menu_Cache"/>
     <addaction name="actionPipeline"/>
@@ -888,24 +885,9 @@
     <string>&amp;Predefined</string>
    </property>
   </action>
-  <action name="actionFlushCache">
-   <property name="text">
-    <string>&amp;Flush</string>
-   </property>
-  </action>
-  <action name="acitonFlushAllCache">
-   <property name="text">
-    <string>F&amp;lush All</string>
-   </property>
-  </action>
   <action name="actionPreference">
    <property name="text">
     <string>&amp;Preference...</string>
-   </property>
-  </action>
-  <action name="actionAssemblerConfiguration">
-   <property name="text">
-    <string>&amp;Configuration</string>
    </property>
   </action>
   <action name="actionSave_all">
@@ -1122,38 +1104,6 @@
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>handleRemoveCache()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>959</x>
-     <y>539</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionFlushCache</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>handleFlushCache()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>959</x>
-     <y>539</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>acitonFlushAllCache</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>handleFlushAllCache()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

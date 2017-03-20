@@ -14,12 +14,14 @@ class ProgramManagerX{
 
         QDataStream out(&file);
         out << (qint32)instructions->size();
+        qDebug() << "SIZE: " << instructions->size();
         for(int i = 0; i < instructions->size(); i++){
             out << (qint32)instructions->at(i);
         }
     }
 
     static QVector<uint>* loadProgram(QString fileName){
+        qDebug() << "LOAD: " << fileName;
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
             return NULL;
@@ -29,7 +31,7 @@ class ProgramManagerX{
         QString str;
         qint32 size;
         in >> size; 
-        qDebug() << size;
+        // qDebug() <<"SIZE: " << size;
         for(int i =0; i < size; i++){
             qint32 a;
             in  >> a;

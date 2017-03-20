@@ -921,21 +921,17 @@ build/moc_HighLighter.cpp: src/gui/HighLighter.h \
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/HighLighter.h -o build/moc_HighLighter.cpp
 
 build/moc_MainWindow.cpp: src/gui/ui_pisa.h \
-		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
-		src/gui/HexSpinBox.h \
-		src/gui/MemoryView.h \
-		src/memory/MainMemory.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/gui/RegisterView.h \
-		src/memory/Register.h \
-		src/Architecture.h \
 		src/Computer.h \
 		src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/memory/Register.h \
+		src/Architecture.h \
+		src/memory/MainMemory.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -949,6 +945,7 @@ build/moc_MainWindow.cpp: src/gui/ui_pisa.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
 		src/assembler/ProgramManagerX.h \
+		src/gui/HexSpinBox.h \
 		src/gui/MainWindow.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -978,21 +975,17 @@ build/moc_MiscDialog.cpp: src/gui/ui_newcachedialog.h \
 build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/gui/MainWindow.h \
 		src/gui/ui_pisa.h \
-		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
-		src/gui/HexSpinBox.h \
-		src/gui/MemoryView.h \
-		src/memory/MainMemory.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/gui/RegisterView.h \
-		src/memory/Register.h \
-		src/Architecture.h \
 		src/Computer.h \
 		src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/memory/Register.h \
+		src/Architecture.h \
+		src/memory/MainMemory.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1004,6 +997,7 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
 		src/assembler/ProgramManagerX.h \
+		src/gui/HexSpinBox.h \
 		src/gui/PreferenceDialog.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -1079,21 +1073,17 @@ build/Computer.o: src/Computer.cpp src/Computer.h \
 
 build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/gui/ui_pisa.h \
-		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
-		src/gui/HexSpinBox.h \
-		src/gui/MemoryView.h \
-		src/memory/MainMemory.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/gui/RegisterView.h \
-		src/memory/Register.h \
-		src/Architecture.h \
 		src/Computer.h \
 		src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/memory/Register.h \
+		src/Architecture.h \
+		src/memory/MainMemory.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1105,7 +1095,8 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h
+		src/assembler/ProgramManagerX.h \
+		src/gui/HexSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/main.o src/main.cpp
 
 build/Utility.o: src/Utility.cpp src/Utility.h
@@ -1166,21 +1157,17 @@ build/HighLighter.o: src/gui/HighLighter.cpp src/gui/HighLighter.h
 
 build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/gui/ui_pisa.h \
-		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
-		src/gui/HexSpinBox.h \
-		src/gui/MemoryView.h \
-		src/memory/MainMemory.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/gui/RegisterView.h \
-		src/memory/Register.h \
-		src/Architecture.h \
 		src/Computer.h \
 		src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/memory/Register.h \
+		src/Architecture.h \
+		src/memory/MainMemory.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1192,7 +1179,8 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h
+		src/assembler/ProgramManagerX.h \
+		src/gui/HexSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MainWindow.o src/gui/MainWindow.cpp
 
 build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
@@ -1216,21 +1204,17 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/gui/ui_preferencedialog.h \
 		src/gui/MainWindow.h \
 		src/gui/ui_pisa.h \
-		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
-		src/gui/HexSpinBox.h \
-		src/gui/MemoryView.h \
-		src/memory/MainMemory.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/gui/RegisterView.h \
-		src/memory/Register.h \
-		src/Architecture.h \
 		src/Computer.h \
 		src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/memory/Register.h \
+		src/Architecture.h \
+		src/memory/MainMemory.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1240,7 +1224,8 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h
+		src/assembler/ProgramManagerX.h \
+		src/gui/HexSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PreferenceDialog.o src/gui/PreferenceDialog.cpp
 
 build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
@@ -1279,7 +1264,8 @@ build/Register.o: src/memory/Register.cpp src/memory/Register.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
 		src/memory/MemoryInterface.h \
-		src/Architecture.h
+		src/Architecture.h \
+		src/memory/serialization.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Register.o src/memory/Register.cpp
 
 build/serialization.o: src/memory/serialization.cpp src/memory/serialization.h

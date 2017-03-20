@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <iostream>
+#include <typeinfo>
 #include <QFileDialog>
 #include <QMetaType>
 #include <QInputDialog>

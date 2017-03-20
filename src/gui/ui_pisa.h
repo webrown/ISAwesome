@@ -68,10 +68,7 @@ public:
     QAction *actionRemoveCache;
     QAction *actionClearCache;
     QAction *actionPredefined;
-    QAction *actionFlushCache;
-    QAction *acitonFlushAllCache;
     QAction *actionPreference;
-    QAction *actionAssemblerConfiguration;
     QAction *actionSave_all;
     QAction *actionUpload;
     QWidget *centralwidget;
@@ -229,14 +226,8 @@ public:
         actionClearCache->setObjectName(QStringLiteral("actionClearCache"));
         actionPredefined = new QAction(MainWindow);
         actionPredefined->setObjectName(QStringLiteral("actionPredefined"));
-        actionFlushCache = new QAction(MainWindow);
-        actionFlushCache->setObjectName(QStringLiteral("actionFlushCache"));
-        acitonFlushAllCache = new QAction(MainWindow);
-        acitonFlushAllCache->setObjectName(QStringLiteral("acitonFlushAllCache"));
         actionPreference = new QAction(MainWindow);
         actionPreference->setObjectName(QStringLiteral("actionPreference"));
-        actionAssemblerConfiguration = new QAction(MainWindow);
-        actionAssemblerConfiguration->setObjectName(QStringLiteral("actionAssemblerConfiguration"));
         actionSave_all = new QAction(MainWindow);
         actionSave_all->setObjectName(QStringLiteral("actionSave_all"));
         QIcon icon11;
@@ -590,9 +581,6 @@ public:
         menu_Cache->addAction(actionAddCache);
         menu_Cache->addAction(actionRemoveCache);
         menu_Cache->addAction(actionClearCache);
-        menu_Cache->addSeparator();
-        menu_Cache->addAction(actionFlushCache);
-        menu_Cache->addAction(acitonFlushAllCache);
         menuHelp->addAction(actionPISA_Help);
         menuHelp->addAction(actionAbout_PISA);
         menuSettings->addAction(actionPreference);
@@ -624,8 +612,6 @@ public:
         QObject::connect(actionAddCache, SIGNAL(triggered()), MainWindow, SLOT(handleAddCache()));
         QObject::connect(actionClearCache, SIGNAL(triggered()), MainWindow, SLOT(handleClearCache()));
         QObject::connect(actionRemoveCache, SIGNAL(triggered()), MainWindow, SLOT(handleRemoveCache()));
-        QObject::connect(actionFlushCache, SIGNAL(triggered()), MainWindow, SLOT(handleFlushCache()));
-        QObject::connect(acitonFlushAllCache, SIGNAL(triggered()), MainWindow, SLOT(handleFlushAllCache()));
         QObject::connect(editorTab, SIGNAL(tabCloseRequested(int)), editorTab, SLOT(closeTab(int)));
         QObject::connect(actionPreference, SIGNAL(triggered()), MainWindow, SLOT(handlePreference()));
         QObject::connect(actionbuild, SIGNAL(triggered()), MainWindow, SLOT(handleBuild()));
@@ -640,7 +626,7 @@ public:
         QObject::connect(tracker, SIGNAL(customContextMenuRequested(QPoint)), MainWindow, SLOT(handleCustomContextMenuForTracker(QPoint)));
         QObject::connect(actionUpload, SIGNAL(triggered()), MainWindow, SLOT(handleUpload()));
 
-        leftBoard->setCurrentIndex(2);
+        leftBoard->setCurrentIndex(1);
         editorTab->setCurrentIndex(-1);
         tabWidget_output->setCurrentIndex(2);
         tabWidget_pipeline->setCurrentIndex(0);
@@ -718,10 +704,7 @@ public:
         actionRemoveCache->setText(QApplication::translate("MainWindow", "&Remove Cache", Q_NULLPTR));
         actionClearCache->setText(QApplication::translate("MainWindow", "&Clear Cache", Q_NULLPTR));
         actionPredefined->setText(QApplication::translate("MainWindow", "&Predefined", Q_NULLPTR));
-        actionFlushCache->setText(QApplication::translate("MainWindow", "&Flush", Q_NULLPTR));
-        acitonFlushAllCache->setText(QApplication::translate("MainWindow", "F&lush All", Q_NULLPTR));
         actionPreference->setText(QApplication::translate("MainWindow", "&Preference...", Q_NULLPTR));
-        actionAssemblerConfiguration->setText(QApplication::translate("MainWindow", "&Configuration", Q_NULLPTR));
         actionSave_all->setText(QApplication::translate("MainWindow", "Sav&e_all", Q_NULLPTR));
         actionSave_all->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+S", Q_NULLPTR));
         actionUpload->setText(QApplication::translate("MainWindow", "Upload", Q_NULLPTR));

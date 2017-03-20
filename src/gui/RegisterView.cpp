@@ -58,7 +58,7 @@ void RegisterView::showVector(int n){
     qDebug() << "X";
     for(int row =0; row< 64; row++){
         uint content = vec[row].asUInt;
-        regTable->item(row, 0)->setText("R" + num + "_"+ QString::number(row));
+        regTable->item(row, 0)->setText("R" + num + "_"+ QString::number(row).toUpper());
         regTable->item(row, 1)->setText("0X" + QString::number(content,16));
         regTable->item(row, 2)->setText(QString::number(content,10));
         regTable->item(row, 3)->setText("0B" + QString::number(content,2));
@@ -70,14 +70,14 @@ void RegisterView::showGeneral(){
     for(;row < 10; row++){
         uint content = regs->_iScas[row].asUInt;
         regTable->item(row, 0)->setText("R" + QString::number(row));
-        regTable->item(row, 1)->setText("0X" + QString::number(content, 16));
+        regTable->item(row, 1)->setText("0X" + QString::number(content, 16).toUpper());
         regTable->item(row, 2)->setText(QString::number(content, 10));
         regTable->item(row, 3)->setText("0B" + QString::number(content, 2));
     }
     for(;row<20; row++){
         uint content = regs->_fScas[row-10].asUInt;
         regTable->item(row, 0)->setText("R" + QString::number(row));
-        regTable->item(row, 1)->setText("0X" + QString::number(content, 16));
+        regTable->item(row, 1)->setText("0X" + QString::number(content, 16).toUpper());
         regTable->item(row, 2)->setText(QString::number(content, 10));
         regTable->item(row, 3)->setText("0B" + QString::number(content, 2));
     }
@@ -85,7 +85,7 @@ void RegisterView::showGeneral(){
     for(;row<24;row++){
         uint content = regs->_sRegs[row-20].asUInt;
         regTable->item(row, 0)->setText("R" + QString::number(row));
-        regTable->item(row, 1)->setText("0X" + QString::number(content, 16));
+        regTable->item(row, 1)->setText("0X" + QString::number(content, 16).toUpper());
         regTable->item(row, 2)->setText(QString::number(content, 10));
         regTable->item(row, 3)->setText("0B" + QString::number(content, 2));
  
@@ -99,10 +99,12 @@ void RegisterView::showGeneral(){
     }
 }
 void RegisterView::showFlags(){
+    QVector<Value> vec = regs->_flagVec;
     for(int row =0; row< 64; row++){
+        uint content = vec[row].asUInt;
         regTable->item(row, 0)->setText("FLAG #" + QString::number(row));
-        regTable->item(row, 1)->setText("0X0");
-        regTable->item(row, 2)->setText("0");
-        regTable->item(row, 3)->setText("0B0");
+        regTable->item(row, 1)->setText("0X"+QString::number(content,16).toUpper());
+        regTable->item(row, 2)->setText("" + QString::number(content,10));
+        regTable->item(row, 3)->setText("0B" + QString::number(content,2));
     }
 }

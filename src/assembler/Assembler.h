@@ -58,7 +58,7 @@ class AssemblerConfiguration{
 };
 Q_DECLARE_METATYPE(AssemblerConfiguration);
 
-
+#define HEADER_BUFFER 32u
 /* Assembler is a singleton object.
  * 
  *
@@ -115,6 +115,8 @@ void resultReady(Assembled* assembled, bool runAfter);
     void preprocessLine(QString fileName, int lineNumber, QString line);
     void processLines();
     void processLine(Preprocessed preprocessed);
+    void immiMacro(QString front, uint immi, QString end, uint nextAddress);
+    void writeHeader();
 
 };
 

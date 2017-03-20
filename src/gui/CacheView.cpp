@@ -14,7 +14,7 @@ CacheView::CacheView(Cache* cache){
     int row = ways * maxIndex;
     this->setRowCount(row);
     this->setColumnCount(col);
-
+    this->setSelectionBehavior(QAbstractItemView::SelectRows);
     QStringList header;
     header << "Tag" <<"Index"<< "Dirty" <<"LRU" << "Valid";
 
@@ -48,11 +48,11 @@ CacheView::~CacheView(){
 void CacheView::update(){
     for(int ind = 0; ind < cache->contents->size(); ind++) {
         for(int way = 0; way < cache->contents->at(0)->size(); way++) {
-            this->item(ind * cache->contents->at(0)->size() + way, 0)->setText(QString::number(cache->tags->at(ind)->at(way)));
-            this->item(ind * cache->contents->at(0)->size() + way, 1)->setText(QString::number(ind));
-            this->item(ind * cache->contents->at(0)->size() + way, 2)->setText(QString::number(cache->dirty->at(ind)->at(way)));
-            this->item(ind * cache->contents->at(0)->size() + way, 3)->setText(QString::number(cache->LRU->at(ind)->at(way)));
-            this->item(ind * cache->contents->at(0)->size() + way, 4)->setText(QString::number(cache->valid->at(ind)->at(way)));
+            this->item(ind * cache->contents->at(0)->size() + way, 0)->setText(QString::number(cache->tags->at(ind)->at(way),2));
+            this->item(ind * cache->contents->at(0)->size() + way, 1)->setText(QString::number(ind,2));
+            this->item(ind * cache->contents->at(0)->size() + way, 2)->setText(QString::number(cache->dirty->at(ind)->at(way),2));
+            this->item(ind * cache->contents->at(0)->size() + way, 3)->setText(QString::number(cache->LRU->at(ind)->at(way),2));
+            this->item(ind * cache->contents->at(0)->size() + way, 4)->setText(QString::number(cache->valid->at(ind)->at(way),2));
 
             for(int offset = 0; offset < cache->contents->at(0)->at(0)->size(); offset++) {
                 this->item(ind * cache->contents->at(0)->size() + way, NUMBER_OF_DEFAULT_HEADERS + offset)->setText(QString::number(cache->contents->at(ind)->at(way)->at(offset).asInt));
