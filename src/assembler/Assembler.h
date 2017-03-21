@@ -8,12 +8,12 @@
 #include <QVector>
 #include <QQueue>
 #include <QMap>
+#include <QDir>
 #include <QFile>
-#include "Error.h"
-#include "Warning.h"
-#include "../architecture.h"
-#include "../instruction/InstructionResolver.h"
-#include "../instruction/conditionResolver.h"
+#include "Problem.h"
+#include "../Architecture.h"
+#include "InstructionResolver.h"
+#include "ConditionResolver.h"
 
 
 
@@ -23,40 +23,48 @@
  */
 class Assembled{
   public:
+      ~Assembled(){
+          delete instructions;
+          delete problemLog;
+      }
+    QString fileName;
     bool isAssembled; 
     int elaspedTime;
 
     QVector<uint>* instructions;
-    QList<Error>* errorLog;
-    QList<Warning>* warningLog;
+    QList<Problem>* problemLog;
 };
+Q_DECLARE_METATYPE(Assembled);
 
 
 class Preprocessed{
   public:
-    int docNumber; //nth document
-    int lineNumber; //nth line
+      QString fileName;
+      int lineNumber; //nth line
 
     int address;
     QStringList tokens;
 };
 
 class AssemblerConfiguration{
+
     public:
         bool useDefaultMacro = true;
         bool useGlobalMacro = true;
         bool useDefaultAlias = true;
         bool useGlobalAlias = true;
         bool useMainEntry = true;
-        bool useOrder = true;
+        bool useWall = true;
 };
+Q_DECLARE_METATYPE(AssemblerConfiguration);
 
-
+#define HEADER_BUFFER 32u
 /* Assembler is a singleton object.
  * 
  *
  */
-class Assembler{
+class Assembler: public QObject{
+    Q_OBJECT
   public: 
     //Constructor
     Assembler();
@@ -64,50 +72,51 @@ class Assembler{
 
     //Fields
     bool _success;
-    uint mainAddress;
+    uint mainAddress = INSTRUCTION_SIZE;
 
     const InstructionResolver IRS;
     const ConditionResolver CRS;
 
     //Symbol table related
-    QMap<QString, uint>* _labelTable;
-    QMap<QString, QString>* _aliasTable;
-    QMap<QString, QStringList>* _macroTable;
+    QMap<QString, QString>* _labelTable = NULL;
+    QMap<QString, QString>* _aliasTable = NULL;
+    QMap<QString, QStringList>* _macroTable = NULL;
 
     //Log purpose
-    QList<Error>* _errorLog;
-    QList<Warning>* _warningLog;
+    QList<Problem>* _problemLog;
 
     //Data processing related
-    QList<Preprocessed>* _preprocessedQueue;
-    QVector<uint>* _instructions;
-    QVector<uint>* _addresses;
+    QList<Preprocessed>* _preprocessedQueue = NULL;
+    QVector<uint>* _instructions = NULL;
     
     //Configuration
     AssemblerConfiguration _config;
 
+public slots:
+    void assemble(QString fileName, AssemblerConfiguration config, bool runAfter);
 
-    Assembled* assemble(QStringList documents, AssemblerConfiguration config);
+signals:
+void resultReady(Assembled* assembled, bool runAfter);
 
   private:
-    static bool isExisting;
 
     //Initialize variables
     void init();
     void clear();
-    void throwWarning(int docNumber, int lineNumber, int wordNumber, QString cause);
-    void throwError(int docNumber, int lineNumber, int wordNumber, QString cause);
+    void throwWarning(QString fileName, int lineNumber, int wordNumber, QString cause);
+    void throwError(QString fileName, int lineNumber, int wordNumber, QString cause);
 
-    void loadFromSystemFile(QString fileName);
+    void processFile(QString fileName);
 
     //Sort the documents, if order is true
     void sortDocuments(QStringList documents);
 
-    void preprocessLines(QStringList documents);
-    void preprocessLine(int docNumber, int lineNumber, QString line);
+    void preprocessDocument(QStringList lines, QString fileName);
+    void preprocessLine(QString fileName, int lineNumber, QString line);
     void processLines();
     void processLine(Preprocessed preprocessed);
-    uint convertRegister(QString str);
+    void immiMacro(QString front, uint immi, QString end, uint nextAddress);
+    void writeHeader();
 
 };
 

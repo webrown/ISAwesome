@@ -44,7 +44,7 @@ class Computer{
          * Initiate computer, after step, pause, stop will be called only after init is called
          *
          */
-        void init();
+        void init(QVector<uint>* instructions);
 
 };   
 #endif

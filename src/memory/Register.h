@@ -4,7 +4,7 @@
 #include "QueryResult.h"
 #include "MemoryInterface.h"
 #include <QString>
-#include "../architecture.h"
+#include "../Architecture.h"
 
 class Register : MemoryInterface{
     public:
@@ -14,8 +14,8 @@ class Register : MemoryInterface{
         QVector<Value> _fScas;
         QVector< QVector <Value> > _iVecs;
         QVector< QVector <Value> > _fVecs;
+        static constexpr double delay = 0;
         QVector<Value> _flagVec;
-        static const double delay = 0;
 
         Register();
         ~Register();

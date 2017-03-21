@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+make -s clean
 qmake -project "DESTDIR = bin
 OBJECTS_DIR = build
 UI_DIR = src/gui
@@ -6,6 +7,28 @@ MOC_DIR = build
 RCC_DIR = build
 
 QT += widgets testlib
-CONFIG += qt debug console testlib"
+CONFIG += qt debug console
+
+copydata.commands = cp src/assembler/DefaultMacro src/assembler/DefaultAlias \$\$DESTDIR 
+first.depends = \$(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
+" -after "
+test{
+    message(Configuring test build...)
+    SOURCES -= src/main.cpp \
+
+}
+else{
+    message(Normal build)
+    SOURCES -= test/main.cpp \
+        src/pipeline/Pipeline.h \
+        src/pipeline/StageData.h \
+        src/pipeline/PipelineGlobals.h \
+        src/pipeline/Pipeline.cpp \
+
+
+}" 
 
 

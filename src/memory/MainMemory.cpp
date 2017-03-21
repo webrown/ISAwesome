@@ -1,5 +1,5 @@
 #include "MainMemory.h"
-#include "../architecture.h"
+#include "../Architecture.h"
 #include <QDebug>
 #include <QtGlobal>
 #include "serialization.h"

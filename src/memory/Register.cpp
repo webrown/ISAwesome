@@ -25,7 +25,9 @@ Register::Register(){
     }
 }
 
-Register::~Register() {
+
+Register::~Register(){
+    //Do nothing
 }
 
 QueryResult* Register::read(unsigned int address, unsigned int length){
