@@ -1,6 +1,6 @@
 //#include "PipelineGlobals.h"
 //#include "Pipeline.h"
-#include "spliceMachineCode.h"
+#include "../src/pipeline/spliceMachineCode.h"
 //#include "StageData.h"
 
 #include <string>
