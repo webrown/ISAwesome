@@ -14,10 +14,6 @@ MainMemory::~MainMemory(){
 }
 
 QueryResult* MainMemory::read(unsigned int address, unsigned int length){
-    if(length != VECTOR_SIZE && length != 1){
-        qDebug() << "Invalid Access: length has to be 1 or " << VECTOR_SIZE << endl;
-        exit(-1);
-    }
     QVector<Value> result;
     int startInd1;
     int startInd2;

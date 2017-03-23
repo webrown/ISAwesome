@@ -6,7 +6,7 @@
 using namespace std;
 
 //Implement me plz!!
-class MainMemory : MemoryInterface{
+class MainMemory : public MemoryInterface{
   public:
     using MemoryInterface::write;
     // Using Young's idea:  Rather than having a single massive vector, memory 
@@ -17,7 +17,7 @@ class MainMemory : MemoryInterface{
     QVector< QVector< Value > > _contents;
     double delay;
     MainMemory(double delay);
-    ~MainMemory();
+    virtual ~MainMemory();
     QueryResult *read(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address);
     double write(QVector<Value> *value, unsigned int address);

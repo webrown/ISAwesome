@@ -1,8 +1,10 @@
 #include "../src/memory/Cache.h"
-#include <stdlib.h>
-#include <iostream>
 #include "../src/memory/MainMemory.h"
 #include "../src/memory/Register.h"
+#include "../src/memory/MemoryStructure.h"
+
+#include <stdlib.h>
+#include <iostream>
 
 using namespace std;
 
@@ -161,8 +163,8 @@ int main() {
     Cache l3Cache(8,0, 0, 10, NULL);
     Cache l2Cache(4,1, 2, 10, &l3Cache);
     Cache l1Cache(1,2, 2, 10, &l2Cache);
-    l2Cache.nextCache = &l3Cache;
-    l1Cache.nextCache = &l2Cache;
+    l2Cache.nextMemory = &l3Cache;
+    l1Cache.nextMemory = &l2Cache;
 
     l1Cache.write(1234, 22);
     QueryResult *muffins = l1Cache.read(22);
@@ -574,6 +576,53 @@ cout << "B" << endl;
     }
 
     cout << "END:  Register tests." << endl;
+  }
+  {
+    cout << "BEGIN:  MemoryStructure tests" << endl;
+    MemoryStructure ms(100);
+    Cache *l2 = ms.pushCache(4, 3, 2, 35);
+    Cache *l1d = ms.pushCache(2, 3, 1, 15);
+    ms.setToDataAccess();
+    ms.goBack();
+    Cache *l1i = ms.pushCache(2, 3, 1, 15);
+    ms.setToInstructionAccess();
+
+    double writeTime = ms.getInstructionAccess()->write(42, 55);
+    if(writeTime == 100+35+15) {
+      cout << "PASS:  initial write took " << writeTime << endl;
+    }
+    else {
+      cout << "FAIL:  initial write took " << writeTime << endl;
+    }
+
+    writeTime = ms.getDataAccess()->write(43, 555);
+    if(writeTime == 100+35+15) {
+      cout << "PASS:  second write took " << writeTime << endl;
+    }
+    else {
+      cout << "FAIL:  second write took " << writeTime << endl;
+    }
+
+    QueryResult *qr = ms.getDataAccess()->read(555);
+    if(qr->time == 15) {
+      cout << "PASS:  read took " << qr->time << endl;
+    }
+    else {
+      cout << "FAIL:  read took " << qr->time << endl;
+    }
+
+    if(qr->result.at(0).i == 43) {
+      cout << "PASS:  read " << qr->result.at(0).i << endl;
+    }
+    else {
+      cout << "FAIL:  read " << qr->result.at(0).i << endl;
+    }
+
+    // Kinda scared that this will barf! :)
+    for(int i = 0; i < 1000; i++) {
+      ms.goBack();
+    }
+    cout << "END:  MemoryStructure tests" << endl;
   }
   return 0;
 }
