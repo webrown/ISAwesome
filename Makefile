@@ -48,7 +48,10 @@ OBJECTS_DIR   = build/
 
 ####### Files
 
-SOURCES       = src/Computer.cpp \
+SOURCES       = invisible/crunchyCache.cpp \
+		invisible/memoryTests.cpp \
+		invisible/pipelineTests.cpp \
+		src/Computer.cpp \
 		src/main.cpp \
 		src/Utility.cpp \
 		test/TestAssembler.cpp \
@@ -70,7 +73,9 @@ SOURCES       = src/Computer.cpp \
 		src/memory/MemoryInterface.cpp \
 		src/memory/QueryResult.cpp \
 		src/memory/Register.cpp \
-		src/memory/serialization.cpp build/qrc_pisa.cpp \
+		src/memory/serialization.cpp \
+		src/pipeline/spliceMachineCode.cpp \
+		src/pipeline/StageData.cpp build/qrc_pisa.cpp \
 		build/moc_TestAssembler.cpp \
 		build/moc_TestInstructionResolver.cpp \
 		build/moc_Assembler.cpp \
@@ -83,7 +88,10 @@ SOURCES       = src/Computer.cpp \
 		build/moc_MiscDialog.cpp \
 		build/moc_PreferenceDialog.cpp \
 		build/moc_RegisterView.cpp
-OBJECTS       = build/Computer.o \
+OBJECTS       = build/crunchyCache.o \
+		build/memoryTests.o \
+		build/pipelineTests.o \
+		build/Computer.o \
 		build/main.o \
 		build/Utility.o \
 		build/TestAssembler.o \
@@ -106,6 +114,8 @@ OBJECTS       = build/Computer.o \
 		build/QueryResult.o \
 		build/Register.o \
 		build/serialization.o \
+		build/spliceMachineCode.o \
+		build/StageData.o \
 		build/qrc_pisa.o \
 		build/moc_TestAssembler.o \
 		build/moc_TestInstructionResolver.o \
@@ -342,7 +352,11 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/memory/Value.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/PipelineGlobals.h \
-		src/pipeline/StageData.h src/Computer.cpp \
+		src/pipeline/spliceMachineCode.h \
+		src/pipeline/StageData.h invisible/crunchyCache.cpp \
+		invisible/memoryTests.cpp \
+		invisible/pipelineTests.cpp \
+		src/Computer.cpp \
 		src/main.cpp \
 		src/Utility.cpp \
 		test/TestAssembler.cpp \
@@ -364,7 +378,9 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/memory/MemoryInterface.cpp \
 		src/memory/QueryResult.cpp \
 		src/memory/Register.cpp \
-		src/memory/serialization.cpp
+		src/memory/serialization.cpp \
+		src/pipeline/spliceMachineCode.cpp \
+		src/pipeline/StageData.cpp
 QMAKE_TARGET  = PISA
 DESTDIR       = bin/
 TARGET        = bin/PISA
@@ -790,8 +806,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Architecture.h src/Computer.h src/Utility.h test/TestAssembler.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/assembler/Warning.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/memory/Cache.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/StageData.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/Computer.cpp src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/memory/Cache.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/Architecture.h src/Computer.h src/Utility.h test/TestAssembler.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/assembler/Warning.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/memory/Cache.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/spliceMachineCode.h src/pipeline/StageData.h $(DISTDIR)/
+	$(COPY_FILE) --parents invisible/crunchyCache.cpp invisible/memoryTests.cpp invisible/pipelineTests.cpp src/Computer.cpp src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/memory/Cache.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/spliceMachineCode.cpp src/pipeline/StageData.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -1061,6 +1077,24 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 
 ####### Compile
 
+build/crunchyCache.o: invisible/crunchyCache.cpp src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/crunchyCache.o invisible/crunchyCache.cpp
+
+build/memoryTests.o: invisible/memoryTests.cpp src/memory/Cache.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Register.h \
+		src/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/memoryTests.o invisible/memoryTests.cpp
+
+build/pipelineTests.o: invisible/pipelineTests.cpp src/pipeline/spliceMachineCode.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/pipelineTests.o invisible/pipelineTests.cpp
+
 build/Computer.o: src/Computer.cpp src/Computer.h \
 		src/memory/Cache.h \
 		src/memory/QueryResult.h \
@@ -1270,6 +1304,12 @@ build/Register.o: src/memory/Register.cpp src/memory/Register.h \
 
 build/serialization.o: src/memory/serialization.cpp src/memory/serialization.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/serialization.o src/memory/serialization.cpp
+
+build/spliceMachineCode.o: src/pipeline/spliceMachineCode.cpp src/pipeline/spliceMachineCode.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/spliceMachineCode.o src/pipeline/spliceMachineCode.cpp
+
+build/StageData.o: src/pipeline/StageData.cpp src/pipeline/StageData.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/StageData.o src/pipeline/StageData.cpp
 
 build/qrc_pisa.o: build/qrc_pisa.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_pisa.o build/qrc_pisa.cpp

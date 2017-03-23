@@ -1,10 +1,31 @@
 #ifndef COMPUTER_H
 #define COMPUTER_H
 
+#include <queue>
 #include <QList>
+#include <QQueue>
+#include <QMap>
 #include "memory/Cache.h"
 #include "memory/Register.h"
 #include "memory/MainMemory.h"
+
+enum BreakPointType{
+    SKIP, ONCE, EVERY
+};
+
+class BreakPoint{
+    public:
+        BreakPointType type;
+        uint address;
+        bool operator<(const BreakPoint& right) const
+        {
+            return address < right.address;
+        }
+        bool operator==(const BreakPoint &right) const
+        {
+            return address == right.address;
+        }
+};
 
 class Computer{
     public:
@@ -13,7 +34,8 @@ class Computer{
          * If this variable is false, all break will be ignored
          */
         bool breakEnabled;
-        
+        priority_queue<BreakPoint> breakPointQueue; 
+
         Register* regs = NULL;
         MainMemory* mem = NULL;
         Cache* topCache = NULL;
@@ -46,5 +68,8 @@ class Computer{
          */
         void init(QVector<uint>* instructions);
 
+
+        void addBreakPoint(BreakPoint bp);
+        bool removeBreakPoint(BreakPoint bp);
 };   
 #endif
