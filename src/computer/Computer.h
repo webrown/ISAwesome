@@ -5,28 +5,10 @@
 #include <QList>
 #include <QQueue>
 #include <QMap>
-#include "memory/Cache.h"
-#include "memory/Register.h"
-#include "memory/MainMemory.h"
-
-enum BreakPointType{
-    SKIP, ONCE, EVERY
-};
-
-class BreakPoint{
-    public:
-        BreakPointType type;
-        uint address;
-        bool operator<(const BreakPoint& right) const
-        {
-            return address < right.address;
-        }
-        bool operator==(const BreakPoint &right) const
-        {
-            return address == right.address;
-        }
-};
-
+#include "../memory/Register.h"
+#include "../memory/MemoryStructure.h"
+#include "BreakPoint.h"
+#include "Status.h"
 class Computer{
     public:
         /*
@@ -34,11 +16,10 @@ class Computer{
          * If this variable is false, all break will be ignored
          */
         bool breakEnabled;
-        priority_queue<BreakPoint> breakPointQueue; 
+        QMap<uint,BreakPoint> breakMap;
 
         Register* regs = NULL;
-        MainMemory* mem = NULL;
-        Cache* topCache = NULL;
+        MemoryStructure* mems = NULL;
 
         Computer();
         ~Computer();
@@ -47,7 +28,7 @@ class Computer{
          * Run this computer for nCycle 
          * If nCycle = -1, run indefintely
          */
-        void step(int nCycle);
+        Status step(int nCycle);
         
         /*
          * Pause the cycle of computer
@@ -69,7 +50,7 @@ class Computer{
         void init(QVector<uint>* instructions);
 
 
-        void addBreakPoint(BreakPoint bp);
-        bool removeBreakPoint(BreakPoint bp);
+        void addBreakPoint(uint address, BreakPoint bp);
+        void removeBreakPoint(uint address);
 };   
 #endif

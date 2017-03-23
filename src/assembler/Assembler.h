@@ -11,7 +11,7 @@
 #include <QDir>
 #include <QFile>
 #include "Problem.h"
-#include "../Architecture.h"
+#include "../computer/Architecture.h"
 #include "InstructionResolver.h"
 #include "ConditionResolver.h"
 

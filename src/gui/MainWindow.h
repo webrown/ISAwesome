@@ -21,7 +21,7 @@
 #include <QFileInfo>
 #include "ui_pisa.h"
 #include "CodeEditor.h"
-#include "../Computer.h"
+#include "../computer/Computer.h"
 #include "MiscDialog.h"
 #include "PreferenceDialog.h"
 #include "CacheView.h"
