@@ -6,12 +6,12 @@
 
 using namespace std;
 
-Cache::Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache) {
+Cache::Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextMemory) {
   type = BOTH;
   // Load in params.
   this->indexBits = indexBits;
   this->logDataWordCount = logDataWordCount;
-  this->nextCache = nextCache;
+  this->nextMemory = nextMemory;
   this->delay = delay;
   this->logAssociativity = logAssociativity;
 
@@ -320,15 +320,15 @@ double Cache::fetch(unsigned int address){
   // What is the first address on the evicted line?
   int firstEvictedAddress = buildAddress(tags->at(index)->at(way), index, 0);
   // Write to the cache below if dirty and able.
-  if(dirty->at(index)->at(way) && nextCache) {
-    wait += nextCache->write(contents->at(index)->at(way), firstEvictedAddress);
+  if(dirty->at(index)->at(way) && nextMemory) {
+    wait += nextMemory->write(contents->at(index)->at(way), firstEvictedAddress);
   }
   // Set tag and valid bits
   tags->at(index)->replace(way, tag);
   valid->at(index)->replace(way, 1);
   // Get value from below.
-  if(nextCache) {
-    QueryResult *resultFromBelow = nextCache->read(firstInLine(address), contents->at(0)->at(0)->size());
+  if(nextMemory) {
+    QueryResult *resultFromBelow = nextMemory->read(firstInLine(address), contents->at(0)->at(0)->size());
    for(int i = 0; i < contents->at(0)->at(0)->size(); i++) {
       contents->at(index)->at(way)->replace(i,resultFromBelow->result.at(i));
     }

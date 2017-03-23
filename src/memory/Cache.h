@@ -23,14 +23,14 @@ class Cache : public MemoryInterface{
     int logDataWordCount;
     int logAssociativity;
     double delay;
-    Cache *prevCache = NULL;
-    Cache *nextCache = NULL;
+    MemoryInterface *prevMemory = NULL;
+    MemoryInterface *nextMemory = NULL;
     QVector< QVector<int> * > *tags;
     QVector< QVector< QVector<Value> * > * > *contents;
     QVector< QVector<int> * > *LRU;
     QVector< QVector<int> * > *dirty;
     QVector< QVector<int> * > *valid;
-    Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextCache);
+    Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextMemory);
     virtual ~Cache();
     QueryResult *read(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address);
