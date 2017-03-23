@@ -10,14 +10,15 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     disassembler = new Disassembler();
     computer = new Computer();
 
-    assembler->moveToThread(&assemblyThread);
-    connect(&assemblyThread, &QThread::finished, assembler, &QObject::deleteLater);
+    assemblyThread = new QThread(this);
+    assembler->moveToThread(assemblyThread);
+    connect(assemblyThread, &QThread::finished, assembler, &QObject::deleteLater);
     connect(this, &MainWindow::startBuild, assembler, &Assembler::assemble);
     connect(assembler, &Assembler::resultReady, this, &MainWindow::finishAssemble);
-    assemblyThread.start();
+    assemblyThread->start();
 
     //add element on toolbar
-    QSpinBox* cycleSpinBox = new QSpinBox();
+    QSpinBox* cycleSpinBox = new QSpinBox(this);
     cycleSpinBox->setPrefix("Cycle: ");
     cycleSpinBox->setValue(1);
     cycleSpinBox->setRange(0,1000);
@@ -54,10 +55,9 @@ MainWindow::~MainWindow()
 {
     qDebug() << "Killing MainWindow";
     delete computer;
-    delete assembler;
     delete disassembler;
-    assemblyThread.quit();
-    assemblyThread.wait();
+    assemblyThread->quit();
+    assemblyThread->wait();
     qDebug() << "Fin.";
 }
 void MainWindow::updateNavigation(){
@@ -272,13 +272,6 @@ void MainWindow::handleClearCache(){
     }
     computer->topCache =NULL;
 } 
-void MainWindow::handleFlushCache(){
-    qDebug() << "Flush Cache button is clicked";
-}
-
-void MainWindow::handleFlushAllCache(){
-    qDebug() << "Flush All cache button is clicked";
-}
 void MainWindow::handleBuild(){
     qDebug() << "Build button is clicked";
     //Nothing to build

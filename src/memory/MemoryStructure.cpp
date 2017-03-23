@@ -9,6 +9,7 @@ MemoryStructure::MemoryStructure(double mainMemoryDelay) {
 
 MemoryStructure::~MemoryStructure() {
     delete _mainMemory;
+    //Erase cache
 }
 
 void MemoryStructure::pushCache(Cache *newCache) {

@@ -21,7 +21,7 @@
 #include <QFileInfo>
 #include "ui_pisa.h"
 #include "CodeEditor.h"
-#include "../Computer.h"
+#include "../computer/Computer.h"
 #include "MiscDialog.h"
 #include "PreferenceDialog.h"
 #include "CacheView.h"
@@ -55,7 +55,7 @@ class MainWindow : public QMainWindow
         void assemble(QString fileName, bool runAfter);
 
     public slots:
-        //Handlers
+            //Handlers
         void handleNew();
         void handleOpen();
         void handleUndo();
@@ -67,8 +67,6 @@ class MainWindow : public QMainWindow
         void handleAddCache();
         void handleRemoveCache();
         void handleClearCache();
-        void handleFlushCache();
-        void handleFlushAllCache();
         void handlePreference();
         void handleBuild();
         void handleBuildAll();
@@ -87,13 +85,13 @@ class MainWindow : public QMainWindow
         void updateUndo(bool avail);
         void updateRedo(bool avail);
         void finishAssemble(Assembled* assembled, bool runAfter);
-signals:
+    signals:
         void startBuild(QString fileName, AssemblerConfiguration config, bool runAfter);
 
     private:
-        QThread assemblyThread;
+        QThread* computerThread;
+        QThread* assemblyThread;
         Ui::MainWindow _ui;
-        void createEditorTab(QString fileName);
 };
 
 #endif

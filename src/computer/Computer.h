@@ -1,11 +1,14 @@
 #ifndef COMPUTER_H
 #define COMPUTER_H
 
+#include <queue>
 #include <QList>
-#include "memory/Cache.h"
-#include "memory/Register.h"
-#include "memory/MainMemory.h"
-
+#include <QQueue>
+#include <QMap>
+#include "../memory/Register.h"
+#include "../memory/MemoryStructure.h"
+#include "BreakPoint.h"
+#include "Status.h"
 class Computer{
     public:
         /*
@@ -13,10 +16,10 @@ class Computer{
          * If this variable is false, all break will be ignored
          */
         bool breakEnabled;
-        
+        QMap<uint,BreakPoint> breakMap;
+
         Register* regs = NULL;
-        MainMemory* mem = NULL;
-        Cache* topCache = NULL;
+        MemoryStructure* mems = NULL;
 
         Computer();
         ~Computer();
@@ -25,7 +28,7 @@ class Computer{
          * Run this computer for nCycle 
          * If nCycle = -1, run indefintely
          */
-        void step(int nCycle);
+        Status step(int nCycle);
         
         /*
          * Pause the cycle of computer
@@ -46,5 +49,8 @@ class Computer{
          */
         void init(QVector<uint>* instructions);
 
+
+        void addBreakPoint(uint address, BreakPoint bp);
+        void removeBreakPoint(uint address);
 };   
 #endif

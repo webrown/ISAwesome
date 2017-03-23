@@ -2,14 +2,14 @@
 #include <QDebug>
 
 Computer::Computer(){
-    mem = new MainMemory(MAIN_MEMORY_DELAY);
+    qDebug() << "Creating computer";
     regs = new Register();
+    mems = new MemoryStructure(MAIN_MEMORY_DELAY);
 }
 Computer::~Computer(){
-    qDebug() << "Delete Computer";
-    delete mem;
-    delete topCache;
+    qDebug() << "Removing Computer";
     delete regs;
+    delete mems;
     qDebug() << "Computer is removed!";
 }
 
@@ -21,6 +21,15 @@ void Computer::init(QVector<uint>* instructions){
         Value v = {instruction};
         vec->append(v);
     }
-    mem->write(vec, 0);
+    mems->_mainMemory->write(vec, 0);
+}
 
+Status 
+
+void Computer::addBreakPoint(uint address, BreakPoint bp){
+    breakMap[address] = bp;
+}
+
+void Computer::removeBreakPoint(uint address){
+    breakMap.remove(address);
 }
