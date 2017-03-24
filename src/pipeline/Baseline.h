@@ -1,15 +1,19 @@
 #ifndef BASELINE_H
 #define BASELINE_H
+
 #include "../memory/Register.h"
 #include "../memory/MemoryStructure.h"
-class Baseline {
+#include "../computer/Status.h"
+#include "Banana.h"
+
+class Baseline : public Banana{
     public:
         Register *_registers;
         MemoryStructure  *_memory;
         Baseline(Register *registers, MemoryStructure *memory);
-        ~Baseline();
+        virtual ~Baseline();
         void init(void);
-        void run(void);
+        Status run(void);
         void stop(void);
-}
+};
 #endif

@@ -1,3 +1,5 @@
+#ifndef PIPELINE_GLOBALS_H
+#define PIPELINE_GLOBALS_H
 enum Instruction {
     B ,
     BL ,
@@ -28,7 +30,7 @@ enum Instruction {
     DIV ,
     DIVS ,
     LDIV ,
-    LDIV ,
+    LDIVS,
     MOD ,
     MODS ,
     LSR ,
@@ -73,3 +75,4 @@ enum Conditional {
     AL,
     UN
 };
+#endif

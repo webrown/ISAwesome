@@ -9,15 +9,17 @@
 #include "../memory/MemoryStructure.h"
 #include "BreakPoint.h"
 #include "../pipeline/Banana.h"
+#include "../pipeline/Baseline.h"
 #include "Status.h"
-class Computer{
+class Computer: public QObject{
+    Q_OBJECT
     public:
         /*
          * If this variable is true, then computer will stop with break (I am not hundred percent sure about how to implement "break functionality"
          * If this variable is false, all break will be ignored
          */
         bool breakEnabled;
-        QMap<uint,BreakPoint> breakMap;
+        QMap<uint,BreakPoint::BreakPoint> breakMap;
 
         Register* regs = NULL;
         MemoryStructure* mems = NULL;
@@ -52,7 +54,7 @@ class Computer{
         void init(QVector<uint>* instructions);
 
 
-        void addBreakPoint(uint address, BreakPoint bp);
+        void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
         void removeBreakPoint(uint address);
 };   
 #endif

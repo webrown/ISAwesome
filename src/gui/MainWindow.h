@@ -29,6 +29,7 @@
 #include "../assembler/Disassembler.h"
 #include "../assembler/ProgramManagerX.h"
 #include "HexSpinBox.h"
+#include "../computer/BreakPoint.h"
 
 class MainWindow : public QMainWindow
 {
@@ -78,6 +79,9 @@ class MainWindow : public QMainWindow
         void handleOpenFromNavigation(QModelIndex index);
         void handleCustomContextMenuForTracker(QPoint point);
         void handleAddBreak();
+        void handleAddBreakAll();
+        void handleAddSkip();
+        void handleAddSkipAll();
         void handleRemoveBreak();
         void handleUpload();
 

@@ -8,10 +8,8 @@
 
 class Banana {
     public:
-        Banana(Register *registers, MemoryStructure *memory);
-        ~Banana();
-        virtual void init(void);
-        virtual Status run(void);
-        virtual void stop(void);
+        virtual void init(void)=0;
+        virtual Status run(void)=0;
+        virtual void stop(void)=0;
 };
 #endif

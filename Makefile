@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_TESTLIB_LIB -DQT_CORE_LIB -DQT_TESTCASE_BUILDDIR='"/home/younglee/Dropbox/Projects/c++/PISA"'
 CFLAGS        = -pipe -g -D_REENTRANT -Wall -W -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -g -D_REENTRANT -Wall -W -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -g -std=gnu++11 -D_REENTRANT -Wall -W -fPIC $(DEFINES)
 INCPATH       = -I. -I. -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtTest -isystem /usr/include/qt/QtCore -Ibuild -isystem /usr/include/libdrm -Isrc/gui -I/usr/lib/qt/mkspecs/linux-g++
 QMAKE         = /usr/bin/qmake
 DEL_FILE      = rm -f
@@ -51,6 +51,7 @@ OBJECTS_DIR   = build/
 SOURCES       = src/main.cpp \
 		src/Utility.cpp \
 		test/TestAssembler.cpp \
+		test/TestComputer.cpp \
 		test/TestInstructionResolver.cpp \
 		src/assembler/Assembler.cpp \
 		src/assembler/Disassembler.cpp \
@@ -71,8 +72,10 @@ SOURCES       = src/main.cpp \
 		src/memory/MemoryStructure.cpp \
 		src/memory/QueryResult.cpp \
 		src/memory/Register.cpp \
-		src/memory/serialization.cpp build/qrc_pisa.cpp \
+		src/memory/serialization.cpp \
+		src/pipeline/Baseline.cpp build/qrc_pisa.cpp \
 		build/moc_TestAssembler.cpp \
+		build/moc_TestComputer.cpp \
 		build/moc_TestInstructionResolver.cpp \
 		build/moc_Assembler.cpp \
 		build/moc_CacheView.cpp \
@@ -87,6 +90,7 @@ SOURCES       = src/main.cpp \
 OBJECTS       = build/main.o \
 		build/Utility.o \
 		build/TestAssembler.o \
+		build/TestComputer.o \
 		build/TestInstructionResolver.o \
 		build/Assembler.o \
 		build/Disassembler.o \
@@ -108,8 +112,10 @@ OBJECTS       = build/main.o \
 		build/QueryResult.o \
 		build/Register.o \
 		build/serialization.o \
+		build/Baseline.o \
 		build/qrc_pisa.o \
 		build/moc_TestAssembler.o \
+		build/moc_TestComputer.o \
 		build/moc_TestInstructionResolver.o \
 		build/moc_Assembler.o \
 		build/moc_CacheView.o \
@@ -315,6 +321,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		PISA.pro src/Utility.h \
 		test/TestAssembler.h \
+		test/TestComputer.h \
 		test/TestInstructionResolver.h \
 		src/assembler/Assembler.h \
 		src/assembler/ConditionResolver.h \
@@ -344,9 +351,12 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/memory/QueryResult.h \
 		src/memory/Register.h \
 		src/memory/serialization.h \
-		src/memory/Value.h src/main.cpp \
+		src/memory/Value.h \
+		src/pipeline/Banana.h \
+		src/pipeline/Baseline.h src/main.cpp \
 		src/Utility.cpp \
 		test/TestAssembler.cpp \
+		test/TestComputer.cpp \
 		test/TestInstructionResolver.cpp \
 		src/assembler/Assembler.cpp \
 		src/assembler/Disassembler.cpp \
@@ -367,7 +377,8 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/memory/MemoryStructure.cpp \
 		src/memory/QueryResult.cpp \
 		src/memory/Register.cpp \
-		src/memory/serialization.cpp
+		src/memory/serialization.cpp \
+		src/pipeline/Baseline.cpp
 QMAKE_TARGET  = PISA
 DESTDIR       = bin/
 TARGET        = bin/PISA
@@ -793,8 +804,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/assembler/Warning.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/Status.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/memory/Cache.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/memory/Cache.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/assembler/Warning.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/Status.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/memory/Cache.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/Banana.h src/pipeline/Baseline.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/memory/Cache.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/Baseline.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -861,11 +872,11 @@ compiler_moc_predefs_make_all: build/moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) build/moc_predefs.h
 build/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
-	g++ -pipe -g -dM -E -o build/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
+	g++ -pipe -g -std=gnu++11 -dM -E -o build/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp
+compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp
+	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp
 build/moc_TestAssembler.cpp: src/assembler/Assembler.h \
 		src/assembler/Problem.h \
 		src/computer/Architecture.h \
@@ -876,6 +887,24 @@ build/moc_TestAssembler.cpp: src/assembler/Assembler.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestAssembler.h -o build/moc_TestAssembler.cpp
+
+build/moc_TestComputer.cpp: src/computer/Computer.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/BreakPoint.h \
+		src/pipeline/Banana.h \
+		src/computer/Status.h \
+		src/pipeline/Baseline.h \
+		test/TestComputer.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestComputer.h -o build/moc_TestComputer.cpp
 
 build/moc_TestInstructionResolver.cpp: src/assembler/InstructionResolver.h \
 		src/Utility.h \
@@ -943,6 +972,7 @@ build/moc_MainWindow.cpp: src/gui/ui_pisa.h \
 		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
+		src/pipeline/Baseline.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1004,6 +1034,7 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
+		src/pipeline/Baseline.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1099,6 +1130,7 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
+		src/pipeline/Baseline.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1124,6 +1156,22 @@ build/TestAssembler.o: test/TestAssembler.cpp test/TestAssembler.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestAssembler.o test/TestAssembler.cpp
+
+build/TestComputer.o: test/TestComputer.cpp test/TestComputer.h \
+		src/computer/Computer.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/BreakPoint.h \
+		src/pipeline/Banana.h \
+		src/computer/Status.h \
+		src/pipeline/Baseline.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestComputer.o test/TestComputer.cpp
 
 build/TestInstructionResolver.o: test/TestInstructionResolver.cpp test/TestInstructionResolver.h \
 		src/assembler/InstructionResolver.h \
@@ -1159,7 +1207,8 @@ build/Computer.o: src/computer/Computer.cpp src/computer/Computer.h \
 		src/memory/Cache.h \
 		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
-		src/computer/Status.h
+		src/computer/Status.h \
+		src/pipeline/Baseline.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Computer.o src/computer/Computer.cpp
 
 build/CacheView.o: src/gui/CacheView.cpp src/gui/CacheView.h \
@@ -1204,6 +1253,7 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
+		src/pipeline/Baseline.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1258,6 +1308,7 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
+		src/pipeline/Baseline.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1321,11 +1372,28 @@ build/Register.o: src/memory/Register.cpp src/memory/Register.h \
 build/serialization.o: src/memory/serialization.cpp src/memory/serialization.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/serialization.o src/memory/serialization.cpp
 
+build/Baseline.o: src/pipeline/Baseline.cpp src/pipeline/Baseline.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MemoryInterface.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Status.h \
+		src/pipeline/Banana.h \
+		src/pipeline/spliceMachineCode.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Baseline.o src/pipeline/Baseline.cpp
+
 build/qrc_pisa.o: build/qrc_pisa.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_pisa.o build/qrc_pisa.cpp
 
 build/moc_TestAssembler.o: build/moc_TestAssembler.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestAssembler.o build/moc_TestAssembler.cpp
+
+build/moc_TestComputer.o: build/moc_TestComputer.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestComputer.o build/moc_TestComputer.cpp
 
 build/moc_TestInstructionResolver.o: build/moc_TestInstructionResolver.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestInstructionResolver.o build/moc_TestInstructionResolver.cpp

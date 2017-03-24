@@ -1,4 +1,4 @@
 class StageData{
-    Instruction instruction;
-    void takeInstructionCode(int instructionCode);
-}
+    // Instruction instruction;
+    // void takeInstructionCode(int instructionCode);
+};

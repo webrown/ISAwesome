@@ -4,8 +4,7 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
 {
     qDebug() << "MainWindow starts...";
     _ui.setupUi( this );
-
-    //move assembly to different thread
+//move assembly to different thread 
     assembler = new Assembler();
     disassembler = new Disassembler();
     computer = new Computer();
@@ -13,6 +12,9 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     assemblyThread = new QThread(this);
     assembler->moveToThread(assemblyThread);
     connect(assemblyThread, &QThread::finished, assembler, &QObject::deleteLater);
+    //Questionable?
+    connect(computerThread, &QThread::finished, computer, &QObject::deleteLater);
+
     connect(this, &MainWindow::startBuild, assembler, &Assembler::assemble);
     connect(assembler, &Assembler::resultReady, this, &MainWindow::finishAssemble);
     assemblyThread->start();
@@ -58,6 +60,8 @@ MainWindow::~MainWindow()
     delete disassembler;
     assemblyThread->quit();
     assemblyThread->wait();
+    computerThread->quit();
+    computerThread->wait();
     qDebug() << "Fin.";
 }
 void MainWindow::updateNavigation(){
@@ -405,7 +409,16 @@ void MainWindow::launchProgram(QString fileName){
     for(int i = 0; i < instructions->size(); i++){
         QString address = QString::number(INSTRUCTION_SIZE  * i,16).rightJustified(8, '0');
         QString instruction =disassembler->disassemble(instructions->at(i)); 
-        _ui.tracker->addItem(address + "\t" + instruction);
+        QListWidgetItem *newItem = new QListWidgetItem; 
+        newItem->setText(address + "\t" + instruction);
+        QVariant bp (BreakPoint::NONE);
+        newItem->setData(Qt::UserRole, BreakPoint::NONE);
+        _ui.tracker->addItem(newItem);
+        if(i == instructions->size()-1){
+            newItem->setData(Qt::UserRole, BreakPoint::BREAK_ALL);
+            newItem->setBackground(Qt::red);
+
+        }
     }
     computer->init(instructions);
     _ui.tab_memory->update();
@@ -439,10 +452,7 @@ void MainWindow::handleStop(){
 }
 
 //update undo button
-void MainWindow::updateUndo(bool avail)
-{
-    _ui.actionUndo->setEnabled(avail);
-}
+void MainWindow::updateUndo(bool avail) { _ui.actionUndo->setEnabled(avail); }
 
 //update redo button
 void MainWindow::updateRedo(bool avail)
@@ -472,16 +482,30 @@ void MainWindow::handleCustomContextMenuForTracker(QPoint point){
     if(item == NULL){
         return;
     }
-    qDebug() <<item->background();
 
     QMenu menu;
-    QAction *addBreakAction = new QAction("add break");
-    addBreakAction->setEnabled(item->background().style() ==Qt::BrushStyle::NoBrush);
+    QAction *addBreakAction = new QAction("Break once");
+    addBreakAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::BREAK);
     connect(addBreakAction,SIGNAL(triggered()), this, SLOT(handleAddBreak()));
     menu.addAction(addBreakAction);
 
-    QAction *removeBreakAction = new QAction("remove break");
-    removeBreakAction->setEnabled(item->background().color() ==Qt::red);
+    QAction *addBreakAllAction = new QAction("Break all");
+    addBreakAllAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::BREAK_ALL);
+    connect(addBreakAllAction,SIGNAL(triggered()), this, SLOT(handleAddBreakAll()));
+    menu.addAction(addBreakAllAction);
+
+    QAction *addSkipAction = new QAction("Skip");
+    addSkipAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP);
+    connect(addSkipAction,SIGNAL(triggered()), this, SLOT(handleAddSkip()));
+    menu.addAction(addSkipAction);
+
+    QAction *addSkipAllAction = new QAction("Skip all");
+    addSkipAllAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP_ALL);
+    connect(addSkipAllAction,SIGNAL(triggered()), this, SLOT(handleAddSkipAll()));
+    menu.addAction(addSkipAllAction);
+
+    QAction *removeBreakAction = new QAction("No break");
+    removeBreakAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::NONE);
     connect(removeBreakAction,SIGNAL(triggered()), this, SLOT(handleRemoveBreak()));
     menu.addAction(removeBreakAction);
 
@@ -493,9 +517,32 @@ void MainWindow::handleAddBreak(){
         return;
     }
     item->setBackground(Qt::red);
+    item->setData(Qt::UserRole, BreakPoint::BREAK);
+}
+void MainWindow::handleAddBreakAll(){
+    QListWidgetItem* item = _ui.tracker->selectedItems().first();
+    if(item == NULL){
+        return;
+    }
+    item->setBackground(Qt::red);
+    item->setData(Qt::UserRole, BreakPoint::BREAK_ALL);
+}
 
-
-
+void MainWindow::handleAddSkip(){
+    QListWidgetItem* item = _ui.tracker->selectedItems().first();
+    if(item == NULL){
+        return;
+    }
+    item->setBackground(Qt::cyan);
+    item->setData(Qt::UserRole, BreakPoint::SKIP);
+}
+void MainWindow::handleAddSkipAll(){
+    QListWidgetItem* item = _ui.tracker->selectedItems().first();
+    if(item == NULL){
+        return;
+    }
+    item->setBackground(Qt::cyan);
+    item->setData(Qt::UserRole, BreakPoint::SKIP_ALL);
 }
 void MainWindow::handleRemoveBreak(){
     QListWidgetItem* item = _ui.tracker->selectedItems().first();
@@ -503,7 +550,9 @@ void MainWindow::handleRemoveBreak(){
         return;
     }
     item->setBackground(Qt::BrushStyle::NoBrush);
-
+    item->setData(Qt::UserRole, BreakPoint::NONE);
 }
+
+
 void MainWindow::handlePlay(){
 }

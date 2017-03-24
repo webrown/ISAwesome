@@ -3,8 +3,10 @@
 
 #include <QVariant>
 
-enum BreakPoint{
-    SKIP, ONCE, EVERY
+namespace BreakPoint{
+    enum BreakPoint{
+        NONE = 0, SKIP = 1, SKIP_ALL = 2, BREAK = 3, BREAK_ALL =4
+    };
 };
 
 // class BreakPoint{

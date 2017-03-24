@@ -10,37 +10,31 @@ class Register : MemoryInterface{
     public:
         using MemoryInterface::write;
 
-        QVector<Value> _iScas;
-        QVector<Value> _fScas;
-        QVector<Value> _sRegs;
-
-        QVector<QVector<Value>> _iVecs;
-        QVector<QVector<Value>> _fVecs;
-
-
         QVector<Value> _scas;
         QVector< QVector <Value> > _vecs;
-        static constexpr double delay = 0;
-        QVector<Value> _flagVec;
+        Value _flag; 
+        QVector<Value> _flags;
 
         Register();
         ~Register();
-        QueryResult *read(unsigned int address, unsigned int length);
-        QueryResult *read(unsigned int address);
-
         uint getPC();
         uint getSP();
         uint getBP();
         uint getLR();
 
-        Value r(int i);
-        void w(int address, Value v);
+        Value read(int i);
+        void write(int address, Value v);
 
-        QVector<Value> rV(int address);
-        void wV(int address, QVector<Value> v);
+        QVector<Value> readVector(int address);
+        void writeVector(int address, QVector<Value> v);
 
-        double write(QVector<Value> *value, unsigned int address);
-        double write(Value value, unsigned int address);
+        Value readFlag();
+        void writeFlag(Value v);
+        QVector<Value> readFlags();
+        void writeFlags(QVector<Value> v);
+
+
+
         QString *save();
         void restore(QString *state);
 
@@ -55,6 +49,19 @@ class Register : MemoryInterface{
         static const unsigned int SP = 21;
         static const unsigned int BP = 22;
         static const unsigned int PC = 23;
+
+        //Deprecated
+        static constexpr double delay = 0;
+        double write(QVector<Value> *value, unsigned int address);
+        double write(Value value, unsigned int address);
+        QueryResult *read(unsigned int address, unsigned int length);
+        QueryResult *read(unsigned int address);
+        QVector<Value> _iScas;
+        QVector<Value> _fScas;
+        QVector<Value> _sRegs;
+        QVector<QVector<Value>> _iVecs;
+        QVector<QVector<Value>> _fVecs;
+        QVector<Value> _flagVec;
 };
 
 #endif

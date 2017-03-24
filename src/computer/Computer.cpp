@@ -5,6 +5,7 @@ Computer::Computer(){
     qDebug() << "Creating computer";
     regs = new Register();
     mems = new MemoryStructure(MAIN_MEMORY_DELAY);
+    exec = new Baseline(regs, mems);
 }
 Computer::~Computer(){
     qDebug() << "Removing Computer";
@@ -33,15 +34,18 @@ Status Computer::step(int nCycle){
         if(breakEnabled == true){
             uint pc = regs->getPC();
             if(breakMap.contains(pc) == true){
-                BreakPoint bp = breakMap[pc];
-                if(bp == ONCE){
+                BreakPoint::BreakPoint bp = breakMap[pc];
+                if(bp == BreakPoint::BREAK){
                     breakFlag = true;
                     breakMap.remove(pc);
                 }
-                else if(bp == EVERY){
+                else if(bp == BreakPoint::BREAK_ALL){
                     breakFlag = true;
                 }
-                else if(bp == SKIP){
+                else if(bp == BreakPoint::SKIP || bp == BreakPoint::SKIP_ALL){
+                    if(bp == BreakPoint::SKIP){
+                        breakMap.remove(pc);
+                    }
                     Value v = {regs->getPC()+1};
                     regs->w(Register::PC, v);
                     nCycle = nCycle < 0 ? -1 : nCycle -1;
@@ -64,7 +68,7 @@ void Computer::pause(){
     //Do nothing
 }
 
-void Computer::addBreakPoint(uint address, BreakPoint bp){
+void Computer::addBreakPoint(uint address, BreakPoint::BreakPoint bp){
     breakMap[address] = bp;
 }
 
