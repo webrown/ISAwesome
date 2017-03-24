@@ -13,5 +13,5 @@ class Banana {
         virtual void init(void);
         virtual Status run(void);
         virtual void stop(void);
-}
+};
 #endif

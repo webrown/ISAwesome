@@ -44,7 +44,7 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     QModelIndex idx = fModel->index(settings.value("general/workdirectory",getDocDir()).toString());
     _ui.fileSystemView->setRootIndex(idx);
 
-    _ui.tab_memory->init(computer->mem, _ui.tableWidget_memory,_ui.spinBox,_ui.pushButton, _ui.lineEdit);
+    _ui.tab_memory->init(computer->mems->_mainMemory, _ui.tableWidget_memory,_ui.spinBox,_ui.pushButton, _ui.lineEdit);
     _ui.tab_register->init(computer->regs, _ui.tableWidget_6,_ui.comboBox);
 
 
@@ -189,88 +189,87 @@ void MainWindow::handleAboutPISA()
 
 void MainWindow::handleAddCache(){ 
     qDebug() << "Add Cache button is clicked";
-    NewCacheDialog dialog(computer->topCache, this);
-    int result = dialog.exec();
-    if(result == QDialog::Accepted){
-        printlnConsole("Cache added");
-        CacheInfo info = dialog.getCacheInfo();
-        Cache* cache = new Cache(info.indexBits, info.logDataWordCount, info.logAssociativity,info.delay, info.next);
-        cache->prevCache = info.prev;
-        int _index = 1;
-        if(info.next != NULL){
-                info.next->prevCache = cache;
-        }
-        if(info.prev != NULL){
-            _index = _ui.tabWidget_memory->indexOf(info.prev->view) + 1;
-            info.prev->nextCache = cache;
-        }
-        else{
-            computer->topCache = cache;
-        }
-        _ui.tabWidget_memory->insertTab(_index,new CacheView(cache), "Cache");
-
-        int index = 1;
-        //reset name
-        for(Cache* curr = computer->topCache; curr != NULL; curr = curr->nextCache){
-            _ui.tabWidget_memory->setTabText(_ui.tabWidget_memory->indexOf(curr->view),(new QString("Cache %1(BOTH)"))->arg(index++));
-        }   
-    }
-
+/*     NewCacheDialog dialog(computer->topCache, this); */
+    // int result = dialog.exec();
+    // if(result == QDialog::Accepted){
+    //     printlnConsole("Cache added");
+    //     CacheInfo info = dialog.getCacheInfo();
+    //     Cache* cache = new Cache(info.indexBits, info.logDataWordCount, info.logAssociativity,info.delay, info.next);
+    //     cache->prevCache = info.prev;
+    //     int _index = 1;
+    //     if(info.next != NULL){
+    //             info.next->prevCache = cache;
+    //     }
+    //     if(info.prev != NULL){
+    //         _index = _ui.tabWidget_memory->indexOf(info.prev->view) + 1;
+    //         info.prev->nextCache = cache;
+    //     }
+    //     else{
+    //         computer->topCache = cache;
+    //     }
+    //     _ui.tabWidget_memory->insertTab(_index,new CacheView(cache), "Cache");
+    //
+    //     int index = 1;
+    //     //reset name
+    //     for(Cache* curr = computer->topCache; curr != NULL; curr = curr->nextCache){
+    //         _ui.tabWidget_memory->setTabText(_ui.tabWidget_memory->indexOf(curr->view),(new QString("Cache %1(BOTH)"))->arg(index++));
+    //     }
+    // }
+/*  */
 }
 
 void MainWindow::handleRemoveCache(){
-    qDebug() << "Remove Cache button is clicked";
-    QWidget* widget = _ui.tabWidget_memory->currentWidget();
-    if(CacheView* cacheView = dynamic_cast<CacheView*>(widget)) {
-        printlnConsole("Cache removed");
-        Cache* cache = cacheView->cache;
-        Cache* prevCache = cache->prevCache;
-        Cache* nextCache = cache->nextCache;
-        if(prevCache != NULL && nextCache != NULL){
-            prevCache->nextCache = nextCache;
-            nextCache->prevCache = prevCache;
-        }
-        else if(prevCache != NULL){
-            prevCache->nextCache = NULL;
-        }
-        else if(nextCache != NULL){
-            nextCache->prevCache = NULL;
-            computer->topCache = nextCache;
-        }
-        else{
-            computer->topCache = NULL;
-        }
-        int _index = _ui.tabWidget_memory->currentIndex();
-        _ui.tabWidget_memory->removeTab(_index);
-        delete cache;
-        delete cacheView;
-
-        int index = 1;
-        //reset name
-        for(Cache* curr = computer->topCache; curr != NULL; curr = curr->nextCache){
-            _ui.tabWidget_memory->setTabText(_ui.tabWidget_memory->indexOf(curr->view),(new QString("Cache %1(BOTH)"))->arg(index++));
-        }   
-    }
-    else{
-        printlnConsole("No cache to remove");
-    }
+/*     qDebug() << "Remove Cache button is clicked"; */
+    // QWidget* widget = _ui.tabWidget_memory->currentWidget();
+    // if(CacheView* cacheView = dynamic_cast<CacheView*>(widget)) {
+    //     printlnConsole("Cache removed");
+    //     Cache* cache = cacheView->cache;
+    //     Cache* prevCache = cache->prevCache;
+    //     Cache* nextCache = cache->nextCache;
+    //     if(prevCache != NULL && nextCache != NULL){
+    //         prevCache->nextCache = nextCache;
+    //         nextCache->prevCache = prevCache;
+    //     }
+    //     else if(prevCache != NULL){
+    //         prevCache->nextCache = NULL;
+    //     }
+    //     else if(nextCache != NULL){
+    //         nextCache->prevCache = NULL;
+    //         computer->topCache = nextCache;
+    //     } //     else{
+    //         computer->topCache = NULL;
+    //     }
+    //     int _index = _ui.tabWidget_memory->currentIndex();
+    //     _ui.tabWidget_memory->removeTab(_index);
+    //     delete cache;
+    //     delete cacheView;
+    //
+    //     int index = 1;
+    //     //reset name
+    //     for(Cache* curr = computer->topCache; curr != NULL; curr = curr->nextCache){
+    //         _ui.tabWidget_memory->setTabText(_ui.tabWidget_memory->indexOf(curr->view),(new QString("Cache %1(BOTH)"))->arg(index++));
+    //     }
+    // }
+    // else{
+    //     printlnConsole("No cache to remove");
+/*     } */
 }
 
 
 void MainWindow::handleClearCache(){
-    qDebug() << "Clear Cache button is clicked";
-    printlnConsole("Cache cleared");
-    Cache* nextCache;
-    for(Cache* cache = computer->topCache; cache != NULL; cache = nextCache){
-        CacheView* cacheView =cache->view;
-
-        _ui.tabWidget_memory->removeTab(_ui.tabWidget_memory->indexOf(cacheView));
-
-        nextCache = cache->nextCache;
-        delete cache;
-        delete cacheView;
-    }
-    computer->topCache =NULL;
+    /* qDebug() << "Clear Cache button is clicked"; */
+    // printlnConsole("Cache cleared");
+    // Cache* nextCache;
+    // for(Cache* cache = computer->topCache; cache != NULL; cache = nextCache){
+    //     CacheView* cacheView =cache->view;
+    //
+    //     _ui.tabWidget_memory->removeTab(_ui.tabWidget_memory->indexOf(cacheView));
+    //
+    //     nextCache = cache->nextCache;
+    //     delete cache;
+    //     delete cacheView;
+    // }
+    /* computer->topCache =NULL; */
 } 
 void MainWindow::handleBuild(){
     qDebug() << "Build button is clicked";

@@ -9,11 +9,17 @@
 class Register : MemoryInterface{
     public:
         using MemoryInterface::write;
+
         QVector<Value> _iScas;
-        QVector<Value> _sRegs;
         QVector<Value> _fScas;
-        QVector< QVector <Value> > _iVecs;
-        QVector< QVector <Value> > _fVecs;
+        QVector<Value> _sRegs;
+
+        QVector<QVector<Value>> _iVecs;
+        QVector<QVector<Value>> _fVecs;
+
+
+        QVector<Value> _scas;
+        QVector< QVector <Value> > _vecs;
         static constexpr double delay = 0;
         QVector<Value> _flagVec;
 
@@ -21,6 +27,17 @@ class Register : MemoryInterface{
         ~Register();
         QueryResult *read(unsigned int address, unsigned int length);
         QueryResult *read(unsigned int address);
+
+        uint getPC();
+        uint getSP();
+        uint getBP();
+        uint getLR();
+
+        Value r(int i);
+        void w(int address, Value v);
+
+        QVector<Value> rV(int address);
+        void wV(int address, QVector<Value> v);
 
         double write(QVector<Value> *value, unsigned int address);
         double write(Value value, unsigned int address);

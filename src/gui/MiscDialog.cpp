@@ -17,32 +17,32 @@ NewCacheDialog::NewCacheDialog(Cache* topCache,  QWidget *parent )
         return;
     }
 
-    for(Cache*  curr = topCache; curr != NULL; curr = curr->nextCache){
-        list.append(curr);
-        QString line = "Cache %1";
-        if((curr)->type == DATA){
-            line += " (D)";
-        }
-        else if((curr)->type == INSTRUCTION){
-            line += " (I)"; 
-        }
-        else if((curr)->type == BOTH){
-            line += " (D&I)"; 
-        }
-        line = line.arg(cacheN++);
-
-        _ui.nextBox->addItem(line,QVariant(cacheN) );
-
-
-        //Get last cache
-        Cache* last = (curr)->nextCache; 
-        if(last == NULL){
-            _ui.indexSpin->setMinimum( curr->indexBits); 
-            _ui.offsetSpin->setMinimum(curr->logDataWordCount);
-            _ui.waySpin->setMinimum(curr->logAssociativity);
-            _ui.delaySpin->setMinimum(curr->delay);
-        }
-    }
+/*     for(Cache*  curr = topCache; curr != NULL; curr = curr->nextCache){ */
+        // list.append(curr);
+        // QString line = "Cache %1";
+        // if((curr)->type == DATA){
+        //     line += " (D)";
+        // }
+        // else if((curr)->type == INSTRUCTION){
+        //     line += " (I)";
+        // }
+        // else if((curr)->type == BOTH){
+        //     line += " (D&I)";
+        // }
+        // line = line.arg(cacheN++);
+        //
+        // _ui.nextBox->addItem(line,QVariant(cacheN) );
+        //
+        //
+        // //Get last cache
+        // Cache* last = (curr)->nextCache;
+        // if(last == NULL){
+        //     _ui.indexSpin->setMinimum( curr->indexBits);
+        //     _ui.offsetSpin->setMinimum(curr->logDataWordCount);
+        //     _ui.waySpin->setMinimum(curr->logAssociativity);
+        //     _ui.delaySpin->setMinimum(curr->delay);
+        // }
+    /* } */
     _ui.nextBox->setCurrentIndex(cacheN-1);
 }
 

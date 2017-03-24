@@ -8,6 +8,7 @@
 #include "../memory/Register.h"
 #include "../memory/MemoryStructure.h"
 #include "BreakPoint.h"
+#include "../pipeline/Banana.h"
 #include "Status.h"
 class Computer{
     public:
@@ -20,6 +21,7 @@ class Computer{
 
         Register* regs = NULL;
         MemoryStructure* mems = NULL;
+        Banana* exec = NULL;
 
         Computer();
         ~Computer();

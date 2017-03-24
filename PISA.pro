@@ -53,11 +53,7 @@ HEADERS += src/Utility.h \
            src/memory/QueryResult.h \
            src/memory/Register.h \
            src/memory/serialization.h \
-           src/memory/Value.h \
-           src/pipeline/Pipeline.h \
-           src/pipeline/PipelineGlobals.h \
-           src/pipeline/spliceMachineCode.h \
-           src/pipeline/StageData.h
+           src/memory/Value.h 
 FORMS += rsc/ui/newcachedialog.ui \
          rsc/ui/newfiledialog.ui \
          rsc/ui/pisa.ui \
@@ -86,10 +82,7 @@ SOURCES += src/main.cpp \
            src/memory/MemoryStructure.cpp \
            src/memory/QueryResult.cpp \
            src/memory/Register.cpp \
-           src/memory/serialization.cpp \
-           src/pipeline/Pipeline.cpp \
-           src/pipeline/spliceMachineCode.cpp \
-           src/pipeline/StageData.cpp
+           src/memory/serialization.cpp 
 RESOURCES += rsc/pisa.qrc
 
 test{

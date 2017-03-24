@@ -23,6 +23,14 @@ Register::Register(){
         vec.fill(floatZero,VECTOR_SIZE);
         _fVecs.append(vec);
     }
+
+    _scas.fill(intZero, NUMBER_OF_FLOAT_VECTOR+ NUMBER_OF_INTEGER_VECTOR+NUMBER_OF_SYSTEM_REGISTER);
+    for(int i =0; i < NUMBER_OF_FLOAT_SCALAR_REGISTER+ NUMBER_OF_INTEGER_SCALAR_REGISTER; i++){
+        QVector<Value> vec;
+        vec.fill(floatZero,VECTOR_SIZE);
+        _vecs.append(vec);
+
+    }
 }
 
 
@@ -182,4 +190,41 @@ void Register::restore(QString *state){
         }
     }
     delete stateVector;
+}
+
+uint Register::getPC(){
+    return _scas[PC].asUInt;
+}
+
+uint Register::getSP(){
+    return _scas[SP].asUInt;
+}
+uint Register::getBP(){
+    return _scas[BP].asUInt;
+}
+uint Register::getLR(){
+    return _scas[LR].asUInt;
+}
+
+Value Register::r(int i){
+    Q_ASSERT(0<= i &&i > NUMBER_OF_SCALAR_REGISTER);
+    return _scas[i];
+}
+
+void Register::w(int i, Value v){
+    Q_ASSERT(0<= i &&i > NUMBER_OF_SCALAR_REGISTER);
+    _scas[i] = v;
+}
+
+QVector<Value> Register::rV(int i){
+    Q_ASSERT(NUMBER_OF_SCALAR_REGISTER <= i && i <NUMBER_OF_SCALAR_REGISTER + NUMBER_OF_VECTOR_REGISTER);
+
+    return _vecs[i];
+}
+
+void Register::wV(int i, QVector<Value> v){
+    Q_ASSERT(NUMBER_OF_SCALAR_REGISTER <= i && i <NUMBER_OF_SCALAR_REGISTER + NUMBER_OF_VECTOR_REGISTER);
+    Q_ASSERT(v.size() == VECTOR_SIZE);
+
+    _vecs[i] = v;
 }
