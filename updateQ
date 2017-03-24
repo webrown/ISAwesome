@@ -7,7 +7,7 @@ MOC_DIR = build
 RCC_DIR = build
 
 QT += widgets testlib
-CONFIG += qt debug console
+CONFIG += qt debug console c++11
 
 copydata.commands = cp src/assembler/DefaultMacro src/assembler/DefaultAlias \$\$DESTDIR 
 first.depends = \$(first) copydata
@@ -29,6 +29,6 @@ else{
         src/pipeline/Pipeline.cpp \
 
 
-}" 
-
+}
+SOURCES -= \$\$files(invisible/*)" 
 
