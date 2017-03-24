@@ -1,5 +1,6 @@
 //#include "PipelineGlobals.h"
 //#include "Pipeline.h"
+#include "../src/pipeline/Baseline.h"
 #include "../src/pipeline/spliceMachineCode.h"
 //#include "StageData.h"
 
@@ -37,5 +38,10 @@ int main() {
 
     int alternation = 1431677610; // 01010101010101011010101010101010
     checkEqual(spliceMachineCode(alternation, 15,16), 3, "Center test");
+
+    // Try baseline
+    MemoryStructure ms(100);
+    Register r;
+    Baseline b(&r, &ms);
 }
 

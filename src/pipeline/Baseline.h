@@ -8,12 +8,12 @@
 
 class Baseline : public Banana{
     public:
-        Register *_registers;
-        MemoryStructure  *_memory;
+        Register *registers;
+        MemoryStructure  *memory;
         Baseline(Register *registers, MemoryStructure *memory);
         virtual ~Baseline();
         void init(void);
         Status run(void);
         void stop(void);
-}
+};
 #endif
