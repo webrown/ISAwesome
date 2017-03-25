@@ -49,12 +49,13 @@ class Register{
         static const unsigned int specials = 20;
         static const unsigned int vectorIntegers = 24;
         static const unsigned int vectorFloats = 28;
-        static const unsigned int flags = 33;
 
         static const unsigned int LR = 20;
         static const unsigned int SP = 21;
         static const unsigned int BP = 22;
         static const unsigned int PC = 23;
+        static bool isVectorIndex(int index);
+        static bool isFloatIndex(int index);
 };
 
 #endif

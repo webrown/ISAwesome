@@ -1,6 +1,7 @@
 #include "Register.h"
 #include <QDebug>
 #include "serialization.h"
+#include "Flag.h"
 
 Register::Register(){
     Value intZero = {0};
@@ -10,33 +11,16 @@ Register::Register(){
     _flag = intZero;
     _flags.fill(intZero, VECTOR_SIZE);
     _scas.fill(intZero, NUMBER_OF_SCALAR_REGISTER);
-    //_scas.fill(intZero, NUMBER_OF_FLOAT_SCALAR_REGISTER+ NUMBER_OF_INTEGER_SCALAR_REGISTER+NUMBER_OF_SYSTEM_REGISTER);
-    //_scas.fill(intZero, NUMBER_OF_FLOAT_VECTOR+ NUMBER_OF_INTEGER_VECTOR+NUMBER_OF_SYSTEM_REGISTER);
-    //for(int i =0; i < NUMBER_OF_FLOAT_SCALAR_REGISTER+ NUMBER_OF_INTEGER_SCALAR_REGISTER; i++){
-    //for(int i =0; i < NUMBER_OF_FLOAT_VECTOR+ NUMBER_OF_INTEGER_VECTOR; i++){
     for(int i =0; i < NUMBER_OF_VECTOR_REGISTER; i++){
         QVector<Value> vec;
         vec.fill(floatZero,VECTOR_SIZE);
         _vecs.append(vec);
     }
-
-//    //----------------Deprecated--------------------
-//    _iScas.fill(intZero, NUMBER_OF_INTEGER_SCALAR_REGISTER);
-//    _fScas.fill(floatZero, NUMBER_OF_FLOAT_SCALAR_REGISTER);
-//    _sRegs.fill(intZero, NUMBER_OF_SYSTEM_REGISTER);
-//    _flagVec.fill(intZero, VECTOR_SIZE);
-//
-//    for(int i = 0; i < NUMBER_OF_INTEGER_VECTOR; i++){
-//        QVector<Value> vec;
-//        vec.fill(intZero,VECTOR_SIZE);
-//        _iVecs.append(vec);
-//    }
-//
-//    for(int i = 0; i < NUMBER_OF_FLOAT_VECTOR; i++){
-//        QVector<Value> vec;
-//        vec.fill(floatZero,VECTOR_SIZE);
-//        _fVecs.append(vec);
-//    }
+    
+    // Always bit should be set (and in theory never unset)
+    using namespace Flag;
+    _flag  = add(_flag,  AL);
+    _flags = add(_flags, AL);
 }
 
 Register::~Register(){
@@ -148,113 +132,6 @@ void Register::writeFlags(QVector<Value> v){
     _flags = v;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-////--------------------Deprecated---------------------
-//QueryResult* Register::read(unsigned int address, unsigned int length){
-//    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER|| address >= TOTAL_NUMBER_OF_REGISTERS+1){
-//        qDebug()<< "Invalid Access: address has to be between " << (NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER) << " to " << (TOTAL_NUMBER_OF_REGISTERS+1) << endl;
-//        exit(-1);
-//    }
-//    if(length != VECTOR_SIZE){
-//        qDebug() << "Invalid Access: length has to be 64" << endl;
-//        exit(-1);
-//    }
-//
-//    address -= NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER;
-//    if(address < NUMBER_OF_INTEGER_VECTOR){
-//        return new QueryResult(_iVecs[address], delay);
-//    }
-//    else if(address < NUMBER_OF_INTEGER_VECTOR+NUMBER_OF_FLOAT_VECTOR){
-//        return new QueryResult(_fVecs[address - NUMBER_OF_INTEGER_VECTOR], delay);
-//    }
-//    else {
-//        return new QueryResult(_flagVec, delay);
-//    }
-//}
-//
-//QueryResult* Register::read(unsigned int address){
-//    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER){
-//        QVector<Value> vec;
-//        vec.push_back(_iScas[address]);
-//        return new QueryResult(vec, delay);
-//    }
-//    else if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER){
-//        QVector<Value> vec;
-//        vec.push_back(_fScas[address-NUMBER_OF_INTEGER_SCALAR_REGISTER]);
-//        return new QueryResult(vec, delay);
-//
-//    }
-//    else if(address <  NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER + NUMBER_OF_SYSTEM_REGISTER){
-//        QVector<Value> vec;
-//        vec.push_back(_sRegs[address-NUMBER_OF_INTEGER_SCALAR_REGISTER- NUMBER_OF_FLOAT_SCALAR_REGISTER]);
-//        return new QueryResult(vec, delay);
-//    }
-//    qDebug() << "Register address " << address << " does not exist!";
-//    exit(-1);
-//}
-//
-//
-//double Register::write(QVector<Value> *value, unsigned int address){
-//    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER|| address >= TOTAL_NUMBER_OF_REGISTERS+1){
-//        qDebug()<< "Invalid Access: address has to be between " << (NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER) << " to " << (TOTAL_NUMBER_OF_REGISTERS+1) << endl;
-//        exit(-1);
-//    }
-//    if(value->size() != VECTOR_SIZE){
-//        qDebug() << "Invalid Access: length has to be 64" << endl;
-//        exit(-1);
-//    }
-//
-//    address -= NUMBER_OF_INTEGER_SCALAR_REGISTER + NUMBER_OF_FLOAT_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER;
-//    if(address < NUMBER_OF_INTEGER_VECTOR){
-//        for(int i = 0; i < VECTOR_SIZE;i++){
-//            _iVecs[address].replace(i,value->at(i));
-//        }
-//    }
-//    else if(address < NUMBER_OF_INTEGER_VECTOR+NUMBER_OF_FLOAT_VECTOR){
-//        for(int i = 0; i < VECTOR_SIZE;i++){
-//            _fVecs[address-NUMBER_OF_INTEGER_VECTOR].replace(i,value->at(i));
-//        }
-//    }
-//    else {
-//        for(int i = 0; i < VECTOR_SIZE;i++){
-//            _flagVec.replace(i,value->at(i));
-//        }
-//    }
-//    return delay;
-//}
-//
-//
-//double Register::write(Value input, unsigned int address){
-//    if(address < NUMBER_OF_INTEGER_SCALAR_REGISTER) {
-//        _iScas.replace(address,input);
-//        return delay;
-//    }
-//    address -= NUMBER_OF_INTEGER_SCALAR_REGISTER;
-//
-//    if(address < NUMBER_OF_FLOAT_SCALAR_REGISTER) {
-//        _fScas.replace(address,input);
-//        return delay;
-//    }
-//    address -= NUMBER_OF_FLOAT_SCALAR_REGISTER;
-//
-//    if(address < NUMBER_OF_SYSTEM_REGISTER) {
-//        _sRegs.replace(address,input);
-//        return delay;
-//    }
-//    qDebug()<< "Invalid Access: address has to be between 0 to " << (NUMBER_OF_INTEGER_SCALAR_REGISTER+NUMBER_OF_FLOAT_SCALAR_REGISTER+NUMBER_OF_SYSTEM_REGISTER) << endl;
-//    exit(-1);
-//}
-
 QString *Register::save(){
     QVector<int> result;
 
@@ -295,5 +172,13 @@ void Register::restore(QString *state){
         }
     }
     delete stateVector;
+}
+
+bool Register::isVectorIndex(int index){
+    return index >= (int)vectorIntegers;
+}
+
+bool Register::isFloatIndex(int index){
+    return (index >= (int)scalarFloats && index < (int)specials) || (index >= (int)vectorFloats);
 }
 

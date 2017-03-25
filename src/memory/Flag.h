@@ -21,22 +21,26 @@ namespace Flag{
         return ret;
     }
 
-    void add(Value v, FlagType f){
+    Value add(Value v, FlagType f){
         v = {(v.asUInt | f)};
+        return v;
     }
-    void add(QVector<Value> v, FlagType f){
+    QVector<Value> add(QVector<Value> v, FlagType f){
         for(int i = 0; i < VECTOR_SIZE; i++){
             v[i] = {(v[i].asUInt | f)};
         }
+        return v;
     }
 
-    void remove(Value v, FlagType f){
+    Value remove(Value v, FlagType f){
         v = {(v.asUInt & ~f)};
+        return v;
     }
-    void remove(QVector<Value> v, FlagType f){
+    QVector<Value> remove(QVector<Value> v, FlagType f){
         for(int i = 0; i < VECTOR_SIZE; i++){
             v[i] = {(v[i].asUInt & ~f)};
         }
+        return v;
     }
 
 };
