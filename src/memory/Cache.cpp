@@ -233,7 +233,8 @@ void Cache::restore(QString *state){
         if(stateIndex == s->size()) {
           return;
         }
-        Value value = {s->at(stateIndex++)};
+        Value value;
+        value.i = s->at(stateIndex++);
         contents->at(ind)->at(way)->replace(offset, value);
       }
       // Place in dirty.
