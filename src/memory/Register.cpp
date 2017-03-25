@@ -62,11 +62,6 @@ Value Register::read(int i){
     return _scas[i];
 }
 
-void Register::write(int i, Value v){
-    Q_ASSERT(0<= i &&i < NUMBER_OF_SCALAR_REGISTER);
-    _scas[i] = v;
-}
-
 void Register::write(Value v, int i){
     Q_ASSERT(0<= i &&i < NUMBER_OF_SCALAR_REGISTER);
     _scas[i] = v;
@@ -94,12 +89,6 @@ void Register::write(float v, int address) {
 QVector<Value> Register::readVector(int i){
     Q_ASSERT(NUMBER_OF_SCALAR_REGISTER <= i && i <NUMBER_OF_SCALAR_REGISTER + NUMBER_OF_VECTOR_REGISTER);
     return _vecs[i-NUMBER_OF_SCALAR_REGISTER];
-}
-
-void Register::writeVector(int i, QVector<Value> v){
-    Q_ASSERT(NUMBER_OF_SCALAR_REGISTER <= i && i <NUMBER_OF_SCALAR_REGISTER + NUMBER_OF_VECTOR_REGISTER);
-    Q_ASSERT(v.size() == VECTOR_SIZE);
-    _vecs[i-NUMBER_OF_SCALAR_REGISTER] = v;
 }
 
 void Register::writeVector(QVector<Value> v, int i){

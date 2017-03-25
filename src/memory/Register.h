@@ -20,15 +20,12 @@ class Register{
         uint getLR();
 
         Value read(int i);
-        void write(int address, Value v);
         void write(Value v, int address);
         void write(int v, int address);
         void write(unsigned int v, int address);
         void write(float v, int address);
 
         QVector<Value> readVector(int address);
-        void writeVector(int address, QVector<Value> v);
-
         void writeVector(QVector<Value> v, int address);
         void writeVector(QVector<int> v, int address);
         void writeVector(QVector<float> v, int address);
