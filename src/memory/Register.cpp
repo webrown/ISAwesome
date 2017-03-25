@@ -9,7 +9,7 @@ Register::Register(){
 
     _flag = intZero;
     _flags.fill(intZero, VECTOR_SIZE);
-    _scas.fill(intZero, NUMBER_OF_FLOAT_VECTOR+ NUMBER_OF_INTEGER_VECTOR+NUMBER_OF_SYSTEM_REGISTER);
+    _scas.fill(intZero, NUMBER_OF_FLOAT_SCALAR_REGISTER+ NUMBER_OF_INTEGER_SCALAR_REGISTER +NUMBER_OF_SYSTEM_REGISTER);
     for(int i =0; i < NUMBER_OF_FLOAT_SCALAR_REGISTER+ NUMBER_OF_INTEGER_SCALAR_REGISTER; i++){
         QVector<Value> vec;
         vec.fill(floatZero,VECTOR_SIZE);

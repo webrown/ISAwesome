@@ -2,22 +2,26 @@
 
 MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535","PISA")
 {
+    qRegisterMetaType<ThreadMessage>();
     qDebug() << "MainWindow starts...";
     _ui.setupUi( this );
 //move assembly to different thread 
     assembler = new Assembler();
     disassembler = new Disassembler();
     computer = new Computer();
-
-    assemblyThread = new QThread(this);
-    assembler->moveToThread(assemblyThread);
+assemblyThread = new QThread(this); assembler->moveToThread(assemblyThread);
     connect(assemblyThread, &QThread::finished, assembler, &QObject::deleteLater);
-    //Questionable?
-    connect(computerThread, &QThread::finished, computer, &QObject::deleteLater);
-
     connect(this, &MainWindow::startBuild, assembler, &Assembler::assemble);
     connect(assembler, &Assembler::resultReady, this, &MainWindow::finishAssemble);
     assemblyThread->start();
+
+    computerThread = new QThread(this);
+    computer->moveToThread(computerThread);
+    connect(computerThread, &QThread::finished, computer, &QObject::deleteLater);
+    connect(this, &MainWindow::_sendMessage, computer, &Computer::procMessage);
+    connect(computer, &Computer::sendMessage, this, &MainWindow::procMessage);
+
+    computerThread->start();
 
     //add element on toolbar
     QSpinBox* cycleSpinBox = new QSpinBox(this);
@@ -46,8 +50,8 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     QModelIndex idx = fModel->index(settings.value("general/workdirectory",getDocDir()).toString());
     _ui.fileSystemView->setRootIndex(idx);
 
-    _ui.tab_memory->init(computer->mems->_mainMemory, _ui.tableWidget_memory,_ui.spinBox,_ui.pushButton, _ui.lineEdit);
-    _ui.tab_register->init(computer->regs, _ui.tableWidget_6,_ui.comboBox);
+    _ui.tab_memory->init(this,_ui.tableWidget_memory,_ui.spinBox,_ui.pushButton, _ui.lineEdit);
+    _ui.tab_register->init(this,_ui.tableWidget_6,_ui.comboBox);
 
 
     qDebug() << "MainWindow is initialized...";
@@ -56,14 +60,13 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
 MainWindow::~MainWindow()
 {
     qDebug() << "Killing MainWindow";
-    delete computer;
-    delete disassembler;
     assemblyThread->quit();
     assemblyThread->wait();
     computerThread->quit();
     computerThread->wait();
     qDebug() << "Fin.";
 }
+
 void MainWindow::updateNavigation(){
     QFileSystemModel* fModel = (QFileSystemModel*) _ui.fileSystemView->model();
     fModel->setRootPath(settings.value("general/workdirectory",getDocDir()).toString());
@@ -403,24 +406,27 @@ void MainWindow::handleUpload(){
 void MainWindow::launchProgram(QString fileName){
     clearConsole();
     printlnConsole("Run: " + fileName);
-    QVector<uint>* instructions = ProgramManagerX::loadProgram(fileName);
+    QList<uint> instructions = ProgramManagerX::loadProgram(fileName);
+    //TODO fix this
+    QList<QVariant> _instructions;
+
     //change this code
     _ui.tracker->clear();
-    for(int i = 0; i < instructions->size(); i++){
+    for(int i = 0; i < instructions.size(); i++){
         QString address = QString::number(INSTRUCTION_SIZE  * i,16).rightJustified(8, '0');
-        QString instruction =disassembler->disassemble(instructions->at(i)); 
+        QString instruction =disassembler->disassemble(instructions.at(i)); 
         QListWidgetItem *newItem = new QListWidgetItem; 
         newItem->setText(address + "\t" + instruction);
         QVariant bp (BreakPoint::NONE);
         newItem->setData(Qt::UserRole, BreakPoint::NONE);
         _ui.tracker->addItem(newItem);
-        if(i == instructions->size()-1){
+        if(i == instructions.size()-1){
             newItem->setData(Qt::UserRole, BreakPoint::BREAK_ALL);
             newItem->setBackground(Qt::red);
-
         }
+        _instructions.append(instructions.at(i));
     }
-    computer->init(instructions);
+    sendMessage(ThreadMessage(ThreadMessage::R_LOAD,_instructions));
     _ui.tab_memory->update();
 }
 
@@ -555,4 +561,42 @@ void MainWindow::handleRemoveBreak(){
 
 
 void MainWindow::handlePlay(){
+}
+
+void MainWindow::procMessage(ThreadMessage message){
+    qDebug() << "GUI:RECV FROM COMPUTER";
+    ThreadMessage::Type type = message.type;
+    QVariant info = message.message;
+    switch(message.type){
+        case ThreadMessage::A_OKAY:
+            //Do nothing
+            break;
+        case ThreadMessage::A_ERROR:
+            //Show error message
+            break;
+        case ThreadMessage::A_VIEW_MEMORY:
+            _ui.tab_memory->display(info.toList());
+            break;
+        case ThreadMessage::A_VIEW_REGISTER:
+            _ui.tab_register->display(info.toList());
+            break;
+        defualt:
+            break;
+    }
+    messageQueue.dequeue();
+    if(messageQueue.isEmpty() == false){
+        emit _sendMessage(messageQueue.head());
+    }
+
+}
+void MainWindow::sendMessage(ThreadMessage message){
+    qDebug() << "GUI:SEND TO COMPUTER";
+    //If queue is empty, send right away
+    if(messageQueue.isEmpty()){
+        messageQueue.enqueue(message);
+        emit _sendMessage(message);
+    }
+    else{
+        messageQueue.enqueue(message);
+    }
 }

@@ -1,12 +1,14 @@
 #include "MemoryView.h"
-MemoryView::MemoryView(){
+#include "MainWindow.h"
+
+MemoryView::MemoryView(QWidget* widget) : QTableWidget(widget){
     //Do nothing
 }
 MemoryView::~MemoryView(){
     //Do nothing
 }
-void MemoryView::init(MainMemory* memory, QTableWidget* memoryTable, HexSpinBox* spinBox, QPushButton* searchButton, QLineEdit* lineEdit){
-    this->memory = memory;
+void MemoryView::init(MainWindow* main, QTableWidget* memoryTable, HexSpinBox* spinBox, QPushButton* searchButton, QLineEdit* lineEdit){
+    this->main = main;
     this->memoryTable = memoryTable;
     this->spinBox = spinBox;
     this->searchButton =searchButton;
@@ -28,26 +30,7 @@ void MemoryView::init(MainMemory* memory, QTableWidget* memoryTable, HexSpinBox*
 void MemoryView::updateWithSpinBox(){
     qDebug() << "Update with spin box";
     uint address = spinBox->hexValue();
-    uint mask = (MainMemory::MEMORY_CHUNKS-1) << 8;
-    uint chunkBit = ((mask & address) >> 8);
-    uint x = (((1<<8)-1) & address) << 8;
-    //check empty
-    if(memory->_contents[chunkBit].size() ==0){
-        for(int row = 0; row < 256; row++){
-            memoryTable->item(row, 0)->setText("0X" + QString::number(chunkBit + x + row,16).rightJustified(8,'0'));
-            memoryTable->item(row, 1)->setText("0X0");
-            memoryTable->item(row, 2)->setText("0");
-            memoryTable->item(row, 3)->setText("0B0");
-        }
-        return;
-    }
-    for(uint i = 0; i < 256; i++){
-        uint content = memory->_contents[chunkBit][x + i].asUInt;
-            memoryTable->item(i, 0)->setText("0X" + QString::number(chunkBit + x + i,16).rightJustified(8,'0'));
-            memoryTable->item(i, 1)->setText("0X" + QString::number(content, 16));
-            memoryTable->item(i, 2)->setText(QString::number(content, 10));
-            memoryTable->item(i, 3)->setText("0B" + QString::number(content, 2));
-    }
+    main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_MEMORY, address));
 }
 void MemoryView::updateWithSearch(){
     qDebug() << "Update with search";
@@ -57,31 +40,27 @@ void MemoryView::updateWithSearch(){
         return;
     }
     uint address = searchAddress >> 8;
+    main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_MEMORY, searchAddress));
+   
+}
+void MemoryView::display(QList<QVariant> list){
+    uint address = list[0].toUInt();
     uint mask = (MainMemory::MEMORY_CHUNKS-1) << 8;
     uint chunkBit = ((mask & address) >> 8);
     uint x = (((1<<8)-1) & address) << 8;
     //check empty
-    if(memory->_contents[chunkBit].size() ==0){
-        for(int row = 0; row < 256; row++){
-            memoryTable->item(row, 0)->setText("0X" + QString::number(chunkBit + x + row,16).rightJustified(8,'0'));
-            memoryTable->item(row, 1)->setText("0X0");
-            memoryTable->item(row, 2)->setText("0");
-            memoryTable->item(row, 3)->setText("0B0");
-        }
-    }
-    else{
-        for(uint i = 0; i < 256; i++){
-            uint content = memory->_contents[chunkBit][x + i].asUInt;
-            memoryTable->item(i, 0)->setText("0X" + QString::number(chunkBit + x + i,16).rightJustified(8,'0'));
-            memoryTable->item(i, 1)->setText("0X" + QString::number(content, 16));
-            memoryTable->item(i, 2)->setText(QString::number(content, 10));
-            memoryTable->item(i, 3)->setText("0B" + QString::number(content, 2));
-        }
+    for(uint i = 0; i < 256; i++){
+        uint content = list[i+1].toUInt();
+        memoryTable->item(i, 0)->setText("0X" + QString::number(chunkBit + x + i,16).rightJustified(8,'0'));
+        memoryTable->item(i, 1)->setText("0X" + QString::number(content, 16));
+        memoryTable->item(i, 2)->setText(QString::number(content, 10));
+        memoryTable->item(i, 3)->setText("0B" + QString::number(content, 2));
     }
 
-    uint specific = searchAddress & ((1<<8)-1);
-    memoryTable->selectRow(specific);
-    
+    qDebug() << "B";
+    /* uint specific = searchAddress & ((1<<8)-1);
+     * memoryTable->selectRow(specific); */
+ 
 }
 void MemoryView::update(){
     updateWithSpinBox();

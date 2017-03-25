@@ -5,13 +5,14 @@
 #include "Cache.h"
 class MemoryStructure {
     public:
-        MemoryStructure(double mainMemoryDelay);
-        ~MemoryStructure();
-        MemoryInterface *_lastAdded;
-        MemoryInterface *_dataAccess;
-        MemoryInterface *_instructionAccess;
+        MemoryInterface *_lastAdded = NULL;
+        MemoryInterface *_dataAccess = NULL;
+        MemoryInterface *_instructionAccess = NULL;
         MainMemory *_mainMemory;
         
+        MemoryStructure(double mainMemoryDelay);
+        ~MemoryStructure();
+
         Cache *pushCache(int indexBits, int logDataWordCount, int logAssociativity, double delay); // Place cache on top of lastAdded.
         void pushCache(Cache *newCache); // Place cache on top of lastAdded.
         void goBack(); // Change lastAdded to previous lastAdded.

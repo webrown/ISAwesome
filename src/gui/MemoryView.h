@@ -1,6 +1,7 @@
 #ifndef MEMORYVIEW_H
 #define MEMORYVIEW_H
 
+class MainWindow;
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QPushButton>
@@ -8,26 +9,27 @@
 #include <QDebug>
 #include "../memory/MainMemory.h"
 #include "HexSpinBox.h"
+#include "../computer/ThreadMessage.h"
 
 
-class MainMemory;
 
 class MemoryView : public QTableWidget
 {
     Q_OBJECT
 
 public:
-    MainMemory* memory;
-    MemoryView();
+    MemoryView(QWidget* widget = 0);
     ~MemoryView();
     void update();
-    void init(MainMemory* memory, QTableWidget* memoryTable, HexSpinBox* spinBox, QPushButton* searchButton, QLineEdit* lineEdit);
-
+    void init(MainWindow* main, QTableWidget* memoryTable, HexSpinBox* spinBox, QPushButton* searchButton, QLineEdit* lineEdit);
+    void display(QList<QVariant> list);
+    
 public slots:
     void updateWithSearch();
     void updateWithSpinBox();
 
 private:
+    MainWindow* main;
     QTableWidget* memoryTable;
     HexSpinBox* spinBox;
     QPushButton* searchButton;

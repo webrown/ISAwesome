@@ -11,13 +11,19 @@
 #include "../pipeline/Banana.h"
 #include "../pipeline/Baseline.h"
 #include "Status.h"
+#include "ThreadMessage.h"
 class Computer: public QObject{
     Q_OBJECT
     public:
+        enum State{
+            DEAD, LOADED, RUNNING
+        };
         /*
          * If this variable is true, then computer will stop with break (I am not hundred percent sure about how to implement "break functionality"
          * If this variable is false, all break will be ignored
          */
+
+        State currState;
         bool breakEnabled;
         QMap<uint,BreakPoint::BreakPoint> breakMap;
 
@@ -51,10 +57,19 @@ class Computer: public QObject{
          * Initiate computer, after step, pause, stop will be called only after init is called
          *
          */
-        void init(QVector<uint>* instructions);
+        void init();
+        void load(QList<QVariant> instructions);
 
 
         void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
         void removeBreakPoint(uint address);
+
+        void handleMemoryView(uint startAddress);
+        void handleRegisterView(QString type);
+
+        public slots:
+            void procMessage(ThreadMessage message);
+        signals:
+            void sendMessage(ThreadMessage message);
 };   
 #endif

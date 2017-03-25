@@ -1,16 +1,18 @@
 #include "Assembler.h" 
 
 Assembler::Assembler(){
+    qDebug() << "ASM: creating assembler";
     qRegisterMetaType<AssemblerConfiguration>();
     qRegisterMetaType<Assembled>();
 }
 
 Assembler::~Assembler(){
+    qDebug() << "ASM: removing assembler";
     clear();
 }
 
 void Assembler::init(){
-    qDebug() << "Initiating Assembler variables" ;
+    qDebug() << "ASM: Initiating assembler" ;
     _success = true;
     mainAddress = HEADER_BUFFER;
 
@@ -25,7 +27,7 @@ void Assembler::init(){
 }
 
 void Assembler::clear(){
-    qDebug() << "Clear";
+    qDebug() << "ASM: Clearing assembler";
 
     if(_labelTable != NULL){
         delete _labelTable;
@@ -49,10 +51,11 @@ void Assembler::clear(){
 
     _problemLog = NULL;
     _instructions = NULL;
-    qDebug() << "Assembler is cleared";
+    qDebug() << "ASM: Assembler is cleared";
 }
 
 void Assembler::assemble(QString fileName, AssemblerConfiguration config, bool runAfter){
+    qDebug() << "ASM: start assembly";
     //Start time to measure how long it took to compile
     QTime timer;
     timer.start();

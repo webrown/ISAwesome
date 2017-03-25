@@ -47,7 +47,6 @@ class Preprocessed{
 };
 
 class AssemblerConfiguration{
-
     public:
         bool useDefaultMacro = true;
         bool useGlobalMacro = true;
@@ -63,6 +62,7 @@ Q_DECLARE_METATYPE(AssemblerConfiguration);
  * 
  *
  */
+
 class Assembler: public QObject{
     Q_OBJECT
   public: 

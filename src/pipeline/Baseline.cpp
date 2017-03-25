@@ -2,11 +2,15 @@
 #include "spliceMachineCode.h"
 #include "../Utility.h"
 #include "PipelineGlobals.h"
-Baseline::Baseline(Register *registers, MemoryStructure *memory){
-    registers = registers;
-    memory = memory;
-}
 
+Baseline::Baseline(Register *registers, MemoryStructure *memory){
+    // this->registers = registers;
+    // this->memory = memory;
+}
+Baseline::~Baseline(){
+}
+void Baseline::init(void){
+}
 Status Baseline::run(void){
 /*     // Complete 1 instruction */
     // QueryResult *qr = NULL;

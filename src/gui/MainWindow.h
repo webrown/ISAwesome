@@ -1,5 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
+#include "MemoryView.h"
 #include <iostream>
 #include <typeinfo>
 #include <QFileDialog>
@@ -30,6 +32,7 @@
 #include "../assembler/ProgramManagerX.h"
 #include "HexSpinBox.h"
 #include "../computer/BreakPoint.h"
+Q_DECLARE_METATYPE(ThreadMessage);
 
 class MainWindow : public QMainWindow
 {
@@ -41,6 +44,7 @@ class MainWindow : public QMainWindow
         Assembler* assembler;
         Disassembler* disassembler;
         QSettings settings;
+        QQueue<ThreadMessage> messageQueue;
 
         void updateNavigation();
 
@@ -89,8 +93,11 @@ class MainWindow : public QMainWindow
         void updateUndo(bool avail);
         void updateRedo(bool avail);
         void finishAssemble(Assembled* assembled, bool runAfter);
+        void procMessage(ThreadMessage message);
+        void sendMessage(ThreadMessage message);
     signals:
         void startBuild(QString fileName, AssemblerConfiguration config, bool runAfter);
+        void _sendMessage(ThreadMessage message);
 
     private:
         QThread* computerThread;

@@ -10,12 +10,13 @@
 using namespace std;
 class CacheView;
 
-enum CacheType{
-    DATA, INSTRUCTION, BOTH
-};
-
 class Cache : public MemoryInterface{
+
   public:
+    enum CacheType{
+        DATA_ONLY, INSTRUCTION_ONLY, BOTH
+    };
+
     using MemoryInterface::write;
     CacheType type;
     CacheView* view = NULL;
@@ -30,14 +31,20 @@ class Cache : public MemoryInterface{
     QVector< QVector<int> * > *LRU;
     QVector< QVector<int> * > *dirty;
     QVector< QVector<int> * > *valid;
+
+
     Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextMemory);
     virtual ~Cache();
+
     QueryResult *read(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address);
     double write(QVector<Value> *value, unsigned int address);
     double write(Value value, unsigned int address);
+
     QString *save();
     void restore(QString *state);
+
+    //private
     QVector<int> *splitAddress(unsigned int address);
     int addressWay(unsigned int address);
     double fetch(unsigned int address);

@@ -629,7 +629,7 @@ public:
         leftBoard->setCurrentIndex(1);
         editorTab->setCurrentIndex(-1);
         tabWidget_output->setCurrentIndex(2);
-        tabWidget_pipeline->setCurrentIndex(0);
+        tabWidget_pipeline->setCurrentIndex(1);
         tabWidget_memory->setCurrentIndex(0);
 
 
