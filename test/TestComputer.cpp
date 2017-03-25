@@ -9,9 +9,9 @@ void TestComputer::initTestCase(){
 void TestComputer::test_one_add(){
     QVector<uint>* instructions =  new QVector<uint>();
     instructions->append(3825205248u);
-    computer.init(instructions);
+//    computer.init(instructions);
     computer.step(1);
-    QVERIFY(regs->r(0).asUInt == 0u);
+    QVERIFY(regs->read(0).asUInt == 0u);
     computer.stop();
 }
 
@@ -26,15 +26,15 @@ void TestComputer::test_multiple_add_same_reg(){
     instructions->append(3825205312u);
     instructions->append(3825205344u);
 
-    computer.init(instructions);
+//    computer.init(instructions);
     computer.step(1);
-    QVERIFY(regs->r(0).asUInt == 0u);
+    QVERIFY(regs->read(0).asUInt == 0u);
     computer.step(1);
-    QVERIFY(regs->r(0).asUInt == 1u);
+    QVERIFY(regs->read(0).asUInt == 1u);
     computer.step(1);
-    QVERIFY(regs->r(0).asUInt == 2u);
+    QVERIFY(regs->read(0).asUInt == 2u);
     computer.step(1);
-    QVERIFY(regs->r(0).asUInt == 3u);
+    QVERIFY(regs->read(0).asUInt == 3u);
     computer.stop();
 }
 /* Add 0 R4
@@ -48,16 +48,16 @@ void TestComputer::test_multiple_add_diff_reg(){
     instructions->append(3825205312u);
     instructions->append(3825205344u);
 
-    computer.init(instructions);
+    // computer.init(instructions);
     computer.step(1);
-    QVERIFY(regs->r(4).asUInt == 0u);
+    QVERIFY(regs->read(4).asUInt == 0u);
     computer.step(1);
-    QVERIFY(regs->r(3).asUInt == 1u);
+    QVERIFY(regs->read(3).asUInt == 1u);
     computer.step(1);
-    QVERIFY(regs->r(2).asUInt == 2u);
+    QVERIFY(regs->read(2).asUInt == 2u);
     computer.step(1);
-    QVERIFY(regs->r(1).asUInt == 3u);
-    computer.stop();
+    QVERIFY(regs->read(1).asUInt == 3u);
+    computer.stop(); 
 }
 /* Add 0 R11
  * Add 1 R14
@@ -70,25 +70,25 @@ void TestComputer::test_multiple_add_float_reg(){
     instructions->append(3825205329u);
     instructions->append(3825205356u);
 
-    computer.init(instructions);
+    // computer.init(instructions);
     computer.step(1);
-    QVERIFY(regs->r(11).asUInt == 0u);
+    QVERIFY(regs->read(11).asUInt == 0u);
     computer.step(1);
-    QVERIFY(regs->r(14).asUInt == 1u);
+    QVERIFY(regs->read(14).asUInt == 1u);
     computer.step(1);
-    QVERIFY(regs->r(17).asUInt == 2u);
+    QVERIFY(regs->read(17).asUInt == 2u);
     computer.step(1);
-    QVERIFY(regs->r(12).asUInt == 3u);
-    computer.stop();
+    QVERIFY(regs->read(12).asUInt == 3u);
+    computer.stop(); 
 }
 
 //Add 20 PC
 void TestComputer::test_add_PC(){
 QVector<uint>* instructions =  new QVector<uint>();
     instructions->append(3825205911u);
-    computer.init(instructions);
+    // computer.init(instructions);
     computer.step(1);
-    QVERIFY(regs->r(Register::PC).asUInt == 20u);
+    QVERIFY(regs->read((int)Register::PC).asUInt == 20u);
     computer.stop();
 
 }
@@ -96,4 +96,3 @@ QVector<uint>* instructions =  new QVector<uint>();
 void TestComputer::cleanupTestCase(){
     //Do nothing
 }
-
