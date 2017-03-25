@@ -1,3 +1,13 @@
 #!/usr/bin/env bash
+
+
+if [ "$1" = "test" ]
+then
+    arg="CONFIG +=test"
+fi
+qmake "$arg"
 make -s
-cd bin ; ./PISA
+if [ $? -eq 0 ]
+then
+    cd bin ; ./PISA
+fi

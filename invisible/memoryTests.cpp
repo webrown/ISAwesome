@@ -490,14 +490,13 @@ int main() {
     cout << "BEGIN:  Register tests." << endl;
     Register r;
     r.write(42, 10);
-    QueryResult *qr = r.read(10);
-    if(qr->result.at(0).i == 42) {
+    Value result = r.read(10);
+    if(result.i == 42) {
       cout << "PASS:  Can write/read a single integer scalar value." << endl;
     }
     else {
-      cout << "FAIL:  Cannot write/read a single integer scalar value." << qr->result.at(0).i << endl;
+      cout << "FAIL:  Cannot write/read a single integer scalar value." << result.i << endl;
     }
-    delete qr;
 
     for(int i = 0; i < 24; i++) {
         Value v;
@@ -505,41 +504,34 @@ int main() {
         r.write(v,i);
     }
     for(int i = 0; i < 24; i++) {
-        QueryResult *qr = r.read(i);
-        if(qr->result.at(0).f == i) {
+        if(r.read(i).f == i) {
           cout << "PASS:  Can write/read to address " << i << endl;
         }
         else {
           cout << "FAIL:  Cannot write/read to address " << i << endl;
         }
-        delete qr;
     }
-cout << "A" << endl;
 
     Value counter = {0};
-    for(int i = 24; i < 33; i++) {
+    for(int i = 24; i < 32; i++) {
         QVector<Value> vec;
         for(int j = 0; j < 64; j++) {
             vec.push_back(counter);
             counter.i++;
         }
-cout << "i=" << counter.i << endl;
-        r.write(&vec,i);
+        r.write(vec,i);
     }
-cout << "B" << endl;
     counter.i = 0;
-    for(unsigned int i = 24; i < 33; i++) {
-        QueryResult *qr = r.read(i, 64);
+    for(unsigned int i = 24; i < 32; i++) {
         for(int j = 0; j < 64; j++) {
-            if(qr->result.at(j).i == counter.i) {
+            if(r.readVector(i).at(j).i == counter.i) {
               cout << "PASS:  Can write/read to vector word " << counter.i << "." << endl;
             }
             else {
-              cout << "FAIL:  Cannot write/read to vector word " << counter.i << "." << qr->result.at(j).i << endl;
+              cout << "FAIL:  Cannot write/read to vector word " << counter.i << "." << r.readVector(i).at(j).i << endl;
             }
             counter.i++;
         }
-        delete qr;
     }
 
     // Just make sure we can do this syntax...
@@ -553,24 +545,20 @@ cout << "B" << endl;
     r2.restore(state);
     delete state;
     for(int i = 0; i < 24; i++) {
-        QueryResult *qr1 = r.read(i);
-        QueryResult *qr2 = r2.read(i);
-        if(qr1->result.at(0).i == qr2->result.at(0).i) {
-            cout << "PASS:  saved and restored " << qr1->result.at(0).i << " " << qr2->result.at(0).i << endl;
+        if(r.read(i).i == r2.read(i).i) {
+            cout << "PASS:  saved and restored " << r.read(i).i << " " << r2.read(i).i << endl;
         }
         else {
-            cout << "FAIL:  cannot save and restore " << qr1->result.at(0).i << " " << qr2->result.at(0).i << endl;
+            cout << "FAIL:  cannot save and restore " << r.read(i).i << " " << r2.read(i).i << endl;
         }
     }
-    for(int i = 24; i < 33; i++) {
-        QueryResult *qr1 = r.read(i, 64);
-        QueryResult *qr2 = r2.read(i, 64);
+    for(int i = 24; i < 32; i++) {
         for(int j = 0; j < 64; j++) {
-            if(qr1->result.at(j).i == qr2->result.at(j).i) {
-                cout << "PASS:  saved and restored " << qr1->result.at(j).i << " " << qr2->result.at(j).i << endl;
+            if(r.readVector(i).at(j).i == r2.readVector(i).at(j).i) {
+                cout << "PASS:  saved and restored " << r.readVector(i).at(j).i << " " << r2.readVector(i).at(j).i << endl;
             }
             else {
-                cout << "FAIL:  cannot save and restore " << qr1->result.at(j).i << " " << qr2->result.at(j).i << endl;
+                cout << "FAIL:  cannot save and restore " << r.readVector(i).at(j).i << " " << r2.readVector(i).at(j).i << endl;
             }
         }
     }
@@ -586,6 +574,7 @@ cout << "B" << endl;
     ms.goBack();
     Cache *l1i = ms.pushCache(2, 3, 1, 15);
     ms.setToInstructionAccess();
+    cout << l2 << l1d << l1i << endl;
 
     double writeTime = ms.getInstructionAccess()->write(42, 55);
     if(writeTime == 100+35+15) {

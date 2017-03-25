@@ -56,23 +56,4 @@ enum Instruction {
     TOI ,
     TOF
 };
-
-enum Conditional {
-    EQ,
-    NE,
-    CS,
-    CC,
-    MI,
-    PL,
-    VS,
-    VC,
-    DZ,
-    NZ,
-    LE,
-    GE,
-    LT,
-    GT,
-    AL,
-    UN
-};
 #endif

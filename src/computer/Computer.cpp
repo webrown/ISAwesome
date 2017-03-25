@@ -67,7 +67,7 @@ Status Computer::step(int nCycle){
                         breakMap.remove(pc);
                     }
                     Value v = {regs->getPC()+1};
-                    regs->write(Register::PC, v);
+                    regs->write(v, Register::PC);
                     nCycle = nCycle < 0 ? -1 : nCycle -1;
                    continue;
                 }

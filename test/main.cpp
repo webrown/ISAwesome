@@ -1,7 +1,7 @@
 #include <QtTest/QtTest>
 #include "TestInstructionResolver.h"
 #include "TestAssembler.h"
-#include "TestComputer.h"
+#include "TestBaseline.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
  *     TestAssembler test2;
  *     QTest::qExec(&test2,argc, argv); */
 
-    TestComputer test3;
+    TestBaseline test3;
     QTest::qExec(&test3, argc,argv);
 
 

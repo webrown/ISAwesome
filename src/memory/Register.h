@@ -2,14 +2,11 @@
 #define REGISTER_H
 
 #include "QueryResult.h"
-#include "MemoryInterface.h"
 #include <QString>
 #include "../computer/Architecture.h"
 
-class Register : MemoryInterface{
+class Register{
     public:
-        using MemoryInterface::write;
-
         QVector<Value> _scas;
         QVector< QVector <Value> > _vecs;
         Value _flag; 
@@ -23,10 +20,19 @@ class Register : MemoryInterface{
         uint getLR();
 
         Value read(int i);
-        void write(int address, Value v);
+        void write(Value v, int address);
+        void write(int v, int address);
+        void write(unsigned int v, int address);
+        void write(float v, int address);
 
         QVector<Value> readVector(int address);
-        void writeVector(int address, QVector<Value> v);
+        void writeVector(QVector<Value> v, int address);
+        void writeVector(QVector<int> v, int address);
+        void writeVector(QVector<float> v, int address);
+
+        void write(QVector<Value> v, int address);
+        void write(QVector<int> v, int address);
+        void write(QVector<float> v, int address);
 
         Value readFlag();
         void writeFlag(Value v);
@@ -43,25 +49,13 @@ class Register : MemoryInterface{
         static const unsigned int specials = 20;
         static const unsigned int vectorIntegers = 24;
         static const unsigned int vectorFloats = 28;
-        static const unsigned int flags = 33;
 
         static const unsigned int LR = 20;
         static const unsigned int SP = 21;
         static const unsigned int BP = 22;
         static const unsigned int PC = 23;
-
-        //Deprecated
-        static constexpr double delay = 0;
-        double write(QVector<Value> *value, unsigned int address);
-        double write(Value value, unsigned int address);
-        QueryResult *read(unsigned int address, unsigned int length);
-        QueryResult *read(unsigned int address);
-        QVector<Value> _iScas;
-        QVector<Value> _fScas;
-        QVector<Value> _sRegs;
-        QVector<QVector<Value>> _iVecs;
-        QVector<QVector<Value>> _fVecs;
-        QVector<Value> _flagVec;
+        static bool isVectorIndex(int index);
+        static bool isFloatIndex(int index);
 };
 
 #endif

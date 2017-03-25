@@ -1,7 +1,7 @@
 //#include "PipelineGlobals.h"
 //#include "Pipeline.h"
 #include "../src/pipeline/Baseline.h"
-#include "../src/pipeline/spliceMachineCode.h"
+#include "../src/Utility.h"
 //#include "StageData.h"
 
 #include <string>
@@ -19,8 +19,8 @@ void checkEqual(int a, int b, string description) {
 }
 
 int main() {
-    cout << intToBinary(10) << endl;
-    cout << intToBinary(-1) << endl;
+    cout << intToBinary(10).toUtf8().constData() << endl;
+    cout << intToBinary(-1).toUtf8().constData() << endl;
     checkEqual(intToBinary(0).size(), 32, "Good intToBinary length");
 
     // Make sure distance between start and end increases length.

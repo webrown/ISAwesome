@@ -100,7 +100,8 @@ void MainMemory::restore(QString *state){
         }
         else {
             // Add to the last vector.
-            Value v = {nextVal};
+            Value v;
+            v.i = nextVal;
             _contents.last().push_back(v);
             remainingElements--;
         }
