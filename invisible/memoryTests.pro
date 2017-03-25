@@ -5,7 +5,7 @@ HEADERS += ../src/memory/MainMemory.h
 HEADERS += ../src/memory/MemoryInterface.h
 HEADERS += ../src/memory/QueryResult.h
 HEADERS += ../src/memory/Register.h
-HEADERS += ../src/memory/../architecture.h
+HEADERS += ../src/computer/architecture.h
 HEADERS += ../src/memory/serialization.h
 HEADERS += ../src/memory/MemoryStructure.h
 
@@ -17,3 +17,4 @@ SOURCES += ../src/memory/serialization.cpp
 SOURCES += ../src/memory/MemoryInterface.cpp
 SOURCES += ../src/memory/MemoryStructure.cpp
 SOURCES += memoryTests.cpp
+
