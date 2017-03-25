@@ -224,10 +224,10 @@ void CodeEditor::mark(QList<Problem> problems){
             currWord++;
         }
         cur.movePosition(QTextCursor::EndOfWord,QTextCursor::KeepAnchor);
-        if(problem.type == ERROR){
+        if(problem.type == Problem::ERROR){
             cur.mergeCharFormat(errorFormat);
         }
-        else if(problem.type == WARNING){
+        else if(problem.type == Problem::WARNING){
             cur.mergeCharFormat(warningFormat);
         }
     }

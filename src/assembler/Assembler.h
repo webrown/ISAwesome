@@ -120,4 +120,5 @@ void resultReady(Assembled* assembled, bool runAfter);
 
 };
 
+
 #endif

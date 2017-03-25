@@ -339,7 +339,7 @@ void MainWindow::displayProblems(QList<Problem>* problemLog){
         Problem problem = problemLog->at(i);
 
         problemMap.insert(problem.fileName, problem);
-        QString type = (problem.type == WARNING ? "Warning" :(problem.type == ERROR ? "Error" : "???"));
+        QString type = (problem.type == Problem::WARNING ? "Warning" :(problem.type == Problem::ERROR ? "Error" : "???"));
         _ui.problemTable->setItem(i,0,new QTableWidgetItem(type));
         _ui.problemTable->setItem(i,1,new QTableWidgetItem(problem.fileName));
         _ui.problemTable->setItem(i,2,new QTableWidgetItem(QString::number(problem.lineNumber+1)));

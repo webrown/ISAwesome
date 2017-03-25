@@ -480,7 +480,7 @@ void Assembler::processLine(Preprocessed prep){
     qDebug() << "processing a line" ;
     QString fileName = prep.fileName;
     int lineNumber = prep.lineNumber;
-    uint address = prep.address;
+    // uint address = prep.address;
     QStringList tokens = prep.tokens;
 
     uint flag = CRS.nameTable["AL"];
@@ -552,13 +552,13 @@ void Assembler::processLine(Preprocessed prep){
 
 
 void Assembler::throwError(QString fileName, int lineNumber, int wordNumber, QString cause){
-    Problem problem(ERROR, cause, fileName, lineNumber, wordNumber);
+    Problem problem(Problem::ERROR, cause, fileName, lineNumber, wordNumber);
     _problemLog->append(problem);
     _success=false;
 }
 
 void Assembler::throwWarning(QString fileName, int lineNumber, int wordNumber, QString cause){
-    Problem warning(WARNING, cause, fileName, lineNumber,wordNumber);
+    Problem warning(Problem::WARNING, cause, fileName, lineNumber,wordNumber);
     _problemLog->append(warning);
 }
 
