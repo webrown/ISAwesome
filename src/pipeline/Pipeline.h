@@ -1,12 +1,16 @@
+#ifndef PIPELINE_H
+#define PIPELINE_H
+#include "../memory/MemoryInterface.h"
+#include "../memory/Register.h"
 #include "StageData.h"
 
 class Pipeline {
     public:
-        Pipeline(MemoryInterface *dataMemory, MemoryInterface *instructionMemory, Registers *registers) {
+        Pipeline(MemoryInterface *dataMemory, MemoryInterface *instructionMemory, Register *registers);
 
         MemoryInterface *dataMemory;
         MemoryInterface *instructionMemory;
-        Registers *registers;
+        Register *registers;
 
         void cycle();
         void _writeBack();
@@ -15,17 +19,18 @@ class Pipeline {
         void _decode();
         void _instructionFetch();
 
-        StageData *_writeBackData;
-        StageData *_memoryData;
-        StageData *_executeData;
-        StageData *_decodeData;
-        StageData *_instructionFetchData;
+        StageData *_writeBackStageData;
+        StageData *_memoryStageData;
+        StageData *_executeStageData;
+        StageData *_decodeStageData;
+        StageData *_instructionFetchStageData;
 
-        bool _writeBackDone;
-        bool _memoryDone;
-        bool _executeDone;
-        bool _decodeDone;
-        bool _instructionFetchDone;
+        bool _writeBackStageDone;
+        bool _memoryStageDone;
+        bool _executeStageDone;
+        bool _decodeStageDone;
+        bool _instructionFetchStageDone;
 
-        double _instructionFetchWait;
-}
+        double _instructionFetchStageWait;
+};
+#endif

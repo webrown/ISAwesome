@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'newfiledialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.5.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -72,11 +72,11 @@ public:
 
     void retranslateUi(QDialog *NewFileDialog)
     {
-        NewFileDialog->setWindowTitle(QApplication::translate("NewFileDialog", "New File", Q_NULLPTR));
-        openButton->setText(QApplication::translate("NewFileDialog", "Open", Q_NULLPTR));
-        label->setText(QApplication::translate("NewFileDialog", "Work Directory:", Q_NULLPTR));
-        label_2->setText(QApplication::translate("NewFileDialog", "File Name:", Q_NULLPTR));
-        randomButton->setText(QApplication::translate("NewFileDialog", "Random", Q_NULLPTR));
+        NewFileDialog->setWindowTitle(QApplication::translate("NewFileDialog", "New File", 0));
+        openButton->setText(QApplication::translate("NewFileDialog", "Open", 0));
+        label->setText(QApplication::translate("NewFileDialog", "Work Directory:", 0));
+        label_2->setText(QApplication::translate("NewFileDialog", "File Name:", 0));
+        randomButton->setText(QApplication::translate("NewFileDialog", "Random", 0));
     } // retranslateUi
 
 };
