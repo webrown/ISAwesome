@@ -1,6 +1,10 @@
 #include "Baseline.h"
 #include "../Utility.h"
 #include "PipelineGlobals.h"
+#include "../memory/Flag.h"
+
+using namespace Flag;
+
 Baseline::Baseline(Register *registers, MemoryStructure *memory){
     registers = registers;
     memory = memory;
@@ -86,7 +90,7 @@ Status Baseline::run(void){
     
      // What is the flag?
      unsigned int flagCode = spliceMachineCode(nextInstruction, 28, 31);
-     Conditional flag;
+     FlagType flag;
      if(flagCode ==  0) flag = EQ;
      if(flagCode ==  1) flag = NE;
      if(flagCode ==  2) flag = CS;
