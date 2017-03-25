@@ -10,6 +10,7 @@
 #include <QMap>
 #include <QDir>
 #include <QFile>
+#include <QTextStream>
 #include "Problem.h"
 #include "../computer/Architecture.h"
 #include "InstructionResolver.h"
@@ -83,6 +84,10 @@ class Assembler: public QObject{
     QMap<QString, QStringList>* _macroTable = NULL;
 
     //Log purpose
+    QFile* _logFile;
+    QTextStream* _log;
+
+    //Problem collection
     QList<Problem>* _problemLog;
 
     //Data processing related
@@ -101,6 +106,7 @@ void resultReady(Assembled* assembled, bool runAfter);
   private:
 
     //Initialize variables
+    void setUpLogging();
     void init();
     void clear();
     void throwWarning(QString fileName, int lineNumber, int wordNumber, QString cause);
@@ -119,5 +125,6 @@ void resultReady(Assembled* assembled, bool runAfter);
     void writeHeader();
 
 };
+
 
 #endif

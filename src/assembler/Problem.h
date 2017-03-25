@@ -3,13 +3,14 @@
 #include <QString>
 #include <QDebug>
 
-enum ProblemType{
-    WARNING, ERROR
-};
 /* Contain error generated during assembly
 */
 class Problem{
+
     public:
+        enum ProblemType{
+            WARNING, ERROR
+        };
         ProblemType type;
         int lineNumber;
         int wordNumber;

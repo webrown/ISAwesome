@@ -11,6 +11,14 @@ Assembler::~Assembler(){
     clear();
 }
 
+void Assembler::setUpLogging(){
+    qDebug() << "ASM: set up logging file";
+    _logFile = new QFile(QTime::currentTime().toString() + ".log");
+    //TODO protection?
+    _logFile->open(QIODevice::WriteOnly | QIODevice::Text);
+    _log = new QTextStream(_logFile);
+}
+
 void Assembler::init(){
     qDebug() << "ASM: Initiating assembler" ;
     _success = true;
@@ -48,6 +56,16 @@ void Assembler::clear(){
         delete _preprocessedQueue;
         _preprocessedQueue = NULL;
     }
+    if(_logFile != NULL){
+        delete _logFile;
+        _logFile = NULL;
+    }
+    if(_log != NULL){
+        delete _log;
+        _log = NULL;
+    }
+
+    
 
     _problemLog = NULL;
     _instructions = NULL;
@@ -60,13 +78,19 @@ void Assembler::assemble(QString fileName, AssemblerConfiguration config, bool r
     QTime timer;
     timer.start();
 
-    qDebug() << "----------Start Assembly---------------" ;
+    //set up logging file
+    setUpLogging();
+
+    (*_log)<<("----------Start Assembly---------------\n") ;
+
+    //Save config
+    _config = config;
 
     //initialize assembler
-    _config = config;
     init();
 
-    qDebug() << "----------Set Environment--------------";
+
+    (*_log)<<("----------Set Environment--------------\n");
     if(_config.useDefaultMacro == true){
         processFile("DefaultMacro");
     }
@@ -80,17 +104,18 @@ void Assembler::assemble(QString fileName, AssemblerConfiguration config, bool r
         processFile("GlobalAlias");
     }
 
-    qDebug() << "----------Preprocess-------------------";
+    (*_log) << "----------Preprocess-------------------\n";
 
     processFile(fileName);
 
-    qDebug() << "----------Process----------------------";
+    (*_log) << "----------Process----------------------\n";
 
     processLines();
 
-    qDebug() << "----------Assembly Result---------------" ;
+    (*_log) << "----------Assembly Result--------------\n" ;
 
     //Consider wall option
+    //TODO: fix usewall lol
     _success = (config.useWall == false)| (_problemLog->isEmpty() == true);
     Assembled* assembled = new Assembled();
     assembled->fileName = fileName;
@@ -480,7 +505,7 @@ void Assembler::processLine(Preprocessed prep){
     qDebug() << "processing a line" ;
     QString fileName = prep.fileName;
     int lineNumber = prep.lineNumber;
-    uint address = prep.address;
+    // uint address = prep.address;
     QStringList tokens = prep.tokens;
 
     uint flag = CRS.nameTable["AL"];
@@ -552,13 +577,13 @@ void Assembler::processLine(Preprocessed prep){
 
 
 void Assembler::throwError(QString fileName, int lineNumber, int wordNumber, QString cause){
-    Problem problem(ERROR, cause, fileName, lineNumber, wordNumber);
+    Problem problem(Problem::ERROR, cause, fileName, lineNumber, wordNumber);
     _problemLog->append(problem);
     _success=false;
 }
 
 void Assembler::throwWarning(QString fileName, int lineNumber, int wordNumber, QString cause){
-    Problem warning(WARNING, cause, fileName, lineNumber,wordNumber);
+    Problem warning(Problem::WARNING, cause, fileName, lineNumber,wordNumber);
     _problemLog->append(warning);
 }
 

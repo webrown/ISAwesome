@@ -339,7 +339,7 @@ void MainWindow::displayProblems(QList<Problem>* problemLog){
         Problem problem = problemLog->at(i);
 
         problemMap.insert(problem.fileName, problem);
-        QString type = (problem.type == WARNING ? "Warning" :(problem.type == ERROR ? "Error" : "???"));
+        QString type = (problem.type == Problem::WARNING ? "Warning" :(problem.type == Problem::ERROR ? "Error" : "???"));
         _ui.problemTable->setItem(i,0,new QTableWidgetItem(type));
         _ui.problemTable->setItem(i,1,new QTableWidgetItem(problem.fileName));
         _ui.problemTable->setItem(i,2,new QTableWidgetItem(QString::number(problem.lineNumber+1)));
@@ -490,27 +490,27 @@ void MainWindow::handleCustomContextMenuForTracker(QPoint point){
     }
 
     QMenu menu;
-    QAction *addBreakAction = new QAction("Break once");
+    QAction *addBreakAction = new QAction(tr("Break once"));
     addBreakAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::BREAK);
     connect(addBreakAction,SIGNAL(triggered()), this, SLOT(handleAddBreak()));
     menu.addAction(addBreakAction);
 
-    QAction *addBreakAllAction = new QAction("Break all");
+    QAction *addBreakAllAction = new QAction(tr("Break all"));
     addBreakAllAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::BREAK_ALL);
     connect(addBreakAllAction,SIGNAL(triggered()), this, SLOT(handleAddBreakAll()));
     menu.addAction(addBreakAllAction);
 
-    QAction *addSkipAction = new QAction("Skip");
+    QAction *addSkipAction = new QAction(tr("Skip"));
     addSkipAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP);
     connect(addSkipAction,SIGNAL(triggered()), this, SLOT(handleAddSkip()));
     menu.addAction(addSkipAction);
 
-    QAction *addSkipAllAction = new QAction("Skip all");
+    QAction *addSkipAllAction = new QAction(tr("Skip all"));
     addSkipAllAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP_ALL);
     connect(addSkipAllAction,SIGNAL(triggered()), this, SLOT(handleAddSkipAll()));
     menu.addAction(addSkipAllAction);
 
-    QAction *removeBreakAction = new QAction("No break");
+    QAction *removeBreakAction = new QAction(tr("No break"));
     removeBreakAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::NONE);
     connect(removeBreakAction,SIGNAL(triggered()), this, SLOT(handleRemoveBreak()));
     menu.addAction(removeBreakAction);
