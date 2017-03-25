@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'newcachedialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.5.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -130,19 +130,19 @@ public:
 
     void retranslateUi(QDialog *NewCacheDialog)
     {
-        NewCacheDialog->setWindowTitle(QApplication::translate("NewCacheDialog", "New Cache", Q_NULLPTR));
-        label_2->setText(QApplication::translate("NewCacheDialog", "Index Bits:", Q_NULLPTR));
-        label_7->setText(QApplication::translate("NewCacheDialog", "After:", Q_NULLPTR));
+        NewCacheDialog->setWindowTitle(QApplication::translate("NewCacheDialog", "New Cache", 0));
+        label_2->setText(QApplication::translate("NewCacheDialog", "Index Bits:", 0));
+        label_7->setText(QApplication::translate("NewCacheDialog", "After:", 0));
         typeBox->clear();
         typeBox->insertItems(0, QStringList()
-         << QApplication::translate("NewCacheDialog", "Data & Instruction", Q_NULLPTR)
-         << QApplication::translate("NewCacheDialog", "Data Only", Q_NULLPTR)
-         << QApplication::translate("NewCacheDialog", "Instruction Only", Q_NULLPTR)
+         << QApplication::translate("NewCacheDialog", "Data & Instruction", 0)
+         << QApplication::translate("NewCacheDialog", "Data Only", 0)
+         << QApplication::translate("NewCacheDialog", "Instruction Only", 0)
         );
-        label_4->setText(QApplication::translate("NewCacheDialog", "Way Bits:", Q_NULLPTR));
-        label_8->setText(QApplication::translate("NewCacheDialog", "Type:", Q_NULLPTR));
-        label_5->setText(QApplication::translate("NewCacheDialog", "Delay Bits:", Q_NULLPTR));
-        label_3->setText(QApplication::translate("NewCacheDialog", "Offset Bits:", Q_NULLPTR));
+        label_4->setText(QApplication::translate("NewCacheDialog", "Way Bits:", 0));
+        label_8->setText(QApplication::translate("NewCacheDialog", "Type:", 0));
+        label_5->setText(QApplication::translate("NewCacheDialog", "Delay Bits:", 0));
+        label_3->setText(QApplication::translate("NewCacheDialog", "Offset Bits:", 0));
     } // retranslateUi
 
 };

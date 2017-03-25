@@ -5,6 +5,8 @@
 #include "../src/memory/Register.h"
 #include "../src/memory/MemoryStructure.h"
 #include "../src/pipeline/Baseline.h"
+#include "../src/memory/Flag.h"
+#include "../src/Utility.h"
 
 
 class TestBaseline: public QObject
@@ -23,6 +25,7 @@ class TestBaseline: public QObject
         void test_multiple_add_same_reg();
         void test_multiple_add_float_reg();
         void test_add_PC();
+        void test_snippet();
         void cleanupTestCase();
 };
 #endif

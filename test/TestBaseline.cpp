@@ -114,3 +114,99 @@ void TestBaseline::cleanupTestCase(){
     delete mem;
     delete base;
 }
+
+void TestBaseline::test_snippet(){
+    QVector<uint> instructions;
+    instructions.append(3774873857u); //CPY 8 R1 ; Test immediate-scalar int
+    instructions.append(3774873925u); //CPY 10 R5
+    instructions.append(3785359521u); //STO R5 R1
+    instructions.append(3827302433u); //ADD R1 R1 ; 16
+    instructions.append(3774873957u); //CPY 11 R5
+    instructions.append(3785359521u); //STO R5 R1
+    instructions.append(3774874594u); //CPY 31 R2
+    instructions.append(3776970831u); //CPY R2 R15 ; Move to floating register coldly
+    instructions.append(3961520175u); //AND R1 R15 ;AND noop
+    instructions.append(3827302434u); //ADD R1 R2 ; AND int scalar-scalar
+    instructions.append(3774873925u); //CPY 10 R5
+    instructions.append(3781165240u); //LOD R5 R24
+    instructions.append(3781165241u); //LOD R5 R25
+    instructions.append(3827303193u); //ADD R24 R25 ; ADD dot
+    instructions.append(3825205251u); //ADD R24 R3 ; ADD reduce (like SOE command)
+    instructions.append(3774873658u); //CPY 1 R26 ; CPY broadcast immediate
+    instructions.append(3810526041u); //ARR R26 R25 ; Grab element 1 everywhere
+    instructions.append(3772777241u); //CMP R24 R25
+    instructions.append(285212730u); //NE CMP 1 R26 ; Standard flag extraction
+    instructions.append(3770679301u);//CMP 0 R5
+    instructions.append(42u); //EQ B 42 ; Was this the syntax we settled on for conditions?
+    
+    
+    load(instructions);
+
+    base->init();
+    base->run();
+    QVERIFY(regs->read(1).asUInt == 8u);
+    base->run();
+    QVERIFY(regs->read(10).asUInt == 5u);
+    base->run();
+    QVERIFY(mem->_mainMemory->read(10)->at(0).asUInt == 8u);
+    base->run();
+    QVERIFY(regs->read(1).asUInt == 16u);
+    base->run();
+    QVERIFY(regs->read(5).asUInt == 11u);
+    base->run();
+    QVERIFY(regs->read(2).asUInt == 31u);    
+    base->run();
+    QVERIFY(regs->read(15).asUInt == 31u);    
+    base->run();
+    QVERIFY(regs->read(15).asUInt == 8u);    
+     base->run();
+    QVERIFY(regs->read(2).asUInt == 47u);    
+     base->run();
+    QVERIFY(regs->read(5).asUInt == 10u);    
+     base->run();
+    QVector<Value> v = regs->readVector(24);
+     for(int i =0; i < 64; i++){
+        QVERIFY(v[i].asUInt == 8u);     
+     }
+     base->run();
+     v = regs->readVector(24);
+     for(int i =0; i < 64; i++){
+        QVERIFY(v[i].asUInt == 8u);     
+     }
+     base->run();
+     v =  regs->readVector(25);
+     for(int i =0; i < 64; i++){
+         QVERIFY(v[i].asUInt == 16u);     
+     }
+     base->run();
+    QVERIFY(regs->read(3).asUInt == 512u);     
+
+     base->run();
+
+        v =  regs->readVector(26);
+     for(int i =0; i < 64; i++){
+         QVERIFY(v[i].asUInt == 1u);     
+     } 
+     base->run();
+        v =  regs->readVector(25);
+     for(int i =0; i < 64; i++){
+         QVERIFY(v[i].asUInt == 1u);     
+     } 
+     base->run();
+
+     v = regs->_flags;
+     QBitArray b = Flag::has(v, Flag::NE);
+     for(int i =0; i < 64; i++){
+         QVERIFY(b[i]);     
+     }
+     base->run();
+        v =  regs->readVector(26);
+     for(int i =0; i < 64; i++){
+         QVERIFY(v[i].asUInt == 1u);     
+     } 
+     base->run();
+    QVERIFY(Flag::has(regs->_flag, Flag::NE));     
+    base->run();
+    QVERIFY(regs->getPC() == 42u);
+    base->stop(); 
+}

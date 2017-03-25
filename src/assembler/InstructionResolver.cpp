@@ -213,6 +213,7 @@ ParseResult parseCPY(QStringList tokens){
     else if(VV(tokens, &result)) ;
     else if(RV(tokens, &result)) ; 
     else if(IR(tokens, &result)) ;
+    else if(IV(tokens, &result)) ;
 
     else{
         result.error = "Invalid argument";

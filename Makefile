@@ -944,6 +944,7 @@ build/moc_TestBaseline.cpp: src/memory/Register.h \
 		src/pipeline/Baseline.h \
 		src/computer/Status.h \
 		src/pipeline/Banana.h \
+		src/memory/Flag.h \
 		test/TestBaseline.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -1234,7 +1235,8 @@ build/TestBaseline.o: test/TestBaseline.cpp test/TestBaseline.h \
 		src/memory/Cache.h \
 		src/pipeline/Baseline.h \
 		src/computer/Status.h \
-		src/pipeline/Banana.h
+		src/pipeline/Banana.h \
+		src/memory/Flag.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestBaseline.o test/TestBaseline.cpp
 
 build/TestInstructionResolver.o: test/TestInstructionResolver.cpp test/TestInstructionResolver.h \

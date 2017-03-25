@@ -1,4 +1,7 @@
+#include "PipelineGlobals.h"
+#include "../memory/Value.h"
 class StageData{
-    // Instruction instruction;
-    // void takeInstructionCode(int instructionCode);
+    public:
+        Instruction instruction;
+        void takeInstructionCode(Value instructionCode);
 };
