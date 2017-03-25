@@ -13,6 +13,9 @@ HEADERS += ../src/pipeline/ArithmeticOperation.h
 HEADERS += ../src/pipeline/CopyOperation.h
 #HEADERS += StageData.h
 HEADERS += ../src/memory/Flag.h
+HEADERS += ../src/pipeline/StoreOperation.h
+HEADERS += ../src/pipeline/LoadOperation.h
+HEADERS += ../src/pipeline/MemoryOperation.h
 
 #SOURCES += Pipeline.cpp
 #SOURCES += StageData.cpp
@@ -32,4 +35,7 @@ SOURCES += ../src/memory/MainMemory.cpp
 SOURCES += ../src/memory/Cache.cpp
 SOURCES += ../src/memory/serialization.cpp
 SOURCES += ../src/memory/Flag.cpp
+SOURCES += ../src/pipeline/StoreOperation.cpp
+SOURCES += ../src/pipeline/LoadOperation.cpp
+SOURCES += ../src/pipeline/MemoryOperation.cpp
 
