@@ -33,7 +33,9 @@
 #include "../assembler/ProgramManagerX.h"
 #include "HexSpinBox.h"
 #include "../computer/BreakPoint.h"
+#include "CacheModel.h"
 Q_DECLARE_METATYPE(ThreadMessage);
+Q_DECLARE_METATYPE(CacheModel);
 
 class MainWindow : public QMainWindow
 {
@@ -45,7 +47,10 @@ class MainWindow : public QMainWindow
         Assembler* assembler;
         Disassembler* disassembler;
         QSettings settings;
+
         QQueue<ThreadMessage> messageQueue;
+
+        QList<CacheModel> cacheModels;
 
         void updateNavigation();
 

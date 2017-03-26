@@ -1065,6 +1065,7 @@ build/moc_MainWindow.cpp: src/gui/MemoryView.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/MainWindow.h \
@@ -1093,6 +1094,7 @@ build/moc_MemoryView.cpp: src/memory/MainMemory.h \
 
 build/moc_MiscDialog.cpp: src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/memory/Cache.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
@@ -1129,6 +1131,7 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
@@ -1227,6 +1230,7 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
@@ -1369,6 +1373,7 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
@@ -1406,6 +1411,7 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
@@ -1420,6 +1426,7 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 build/MiscDialog.o: src/gui/MiscDialog.cpp src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/memory/Cache.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
@@ -1454,6 +1461,7 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
 		src/assembler/InstructionResolver.h \
@@ -1489,6 +1497,7 @@ build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
 		src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \

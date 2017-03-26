@@ -14,6 +14,7 @@ int main( int argc, char **argv )
     qDebug() << "Launch Application";
     QApplication app( argc, argv );
 
+
     //Why not?
     QPixmap pixmap("pisa.png");
     QSplashScreen splash(pixmap);

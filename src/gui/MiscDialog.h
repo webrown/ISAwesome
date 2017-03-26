@@ -10,27 +10,20 @@
 #include <QDebug>
 #include "ui_newcachedialog.h"
 #include "ui_newfiledialog.h"
+#include "CacheModel.h"
 #include "../memory/Cache.h"
-
-class CacheInfo{
-    public:
-    Cache *next = NULL, *prev = NULL;
-    int indexBits, logDataWordCount, logAssociativity;
-    double delay;
-};
 
 class NewCacheDialog : public QDialog
 {
     Q_OBJECT
     public:
-        NewCacheDialog(Cache* topCache, QWidget *parent = 0);
+        QList<CacheModel>* cacheModels;
+        NewCacheDialog(QList<CacheModel>* cacheModels, QWidget *parent = 0);
         ~NewCacheDialog();
-        CacheInfo getCacheInfo();
-        QList<Cache *> list;
+        CacheModel getModel();
 
     public slots:
-        void update(QSpinBox* box);
-        void update(QComboBox* box); 
+        void accept();
 
     private:
         Ui::NewCacheDialog _ui;

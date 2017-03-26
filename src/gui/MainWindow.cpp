@@ -2,6 +2,7 @@
 
 MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535","PISA")
 {
+    qRegisterMetaType<CacheModel>();
     qRegisterMetaType<ThreadMessage>();
     qDebug() << "GUI: MainWindow starts...";
     _ui.setupUi( this );
@@ -199,33 +200,13 @@ void MainWindow::handleAboutPISA()
 
 void MainWindow::handleAddCache(){ 
     qDebug() << "GUI: Add Cache button is clicked";
-/*     NewCacheDialog dialog(computer->topCache, this); */
-    // int result = dialog.exec();
-    // if(result == QDialog::Accepted){
-    //     printlnConsole("Cache added");
-    //     CacheInfo info = dialog.getCacheInfo();
-    //     Cache* cache = new Cache(info.indexBits, info.logDataWordCount, info.logAssociativity,info.delay, info.next);
-    //     cache->prevCache = info.prev;
-    //     int _index = 1;
-    //     if(info.next != NULL){
-    //             info.next->prevCache = cache;
-    //     }
-    //     if(info.prev != NULL){
-    //         _index = _ui.tabWidget_memory->indexOf(info.prev->view) + 1;
-    //         info.prev->nextCache = cache;
-    //     }
-    //     else{
-    //         computer->topCache = cache;
-    //     }
-    //     _ui.tabWidget_memory->insertTab(_index,new CacheView(cache), "Cache");
-    //
-    //     int index = 1;
-    //     //reset name
-    //     for(Cache* curr = computer->topCache; curr != NULL; curr = curr->nextCache){
-    //         _ui.tabWidget_memory->setTabText(_ui.tabWidget_memory->indexOf(curr->view),(new QString("Cache %1(BOTH)"))->arg(index++));
-    //     }
-    // }
-/*  */
+    NewCacheDialog dialog(&cacheModels, this);
+    int result = dialog.exec();
+    if(result == QDialog::Accepted){
+        printlnConsole("Cache added");
+        CacheModel info = dialog.getModel();
+   }
+
 }
 
 void MainWindow::handleRemoveCache(){

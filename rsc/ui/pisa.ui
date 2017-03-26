@@ -311,7 +311,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_memory">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="RegisterView" name="tab_register">
          <attribute name="title">
@@ -433,6 +433,103 @@
             <column>
              <property name="text">
               <string>Binary</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Cache</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <widget class="QWidget" name="widget_4" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Type:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox_2"/>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Page:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox_3"/>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_2"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_2">
+               <property name="text">
+                <string>Search</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tableWidget_7">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>100</number>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Tag</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Index</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Dirty</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>LRU</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Valid</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Offset</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Value</string>
              </property>
             </column>
            </widget>

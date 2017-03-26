@@ -135,7 +135,7 @@ public:
         label_7->setText(QApplication::translate("NewCacheDialog", "After:", Q_NULLPTR));
         typeBox->clear();
         typeBox->insertItems(0, QStringList()
-         << QApplication::translate("NewCacheDialog", "Data & Instruction", Q_NULLPTR)
+         << QApplication::translate("NewCacheDialog", "Both", Q_NULLPTR)
          << QApplication::translate("NewCacheDialog", "Data Only", Q_NULLPTR)
          << QApplication::translate("NewCacheDialog", "Instruction Only", Q_NULLPTR)
         );
