@@ -73,6 +73,7 @@ class Assembler: public QObject{
 
     //Fields
     bool _success;
+    bool _hasWarning;
     uint mainAddress = INSTRUCTION_SIZE;
 
     const InstructionResolver IRS;
@@ -106,7 +107,7 @@ void resultReady(Assembled* assembled, bool runAfter);
   private:
 
     //Initialize variables
-    void setUpLogging();
+    void setUpLogging(QString fileName);
     void init();
     void clear();
     void throwWarning(QString fileName, int lineNumber, int wordNumber, QString cause);

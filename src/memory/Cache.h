@@ -19,12 +19,10 @@ class Cache : public MemoryInterface{
 
     using MemoryInterface::write;
     CacheType type;
-    CacheView* view = NULL;
     int indexBits;
     int logDataWordCount;
     int logAssociativity;
     double delay;
-    MemoryInterface *prevMemory = NULL;
     MemoryInterface *nextMemory = NULL;
     QVector< QVector<int> * > *tags;
     QVector< QVector< QVector<Value> * > * > *contents;
@@ -35,6 +33,7 @@ class Cache : public MemoryInterface{
 
     Cache(int indexBits, int logDataWordCount, int logAssociativity, double delay, Cache *nextMemory);
     virtual ~Cache();
+    void init();
 
     QueryResult *read(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address);

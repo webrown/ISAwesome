@@ -2,36 +2,31 @@
 #include <QDebug>
 
 Computer::Computer(){
-    qDebug() << "Creating computer";
+    qDebug() << "COM: Creating computer";
     regs = new Register();
     mems = new MemoryStructure(MAIN_MEMORY_DELAY);
     exec = new Baseline(regs, mems);
     currState = DEAD;
-    qDebug() << "Computer created";
+    qDebug() << "COM: Computer created";
 }
 Computer::~Computer(){
-    qDebug() << "Removing Computer";
+    qDebug() << "COM: Removing Computer";
     delete regs;
     delete mems;
     delete exec;
-    qDebug() << "Computer is removed!";
+    qDebug() << "COM: Computer is removed!";
 }
 
-void Computer::init(){
-    qDebug() << "Computer: load";
-    if(currState != LOADED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Load program first"}));
-    }
-    currState = RUNNING;
-    exec->init();
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-}
-
-void Computer::load(QList<QVariant> instructions){
-    qDebug() <<"Computer: load";
+void Computer::init(QList<QVariant> instructions){
+    qDebug() <<"COM: init";
     if(currState != DEAD){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Stop current program first"}));
+        return;
     }
+    exec->init();
+    regs->init();
+    mems->init();
+
     QVector<Value>* vec = new QVector<Value>();
     for(int i =0 ; i < instructions.size(); i++){
         uint instruction = instructions[i].toUInt(); 
@@ -39,13 +34,15 @@ void Computer::load(QList<QVariant> instructions){
         vec->append(v);
     }
     mems->_mainMemory->write(vec, 0);
-    currState = LOADED;
 
+    currState = RUNNING;
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    return;
 }
 
-Status Computer::step(int nCycle){
-    qDebug() << "Computer: step";
+
+void Computer::step(int nCycle){
+    qDebug() << "COM: step";
     if(currState != RUNNING){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
     }
@@ -75,41 +72,45 @@ Status Computer::step(int nCycle){
         }
         Status status = exec->run();
         if(status != OKAY){
-            return status;
+            qDebug() << "Something is wrong; I feel like I have to do something, but I don't wnat to do anything.";
+            return;
         }
         nCycle = nCycle < 0 ? -1 : nCycle -1;
     }
+    return;
 }
 
 void Computer::stop(){
-    qDebug() << "Computer: stop";
+    qDebug() << "COM: stop";
     if(currState != RUNNING){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
+        return;
     }
     currState = DEAD;
     exec->stop();
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    return;
 }
 void Computer::pause(){
-    qDebug() << "Computer: pause";
+    qDebug() << "COM: pause";
     //Do nothing
 }
 
 void Computer::addBreakPoint(uint address, BreakPoint::BreakPoint bp){
-    qDebug() << "Computer: add break point";
+    qDebug() << "COM: add break point";
     breakMap[address] = bp;
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
 
 }
 
 void Computer::removeBreakPoint(uint address){
-    qDebug() << "Computer: remove break point";
+    qDebug() << "COM: remove break point";
     breakMap.remove(address);
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
 }
 
 void Computer::handleMemoryView(uint address){
-    qDebug() <<"Computer: make memory view";
+    qDebug() <<"COM: make memory view";
     QList<QVariant> ret;
     //Put requested address in first index to display them
     ret.append(address);
@@ -130,10 +131,11 @@ void Computer::handleMemoryView(uint address){
         }
     }
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_MEMORY, ret));
+    return;
 }
 
 void Computer::handleRegisterView(QString line){
-    qDebug() << "Computer: make register view";
+    qDebug() << "COM: make register view";
     QList<QVariant> ret;
     ret.append(line);
     if(line == "General Registers"){
@@ -167,42 +169,54 @@ void Computer::handleRegisterView(QString line){
         }
     }
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_REGISTER, ret));
+    return;
 }
 void Computer::procMessage(ThreadMessage message){
     ThreadMessage::Type type = message.type;
-    qDebug() << "RECV FROM GUI" << type;
 
     QVariant info = message.message;
     switch(type){
-        case ThreadMessage::R_LOAD:
-            load(info.toList());
-            break;
         case ThreadMessage::R_INIT:
-            init();
+            qDebug() << "COM: RECV FROM GUI: R_INIT";
+            init(info.toList());
             break;
         case ThreadMessage::R_STEP:
+            qDebug() << "COM: RECV FROM GUI: R_STEP";
+
             step(info.toInt());
             break;
         case ThreadMessage::R_STOP:
+            qDebug() << "COM: RECV FROM GUI: R_STOP";
+
             stop();
             break;
         case ThreadMessage::R_PAUSE:
+            qDebug() << "COM: RECV FROM GUI: R_PAUSE";
+
             pause();
             break;
         case ThreadMessage::R_ADDBREAK:
+            qDebug() << "COM: RECV FROM GUI: R_ADDBREAK";
+
             addBreakPoint(info.toList()[0].toUInt(), static_cast<BreakPoint::BreakPoint> (info.toList()[1].toUInt()));
             break;
         case ThreadMessage::R_REMOVEBREAK:
+            qDebug() << "COM: RECV FROM GUI: R_REMOVEBREAK";
+
             removeBreakPoint(info.toUInt());
             break;
         case ThreadMessage::R_VIEW_REGISTER:
+            qDebug() << "COM: RECV FROM GUI: R_VIEW_REGISTER";
+
             handleRegisterView(info.toString());
             break;
         case ThreadMessage::R_VIEW_MEMORY:
+            qDebug() << "COM: RECV FROM GUI: R_VIEW_MEMORY";
+
             handleMemoryView(info.toUInt());
             break;
-        defaut:
-            qDebug() <<"Invalid message";
+        default:
+            qDebug() <<"COM: Invalid message";
             break;
     }
 

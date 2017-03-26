@@ -16,9 +16,6 @@ class ThreadMessage{
         // QVaraint =None
         A_OKAY,
 
-        // Load instruction 
-        // QVariant=*QVector<Uint> instructions
-        R_LOAD, 
         R_INIT,  
         R_STOP, 
         R_STEP, 

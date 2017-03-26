@@ -74,6 +74,29 @@ Cache::~Cache() {
   delete valid;
 }
 
+void Cache::init(){
+  size_t maxIndex = 1 << indexBits;
+  size_t ways = 1 << logAssociativity;
+  size_t dataWordCount = 1 << logDataWordCount;
+  for(size_t index = 0; index < maxIndex; index++) {
+      for(size_t index2 = 0; index2 < ways; index2++){
+          // reset tag bits.
+          tags->at(index2)->fill(0);
+          // Add content cells.
+          QVector< QVector<Value> * > *_contents = contents->at(index2);
+          for(size_t word = 0;word < dataWordCount; word++) {
+              Value v = {0};
+              _contents->at(word)->fill(v);
+          }
+          // reset LRU bit
+          LRU->at(index2)->fill(0);
+          // reset dirty bit
+          dirty->at(index2)->fill(0);
+          // reset valid bit
+          valid->at(index2)->fill(0);
+      }
+     }
+}
 unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned int offset){
   // Concatenate tag, index, and offset into an address.
   return (tag << (indexBits + logDataWordCount)) | (index << logDataWordCount) | offset;

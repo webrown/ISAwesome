@@ -23,10 +23,6 @@ class Problem{
             this->lineNumber = lineNumber;
             this->wordNumber = wordNumber;
             this->cause = cause;
-            qDebug() << (type==WARNING ? "Warning" : (type == ERROR ? "Error" : "???"));
-            qDebug() << "File Name: " << fileName;
-            qDebug() << "Line Number: " << lineNumber << " \tWord Number: " << wordNumber;
-            qDebug() << "cause:" << cause;
         }
 
 };

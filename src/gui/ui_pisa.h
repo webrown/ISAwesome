@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'pisa.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -638,140 +638,140 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "PISA", 0));
-        actionSave_As->setText(QApplication::translate("MainWindow", "Sa&ve As", 0));
-        actionPipeline->setText(QApplication::translate("MainWindow", "&Pipeline", 0));
-        actionRun->setText(QApplication::translate("MainWindow", "&Run", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "PISA", Q_NULLPTR));
+        actionSave_As->setText(QApplication::translate("MainWindow", "Sa&ve As", Q_NULLPTR));
+        actionPipeline->setText(QApplication::translate("MainWindow", "&Pipeline", Q_NULLPTR));
+        actionRun->setText(QApplication::translate("MainWindow", "&Run", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionRun->setToolTip(QApplication::translate("MainWindow", "Run Program", 0));
+        actionRun->setToolTip(QApplication::translate("MainWindow", "Run Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionAbout_PISA->setText(QApplication::translate("MainWindow", "&About PISA", 0));
-        actionPISA_Help->setText(QApplication::translate("MainWindow", "&PISA Help", 0));
-        actionnew->setText(QApplication::translate("MainWindow", "&New", 0));
+        actionAbout_PISA->setText(QApplication::translate("MainWindow", "&About PISA", Q_NULLPTR));
+        actionPISA_Help->setText(QApplication::translate("MainWindow", "&PISA Help", Q_NULLPTR));
+        actionnew->setText(QApplication::translate("MainWindow", "&New", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionnew->setToolTip(QApplication::translate("MainWindow", "Create New File", 0));
+        actionnew->setToolTip(QApplication::translate("MainWindow", "Create New File", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionnew->setShortcut(QApplication::translate("MainWindow", "Ctrl+N", 0));
-        actionopen->setText(QApplication::translate("MainWindow", "&open", 0));
+        actionnew->setShortcut(QApplication::translate("MainWindow", "Ctrl+N", Q_NULLPTR));
+        actionopen->setText(QApplication::translate("MainWindow", "&open", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionopen->setToolTip(QApplication::translate("MainWindow", "Open File", 0));
+        actionopen->setToolTip(QApplication::translate("MainWindow", "Open File", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionopen->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+N", 0));
-        actionsave->setText(QApplication::translate("MainWindow", "&Save", 0));
+        actionopen->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+N", Q_NULLPTR));
+        actionsave->setText(QApplication::translate("MainWindow", "&Save", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionsave->setToolTip(QApplication::translate("MainWindow", "Save File", 0));
+        actionsave->setToolTip(QApplication::translate("MainWindow", "Save File", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionsave->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", 0));
-        actionstop->setText(QApplication::translate("MainWindow", "&stop", 0));
+        actionsave->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", Q_NULLPTR));
+        actionstop->setText(QApplication::translate("MainWindow", "&stop", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionstop->setToolTip(QApplication::translate("MainWindow", "Stop Program", 0));
+        actionstop->setToolTip(QApplication::translate("MainWindow", "Stop Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionpause->setText(QApplication::translate("MainWindow", "&pause", 0));
+        actionpause->setText(QApplication::translate("MainWindow", "&pause", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionpause->setToolTip(QApplication::translate("MainWindow", "Pause Program", 0));
+        actionpause->setToolTip(QApplication::translate("MainWindow", "Pause Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionforward->setText(QApplication::translate("MainWindow", "forward", 0));
+        actionforward->setText(QApplication::translate("MainWindow", "forward", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionforward->setToolTip(QApplication::translate("MainWindow", "Forward Program", 0));
+        actionforward->setToolTip(QApplication::translate("MainWindow", "Forward Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionrewind->setText(QApplication::translate("MainWindow", "rewind", 0));
+        actionrewind->setText(QApplication::translate("MainWindow", "rewind", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionrewind->setToolTip(QApplication::translate("MainWindow", "Rewind Program", 0));
+        actionrewind->setToolTip(QApplication::translate("MainWindow", "Rewind Program", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionbuild->setText(QApplication::translate("MainWindow", "&build", 0));
+        actionbuild->setText(QApplication::translate("MainWindow", "&build", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionbuild->setToolTip(QApplication::translate("MainWindow", "Build Current File", 0));
+        actionbuild->setToolTip(QApplication::translate("MainWindow", "Build Current File", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionbuild_all->setText(QApplication::translate("MainWindow", "b&uild all", 0));
+        actionbuild_all->setText(QApplication::translate("MainWindow", "b&uild all", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionbuild_all->setToolTip(QApplication::translate("MainWindow", "Build All Files", 0));
+        actionbuild_all->setToolTip(QApplication::translate("MainWindow", "Build All Files", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionUndo->setText(QApplication::translate("MainWindow", "&Undo", 0));
-        actionUndo->setShortcut(QApplication::translate("MainWindow", "Ctrl+Z", 0));
-        actionRedo->setText(QApplication::translate("MainWindow", "&Redo", 0));
-        actionRedo->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+Z", 0));
-        actionCut->setText(QApplication::translate("MainWindow", "&Cut", 0));
-        actionCut->setShortcut(QApplication::translate("MainWindow", "Ctrl+X", 0));
-        actionCopy->setText(QApplication::translate("MainWindow", "C&opy", 0));
-        actionCopy->setShortcut(QApplication::translate("MainWindow", "Ctrl+C", 0));
-        actionPaste->setText(QApplication::translate("MainWindow", "&Paste", 0));
-        actionPaste->setShortcut(QApplication::translate("MainWindow", "Ctrl+V", 0));
-        actionDelete->setText(QApplication::translate("MainWindow", "&Delete", 0));
-        actionDelete->setShortcut(QApplication::translate("MainWindow", "Ctrl+D", 0));
-        actionLoad_state->setText(QApplication::translate("MainWindow", "&Load State", 0));
-        actionRestore_State->setText(QApplication::translate("MainWindow", "&Restore State", 0));
-        actionAddCache->setText(QApplication::translate("MainWindow", "&Add Cache", 0));
-        actionRemoveCache->setText(QApplication::translate("MainWindow", "&Remove Cache", 0));
-        actionClearCache->setText(QApplication::translate("MainWindow", "&Clear Cache", 0));
-        actionPredefined->setText(QApplication::translate("MainWindow", "&Predefined", 0));
-        actionPreference->setText(QApplication::translate("MainWindow", "&Preference...", 0));
-        actionSave_all->setText(QApplication::translate("MainWindow", "Sav&e_all", 0));
-        actionSave_all->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+S", 0));
-        actionUpload->setText(QApplication::translate("MainWindow", "Upload", 0));
+        actionUndo->setText(QApplication::translate("MainWindow", "&Undo", Q_NULLPTR));
+        actionUndo->setShortcut(QApplication::translate("MainWindow", "Ctrl+Z", Q_NULLPTR));
+        actionRedo->setText(QApplication::translate("MainWindow", "&Redo", Q_NULLPTR));
+        actionRedo->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+Z", Q_NULLPTR));
+        actionCut->setText(QApplication::translate("MainWindow", "&Cut", Q_NULLPTR));
+        actionCut->setShortcut(QApplication::translate("MainWindow", "Ctrl+X", Q_NULLPTR));
+        actionCopy->setText(QApplication::translate("MainWindow", "C&opy", Q_NULLPTR));
+        actionCopy->setShortcut(QApplication::translate("MainWindow", "Ctrl+C", Q_NULLPTR));
+        actionPaste->setText(QApplication::translate("MainWindow", "&Paste", Q_NULLPTR));
+        actionPaste->setShortcut(QApplication::translate("MainWindow", "Ctrl+V", Q_NULLPTR));
+        actionDelete->setText(QApplication::translate("MainWindow", "&Delete", Q_NULLPTR));
+        actionDelete->setShortcut(QApplication::translate("MainWindow", "Ctrl+D", Q_NULLPTR));
+        actionLoad_state->setText(QApplication::translate("MainWindow", "&Load State", Q_NULLPTR));
+        actionRestore_State->setText(QApplication::translate("MainWindow", "&Restore State", Q_NULLPTR));
+        actionAddCache->setText(QApplication::translate("MainWindow", "&Add Cache", Q_NULLPTR));
+        actionRemoveCache->setText(QApplication::translate("MainWindow", "&Remove Cache", Q_NULLPTR));
+        actionClearCache->setText(QApplication::translate("MainWindow", "&Clear Cache", Q_NULLPTR));
+        actionPredefined->setText(QApplication::translate("MainWindow", "&Predefined", Q_NULLPTR));
+        actionPreference->setText(QApplication::translate("MainWindow", "&Preference...", Q_NULLPTR));
+        actionSave_all->setText(QApplication::translate("MainWindow", "Sav&e_all", Q_NULLPTR));
+        actionSave_all->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+S", Q_NULLPTR));
+        actionUpload->setText(QApplication::translate("MainWindow", "Upload", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionUpload->setToolTip(QApplication::translate("MainWindow", "Upload file", 0));
+        actionUpload->setToolTip(QApplication::translate("MainWindow", "Upload file", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        leftBoard->setTabText(leftBoard->indexOf(tab_navigation), QApplication::translate("MainWindow", "Navigation", 0));
-        leftBoard->setTabText(leftBoard->indexOf(tab_performance), QApplication::translate("MainWindow", "Performance", 0));
-        leftBoard->setTabText(leftBoard->indexOf(Track), QApplication::translate("MainWindow", "Tracker", 0));
+        leftBoard->setTabText(leftBoard->indexOf(tab_navigation), QApplication::translate("MainWindow", "Navigation", Q_NULLPTR));
+        leftBoard->setTabText(leftBoard->indexOf(tab_performance), QApplication::translate("MainWindow", "Performance", Q_NULLPTR));
+        leftBoard->setTabText(leftBoard->indexOf(Track), QApplication::translate("MainWindow", "Tracker", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem = problemTable->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("MainWindow", "Type", 0));
+        ___qtablewidgetitem->setText(QApplication::translate("MainWindow", "Type", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem1 = problemTable->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QApplication::translate("MainWindow", "File", 0));
+        ___qtablewidgetitem1->setText(QApplication::translate("MainWindow", "File", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem2 = problemTable->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QApplication::translate("MainWindow", "Line", 0));
+        ___qtablewidgetitem2->setText(QApplication::translate("MainWindow", "Line", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem3 = problemTable->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QApplication::translate("MainWindow", "Word", 0));
+        ___qtablewidgetitem3->setText(QApplication::translate("MainWindow", "Word", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem4 = problemTable->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QApplication::translate("MainWindow", "Description", 0));
-        tabWidget_output->setTabText(tabWidget_output->indexOf(tab_problems), QApplication::translate("MainWindow", "Problems", 0));
-        tabWidget_output->setTabText(tabWidget_output->indexOf(tab_console), QApplication::translate("MainWindow", "Console", 0));
-        tabWidget_output->setTabText(tabWidget_output->indexOf(tab_screen), QApplication::translate("MainWindow", "Screen", 0));
-        tabWidget_pipeline->setTabText(tabWidget_pipeline->indexOf(tab_scalar), QApplication::translate("MainWindow", "Scalar", 0));
-        tabWidget_pipeline->setTabText(tabWidget_pipeline->indexOf(tab_vector), QApplication::translate("MainWindow", "Vector", 0));
-        label_2->setText(QApplication::translate("MainWindow", "Type:", 0));
+        ___qtablewidgetitem4->setText(QApplication::translate("MainWindow", "Description", Q_NULLPTR));
+        tabWidget_output->setTabText(tabWidget_output->indexOf(tab_problems), QApplication::translate("MainWindow", "Problems", Q_NULLPTR));
+        tabWidget_output->setTabText(tabWidget_output->indexOf(tab_console), QApplication::translate("MainWindow", "Console", Q_NULLPTR));
+        tabWidget_output->setTabText(tabWidget_output->indexOf(tab_screen), QApplication::translate("MainWindow", "Screen", Q_NULLPTR));
+        tabWidget_pipeline->setTabText(tabWidget_pipeline->indexOf(tab_scalar), QApplication::translate("MainWindow", "Scalar", Q_NULLPTR));
+        tabWidget_pipeline->setTabText(tabWidget_pipeline->indexOf(tab_vector), QApplication::translate("MainWindow", "Vector", Q_NULLPTR));
+        label_2->setText(QApplication::translate("MainWindow", "Type:", Q_NULLPTR));
         comboBox->clear();
         comboBox->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "General Registers", 0)
-         << QApplication::translate("MainWindow", "Integer Vector #0", 0)
-         << QApplication::translate("MainWindow", "Integer Vector #1", 0)
-         << QApplication::translate("MainWindow", "Integer Vector #2", 0)
-         << QApplication::translate("MainWindow", "Integer Vector #3", 0)
-         << QApplication::translate("MainWindow", "Float Vector #0", 0)
-         << QApplication::translate("MainWindow", "Float Vector #1", 0)
-         << QApplication::translate("MainWindow", "Float Vector #2", 0)
-         << QApplication::translate("MainWindow", "Float Vector #3", 0)
-         << QApplication::translate("MainWindow", "Flag Registers", 0)
+         << QApplication::translate("MainWindow", "General Registers", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Integer Vector #0", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Integer Vector #1", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Integer Vector #2", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Integer Vector #3", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Float Vector #0", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Float Vector #1", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Float Vector #2", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Float Vector #3", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Flag Registers", Q_NULLPTR)
         );
         QTableWidgetItem *___qtablewidgetitem5 = tableWidget_6->horizontalHeaderItem(0);
-        ___qtablewidgetitem5->setText(QApplication::translate("MainWindow", "Address", 0));
+        ___qtablewidgetitem5->setText(QApplication::translate("MainWindow", "Address", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem6 = tableWidget_6->horizontalHeaderItem(1);
-        ___qtablewidgetitem6->setText(QApplication::translate("MainWindow", "Hex", 0));
+        ___qtablewidgetitem6->setText(QApplication::translate("MainWindow", "Hex", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem7 = tableWidget_6->horizontalHeaderItem(2);
-        ___qtablewidgetitem7->setText(QApplication::translate("MainWindow", "Decimal", 0));
+        ___qtablewidgetitem7->setText(QApplication::translate("MainWindow", "Decimal", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem8 = tableWidget_6->horizontalHeaderItem(3);
-        ___qtablewidgetitem8->setText(QApplication::translate("MainWindow", "Binary", 0));
-        tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_register), QApplication::translate("MainWindow", "Register", 0));
+        ___qtablewidgetitem8->setText(QApplication::translate("MainWindow", "Binary", Q_NULLPTR));
+        tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_register), QApplication::translate("MainWindow", "Register", Q_NULLPTR));
         label->setText(QString());
-        label_3->setText(QApplication::translate("MainWindow", "Address: ", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "Search", 0));
+        label_3->setText(QApplication::translate("MainWindow", "Address: ", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("MainWindow", "Search", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem9 = tableWidget_memory->horizontalHeaderItem(0);
-        ___qtablewidgetitem9->setText(QApplication::translate("MainWindow", "Address", 0));
+        ___qtablewidgetitem9->setText(QApplication::translate("MainWindow", "Address", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem10 = tableWidget_memory->horizontalHeaderItem(1);
-        ___qtablewidgetitem10->setText(QApplication::translate("MainWindow", "Hex", 0));
+        ___qtablewidgetitem10->setText(QApplication::translate("MainWindow", "Hex", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem11 = tableWidget_memory->horizontalHeaderItem(2);
-        ___qtablewidgetitem11->setText(QApplication::translate("MainWindow", "Decimal", 0));
+        ___qtablewidgetitem11->setText(QApplication::translate("MainWindow", "Decimal", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem12 = tableWidget_memory->horizontalHeaderItem(3);
-        ___qtablewidgetitem12->setText(QApplication::translate("MainWindow", "Binary", 0));
-        tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_memory), QApplication::translate("MainWindow", "Memory", 0));
-        menuFile->setTitle(QApplication::translate("MainWindow", "Fi&le", 0));
-        menuEdt->setTitle(QApplication::translate("MainWindow", "E&dt", 0));
-        menuWindow->setTitle(QApplication::translate("MainWindow", "Run", 0));
-        menuWindow_2->setTitle(QApplication::translate("MainWindow", "Mod&ule", 0));
-        menu_Cache->setTitle(QApplication::translate("MainWindow", "&Cache", 0));
-        menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0));
-        menuSettings->setTitle(QApplication::translate("MainWindow", "Setti&ngs", 0));
-        toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0));
+        ___qtablewidgetitem12->setText(QApplication::translate("MainWindow", "Binary", Q_NULLPTR));
+        tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_memory), QApplication::translate("MainWindow", "Memory", Q_NULLPTR));
+        menuFile->setTitle(QApplication::translate("MainWindow", "Fi&le", Q_NULLPTR));
+        menuEdt->setTitle(QApplication::translate("MainWindow", "E&dt", Q_NULLPTR));
+        menuWindow->setTitle(QApplication::translate("MainWindow", "Run", Q_NULLPTR));
+        menuWindow_2->setTitle(QApplication::translate("MainWindow", "Mod&ule", Q_NULLPTR));
+        menu_Cache->setTitle(QApplication::translate("MainWindow", "&Cache", Q_NULLPTR));
+        menuHelp->setTitle(QApplication::translate("MainWindow", "Help", Q_NULLPTR));
+        menuSettings->setTitle(QApplication::translate("MainWindow", "Setti&ngs", Q_NULLPTR));
+        toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
     } // retranslateUi
 
 };

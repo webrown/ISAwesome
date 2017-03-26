@@ -16,7 +16,7 @@ class Computer: public QObject{
     Q_OBJECT
     public:
         enum State{
-            DEAD, LOADED, RUNNING
+            DEAD,  RUNNING
         };
         /*
          * If this variable is true, then computer will stop with break (I am not hundred percent sure about how to implement "break functionality"
@@ -33,12 +33,19 @@ class Computer: public QObject{
 
         Computer();
         ~Computer();
+
+        /* 
+         * Initiate computer, after step, pause, stop will be called only after init is called
+         *
+         */
+        void init(QList<QVariant> instructions);
+
         
         /*
          * Run this computer for nCycle 
          * If nCycle = -1, run indefintely
          */
-        Status step(int nCycle);
+        void step(int nCycle);
         
         /*
          * Pause the cycle of computer
@@ -51,14 +58,6 @@ class Computer: public QObject{
          * This is different from removing the computer, it simply flushes out memory and pipeline
          */
         void stop();
-
-
-        /* 
-         * Initiate computer, after step, pause, stop will be called only after init is called
-         *
-         */
-        void init();
-        void load(QList<QVariant> instructions);
 
 
         void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
