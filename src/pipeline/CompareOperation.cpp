@@ -3,6 +3,8 @@
 
 using namespace Flag;
 
+CompareOperation CompareOperation::singleton;
+
 Value CompareOperation::newFlag(int a, int b) {
   Value result;
   result.asUInt = 0;

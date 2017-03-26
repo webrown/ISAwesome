@@ -1,4 +1,7 @@
 #include "CopyOperation.h"
+
+CopyOperation CopyOperation::singleton;
+
 Value CopyOperation::scalarOperation(int a, int b){
   (void) b;
   Value v;

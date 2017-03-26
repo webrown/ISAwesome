@@ -5,6 +5,7 @@
 #include "MemoryOperation.h"
 class LoadOperation : public MemoryOperation{
     public:
-        static void memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex);
+        static LoadOperation singleton;
+        void memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex);
 };
 #endif

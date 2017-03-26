@@ -1,4 +1,8 @@
 #include "AddOperation.h"
+#include <QDebug>
+
+AddOperation AddOperation::singleton;
+
 Value AddOperation::scalarOperation(int a, int b){
   Value v;
   v.i = a+b;

@@ -1,6 +1,8 @@
 #include "LoadOperation.h"
 #include "../memory/QueryResult.h"
 
+LoadOperation LoadOperation::singleton;
+
 void LoadOperation::memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex) {
   // Decide if you want a vector or a scalar and get 
   int dataRequested = Register::isVectorIndex(registerIndex)?VECTOR_SIZE:1;

@@ -4,10 +4,10 @@
 #include "../memory/Value.h"
 class CompareOperation{
     public:
-        static void execute(Register *registers, bool arg1IsImmediate, unsigned int arg1, unsigned int arg2);
-        static Value newFlag(int a, int b);
-        static Value newFlag(float a, float b);
-    private:
-        static Value newFlag(bool arg1IsFloat, bool arg2IsFloat, Value a, Value b, Value oldFlag);
+        static CompareOperation singleton;
+        void execute(Register *registers, bool arg1IsImmediate, unsigned int arg1, unsigned int arg2);
+        Value newFlag(int a, int b);
+        Value newFlag(float a, float b);
+        Value newFlag(bool arg1IsFloat, bool arg2IsFloat, Value a, Value b, Value oldFlag);
 };
 #endif
