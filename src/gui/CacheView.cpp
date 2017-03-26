@@ -4,7 +4,6 @@
 
 CacheView::CacheView(Cache* cache){
     this->cache = cache;
-    cache->view = this;
     size_t dataWordCount =1<< cache->logDataWordCount;
     size_t ways = 1<< cache->logAssociativity;
     size_t maxIndex = 1 << cache->indexBits;

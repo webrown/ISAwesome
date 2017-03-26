@@ -30,7 +30,7 @@ void RegisterView::update(){
 }
 
 void RegisterView::updateWithComboBox(){
-    qDebug() << "RegisterView: Update with ComboBox";
+    qDebug() << "GUI: Update with ComboBox";
     QString line = comboBox->currentText();
     main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_REGISTER, line));
 }

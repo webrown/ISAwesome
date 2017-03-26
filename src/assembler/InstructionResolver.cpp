@@ -454,7 +454,6 @@ ParseResult unparseUnary(uint args){
 }
 
 ParseResult unparseBinary(uint args){
-    qDebug()<< "ENDTER";
     ParseResult result;
     uint firstArg = (args & ((((1<<16)-1))<<5)) >> 5;
     //register

@@ -28,18 +28,18 @@ void MemoryView::init(MainWindow* main, QTableWidget* memoryTable, HexSpinBox* s
 }
 
 void MemoryView::updateWithSpinBox(){
-    qDebug() << "Update with spin box";
+    qDebug() << "GUI: Update with spin box";
     uint address = spinBox->hexValue();
     main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_MEMORY, address));
 }
 void MemoryView::updateWithSearch(){
-    qDebug() << "Update with search";
+    qDebug() << "GUI: Update with search";
     bool okay;
     uint searchAddress = lineEdit->text().toUInt(&okay, 16);
     if(okay == false){
         return;
     }
-    uint address = searchAddress >> 8;
+    // uint address = searchAddress >> 8;
     main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_MEMORY, searchAddress));
    
 }
@@ -57,7 +57,6 @@ void MemoryView::display(QList<QVariant> list){
         memoryTable->item(i, 3)->setText("0B" + QString::number(content, 2));
     }
 
-    qDebug() << "B";
     /* uint specific = searchAddress & ((1<<8)-1);
      * memoryTable->selectRow(specific); */
  

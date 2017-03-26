@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencedialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -217,23 +217,23 @@ public:
 
     void retranslateUi(QDialog *PreferenceDialog)
     {
-        PreferenceDialog->setWindowTitle(QApplication::translate("PreferenceDialog", "Dialog", 0));
-        label->setText(QApplication::translate("PreferenceDialog", "Work Directory:", 0));
-        button_open2->setText(QApplication::translate("PreferenceDialog", "Open...", 0));
-        label_4->setText(QApplication::translate("PreferenceDialog", "Font:", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab_general), QApplication::translate("PreferenceDialog", "General", 0));
-        groupBox->setTitle(QApplication::translate("PreferenceDialog", "Misc. Setting", 0));
-        globalMacroCheckBox->setText(QApplication::translate("PreferenceDialog", "Global Macro", 0));
-        wallCheckBox->setText(QApplication::translate("PreferenceDialog", "Wall", 0));
-        somethingCheckBox1->setText(QApplication::translate("PreferenceDialog", "Something", 0));
-        defaultAliasCheckBox->setText(QApplication::translate("PreferenceDialog", "Use Default Alias", 0));
-        seomthingCheckBox2->setText(QApplication::translate("PreferenceDialog", "Somthing", 0));
-        defaultMacroCheckBox->setText(QApplication::translate("PreferenceDialog", "Use Default Macro", 0));
-        mainEntryCheckBox->setText(QApplication::translate("PreferenceDialog", "Main Entry", 0));
-        preserveCommetnCheckBox->setText(QApplication::translate("PreferenceDialog", "Preserve Comment", 0));
-        globalAliasCheckBox->setText(QApplication::translate("PreferenceDialog", "Global Alias", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab_assembly), QApplication::translate("PreferenceDialog", "Assembly", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("PreferenceDialog", "Disassembly", 0));
+        PreferenceDialog->setWindowTitle(QApplication::translate("PreferenceDialog", "Dialog", Q_NULLPTR));
+        label->setText(QApplication::translate("PreferenceDialog", "Work Directory:", Q_NULLPTR));
+        button_open2->setText(QApplication::translate("PreferenceDialog", "Open...", Q_NULLPTR));
+        label_4->setText(QApplication::translate("PreferenceDialog", "Font:", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab_general), QApplication::translate("PreferenceDialog", "General", Q_NULLPTR));
+        groupBox->setTitle(QApplication::translate("PreferenceDialog", "Misc. Setting", Q_NULLPTR));
+        globalMacroCheckBox->setText(QApplication::translate("PreferenceDialog", "Global Macro", Q_NULLPTR));
+        wallCheckBox->setText(QApplication::translate("PreferenceDialog", "Wall", Q_NULLPTR));
+        somethingCheckBox1->setText(QApplication::translate("PreferenceDialog", "Something", Q_NULLPTR));
+        defaultAliasCheckBox->setText(QApplication::translate("PreferenceDialog", "Use Default Alias", Q_NULLPTR));
+        seomthingCheckBox2->setText(QApplication::translate("PreferenceDialog", "Somthing", Q_NULLPTR));
+        defaultMacroCheckBox->setText(QApplication::translate("PreferenceDialog", "Use Default Macro", Q_NULLPTR));
+        mainEntryCheckBox->setText(QApplication::translate("PreferenceDialog", "Main Entry", Q_NULLPTR));
+        preserveCommetnCheckBox->setText(QApplication::translate("PreferenceDialog", "Preserve Comment", Q_NULLPTR));
+        globalAliasCheckBox->setText(QApplication::translate("PreferenceDialog", "Global Alias", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab_assembly), QApplication::translate("PreferenceDialog", "Assembly", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("PreferenceDialog", "Disassembly", Q_NULLPTR));
     } // retranslateUi
 
 };

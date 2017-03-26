@@ -14,18 +14,25 @@ class Register{
 
         Register();
         ~Register();
+        void init();
+
         uint getPC();
         uint getSP();
         uint getBP();
         uint getLR();
+        
 
         Value read(int i);
+        QVector<Value> readVector(int address);
+
+        //Scalar write
         void write(Value v, int address);
         void write(int v, int address);
         void write(unsigned int v, int address);
         void write(float v, int address);
 
-        QVector<Value> readVector(int address);
+
+        //Vector write
         void writeVector(QVector<Value> v, int address);
         void writeVector(QVector<int> v, int address);
         void writeVector(QVector<float> v, int address);
@@ -33,6 +40,8 @@ class Register{
         void write(QVector<Value> v, int address);
         void write(QVector<int> v, int address);
         void write(QVector<float> v, int address);
+
+        //flag write
 
         Value readFlag();
         void writeFlag(Value v);

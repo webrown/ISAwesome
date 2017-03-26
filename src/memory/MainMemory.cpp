@@ -11,16 +11,24 @@ MainMemory::MainMemory(double delay){
 }
 
 MainMemory::~MainMemory(){
+    //Do nothing
+}
+
+
+void MainMemory::init(){
+    _contents.clear();
+    _contents.resize(MEMORY_CHUNKS);
 }
 
 QueryResult* MainMemory::read(unsigned int address, unsigned int length){
     QVector<Value> result;
-    int startInd1;
-    int startInd2;
-    int endInd1;
-    int endInd2;
+    uint startInd1;
+    uint startInd2;
+    uint endInd1;
+    uint endInd2;
     indexPair(address, &startInd1, &startInd2);
     indexPair(address+length-1, &endInd1, &endInd2);
+
     // Load in first.
     if(_contents.at(startInd1).size() == 0) {
         // This memory is yet to be written to.
@@ -54,14 +62,14 @@ QueryResult* MainMemory::read(unsigned int address){
 
 double MainMemory::write(QVector<Value> *value, unsigned int address){
     for(int i = 0; i < value->size(); i++) {
-      int ind1;
-      int ind2;
+      uint ind1;
+      uint ind2;
       indexPair(address+i, &ind1, &ind2);
       if(_contents.at(ind1).size() == 0) {
         // Ooops!  This memory chunk has not been instantiated yet!
         _contents[ind1].resize(MEMORY_CHUNK_SIZE);
       }
-      _contents[ind1].replace(ind2, value->at(i));
+      _contents[ind1][ind2] =value->at(i);
     }
     return delay;
 }
@@ -108,7 +116,7 @@ void MainMemory::restore(QString *state){
     }
 }
 
-void MainMemory::indexPair(unsigned int address, int *firstIndex, int *secondIndex){
+void MainMemory::indexPair(unsigned int address, uint *firstIndex, uint *secondIndex){
     *firstIndex = address >> 16;
     *secondIndex = address & 0xffff;
 }

@@ -3,24 +3,26 @@
 MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535","PISA")
 {
     qRegisterMetaType<ThreadMessage>();
-    qDebug() << "MainWindow starts...";
+    qDebug() << "GUI: MainWindow starts...";
     _ui.setupUi( this );
 //move assembly to different thread 
     assembler = new Assembler();
     disassembler = new Disassembler();
     computer = new Computer();
-assemblyThread = new QThread(this); assembler->moveToThread(assemblyThread);
+
+    qDebug() << "GUI: Creating Assembly thread";
+    assemblyThread = new QThread(this); assembler->moveToThread(assemblyThread);
     connect(assemblyThread, &QThread::finished, assembler, &QObject::deleteLater);
     connect(this, &MainWindow::startBuild, assembler, &Assembler::assemble);
     connect(assembler, &Assembler::resultReady, this, &MainWindow::finishAssemble);
     assemblyThread->start();
 
+    qDebug() <<"GUI: Creating Computer thread";
     computerThread = new QThread(this);
     computer->moveToThread(computerThread);
     connect(computerThread, &QThread::finished, computer, &QObject::deleteLater);
     connect(this, &MainWindow::_sendMessage, computer, &Computer::procMessage);
     connect(computer, &Computer::sendMessage, this, &MainWindow::procMessage);
-
     computerThread->start();
 
     //add element on toolbar
@@ -54,20 +56,21 @@ assemblyThread = new QThread(this); assembler->moveToThread(assemblyThread);
     _ui.tab_register->init(this,_ui.tableWidget_6,_ui.comboBox);
 
 
-    qDebug() << "MainWindow is initialized...";
+    qDebug() << "GUI: MainWindow is initialized...";
 }
 
 MainWindow::~MainWindow()
 {
-    qDebug() << "Killing MainWindow";
+    qDebug() << "GUI: Killing MainWindow";
     assemblyThread->quit();
     assemblyThread->wait();
     computerThread->quit();
     computerThread->wait();
-    qDebug() << "Fin.";
+    qDebug() << "GUI: Fin.";
 }
 
 void MainWindow::updateNavigation(){
+    qDebug() << "GUI: Update navigation";
     QFileSystemModel* fModel = (QFileSystemModel*) _ui.fileSystemView->model();
     fModel->setRootPath(settings.value("general/workdirectory",getDocDir()).toString());
     _ui.fileSystemView->setModel(fModel);
@@ -78,7 +81,7 @@ void MainWindow::updateNavigation(){
 
 //handle New Event
 void MainWindow::handleNew(){
-    qDebug() << "New Button is clicked!";
+    qDebug() << "GUI: New Button is clicked!";
     NewFileDialog dialog(settings.value("general/workdirectory",getDocDir()).toString(),this);
     if(dialog.exec() != QDialog::Accepted){
         return;
@@ -96,7 +99,7 @@ void MainWindow::handleNew(){
 //handle Open Event
 void MainWindow::handleOpen()
 {
-    qDebug() << "Open Button is clicked!";
+    qDebug() << "GUI: Open Button is clicked!";
     QString docLoc = settings.value("general/workdirectory",getDocDir()).toString();
     QStringList fileNames = QFileDialog::getOpenFileNames(
             this,
@@ -112,7 +115,7 @@ void MainWindow::handleOpen()
 }
 
 void MainWindow::handleOpenFromNavigation(QModelIndex index){
-    qDebug() << "Open from navigation";
+    qDebug() << "GUI: Open from navigation";
     QString fileName = ((QFileSystemModel*)_ui.fileSystemView->model())->rootPath() + "/"+ index.data().toString();
     QFile file(fileName);
     QFileInfo fileInfo(file);
@@ -131,7 +134,7 @@ void MainWindow::handleOpenFromNavigation(QModelIndex index){
 //handle Save event
 void MainWindow::handleSave()
 {
-    qDebug() << "Save button is clicked";
+    qDebug() << "GUI: Save button is clicked";
     if(_ui.editorTab->saveTab()){
         printlnConsole(_ui.editorTab->currentEditor()->sourceFile->fileName() + " is saved");
     }
@@ -142,7 +145,7 @@ void MainWindow::handleSave()
 
 void MainWindow::handleSaveAll()
 {
-    qDebug() << "Save all button is clicked";
+    qDebug() << "GUI: Save all button is clicked";
     if(_ui.editorTab->saveAllTab()){
         for(int i =0; i < _ui.editorTab->count(); i++){
             printlnConsole(((CodeEditor*)_ui.editorTab->widget(i))->sourceFile->fileName() + " is saved");
@@ -156,7 +159,7 @@ void MainWindow::handleSaveAll()
 //handle Save As event
 void MainWindow::handleSaveAs()
 {
-    qDebug() << "Save As button is clicked";
+    qDebug() << "GUI: Save As button is clicked";
     NewFileDialog dialog(settings.value("general/workdirectory",getDocDir()).toString(),this);
     int result = dialog.exec();
     if(result != QDialog::Accepted){
@@ -174,28 +177,28 @@ void MainWindow::handleSaveAs()
 //handle Undo Event
 void MainWindow::handleUndo()
 {
-    qDebug() << "Undo button is clicked";
+    qDebug() << "GUI: Undo button is clicked";
 
     ((CodeEditor*)_ui.editorTab->currentWidget())->undo();
 }
 
 void MainWindow::handleRedo()
 {
-    qDebug() << "Redo button is clicked";
+    qDebug() << "GUI: Redo button is clicked";
     ((CodeEditor*)_ui.editorTab->currentWidget())->redo();
 }
 
 //hande about pisa event
 void MainWindow::handleAboutPISA()
 {
-    qDebug() << "About PISA button is clicked";
+    qDebug() << "GUI: About PISA button is clicked";
     QString link = "https://github.com/webrown/PISA";
     QDesktopServices::openUrl(QUrl(link));
 }
 
 
 void MainWindow::handleAddCache(){ 
-    qDebug() << "Add Cache button is clicked";
+    qDebug() << "GUI: Add Cache button is clicked";
 /*     NewCacheDialog dialog(computer->topCache, this); */
     // int result = dialog.exec();
     // if(result == QDialog::Accepted){
@@ -278,10 +281,10 @@ void MainWindow::handleClearCache(){
     // }
     /* computer->topCache =NULL; */
 } 
+
 void MainWindow::handleBuild(){
-    qDebug() << "Build button is clicked";
+    qDebug() << "GUI: Build button is clicked";
     //Nothing to build
-    //TODO output?
     int index = _ui.editorTab->currentIndex();
     if(index == -1){ 
         _ui.consoleTextEdit->appendPlainText("Nothing to build...");
@@ -289,10 +292,11 @@ void MainWindow::handleBuild(){
     }
     //Save file: I don't know but eclipse does this, so I guess there is some reason why we need to save file before assembly
     _ui.editorTab->currentEditor()->clearMarks();
-   assemble(_ui.editorTab->currentEditor()->sourceFile->fileName(), false); 
+    assemble(_ui.editorTab->currentEditor()->sourceFile->fileName(), false); 
 }
 
 void MainWindow::assemble(QString fileName, bool runAfter){
+    qDebug() << "GUI: assemble requested";
     handleSaveAll();
     AssemblerConfiguration config;
     config.useDefaultMacro = settings.value("assembly/useDefaultMacro", true).toBool();
@@ -305,6 +309,7 @@ void MainWindow::assemble(QString fileName, bool runAfter){
     startBuild(fileName, config, runAfter);
 }
 void MainWindow::finishAssemble(Assembled* assembled, bool runAfter){
+    qDebug() << "GUI: finishing assembly";
     clearConsole();
     //remove this
     _ui.tracker->clear();
@@ -320,15 +325,17 @@ void MainWindow::finishAssemble(Assembled* assembled, bool runAfter){
     else{
         printlnConsole("Build failed...");
     }
+    printlnConsole("Log file generated: ");
 
     printlnConsole("Time elasped: " + QString::number(assembled->elaspedTime) + " msec");
     delete assembled;
     if((isAssembled & runAfter) == true){
-        launchProgram(fileName + ".out");
+        uploadProgram(fileName + ".out");
     }
 }
 
 void MainWindow::displayProblems(QList<Problem>* problemLog){
+    qDebug() << "GUI: Display problems from assembly";
     //Clear problem view
     _ui.problemTable->clearContents();
     _ui.problemTable->setRowCount(problemLog->size());
@@ -365,16 +372,14 @@ void MainWindow::displayProblems(QList<Problem>* problemLog){
     }
 }
 void MainWindow::handleBuildAll(){
-    qDebug() << "Build All button is clicked";
-    _ui.editorTab->currentEditor()->clearMarks();
-
+    qDebug() << "GUI: Build All button is clicked";
+    printlnConsole("Not implemented");
 }
 
 void MainWindow::handlePreference(){
-    qDebug() << "Preference button is clicked";
+    qDebug() << "GUI: Preference button is clicked";
     PreferenceDialog dialog(this);
     dialog.exec();
-
     updateNavigation();
 }
 
@@ -383,7 +388,7 @@ void MainWindow::handleForward(){
 void MainWindow::handleBackward(){
 }
 void MainWindow::handleUpload(){
-    qDebug() << "Upload button is clicked";
+    qDebug() << "GUI: Upload button is clicked";
     //Nothing to build
     //TODO output?
     if(_ui.editorTab->isEmpty()){ 
@@ -392,18 +397,19 @@ void MainWindow::handleUpload(){
     }
     _ui.editorTab->currentEditor()->clearMarks();
     if(shouldIAssemble() == true){
-        qDebug() << "Well, I guess I have to assemble then";
+        qDebug() << "GUI: Well, I guess I have to assemble then";
         QString fileName = _ui.editorTab->currentEditor()->sourceFile->fileName() ;
         assemble(fileName, true);
     }
     else{
-        qDebug() << "HA, no assemble";
+        qDebug() << "GUI: HA, no assemble";
         QString fileName = _ui.editorTab->currentEditor()->sourceFile->fileName() + ".out";
-        launchProgram(fileName);
+        uploadProgram(fileName);
     }
 }
 
-void MainWindow::launchProgram(QString fileName){
+void MainWindow::uploadProgram(QString fileName){
+    qDebug() << "GUI: launch Program";
     clearConsole();
     printlnConsole("Run: " + fileName);
     QList<uint> instructions = ProgramManagerX::loadProgram(fileName);
@@ -426,7 +432,8 @@ void MainWindow::launchProgram(QString fileName){
         }
         _instructions.append(instructions.at(i));
     }
-    sendMessage(ThreadMessage(ThreadMessage::R_LOAD,_instructions));
+    sendMessage(ThreadMessage(ThreadMessage::R_INIT,_instructions));
+    //TODO fix this line
     _ui.tab_memory->update();
 }
 
@@ -435,19 +442,17 @@ bool MainWindow::shouldIAssemble(){
     QString outputFileName = fileName + ".out"; 
     QFile outputFile(outputFileName);
     if(outputFile.exists() == false){
-        qDebug() << "1";
+        qDebug("GUI: assemble since output file doesn't exist");
         return true;
     }
     QFileInfo outputFileInfo(outputFile);
     QFileInfo sourceFileInfo(*(_ui.editorTab->currentEditor()->sourceFile));
     if(outputFileInfo.lastModified() < sourceFileInfo.lastModified()){
-        qDebug() << "2";
-
+        qDebug() << "GUI: assemble since file is modified";
         return true;
     }
     if(_ui.editorTab->isCurrentSaved() == false){
-        qDebug() << "3";
-
+        qDebug() << "GUI: assebmle since current file is not saved";
         return true;
     }
     return false;
@@ -455,6 +460,7 @@ bool MainWindow::shouldIAssemble(){
 void MainWindow::handlePause(){
 }
 void MainWindow::handleStop(){
+    sendMessage(ThreadMessage(ThreadMessage::R_STOP, {}));
 }
 
 //update undo button
@@ -467,21 +473,22 @@ void MainWindow::updateRedo(bool avail)
 }
 
 void MainWindow::printConsole(QString line){
-    qDebug() << "Printed on console: " << line ;
+    qDebug() << "GUI: console: " << line ;
     _ui.tabWidget_output->setCurrentWidget(_ui.tab_console);
     _ui.consoleTextEdit->insertPlainText(line);
 }
 void MainWindow::printlnConsole(QString line){
-    qDebug() << "Printed with line on console: " << line;
+    qDebug() << "GUI: console: " << line;
     _ui.tabWidget_output->setCurrentWidget(_ui.tab_console);
     _ui.consoleTextEdit->appendPlainText(line);
 }
 void MainWindow::clearConsole(){
-    qDebug() << "Clear Console";
+    qDebug() << "GUI: Clear Console";
     _ui.tabWidget_output->setCurrentWidget(_ui.tab_console);
     _ui.consoleTextEdit->clear();
 }
 void MainWindow::handleCustomContextMenuForTracker(QPoint point){
+    qDebug() << "GUI: handle custom context menu for tracker";
     QPoint globalPos = _ui.tracker->mapToGlobal(point);
 
     QListWidgetItem* item = _ui.tracker->currentItem();
@@ -490,34 +497,35 @@ void MainWindow::handleCustomContextMenuForTracker(QPoint point){
     }
 
     QMenu menu;
-    QAction *addBreakAction = new QAction(tr("Break once"), NULL);
+    QAction *addBreakAction = new QAction(tr("Break once"), &menu);
     addBreakAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::BREAK);
     connect(addBreakAction,SIGNAL(triggered()), this, SLOT(handleAddBreak()));
     menu.addAction(addBreakAction);
 
-    QAction *addBreakAllAction = new QAction(tr("Break all"), NULL);
+    QAction *addBreakAllAction = new QAction(tr("Break all"), &menu);
     addBreakAllAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::BREAK_ALL);
     connect(addBreakAllAction,SIGNAL(triggered()), this, SLOT(handleAddBreakAll()));
     menu.addAction(addBreakAllAction);
 
-    QAction *addSkipAction = new QAction(tr("Skip"), NULL);
+    QAction *addSkipAction = new QAction(tr("Skip"), &menu);
     addSkipAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP);
     connect(addSkipAction,SIGNAL(triggered()), this, SLOT(handleAddSkip()));
     menu.addAction(addSkipAction);
 
-    QAction *addSkipAllAction = new QAction(tr("Skip all"), NULL);
+    QAction *addSkipAllAction = new QAction(tr("Skip all"), &menu);
     addSkipAllAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP_ALL);
     connect(addSkipAllAction,SIGNAL(triggered()), this, SLOT(handleAddSkipAll()));
     menu.addAction(addSkipAllAction);
 
-    QAction *removeBreakAction = new QAction(tr("No break"), NULL);
+    QAction *removeBreakAction = new QAction(tr("No break"), &menu);
     removeBreakAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::NONE);
     connect(removeBreakAction,SIGNAL(triggered()), this, SLOT(handleRemoveBreak()));
     menu.addAction(removeBreakAction);
 
-    QAction* action = menu.exec(globalPos);
+    menu.exec(globalPos);
 }
 void MainWindow::handleAddBreak(){
+    qDebug() << "GUI: add break";
     QListWidgetItem* item = _ui.tracker->selectedItems().first();
     if(item == NULL){
         return;
@@ -526,6 +534,7 @@ void MainWindow::handleAddBreak(){
     item->setData(Qt::UserRole, BreakPoint::BREAK);
 }
 void MainWindow::handleAddBreakAll(){
+    qDebug() << "GUI: add break all";
     QListWidgetItem* item = _ui.tracker->selectedItems().first();
     if(item == NULL){
         return;
@@ -535,6 +544,7 @@ void MainWindow::handleAddBreakAll(){
 }
 
 void MainWindow::handleAddSkip(){
+    qDebug() << "GUI: add skip";
     QListWidgetItem* item = _ui.tracker->selectedItems().first();
     if(item == NULL){
         return;
@@ -543,6 +553,7 @@ void MainWindow::handleAddSkip(){
     item->setData(Qt::UserRole, BreakPoint::SKIP);
 }
 void MainWindow::handleAddSkipAll(){
+    qDebug() << "GUI: add skip all";
     QListWidgetItem* item = _ui.tracker->selectedItems().first();
     if(item == NULL){
         return;
@@ -551,6 +562,7 @@ void MainWindow::handleAddSkipAll(){
     item->setData(Qt::UserRole, BreakPoint::SKIP_ALL);
 }
 void MainWindow::handleRemoveBreak(){
+    qDebug() << "GUI: remove break";
     QListWidgetItem* item = _ui.tracker->selectedItems().first();
     if(item == NULL){
         return;
@@ -562,25 +574,35 @@ void MainWindow::handleRemoveBreak(){
 
 void MainWindow::handlePlay(){
 }
+void MainWindow::handleErrorFromComputer(QString errorMessage){
+    QMessageBox msgBox;
+    msgBox.critical(0,"Error",errorMessage);
+    return;     
+}
 
 void MainWindow::procMessage(ThreadMessage message){
-    qDebug() << "GUI:RECV FROM COMPUTER";
     ThreadMessage::Type type = message.type;
     QVariant info = message.message;
     switch(message.type){
         case ThreadMessage::A_OKAY:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_OKAY";
             //Do nothing
             break;
         case ThreadMessage::A_ERROR:
-            //Show error message
+            qDebug() << "GUI: RECV FROM COMPUTER: A_ERROR";
+            handleErrorFromComputer(info.toString());
             break;
         case ThreadMessage::A_VIEW_MEMORY:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_MEMORY";
             _ui.tab_memory->display(info.toList());
             break;
         case ThreadMessage::A_VIEW_REGISTER:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_REGISTER";
             _ui.tab_register->display(info.toList());
             break;
-        defualt:
+        default:
+            qDebug() << "GUI: Invalid message";
+            exit(-1);
             break;
     }
     messageQueue.dequeue();
@@ -590,7 +612,7 @@ void MainWindow::procMessage(ThreadMessage message){
 
 }
 void MainWindow::sendMessage(ThreadMessage message){
-    qDebug() << "GUI:SEND TO COMPUTER";
+    qDebug() << "GUI: send message";
     //If queue is empty, send right away
     if(messageQueue.isEmpty()){
         messageQueue.enqueue(message);

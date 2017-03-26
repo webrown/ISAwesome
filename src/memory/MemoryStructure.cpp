@@ -9,8 +9,15 @@ MemoryStructure::MemoryStructure(double mainMemoryDelay) {
 
 MemoryStructure::~MemoryStructure() {
     delete _mainMemory;
-    //Erase cache
+    //TODO Erase cache
 }
+
+void MemoryStructure::init(){
+    _mainMemory->init();
+    //TODO init caches
+}
+
+
 
 void MemoryStructure::pushCache(Cache *newCache) {
     newCache->nextMemory = _lastAdded;

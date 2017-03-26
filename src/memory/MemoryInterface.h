@@ -11,6 +11,7 @@ class MemoryInterface{
     virtual QueryResult *read(unsigned int address)=0;
     virtual double write(QVector<Value> *value, unsigned int address)=0;
     virtual double write(Value value, unsigned int address)=0;
+
     virtual QString *save()=0;
     virtual void restore(QString *state)=0;
 
@@ -18,6 +19,8 @@ class MemoryInterface{
     double write(int value, unsigned int address);
     double write(QVector<float> *value, unsigned int address);
     double write(float value, unsigned int address);
+
+    virtual void init() =0;
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define MAINMEMORY_H
 
 #include "MemoryInterface.h"
+#include <QVariant>
 
 using namespace std;
 
@@ -14,17 +15,24 @@ class MainMemory : public MemoryInterface{
     // Assuming spacial locality, this should save a lot of memory!
     const static size_t MEMORY_CHUNK_SIZE = 65536;
     const static size_t MEMORY_CHUNKS = 65536;
-    QVector< QVector< Value > > _contents;
+
     double delay;
+    QVector< QVector< Value > > _contents;
+
+
     MainMemory(double delay);
     virtual ~MainMemory();
+    void init();
+
     QueryResult *read(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address);
     double write(QVector<Value> *value, unsigned int address);
     double write(Value value, unsigned int address);
+
     QString *save();
     void restore(QString *state);
-    void indexPair(unsigned int address, int *firstIndex, int *secondIndex);
+
+    void indexPair(unsigned int address, uint *firstIndex, uint *secondIndex);
 };
 
 #endif

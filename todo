@@ -1,11 +1,12 @@
 X new file dialog overwrite option?
-save previous open files?
+X save previous open files?
 X Empty file name
 # assembler configuration
-assembler save
+X assembler save
 
 Memory Handler?
 Baseline Simulator
 Better Cacheview
 Demo code?
 child
+Save and load state ask walter about using stream

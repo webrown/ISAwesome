@@ -14,10 +14,12 @@ class MemoryStructure {
         ~MemoryStructure();
 
         Cache *pushCache(int indexBits, int logDataWordCount, int logAssociativity, double delay); // Place cache on top of lastAdded.
+        void init();
         void pushCache(Cache *newCache); // Place cache on top of lastAdded.
         void goBack(); // Change lastAdded to previous lastAdded.
         void setToInstructionAccess(); // Sets lastAdded to be instruction access point.
         void setToDataAccess();
+
         MemoryInterface *getDataAccess();
         MemoryInterface *getInstructionAccess();
         MemoryInterface *getLastAdded();

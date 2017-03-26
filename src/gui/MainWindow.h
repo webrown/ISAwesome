@@ -21,6 +21,7 @@
 #include <QSettings>
 #include <QThread>
 #include <QFileInfo>
+#include <QMessageBox>
 #include "ui_pisa.h"
 #include "CodeEditor.h"
 #include "../computer/Computer.h"
@@ -54,7 +55,7 @@ class MainWindow : public QMainWindow
 
         void displayProblems(QList<Problem>* problemLog);
 
-        void launchProgram(QString fileName);
+        void uploadProgram(QString fileName);
 
         bool shouldIAssemble(); 
         void assemble(QString fileName, bool runAfter);
@@ -88,6 +89,7 @@ class MainWindow : public QMainWindow
         void handleAddSkipAll();
         void handleRemoveBreak();
         void handleUpload();
+        void handleErrorFromComputer(QString errorMessage);
 
 
         void updateUndo(bool avail);

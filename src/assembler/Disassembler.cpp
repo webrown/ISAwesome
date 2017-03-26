@@ -10,13 +10,11 @@ Disassembler::~Disassembler(){
 }
 
 QString Disassembler::disassemble(uint instruction){
-    qDebug() << "Disassemble: " << QString::number(instruction, 2).rightJustified(32,'0');
+    // qDebug() << "GUI: Disassemble: " << QString::number(instruction, 2).rightJustified(32,'0');
     uint flag = (instruction & FLAG_BIT) >> 28;
     uint opcode = (instruction & OPCODE_BIT) >> 22;
     uint arg = (instruction & ARG_BIT);
-    qDebug() << "Splitted: " <<QString::number(flag, 2).rightJustified(4, '0') << "\t" 
-        <<QString::number(opcode, 2).rightJustified(6,'0') << "\t" 
-        <<QString::number(arg, 2).rightJustified(22,'0');
+    // qDebug() << "GUI: Splitted: " <<QString::number(flag, 2).rightJustified(4, '0') << "\t"<<QString::number(opcode, 2).rightJustified(6,'0') << "\t" <<QString::number(arg, 2).rightJustified(22,'0');
     QString result;
     if(CRS.condTable.contains(flag)){
         result += CRS.condTable[flag] + " ";
@@ -33,7 +31,7 @@ QString Disassembler::disassemble(uint instruction){
     else{
         result += "NOP ";
     }
-    qDebug() << "Disassembled: " << result;
+    // qDebug() << "GUI: Disassembled: " << result;
 
     return result;
 }

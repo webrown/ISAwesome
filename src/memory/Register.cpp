@@ -4,6 +4,14 @@
 #include "Flag.h"
 
 Register::Register(){
+    init();
+}
+
+Register::~Register(){
+    //Do nothing
+}
+void Register::init(){
+    qDebug() << "COM: reseting Register";
     Value intZero = {0};
     Value floatZero;
     floatZero.f = 0;
@@ -21,10 +29,6 @@ Register::Register(){
     using namespace Flag;
     _flag  = add(_flag,  AL);
     _flags = add(_flags, AL);
-}
-
-Register::~Register(){
-    //Do nothing
 }
 
 uint Register::getPC(){
