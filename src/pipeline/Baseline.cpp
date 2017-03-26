@@ -9,6 +9,7 @@
 #include "CopyOperation.h"
 #include "LoadOperation.h"
 #include "StoreOperation.h"
+#include <QDebug>
 
 using namespace Flag;
 Baseline::Baseline(Register * regs, MemoryStructure *mem){
@@ -20,7 +21,8 @@ Baseline::~Baseline(){
 }
 
 void Baseline::init(){
-    // Currently does nothing
+    // Reset PC
+    registers->write(0, Register::PC);
 }
 
 Status Baseline::run(void){
@@ -28,13 +30,12 @@ Status Baseline::run(void){
     QueryResult *qr = NULL;
    
     // Get the next instruction address.
-    int pc = registers->getPC();
     // Get next instruction from memory.
-    qr = memory->getInstructionAccess()->read(pc);
+    qr = memory->getInstructionAccess()->read(registers->getPC());
     unsigned int nextInstruction = qr->result.at(0).asUInt;
     delete qr;
     // Move to next instruction address.
-    pc++;
+    registers->write(registers->getPC()+1, Register::PC);
     // What is instruction type?
     unsigned int opcode = spliceMachineCode(nextInstruction, 22, 27);
     Instruction instructionType;
@@ -132,15 +133,17 @@ Status Baseline::run(void){
     //int ternaryOperand1 = spliceMachineCode(nextInstruction, 15, 20);
     //int ternaryOperand2 = spliceMachineCode(nextInstruction, 8, 13);
     //int ternaryOperand3 = spliceMachineCode(nextInstruction, 0, 4);
+
+    qDebug() << "nextInstruction:" << nextInstruction << intToBinary(nextInstruction);
    
     // Do what the instruction tells you to.
     switch(instructionType) {
         case ADD: {
-            AddOperation::execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            AddOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
         case AND: {
-            AndOperation::execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            AndOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
         case ARR: {
@@ -163,36 +166,34 @@ Status Baseline::run(void){
         }
         case B: {
             if(conditionScalar) {
-                pc = unaryOperand;
+                registers->write(unaryOperand, Register::PC);
             }
             break;
         }
         case CMP: {
             if(conditionScalar) {
-                CompareOperation::execute(registers, useImmediate, binaryOperand1, binaryOperand2);
+                CompareOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2);
             }
             break;
         }
         case CPY: {
-            CopyOperation::execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            CopyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
         case LOD: {
             if(conditionScalar) {
-                LoadOperation::memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
+                LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
         }
         case STO: {
             if(conditionScalar) {
-                StoreOperation::memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
+                StoreOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
         }
         default: {
-             break;
+            break;
         }
      }
-     // pc is now determined fully.
-     registers->write(pc, Register::PC);
      // Yay!  no error!  Well done!
      return OKAY;
 }

@@ -3,9 +3,10 @@
 #include "ArithmeticOperation.h"
 class CopyOperation : public ArithmeticOperation{
     public:
-        static Value scalarOperation(int a, int b);
-        static Value scalarOperation(float a, float b);
-        static Value scalarOperation(float a, int b);
-        static Value scalarOperation(int a, float b);
+        static CopyOperation singleton;
+        Value scalarOperation(int a, int b);
+        Value scalarOperation(float a, float b);
+        Value scalarOperation(float a, int b);
+        Value scalarOperation(int a, float b);
 };
 #endif

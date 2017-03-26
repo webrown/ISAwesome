@@ -26,6 +26,7 @@ class TestBaseline: public QObject
         void test_multiple_add_float_reg();
         void test_add_PC();
         void test_snippet();
+        void test_branch();
         void cleanupTestCase();
 };
 #endif

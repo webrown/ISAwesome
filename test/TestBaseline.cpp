@@ -44,9 +44,9 @@ void TestBaseline::test_multiple_add_same_reg(){
     base->run();
     QVERIFY(regs->read(0).asUInt == 1u);
     base->run();
-    QVERIFY(regs->read(0).asUInt == 2u);
-    base->run();
     QVERIFY(regs->read(0).asUInt == 3u);
+    base->run();
+    QVERIFY(regs->read(0).asUInt == 6u);
     base->stop();
 }
 /* Add 0 R4
@@ -55,10 +55,10 @@ void TestBaseline::test_multiple_add_same_reg(){
  * Add 3 R1 */
 void TestBaseline::test_multiple_add_diff_reg(){
     QVector<uint> instructions;
-    instructions.append(3825205248u);
-    instructions.append(3825205280u);
-    instructions.append(3825205312u);
-    instructions.append(3825205344u);
+    instructions.append(3825205252u);
+    instructions.append(3825205283u);
+    instructions.append(3825205314u);
+    instructions.append(3825205345u);
     load(instructions);
 
     base->init();
@@ -86,13 +86,13 @@ void TestBaseline::test_multiple_add_float_reg(){
 
     base->init();
     base->run();
-    QVERIFY(regs->read(11).asUInt == 0u);
+    QVERIFY(regs->read(11).asFloat == 0.0);
     base->run();
-    QVERIFY(regs->read(14).asUInt == 1u);
+    QVERIFY(regs->read(14).asFloat == 1.0);
     base->run();
-    QVERIFY(regs->read(17).asUInt == 2u);
+    QVERIFY(regs->read(17).asFloat == 2.0);
     base->run();
-    QVERIFY(regs->read(12).asUInt == 3u);
+    QVERIFY(regs->read(12).asFloat == 3.0);
     base->stop(); 
 }
 
@@ -100,6 +100,19 @@ void TestBaseline::test_multiple_add_float_reg(){
 void TestBaseline::test_add_PC(){
     QVector<uint> instructions;
     instructions.append(3825205911u);
+    load(instructions);
+
+    base->init();
+    base->run();
+    QVERIFY(regs->read(Register::PC).i == 21);
+    base->stop();
+
+}
+
+//B 20
+void TestBaseline::test_branch(){
+    QVector<uint> instructions;
+    instructions.append(3758096404u);
     load(instructions);
 
     base->init();
@@ -139,14 +152,13 @@ void TestBaseline::test_snippet(){
     instructions.append(3770679301u);//CMP 0 R5
     instructions.append(42u); //EQ B 42 ; Was this the syntax we settled on for conditions?
     
-    
     load(instructions);
 
     base->init();
     base->run();
     QVERIFY(regs->read(1).asUInt == 8u);
     base->run();
-    QVERIFY(regs->read(10).asUInt == 5u);
+    QVERIFY(regs->read(5).asUInt == 10u);
     base->run();
     QVERIFY(mem->_mainMemory->read(10)->at(0).asUInt == 8u);
     base->run();
@@ -154,11 +166,13 @@ void TestBaseline::test_snippet(){
     base->run();
     QVERIFY(regs->read(5).asUInt == 11u);
     base->run();
+    base->run();
     QVERIFY(regs->read(2).asUInt == 31u);    
     base->run();
-    QVERIFY(regs->read(15).asUInt == 31u);    
+    QVERIFY(regs->read(15).asUInt == 31u);    //AND R1 R15 ;AND noop
     base->run();
-    QVERIFY(regs->read(15).asUInt == 8u);    
+    QVERIFY(regs->read(15).asUInt == (16&31));    //ADD R1 R2 ; AND int scalar-scalar
+
      base->run();
     QVERIFY(regs->read(2).asUInt == 47u);    
      base->run();

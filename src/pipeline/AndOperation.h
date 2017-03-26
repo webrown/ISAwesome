@@ -3,9 +3,7 @@
 #include "ArithmeticOperation.h"
 class AndOperation : public ArithmeticOperation{
     public:
-        static Value scalarOperation(int a, int b);
-        static Value scalarOperation(float a, float b);
-        static Value scalarOperation(float a, int b);
-        static Value scalarOperation(int a, float b);
+        static AndOperation singleton;
+        Value scalarOperation(int a, int b);
 };
 #endif
