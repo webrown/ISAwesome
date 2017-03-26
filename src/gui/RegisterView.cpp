@@ -52,12 +52,19 @@ void RegisterView::display(QList<QVariant> list){
         line = "FLAG #";
     }
     for(int row =0; row< 64; row++){
-
         uint content = list[row+1].toUInt();
+        if(line == "R" && row >= 24){
+            regTable->item(row, 0)->setText("");
+            regTable->item(row, 1)->setText("");
+            regTable->item(row, 2)->setText("");
+            regTable->item(row, 3)->setText("");
+        }
+        else{
         regTable->item(row, 0)->setText(line+ QString::number(row).toUpper());
-        regTable->item(row, 1)->setText("0X" + QString::number(content,16));
+        regTable->item(row, 1)->setText("0X" + QString::number(content,16).rightJustified(8, '0'));
         regTable->item(row, 2)->setText(QString::number(content,10));
-        regTable->item(row, 3)->setText("0B" + QString::number(content,2));
+        regTable->item(row, 3)->setText("0B" + QString::number(content,2).rightJustified(32,'0'));
+        }
     }
 }
 

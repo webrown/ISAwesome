@@ -3,6 +3,8 @@
 
 #include <queue>
 #include <QList>
+#include <QTime>
+#include <QCoreApplication>
 #include <QQueue>
 #include <QMap>
 #include "../memory/Register.h"
@@ -12,11 +14,12 @@
 #include "../pipeline/Baseline.h"
 #include "Status.h"
 #include "ThreadMessage.h"
+#include <QThread>
 class Computer: public QObject{
     Q_OBJECT
     public:
         enum State{
-            DEAD,  RUNNING
+            DEAD = 0,  RUNNING =1
         };
         /*
          * If this variable is true, then computer will stop with break (I am not hundred percent sure about how to implement "break functionality"
@@ -24,7 +27,7 @@ class Computer: public QObject{
          */
 
         State currState;
-        bool breakEnabled;
+        bool breakEnabled = true;
         QMap<uint,BreakPoint::BreakPoint> breakMap;
 
         Register* regs = NULL;
@@ -59,7 +62,7 @@ class Computer: public QObject{
          */
         void stop();
 
-
+        void delay();
         void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
         void removeBreakPoint(uint address);
 

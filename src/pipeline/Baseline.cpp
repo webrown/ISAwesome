@@ -34,8 +34,11 @@ Status Baseline::run(void){
     qr = memory->getInstructionAccess()->read(registers->getPC());
     unsigned int nextInstruction = qr->result.at(0).asUInt;
     delete qr;
+    /* Walter, I think PC should increase by 4
+     *
+     */
     // Move to next instruction address.
-    registers->write(registers->getPC()+1, Register::PC);
+    registers->write(registers->getPC()+INSTRUCTION_SIZE, Register::PC);
     // What is instruction type?
     unsigned int opcode = spliceMachineCode(nextInstruction, 22, 27);
     Instruction instructionType;

@@ -36,7 +36,8 @@ void Computer::init(QList<QVariant> instructions){
     mems->_mainMemory->write(vec, 0);
 
     currState = RUNNING;
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {RUNNING}));
+    emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
     return;
 }
 
@@ -45,10 +46,13 @@ void Computer::step(int nCycle){
     qDebug() << "COM: step";
     if(currState != RUNNING){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
+        return;
     }
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
     bool breakFlag = false;
-    while(breakFlag == false && nCycle > 0){
+    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    while(breakFlag == false && nCycle != 0){
+        //sleep for sanity
+        delay();
         if(breakEnabled == true){
             uint pc = regs->getPC(); if(breakMap.contains(pc) == true){
                 BreakPoint::BreakPoint bp = breakMap[pc];
@@ -76,10 +80,17 @@ void Computer::step(int nCycle){
             return;
         }
         nCycle = nCycle < 0 ? -1 : nCycle -1;
+        emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
     }
     return;
 }
-
+//http://stackoverflow.com/questions/3752742/how-do-i-create-a-pause-wait-function-using-qt
+void Computer::delay()
+{
+    QTime dieTime= QTime::currentTime().addSecs(1);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 void Computer::stop(){
     qDebug() << "COM: stop";
     if(currState != RUNNING){
@@ -88,7 +99,7 @@ void Computer::stop(){
     }
     currState = DEAD;
     exec->stop();
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {DEAD}));
     return;
 }
 void Computer::pause(){
@@ -120,13 +131,13 @@ void Computer::handleMemoryView(uint address){
     uint x = (((1<<8)-1) & address) << 8;
     //check empty
     if(mems->_mainMemory->_contents[chunkBit].size() ==0){
-        for(int row = 0; row < 256; row++){
+        for(int row = 0; row < 64; row++){
             ret.append(0u);
         }
     }
     else{
-        for(uint i = 0; i < 256; i++){
-            uint content = mems->_mainMemory->_contents[chunkBit][x + i].asUInt;
+        for(uint i = 0; i < 64; i++){
+            uint content = mems->_mainMemory->_contents[chunkBit][x + i * INSTRUCTION_SIZE].asUInt;
             ret.append(content);
         }
     }
@@ -140,10 +151,13 @@ void Computer::handleRegisterView(QString line){
     ret.append(line);
     if(line == "General Registers"){
         int row =0;
+        qDebug() << regs->_scas.size();
         for(;row < 24; row++){
             uint content = regs->_scas[row].asUInt;
             ret.append(content);
         }
+        qDebug() <<"A";
+
         for(;row<64;row++){
             ret.append(0u);
         }
@@ -180,9 +194,13 @@ void Computer::procMessage(ThreadMessage message){
             qDebug() << "COM: RECV FROM GUI: R_INIT";
             init(info.toList());
             break;
+        case ThreadMessage::R_SET_PC:
+            qDebug() << "COM: RECV FROM GUI: R_SET_PC";
+            regs->write(info.toUInt(), Register::PC);
+            emit sendMessage(ThreadMessage(ThreadMessage::A_SET_PC,{}));
+            break;
         case ThreadMessage::R_STEP:
             qDebug() << "COM: RECV FROM GUI: R_STEP";
-
             step(info.toInt());
             break;
         case ThreadMessage::R_STOP:

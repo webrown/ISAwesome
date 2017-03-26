@@ -52,6 +52,12 @@ class MainWindow : public QMainWindow
 
         QList<CacheModel> cacheModels;
 
+        QSpinBox* cycleSpinBox;
+        HexSpinBox* pcSpinBox; 
+
+        //@@@TODO FIX THIS SOON
+        QListWidgetItem* currItem = NULL;
+        //@@@
         void updateNavigation();
 
         void printConsole(QString line);
@@ -95,7 +101,11 @@ class MainWindow : public QMainWindow
         void handleRemoveBreak();
         void handleUpload();
         void handleErrorFromComputer(QString errorMessage);
+        void handleUpdatePC(int);
 
+        void update(uint pc);
+        void updateByState(Computer::State state);
+        void updateMemoryWidget();
 
         void updateUndo(bool avail);
         void updateRedo(bool avail);

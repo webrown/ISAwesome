@@ -85,8 +85,8 @@ class Assembler: public QObject{
     QMap<QString, QStringList>* _macroTable = NULL;
 
     //Log purpose
-    QFile* _logFile;
-    QTextStream* _log;
+    QFile* _logFile = NULL;
+    QTextStream* _log =NULL;
 
     //Problem collection
     QList<Problem>* _problemLog;

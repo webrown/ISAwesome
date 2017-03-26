@@ -27,16 +27,19 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     computerThread->start();
 
     //add element on toolbar
-    QSpinBox* cycleSpinBox = new QSpinBox(this);
+    cycleSpinBox = new QSpinBox(this);
     cycleSpinBox->setPrefix("Cycle: ");
     cycleSpinBox->setValue(1);
     cycleSpinBox->setRange(0,1000);
     _ui.toolBar->insertWidget(_ui.actionforward,cycleSpinBox);
 
-    QSpinBox* pcSpinBox = new HexSpinBox(false);
+    pcSpinBox = new HexSpinBox(false);
     pcSpinBox->setPrefix("PC: ");
     pcSpinBox->setValue(0);
+    pcSpinBox->setSingleStep(INSTRUCTION_SIZE);
     _ui.toolBar->addWidget(pcSpinBox);
+    connect(pcSpinBox, SIGNAL(valueChanged(int)) ,this, SLOT(handleUpdatePC(int)));
+
 
     //disable both undo and redo
     _ui.actionUndo->setEnabled(false);
@@ -57,6 +60,7 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     _ui.tab_register->init(this,_ui.tableWidget_6,_ui.comboBox);
 
 
+    updateByState(Computer::DEAD);
     qDebug() << "GUI: MainWindow is initialized...";
 }
 
@@ -365,8 +369,19 @@ void MainWindow::handlePreference(){
 }
 
 void MainWindow::handleForward(){
+   qDebug() << "GUI: Forward button is clicked"; 
+   int cycles = cycleSpinBox->value();
+   sendMessage(ThreadMessage(ThreadMessage::R_STEP, {cycles}));
+}
+
+void MainWindow::handlePlay(){
+    qDebug() << "GUI: Play button is clicked";
+   sendMessage(ThreadMessage(ThreadMessage::R_STEP, {-1}));
+
 }
 void MainWindow::handleBackward(){
+    qDebug() << "GUI: Backward button is clicked";
+    printlnConsole("dS > dQ/T");
 }
 void MainWindow::handleUpload(){
     qDebug() << "GUI: Upload button is clicked";
@@ -402,8 +417,8 @@ void MainWindow::uploadProgram(QString fileName){
     for(int i = 0; i < instructions.size(); i++){
         QString address = QString::number(INSTRUCTION_SIZE  * i,16).rightJustified(8, '0');
         QString instruction =disassembler->disassemble(instructions.at(i)); 
-        QListWidgetItem *newItem = new QListWidgetItem; 
-        newItem->setText(address + "\t" + instruction);
+        QListWidgetItem *newItem = new QListWidgetItem();
+        newItem->setText(address + "  " + instruction);
         QVariant bp (BreakPoint::NONE);
         newItem->setData(Qt::UserRole, BreakPoint::NONE);
         _ui.tracker->addItem(newItem);
@@ -414,9 +429,9 @@ void MainWindow::uploadProgram(QString fileName){
         _instructions.append(instructions.at(i));
     }
     sendMessage(ThreadMessage(ThreadMessage::R_INIT,_instructions));
-    //TODO fix this line
-    _ui.tab_memory->update();
+
 }
+
 
 bool MainWindow::shouldIAssemble(){
     QString fileName = _ui.editorTab->currentEditor()->sourceFile->fileName();
@@ -442,6 +457,7 @@ void MainWindow::handlePause(){
 }
 void MainWindow::handleStop(){
     sendMessage(ThreadMessage(ThreadMessage::R_STOP, {}));
+    currItem = NULL;
 }
 
 //update undo button
@@ -550,11 +566,11 @@ void MainWindow::handleRemoveBreak(){
     }
     item->setBackground(Qt::BrushStyle::NoBrush);
     item->setData(Qt::UserRole, BreakPoint::NONE);
+    //TODO fix this
+    // sendMessage(ThreadMessage(ThreadMessage::R_REMOVEBREAK, {item->text().remove("->").split()[0]));
 }
 
 
-void MainWindow::handlePlay(){
-}
 void MainWindow::handleErrorFromComputer(QString errorMessage){
     QMessageBox msgBox;
     msgBox.critical(0,"Error",errorMessage);
@@ -565,6 +581,18 @@ void MainWindow::procMessage(ThreadMessage message){
     ThreadMessage::Type type = message.type;
     QVariant info = message.message;
     switch(message.type){
+        case ThreadMessage::A_STATE_CHANGE:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_STATE_CHANGE";
+            updateByState(static_cast<Computer::State>(info.toInt()));
+            break;
+        case ThreadMessage::A_UPDATE:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_UPDATE";
+            update(info.toUInt());
+            return;
+        case ThreadMessage::A_SET_PC:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_SET_PC";
+            updateMemoryWidget();
+            break;
         case ThreadMessage::A_OKAY:
             qDebug() << "GUI: RECV FROM COMPUTER: A_OKAY";
             //Do nothing
@@ -590,6 +618,43 @@ void MainWindow::procMessage(ThreadMessage message){
     if(messageQueue.isEmpty() == false){
         emit _sendMessage(messageQueue.head());
     }
+}
+void MainWindow::updateByState(Computer::State state){
+    switch(state){
+        case Computer::DEAD:
+            _ui.actionUpload->setEnabled(true);
+            _ui.actionRun->setEnabled(false);
+            _ui.actionpause->setEnabled(false);
+            _ui.actionstop->setEnabled(false);
+            _ui.actionforward->setEnabled(false);
+
+            break;
+        case Computer::RUNNING:
+            _ui.actionUpload->setEnabled(false);
+            _ui.actionRun->setEnabled(true);
+            _ui.actionpause->setEnabled(true);
+            _ui.actionstop->setEnabled(true);
+            _ui.actionforward->setEnabled(true);
+
+            break;
+
+    }
+}
+void MainWindow::update(uint pc){
+    qDebug() << "GUI: FULL ON UPDATE";
+    pcSpinBox->setHexValue(pc);
+    updateMemoryWidget();
+    if(currItem != NULL && currItem->text() != NULL ){
+        currItem->setText(currItem->text().remove("->"));
+    }
+    if(pc / INSTRUCTION_SIZE < _ui.tracker->count()){
+        _ui.tracker->setCurrentRow(pc/INSTRUCTION_SIZE);
+        currItem = _ui.tracker->item(pc/INSTRUCTION_SIZE);
+        currItem->setText("->" + currItem->text());
+    }
+    else{
+        currItem = NULL;
+    }
 
 }
 void MainWindow::sendMessage(ThreadMessage message){
@@ -602,4 +667,24 @@ void MainWindow::sendMessage(ThreadMessage message){
     else{
         messageQueue.enqueue(message);
     }
+    qDebug() << "GUI: sent message";
+}
+
+void MainWindow::handleUpdatePC(int v){
+    qDebug() << "GUI: update pc through spinbox";
+    sendMessage(ThreadMessage(ThreadMessage::R_SET_PC, {pcSpinBox->hexValue()}));
+}
+void MainWindow::updateMemoryWidget(){
+    QWidget* widget = _ui.tabWidget_memory->currentWidget();
+    if(widget == _ui.tab_register){
+        _ui.tab_register->update();
+    }
+    else if (widget == _ui.tab_cache){
+        // _ui.tab_register->update();
+        // TODO
+    }
+    else if (widget == _ui.tab_memory){
+        _ui.tab_memory->update();
+    }
+
 }

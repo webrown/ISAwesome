@@ -56,7 +56,7 @@
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="tab_navigation">
            <attribute name="title">
@@ -141,7 +141,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_problems">
          <property name="sizePolicy">
@@ -288,7 +288,7 @@
          <enum>QTabWidget::Triangular</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="documentMode">
          <bool>true</bool>
@@ -311,7 +311,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_memory">
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="RegisterView" name="tab_register">
          <attribute name="title">
@@ -439,7 +439,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab">
+        <widget class="QWidget" name="tab_cache">
          <attribute name="title">
           <string>Cache</string>
          </attribute>
@@ -1420,6 +1420,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tabWidget_memory</sender>
+   <signal>currentChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>updateMemoryWidget()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1547</x>
+     <y>739</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>handleNew()</slot>
@@ -1447,5 +1463,6 @@
   <slot>handleOpenFromNavigation(QModelIndex)</slot>
   <slot>handleCustomContextMenuForTracker(QPoint)</slot>
   <slot>handleUpload()</slot>
+  <slot>updateMemoryWidget()</slot>
  </slots>
 </ui>

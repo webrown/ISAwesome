@@ -62,14 +62,15 @@ void Assembler::clear(){
         delete _preprocessedQueue;
         _preprocessedQueue = NULL;
     }
-    if(_logFile != NULL){
-        delete _logFile;
-        _logFile = NULL;
-    }
     if(_log != NULL){
         delete _log;
         _log = NULL;
     }
+    if(_logFile != NULL){
+        delete _logFile;
+        _logFile = NULL;
+    }
+
 
     _problemLog = NULL;
     _instructions = NULL;

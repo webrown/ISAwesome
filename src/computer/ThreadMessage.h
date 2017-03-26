@@ -15,7 +15,11 @@ class ThreadMessage{
         //Command was valid
         // QVaraint =None
         A_OKAY,
+        A_STATE_CHANGE,
+        A_UPDATE,
 
+        R_SET_PC,
+        A_SET_PC,
         R_INIT,  
         R_STOP, 
         R_STEP, 
