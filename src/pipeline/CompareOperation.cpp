@@ -1,11 +1,13 @@
 #include "CompareOperation.h"
 #include "../memory/Flag.h"
+#include <QDebug>
 
 using namespace Flag;
 
 CompareOperation CompareOperation::singleton;
 
 Value CompareOperation::newFlag(int a, int b) {
+qDebug() << "YUS I AM INTING";
   Value result;
   result.asUInt = 0;
   if(a == b) result = add(result, EQ);
@@ -40,6 +42,7 @@ Value CompareOperation::newFlag(bool arg1IsFloat, bool arg2IsFloat, Value a, Val
 
 void CompareOperation::execute(Register *registers, bool arg1IsImmediate, unsigned int arg1, unsigned int arg2){
   if(arg1IsImmediate) {
+qDebug() << "YUS I AM IMMEDIATE";
     // Immediate operations
     Value arg1Value;
     arg1Value.asUInt = arg1;
@@ -53,7 +56,8 @@ void CompareOperation::execute(Register *registers, bool arg1IsImmediate, unsign
     }
     else {
       // immediate is being applied to scalar
-      registers->writeFlag(newFlag(Register::isFloatIndex(arg1), Register::isFloatIndex(arg2), arg1Value, registers->read(arg2), registers->readFlag()));
+qDebug() << "YUS I AM SCALAR";
+      registers->writeFlag(newFlag(Register::isFloatIndex(arg2), Register::isFloatIndex(arg2), arg1Value, registers->read(arg2), registers->readFlag()));
     }
   }
   else {
@@ -71,7 +75,7 @@ void CompareOperation::execute(Register *registers, bool arg1IsImmediate, unsign
       registers->writeFlags(result);
     }
     if( Register::isVectorIndex(arg1) && !Register::isVectorIndex(arg2)) {
-      // Reduce arg1 onto arg2
+      // broadcast arg2 across arg1
       QVector<Value> result;
       for(int i = 0; i < registers->readVector(arg2).size(); i++) {
         result += newFlag(Register::isFloatIndex(arg1), Register::isFloatIndex(arg2), registers->readVector(arg1).at(i), registers->read(arg2), registers->readFlags().at(i));

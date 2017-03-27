@@ -176,7 +176,9 @@ Status Baseline::run(void){
             break;
         }
         case CMP: {
+qDebug() << "I AM CMP";
             if(conditionScalar) {
+qDebug() << "CONDITION ENTERED";
                 CompareOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2);
             }
             break;

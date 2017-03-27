@@ -48,6 +48,7 @@ void ArithmeticOperation::execute(Register *registers, bool arg1IsImmediate, uns
       QVector<Value> result;
       for(int i = 0; i < registers->readVector(arg2).size(); i++) {
         if(flags[i]) result += scalarOperation(Register::isFloatIndex(arg2), Register::isFloatIndex(arg2), arg1Value, registers->readVector(arg2).at(i));
+        else result += registers->readVector(arg2).at(i);
       }
       registers->write(result, arg2);
     }
@@ -68,6 +69,7 @@ qDebug() << "PURE SCALAR";
       QVector<Value> result;
       for(int i = 0; i < registers->readVector(arg2).size(); i++) {
         if(flags[i]) result += scalarOperation(Register::isFloatIndex(arg1), Register::isFloatIndex(arg2), registers->read(arg1), registers->readVector(arg2).at(i));
+        else result += registers->readVector(arg2).at(i);
       }
       registers->write(result, arg2);
     }
@@ -82,6 +84,7 @@ qDebug() << "PURE SCALAR";
       QVector<Value> result;
       for(int i = 0; i < registers->readVector(arg2).size(); i++) {
         if(flags[i]) result += scalarOperation(Register::isFloatIndex(arg1), Register::isFloatIndex(arg2), registers->readVector(arg1).at(i), registers->readVector(arg2).at(i));
+        else result += registers->readVector(arg2).at(i);
       }
       registers->write(result, arg2);
     }
