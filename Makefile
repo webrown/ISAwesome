@@ -64,9 +64,11 @@ SOURCES       = src/main.cpp \
 		src/gui/HighLighter.cpp \
 		src/gui/MainWindow.cpp \
 		src/gui/MemoryView.cpp \
+		src/gui/MyQSpinBox.cpp \
 		src/gui/MiscDialog.cpp \
 		src/gui/PreferenceDialog.cpp \
 		src/gui/RegisterView.cpp \
+		src/gui/Tracker.cpp \
 		src/memory/Cache.cpp \
 		src/memory/Flag.cpp \
 		src/memory/MainMemory.cpp \
@@ -98,8 +100,10 @@ SOURCES       = src/main.cpp \
 		build/moc_MainWindow.cpp \
 		build/moc_MemoryView.cpp \
 		build/moc_MiscDialog.cpp \
+		build/moc_MyQSpinBox.cpp \
 		build/moc_PreferenceDialog.cpp \
-		build/moc_RegisterView.cpp
+		build/moc_RegisterView.cpp \
+		build/moc_Tracker.cpp
 OBJECTS       = build/main.o \
 		build/Utility.o \
 		build/TestAssembler.o \
@@ -116,9 +120,11 @@ OBJECTS       = build/main.o \
 		build/HighLighter.o \
 		build/MainWindow.o \
 		build/MemoryView.o \
+		build/MyQSpinBox.o \
 		build/MiscDialog.o \
 		build/PreferenceDialog.o \
 		build/RegisterView.o \
+		build/Tracker.o \
 		build/Cache.o \
 		build/Flag.o \
 		build/MainMemory.o \
@@ -151,8 +157,10 @@ OBJECTS       = build/main.o \
 		build/moc_MainWindow.o \
 		build/moc_MemoryView.o \
 		build/moc_MiscDialog.o \
+		build/moc_MyQSpinBox.o \
 		build/moc_PreferenceDialog.o \
-		build/moc_RegisterView.o
+		build/moc_RegisterView.o \
+		build/moc_Tracker.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -361,7 +369,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/computer/Computer.h \
 		src/computer/Status.h \
 		src/computer/ThreadMessage.h \
-		src/computer/ThreadMessagePool.h \
+		src/computer/ThreadMessageQueue.h \
 		src/gui/CacheModel.h \
 		src/gui/CacheView.h \
 		src/gui/CodeEditor.h \
@@ -371,8 +379,10 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/MainWindow.h \
 		src/gui/MemoryView.h \
 		src/gui/MiscDialog.h \
+		src/gui/MyQSpinBox.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/RegisterView.h \
+		src/gui/Tracker.h \
 		src/memory/Cache.h \
 		src/memory/Flag.h \
 		src/memory/MainMemory.h \
@@ -410,9 +420,11 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/HighLighter.cpp \
 		src/gui/MainWindow.cpp \
 		src/gui/MemoryView.cpp \
+		src/gui/MyQSpinBox.cpp \
 		src/gui/MiscDialog.cpp \
 		src/gui/PreferenceDialog.cpp \
 		src/gui/RegisterView.cpp \
+		src/gui/Tracker.cpp \
 		src/memory/Cache.cpp \
 		src/memory/Flag.cpp \
 		src/memory/MainMemory.cpp \
@@ -856,8 +868,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessagePool.h src/gui/CacheModel.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/AddOperation.h src/pipeline/AndOperation.h src/pipeline/ArithmeticOperation.h src/pipeline/Banana.h src/pipeline/Baseline.h src/pipeline/CompareOperation.h src/pipeline/CopyOperation.h src/pipeline/LoadOperation.h src/pipeline/MemoryOperation.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/StageData.h src/pipeline/StoreOperation.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/LoadOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/CacheModel.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/AddOperation.h src/pipeline/AndOperation.h src/pipeline/ArithmeticOperation.h src/pipeline/Banana.h src/pipeline/Baseline.h src/pipeline/CompareOperation.h src/pipeline/CopyOperation.h src/pipeline/LoadOperation.h src/pipeline/MemoryOperation.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/StageData.h src/pipeline/StoreOperation.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MyQSpinBox.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/LoadOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -926,9 +938,9 @@ compiler_moc_predefs_clean:
 build/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -dM -E -o build/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp
+compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp
+	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
 build/moc_TestAssembler.cpp: src/assembler/Assembler.h \
 		src/assembler/Problem.h \
 		src/computer/Architecture.h \
@@ -1048,6 +1060,12 @@ build/moc_MainWindow.cpp: src/gui/MemoryView.h \
 		src/memory/Value.h \
 		src/gui/HexSpinBox.h \
 		src/computer/ThreadMessage.h \
+		src/gui/Tracker.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
 		src/gui/ui_pisa.h \
 		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
@@ -1059,7 +1077,6 @@ build/moc_MainWindow.cpp: src/gui/MemoryView.h \
 		src/computer/Computer.h \
 		src/memory/MemoryStructure.h \
 		src/memory/Cache.h \
-		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1072,11 +1089,8 @@ build/moc_MainWindow.cpp: src/gui/MemoryView.h \
 		src/gui/MainWindow.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/InstructionResolver.h \
-		src/Utility.h \
-		src/assembler/ConditionResolver.h \
-		src/assembler/Disassembler.h \
 		src/assembler/ProgramManagerX.h \
+		src/gui/MyQSpinBox.h \
 		src/gui/MainWindow.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -1105,6 +1119,12 @@ build/moc_MiscDialog.cpp: src/gui/ui_newcachedialog.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/MiscDialog.h -o build/moc_MiscDialog.cpp
 
+build/moc_MyQSpinBox.cpp: src/gui/HexSpinBox.h \
+		src/gui/MyQSpinBox.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/MyQSpinBox.h -o build/moc_MyQSpinBox.cpp
+
 build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/gui/MainWindow.h \
 		src/gui/MemoryView.h \
@@ -1114,6 +1134,12 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/memory/Value.h \
 		src/gui/HexSpinBox.h \
 		src/computer/ThreadMessage.h \
+		src/gui/Tracker.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
 		src/gui/ui_pisa.h \
 		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
@@ -1125,7 +1151,6 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/computer/Computer.h \
 		src/memory/MemoryStructure.h \
 		src/memory/Cache.h \
-		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1136,11 +1161,8 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/InstructionResolver.h \
-		src/Utility.h \
-		src/assembler/ConditionResolver.h \
-		src/assembler/Disassembler.h \
 		src/assembler/ProgramManagerX.h \
+		src/gui/MyQSpinBox.h \
 		src/gui/PreferenceDialog.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
@@ -1155,6 +1177,17 @@ build/moc_RegisterView.cpp: src/memory/Register.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/RegisterView.h -o build/moc_RegisterView.cpp
+
+build/moc_Tracker.cpp: src/computer/ThreadMessage.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
+		src/gui/Tracker.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/Tracker.h -o build/moc_Tracker.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -1175,6 +1208,7 @@ src/gui/ui_pisa.h: rsc/ui/pisa.ui \
 		src/gui/HexSpinBox.h \
 		src/gui/MemoryView.h \
 		src/gui/RegisterView.h \
+		src/gui/Tracker.h \
 		src/gui/CodeEditor.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
@@ -1188,7 +1222,13 @@ src/gui/ui_pisa.h: rsc/ui/pisa.ui \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
 		src/computer/Architecture.h \
-		src/computer/ThreadMessage.h
+		src/computer/ThreadMessage.h \
+		src/computer/ThreadMessage.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h
 	/usr/bin/uic rsc/ui/pisa.ui -o src/gui/ui_pisa.h
 
 src/gui/ui_preferencedialog.h: rsc/ui/preferencedialog.ui \
@@ -1213,6 +1253,12 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/memory/Value.h \
 		src/gui/HexSpinBox.h \
 		src/computer/ThreadMessage.h \
+		src/gui/Tracker.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
 		src/gui/ui_pisa.h \
 		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
@@ -1224,7 +1270,6 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/computer/Computer.h \
 		src/memory/MemoryStructure.h \
 		src/memory/Cache.h \
-		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1236,11 +1281,8 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/InstructionResolver.h \
-		src/Utility.h \
-		src/assembler/ConditionResolver.h \
-		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h
+		src/assembler/ProgramManagerX.h \
+		src/gui/MyQSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/main.o src/main.cpp
 
 build/Utility.o: src/Utility.cpp src/Utility.h
@@ -1356,6 +1398,12 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/memory/Value.h \
 		src/gui/HexSpinBox.h \
 		src/computer/ThreadMessage.h \
+		src/gui/Tracker.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
 		src/gui/ui_pisa.h \
 		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
@@ -1367,7 +1415,6 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/computer/Computer.h \
 		src/memory/MemoryStructure.h \
 		src/memory/Cache.h \
-		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1379,11 +1426,8 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/InstructionResolver.h \
-		src/Utility.h \
-		src/assembler/ConditionResolver.h \
-		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h
+		src/assembler/ProgramManagerX.h \
+		src/gui/MyQSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MainWindow.o src/gui/MainWindow.cpp
 
 build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
@@ -1394,6 +1438,12 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/gui/HexSpinBox.h \
 		src/computer/ThreadMessage.h \
 		src/gui/MainWindow.h \
+		src/gui/Tracker.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
 		src/gui/ui_pisa.h \
 		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
@@ -1405,7 +1455,6 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/computer/Computer.h \
 		src/memory/MemoryStructure.h \
 		src/memory/Cache.h \
-		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1417,12 +1466,13 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/InstructionResolver.h \
-		src/Utility.h \
-		src/assembler/ConditionResolver.h \
-		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h
+		src/assembler/ProgramManagerX.h \
+		src/gui/MyQSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryView.o src/gui/MemoryView.cpp
+
+build/MyQSpinBox.o: src/gui/MyQSpinBox.cpp src/gui/MyQSpinBox.h \
+		src/gui/HexSpinBox.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MyQSpinBox.o src/gui/MyQSpinBox.cpp
 
 build/MiscDialog.o: src/gui/MiscDialog.cpp src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
@@ -1444,6 +1494,12 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/memory/Value.h \
 		src/gui/HexSpinBox.h \
 		src/computer/ThreadMessage.h \
+		src/gui/Tracker.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
 		src/gui/ui_pisa.h \
 		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
@@ -1455,7 +1511,6 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/computer/Computer.h \
 		src/memory/MemoryStructure.h \
 		src/memory/Cache.h \
-		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1465,11 +1520,8 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/gui/CacheModel.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
-		src/assembler/InstructionResolver.h \
-		src/Utility.h \
-		src/assembler/ConditionResolver.h \
-		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h
+		src/assembler/ProgramManagerX.h \
+		src/gui/MyQSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PreferenceDialog.o src/gui/PreferenceDialog.cpp
 
 build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
@@ -1483,6 +1535,12 @@ build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
 		src/memory/MainMemory.h \
 		src/memory/MemoryInterface.h \
 		src/gui/HexSpinBox.h \
+		src/gui/Tracker.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
 		src/gui/ui_pisa.h \
 		src/gui/EditorTab.h \
 		src/gui/CodeEditor.h \
@@ -1491,7 +1549,6 @@ build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
 		src/computer/Computer.h \
 		src/memory/MemoryStructure.h \
 		src/memory/Cache.h \
-		src/computer/BreakPoint.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1503,12 +1560,49 @@ build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/CacheView.h \
 		src/assembler/Assembler.h \
+		src/assembler/ProgramManagerX.h \
+		src/gui/MyQSpinBox.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/RegisterView.o src/gui/RegisterView.cpp
+
+build/Tracker.o: src/gui/Tracker.cpp src/gui/Tracker.h \
+		src/computer/ThreadMessage.h \
+		src/computer/BreakPoint.h \
+		src/assembler/Disassembler.h \
 		src/assembler/InstructionResolver.h \
 		src/Utility.h \
 		src/assembler/ConditionResolver.h \
-		src/assembler/Disassembler.h \
-		src/assembler/ProgramManagerX.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/RegisterView.o src/gui/RegisterView.cpp
+		src/gui/MainWindow.h \
+		src/gui/MemoryView.h \
+		src/memory/MainMemory.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/gui/HexSpinBox.h \
+		src/gui/ui_pisa.h \
+		src/gui/EditorTab.h \
+		src/gui/CodeEditor.h \
+		src/gui/HighLighter.h \
+		src/assembler/Problem.h \
+		src/gui/RegisterView.h \
+		src/memory/Register.h \
+		src/computer/Architecture.h \
+		src/computer/Computer.h \
+		src/memory/MemoryStructure.h \
+		src/memory/Cache.h \
+		src/pipeline/Banana.h \
+		src/computer/Status.h \
+		src/pipeline/Baseline.h \
+		src/gui/MiscDialog.h \
+		src/gui/ui_newcachedialog.h \
+		src/gui/ui_newfiledialog.h \
+		src/gui/CacheModel.h \
+		src/gui/PreferenceDialog.h \
+		src/gui/ui_preferencedialog.h \
+		src/gui/CacheView.h \
+		src/assembler/Assembler.h \
+		src/assembler/ProgramManagerX.h \
+		src/gui/MyQSpinBox.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Tracker.o src/gui/Tracker.cpp
 
 build/Cache.o: src/memory/Cache.cpp src/memory/Cache.h \
 		src/memory/QueryResult.h \
@@ -1704,11 +1798,17 @@ build/moc_MemoryView.o: build/moc_MemoryView.cpp
 build/moc_MiscDialog.o: build/moc_MiscDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_MiscDialog.o build/moc_MiscDialog.cpp
 
+build/moc_MyQSpinBox.o: build/moc_MyQSpinBox.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_MyQSpinBox.o build/moc_MyQSpinBox.cpp
+
 build/moc_PreferenceDialog.o: build/moc_PreferenceDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_PreferenceDialog.o build/moc_PreferenceDialog.cpp
 
 build/moc_RegisterView.o: build/moc_RegisterView.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_RegisterView.o build/moc_RegisterView.cpp
+
+build/moc_Tracker.o: build/moc_Tracker.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_Tracker.o build/moc_Tracker.cpp
 
 ####### Install
 

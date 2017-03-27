@@ -7,15 +7,13 @@ Computer::Computer(){
     mems = new MemoryStructure(MAIN_MEMORY_DELAY);
     exec = new Baseline(regs, mems);
     currState = DEAD;
-    qDebug() << "COM: Computer created";
-}
-Computer::~Computer(){
-    qDebug() << "COM: Removing Computer";
-    delete regs;
-    delete mems;
-    delete exec;
-    qDebug() << "COM: Computer is removed!";
-}
+    qDebug() << "COM: Computer created"; } Computer::~Computer(){
+        qDebug() << "COM: Removing Computer";
+        delete regs;
+        delete mems;
+        delete exec;
+        qDebug() << "COM: Computer is removed!";
+    }
 
 void Computer::init(QList<QVariant> instructions){
     qDebug() <<"COM: init";
@@ -35,8 +33,9 @@ void Computer::init(QList<QVariant> instructions){
     }
     mems->_mainMemory->write(vec, 0);
 
-    currState = RUNNING;
-    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {RUNNING}));
+    currState = PAUSED;
+    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
     emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
     return;
 }
@@ -44,46 +43,91 @@ void Computer::init(QList<QVariant> instructions){
 
 void Computer::step(int nCycle){
     qDebug() << "COM: step";
-    if(currState != RUNNING){
+    if(currState == DEAD){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
         return;
     }
-    bool breakFlag = false;
+    currState = RUNNING;
+    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {RUNNING}));
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-    while(breakFlag == false && nCycle != 0){
+
+
+    while(currState == RUNNING){
         //sleep for sanity
         delay();
-        if(breakEnabled == true){
-            uint pc = regs->getPC(); if(breakMap.contains(pc) == true){
-                BreakPoint::BreakPoint bp = breakMap[pc];
-                if(bp == BreakPoint::BREAK){
-                    breakFlag = true;
+
+        uint pc = regs->getPC(); 
+
+        bool skip = false;
+        //Stop mechanism
+        if(breakMap.contains(pc) == true){
+            BreakPoint::BreakPoint bp = breakMap[pc];
+            switch(bp){
+                case BreakPoint::BREAK:
                     breakMap.remove(pc);
-                }
-                else if(bp == BreakPoint::BREAK_ALL){
-                    breakFlag = true;
-                }
-                else if(bp == BreakPoint::SKIP || bp == BreakPoint::SKIP_ALL){
-                    if(bp == BreakPoint::SKIP){
-                        breakMap.remove(pc);
-                    }
-                    Value v = {regs->getPC()+1};
-                    regs->write(v, Register::PC);
-                    nCycle = nCycle < 0 ? -1 : nCycle -1;
-                   continue;
-                }
+                case BreakPoint::BREAK_ALL:
+                    currState = PAUSED;
+                    break;
+                case BreakPoint::SKIP:
+                    breakMap.remove(pc);
+                case BreakPoint::SKIP_ALL:
+                    regs->write({regs->getPC()+INSTRUCTION_SIZE}, Register::PC);
+                    skip = true;
+                    break;
+                case BreakPoint::NONE:
+                default:
+                    //Do nothing
+                    break;
             }
         }
-        Status status = exec->run();
-        if(status != OKAY){
-            qDebug() << "Something is wrong; I feel like I have to do something, but I don't wnat to do anything.";
-            return;
+
+        if(skip == false){
+            Status status = exec->run();
+            if(status != OKAY){
+                qDebug() << "Something is wrong; I feel like I have to do something, but I don't wnat to do anything.";
+                return;
+            }
         }
+
+
+
         nCycle = nCycle < 0 ? -1 : nCycle -1;
+        if(nCycle == 0){
+            currState = PAUSED;
+        }
         emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
     }
+
+    //Distinguish from stop
+    if(currState == PAUSED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
+    }   
     return;
 }
+
+void Computer::stop(){
+    qDebug() << "COM: stop";
+    if(currState == DEAD){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
+        return;
+    }
+    currState = DEAD;
+    exec->stop();
+    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {DEAD}));
+    return;
+}
+
+void Computer::pause(){
+    qDebug() << "COM: pause";
+    if(currState == PAUSED || currState == DEAD){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program is already paused"}));
+        return;
+    }
+    currState = PAUSED;
+    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+}
+
 //http://stackoverflow.com/questions/3752742/how-do-i-create-a-pause-wait-function-using-qt
 void Computer::delay()
 {
@@ -91,34 +135,20 @@ void Computer::delay()
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
-void Computer::stop(){
-    qDebug() << "COM: stop";
-    if(currState != RUNNING){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
-        return;
-    }
-    currState = DEAD;
-    exec->stop();
-    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {DEAD}));
-    return;
-}
-void Computer::pause(){
-    qDebug() << "COM: pause";
-    //Do nothing
-}
 
 void Computer::addBreakPoint(uint address, BreakPoint::BreakPoint bp){
     qDebug() << "COM: add break point";
-    breakMap[address] = bp;
+    if(bp == BreakPoint::NONE){
+        breakMap.remove(address);
+    }
+    else{
+        breakMap[address] = bp;
+    }
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
 
 }
 
-void Computer::removeBreakPoint(uint address){
-    qDebug() << "COM: remove break point";
-    breakMap.remove(address);
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-}
+
 
 void Computer::handleMemoryView(uint address){
     qDebug() <<"COM: make memory view";
@@ -151,12 +181,10 @@ void Computer::handleRegisterView(QString line){
     ret.append(line);
     if(line == "General Registers"){
         int row =0;
-        qDebug() << regs->_scas.size();
         for(;row < 24; row++){
             uint content = regs->_scas[row].asUInt;
             ret.append(content);
         }
-        qDebug() <<"A";
 
         for(;row<64;row++){
             ret.append(0u);
@@ -217,11 +245,6 @@ void Computer::procMessage(ThreadMessage message){
             qDebug() << "COM: RECV FROM GUI: R_ADDBREAK";
 
             addBreakPoint(info.toList()[0].toUInt(), static_cast<BreakPoint::BreakPoint> (info.toList()[1].toUInt()));
-            break;
-        case ThreadMessage::R_REMOVEBREAK:
-            qDebug() << "COM: RECV FROM GUI: R_REMOVEBREAK";
-
-            removeBreakPoint(info.toUInt());
             break;
         case ThreadMessage::R_VIEW_REGISTER:
             qDebug() << "COM: RECV FROM GUI: R_VIEW_REGISTER";

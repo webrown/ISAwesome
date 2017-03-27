@@ -19,7 +19,6 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
@@ -36,6 +35,7 @@
 #include "HexSpinBox.h"
 #include "MemoryView.h"
 #include "RegisterView.h"
+#include "Tracker.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -82,7 +82,7 @@ public:
     QWidget *tab_performance;
     QWidget *Track;
     QVBoxLayout *verticalLayout_8;
-    QListWidget *tracker;
+    Tracker *tracker;
     EditorTab *editorTab;
     QTabWidget *tabWidget_output;
     QWidget *tab_problems;
@@ -283,7 +283,7 @@ public:
         Track->setObjectName(QStringLiteral("Track"));
         verticalLayout_8 = new QVBoxLayout(Track);
         verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
-        tracker = new QListWidget(Track);
+        tracker = new Tracker(Track);
         tracker->setObjectName(QStringLiteral("tracker"));
         tracker->setContextMenuPolicy(Qt::CustomContextMenu);
         tracker->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -702,7 +702,7 @@ public:
         QObject::connect(actionstop, SIGNAL(triggered()), MainWindow, SLOT(handleStop()));
         QObject::connect(actionforward, SIGNAL(triggered()), MainWindow, SLOT(handleForward()));
         QObject::connect(fileSystemView, SIGNAL(doubleClicked(QModelIndex)), MainWindow, SLOT(handleOpenFromNavigation(QModelIndex)));
-        QObject::connect(tracker, SIGNAL(customContextMenuRequested(QPoint)), MainWindow, SLOT(handleCustomContextMenuForTracker(QPoint)));
+        QObject::connect(tracker, SIGNAL(customContextMenuRequested(QPoint)), tracker, SLOT(customContextMenu(QPoint)));
         QObject::connect(actionUpload, SIGNAL(triggered()), MainWindow, SLOT(handleUpload()));
         QObject::connect(tabWidget_memory, SIGNAL(currentChanged(int)), MainWindow, SLOT(updateMemoryWidget()));
 

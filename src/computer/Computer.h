@@ -19,7 +19,7 @@ class Computer: public QObject{
     Q_OBJECT
     public:
         enum State{
-            DEAD = 0,  RUNNING =1
+            DEAD = 0,  RUNNING =1 , PAUSED = 2
         };
         /*
          * If this variable is true, then computer will stop with break (I am not hundred percent sure about how to implement "break functionality"
@@ -27,7 +27,6 @@ class Computer: public QObject{
          */
 
         State currState;
-        bool breakEnabled = true;
         QMap<uint,BreakPoint::BreakPoint> breakMap;
 
         Register* regs = NULL;
@@ -64,7 +63,6 @@ class Computer: public QObject{
 
         void delay();
         void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
-        void removeBreakPoint(uint address);
 
         void handleMemoryView(uint startAddress);
         void handleRegisterView(QString type);

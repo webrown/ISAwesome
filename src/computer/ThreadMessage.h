@@ -17,6 +17,7 @@ class ThreadMessage{
         A_OKAY,
         A_STATE_CHANGE,
         A_UPDATE,
+        A_REMOVEBREAK,
 
         R_SET_PC,
         A_SET_PC,
@@ -25,7 +26,6 @@ class ThreadMessage{
         R_STEP, 
         R_PAUSE,
         R_ADDBREAK,
-        R_REMOVEBREAK,
         R_VIEW_CACHE, A_VIEW_CACHE,
         R_VIEW_MEMORY, A_VIEW_MEMORY,
         R_VIEW_REGISTER, A_VIEW_REGISTER

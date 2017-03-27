@@ -89,7 +89,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <widget class="QListWidget" name="tracker">
+             <widget class="Tracker" name="tracker">
               <property name="contextMenuPolicy">
                <enum>Qt::CustomContextMenu</enum>
               </property>
@@ -1043,6 +1043,14 @@
    <header>RegisterView.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>Tracker</class>
+   <extends>QListWidget</extends>
+   <header>Tracker.h</header>
+   <slots>
+    <slot>customContextMenu(QPoint)</slot>
+   </slots>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>tabWidget_pipeline</tabstop>
@@ -1391,16 +1399,16 @@
   <connection>
    <sender>tracker</sender>
    <signal>customContextMenuRequested(QPoint)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>handleCustomContextMenuForTracker(QPoint)</slot>
+   <receiver>tracker</receiver>
+   <slot>customContextMenu(QPoint)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>152</x>
      <y>458</y>
     </hint>
     <hint type="destinationlabel">
-     <x>959</x>
-     <y>539</y>
+     <x>152</x>
+     <y>458</y>
     </hint>
    </hints>
   </connection>

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "MemoryView.h"
+#include "Tracker.h"
 #include <iostream>
 #include <typeinfo>
 #include <QFileDialog>
@@ -34,6 +35,7 @@
 #include "HexSpinBox.h"
 #include "../computer/BreakPoint.h"
 #include "CacheModel.h"
+#include "MyQSpinBox.h"
 Q_DECLARE_METATYPE(ThreadMessage);
 Q_DECLARE_METATYPE(CacheModel);
 
@@ -45,7 +47,6 @@ class MainWindow : public QMainWindow
         ~MainWindow();
         Computer* computer;
         Assembler* assembler;
-        Disassembler* disassembler;
         QSettings settings;
 
         QQueue<ThreadMessage> messageQueue;
@@ -53,11 +54,8 @@ class MainWindow : public QMainWindow
         QList<CacheModel> cacheModels;
 
         QSpinBox* cycleSpinBox;
-        HexSpinBox* pcSpinBox; 
+        MyQSpinBox* pcSpinBox; 
 
-        //@@@TODO FIX THIS SOON
-        QListWidgetItem* currItem = NULL;
-        //@@@
         void updateNavigation();
 
         void printConsole(QString line);
@@ -93,25 +91,29 @@ class MainWindow : public QMainWindow
         void handlePause();
         void handleStop();
         void handleOpenFromNavigation(QModelIndex index);
-        void handleCustomContextMenuForTracker(QPoint point);
-        void handleAddBreak();
-        void handleAddBreakAll();
-        void handleAddSkip();
-        void handleAddSkipAll();
-        void handleRemoveBreak();
         void handleUpload();
         void handleErrorFromComputer(QString errorMessage);
+        
         void handleUpdatePC(int);
-
         void update(uint pc);
         void updateByState(Computer::State state);
         void updateMemoryWidget();
 
-        void updateUndo(bool avail);
-        void updateRedo(bool avail);
+        //update undo button
+        void updateUndo(bool avail) {
+            _ui.actionUndo->setEnabled(avail); 
+        }
+
+        //update redo button
+        void updateRedo(bool avail)
+        {
+            _ui.actionRedo->setEnabled(avail);
+        }
         void finishAssemble(Assembled* assembled, bool runAfter);
+
         void procMessage(ThreadMessage message);
         void sendMessage(ThreadMessage message);
+
     signals:
         void startBuild(QString fileName, AssemblerConfiguration config, bool runAfter);
         void _sendMessage(ThreadMessage message);
