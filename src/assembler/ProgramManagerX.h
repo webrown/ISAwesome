@@ -23,7 +23,7 @@ class ProgramManagerX{
     static QList<uint> loadProgram(QString fileName){
         qDebug() << "LOAD: " << fileName;
         QFile file(fileName);
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        if (!file.open(QIODevice::ReadOnly)){
             return QList<uint>();
         }
 

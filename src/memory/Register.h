@@ -50,8 +50,8 @@ class Register{
 
 
 
-        QString *save();
-        void restore(QString *state);
+        QByteArray save();
+        void restore(QByteArray state);
 
         static const unsigned int scalarIntegers = 0;
         static const unsigned int scalarFloats = 10;

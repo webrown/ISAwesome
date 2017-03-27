@@ -36,6 +36,7 @@
 #include "../computer/BreakPoint.h"
 #include "CacheModel.h"
 #include "MyQSpinBox.h"
+#include <QByteArray>
 Q_DECLARE_METATYPE(ThreadMessage);
 Q_DECLARE_METATYPE(CacheModel);
 
@@ -93,6 +94,8 @@ class MainWindow : public QMainWindow
         void handleOpenFromNavigation(QModelIndex index);
         void handleUpload();
         void handleErrorFromComputer(QString errorMessage);
+        void handleSaveState();
+        void handleRestoreState();
         
         void handleUpdatePC(int);
         void update(uint pc);

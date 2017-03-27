@@ -3,7 +3,10 @@
 #include <QVector>
 #include <QString>
 
-QString *serialize(QVector<int>* const input);
-QVector<int> *deserialize(QString* const input);
+void serialize(QByteArray* result, QVector<int>* const input);
+void deserialize(QByteArray* const input, QVector<int>* result);
+void serialize(QByteArray* result, QVector<uint>* const input);
+void deserialize(QByteArray* const input, QVector<uint>* result);
+
 
 #endif

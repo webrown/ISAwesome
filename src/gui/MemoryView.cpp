@@ -39,14 +39,14 @@ void MemoryView::updateWithSearch(){
     if(okay == false){
         return;
     }
-    // uint address = searchAddress >> 8;
-    main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_MEMORY, searchAddress));
+    uint address = searchAddress >> 8;
+    main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_MEMORY, address));
    
 }
 void MemoryView::display(QList<QVariant> list){
     uint address = list[0].toUInt();
     uint mask = (MainMemory::MEMORY_CHUNKS-1) << 8;
-    uint chunkBit = ((mask & address) >> 8);
+    uint chunkBit = ((mask & address) >> 8) << 16;
     uint x = (((1<<8)-1) & address) << 8;
     //check empty
     for(uint i = 0; i < 64; i++){

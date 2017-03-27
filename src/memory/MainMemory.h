@@ -29,8 +29,8 @@ class MainMemory : public MemoryInterface{
     double write(QVector<Value> *value, unsigned int address);
     double write(Value value, unsigned int address);
 
-    QString *save();
-    void restore(QString *state);
+    QByteArray save();
+    void restore(QByteArray state);
 
     void indexPair(unsigned int address, uint *firstIndex, uint *secondIndex);
 };

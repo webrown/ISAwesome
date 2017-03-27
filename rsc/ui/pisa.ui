@@ -665,7 +665,7 @@
     <addaction name="actionSave_As"/>
     <addaction name="actionSave_all"/>
     <addaction name="separator"/>
-    <addaction name="actionLoad_state"/>
+    <addaction name="actionSave_state"/>
     <addaction name="actionRestore_State"/>
    </widget>
    <widget class="QMenu" name="menuEdt">
@@ -682,7 +682,7 @@
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
-     <string>Run</string>
+     <string>&amp;Run</string>
     </property>
     <addaction name="actionRun"/>
     <addaction name="actionstop"/>
@@ -952,9 +952,9 @@
     <string>Ctrl+D</string>
    </property>
   </action>
-  <action name="actionLoad_state">
+  <action name="actionSave_state">
    <property name="text">
-    <string>&amp;Load State</string>
+    <string>&amp;Save State</string>
    </property>
   </action>
   <action name="actionRestore_State">
@@ -1444,6 +1444,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionRestore_State</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleRestoreState()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_state</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>handleSaveState()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>handleNew()</slot>
@@ -1472,5 +1504,7 @@
   <slot>handleCustomContextMenuForTracker(QPoint)</slot>
   <slot>handleUpload()</slot>
   <slot>updateMemoryWidget()</slot>
+  <slot>handleSaveState()</slot>
+  <slot>handleRestoreState()</slot>
  </slots>
 </ui>

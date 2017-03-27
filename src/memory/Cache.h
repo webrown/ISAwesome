@@ -40,8 +40,8 @@ class Cache : public MemoryInterface{
     double write(QVector<Value> *value, unsigned int address);
     double write(Value value, unsigned int address);
 
-    QString *save();
-    void restore(QString *state);
+    QByteArray save();
+    void restore(QByteArray state);
 
     //private
     QVector<int> *splitAddress(unsigned int address);

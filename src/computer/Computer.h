@@ -15,11 +15,13 @@
 #include "Status.h"
 #include "ThreadMessage.h"
 #include <QThread>
+#include <QFile>
+
 class Computer: public QObject{
     Q_OBJECT
     public:
         enum State{
-            DEAD = 0,  RUNNING =1 , PAUSED = 2
+            DEAD = 0,  RUNNING =1 , PAUSED = 2, BLOCKED =3
         };
         /*
          * If this variable is true, then computer will stop with break (I am not hundred percent sure about how to implement "break functionality"
@@ -32,7 +34,7 @@ class Computer: public QObject{
         Register* regs = NULL;
         MemoryStructure* mems = NULL;
         Banana* exec = NULL;
-
+        QString a;
         Computer();
         ~Computer();
 
@@ -66,6 +68,8 @@ class Computer: public QObject{
 
         void handleMemoryView(uint startAddress);
         void handleRegisterView(QString type);
+        void handleSaveState(QString fileName);
+        void handleRestoreState(QString fileName);
 
         public slots:
             void procMessage(ThreadMessage message);

@@ -62,7 +62,7 @@ public:
     QAction *actionCopy;
     QAction *actionPaste;
     QAction *actionDelete;
-    QAction *actionLoad_state;
+    QAction *actionSave_state;
     QAction *actionRestore_State;
     QAction *actionAddCache;
     QAction *actionRemoveCache;
@@ -225,8 +225,8 @@ public:
         actionPaste->setObjectName(QStringLiteral("actionPaste"));
         actionDelete = new QAction(MainWindow);
         actionDelete->setObjectName(QStringLiteral("actionDelete"));
-        actionLoad_state = new QAction(MainWindow);
-        actionLoad_state->setObjectName(QStringLiteral("actionLoad_state"));
+        actionSave_state = new QAction(MainWindow);
+        actionSave_state->setObjectName(QStringLiteral("actionSave_state"));
         actionRestore_State = new QAction(MainWindow);
         actionRestore_State->setObjectName(QStringLiteral("actionRestore_State"));
         actionAddCache = new QAction(MainWindow);
@@ -638,7 +638,7 @@ public:
         menuFile->addAction(actionSave_As);
         menuFile->addAction(actionSave_all);
         menuFile->addSeparator();
-        menuFile->addAction(actionLoad_state);
+        menuFile->addAction(actionSave_state);
         menuFile->addAction(actionRestore_State);
         menuEdt->addAction(actionUndo);
         menuEdt->addAction(actionRedo);
@@ -705,6 +705,8 @@ public:
         QObject::connect(tracker, SIGNAL(customContextMenuRequested(QPoint)), tracker, SLOT(customContextMenu(QPoint)));
         QObject::connect(actionUpload, SIGNAL(triggered()), MainWindow, SLOT(handleUpload()));
         QObject::connect(tabWidget_memory, SIGNAL(currentChanged(int)), MainWindow, SLOT(updateMemoryWidget()));
+        QObject::connect(actionRestore_State, SIGNAL(triggered()), MainWindow, SLOT(handleRestoreState()));
+        QObject::connect(actionSave_state, SIGNAL(triggered()), MainWindow, SLOT(handleSaveState()));
 
         leftBoard->setCurrentIndex(2);
         editorTab->setCurrentIndex(-1);
@@ -778,7 +780,7 @@ public:
         actionPaste->setShortcut(QApplication::translate("MainWindow", "Ctrl+V", Q_NULLPTR));
         actionDelete->setText(QApplication::translate("MainWindow", "&Delete", Q_NULLPTR));
         actionDelete->setShortcut(QApplication::translate("MainWindow", "Ctrl+D", Q_NULLPTR));
-        actionLoad_state->setText(QApplication::translate("MainWindow", "&Load State", Q_NULLPTR));
+        actionSave_state->setText(QApplication::translate("MainWindow", "&Save State", Q_NULLPTR));
         actionRestore_State->setText(QApplication::translate("MainWindow", "&Restore State", Q_NULLPTR));
         actionAddCache->setText(QApplication::translate("MainWindow", "&Add Cache", Q_NULLPTR));
         actionRemoveCache->setText(QApplication::translate("MainWindow", "&Remove Cache", Q_NULLPTR));
@@ -864,7 +866,7 @@ public:
         tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_memory), QApplication::translate("MainWindow", "Memory", Q_NULLPTR));
         menuFile->setTitle(QApplication::translate("MainWindow", "Fi&le", Q_NULLPTR));
         menuEdt->setTitle(QApplication::translate("MainWindow", "E&dt", Q_NULLPTR));
-        menuWindow->setTitle(QApplication::translate("MainWindow", "Run", Q_NULLPTR));
+        menuWindow->setTitle(QApplication::translate("MainWindow", "&Run", Q_NULLPTR));
         menuWindow_2->setTitle(QApplication::translate("MainWindow", "Mod&ule", Q_NULLPTR));
         menu_Cache->setTitle(QApplication::translate("MainWindow", "&Cache", Q_NULLPTR));
         menuHelp->setTitle(QApplication::translate("MainWindow", "Help", Q_NULLPTR));

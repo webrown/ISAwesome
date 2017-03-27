@@ -222,8 +222,9 @@ double Cache::write(Value input, unsigned int address){
   return result;
 }
 
-QString *Cache::save(){
+QByteArray Cache::save(){
   QVector<int> v;
+  QByteArray ret;
   for(int ind = 0; ind < contents->size(); ind++) {
     for(int way = 0; way < contents->at(0)->size(); way++) {
       // Record contents
@@ -240,46 +241,45 @@ QString *Cache::save(){
       v.push_back(valid->at(ind)->at(way));
     }
   }
-  return serialize(&v);
+  serialize(&ret, &v);
+  return ret;
 }
 
-void Cache::restore(QString *state){
-  if(!state) {
-    return;
-  }
-  QVector<int> *s = deserialize(state);
+void Cache::restore(QByteArray state){
+  QVector<int> s; 
+    deserialize(&state, &s);
   int stateIndex = 0;
   for(int ind = 0; ind < contents->size(); ind++) {
     for(int way = 0; way < contents->at(0)->size(); way++) {
       // Place contents.
       for(int offset = 0; offset < contents->at(0)->at(0)->size(); offset++) {
-        if(stateIndex == s->size()) {
+        if(stateIndex == s.size()) {
           return;
         }
         Value value;
-        value.i = s->at(stateIndex++);
+        value.i = s.at(stateIndex++);
         contents->at(ind)->at(way)->replace(offset, value);
       }
       // Place in dirty.
-      if(stateIndex == s->size()) {
+      if(stateIndex == s.size()) {
         return;
       }
-      dirty->at(ind)->replace(way,s->at(stateIndex++));
+      dirty->at(ind)->replace(way,s.at(stateIndex++));
       // Place in LRU.
-      if(stateIndex == s->size()) {
+      if(stateIndex == s.size()) {
         return;
       }
-      LRU->at(ind)->replace(way,s->at(stateIndex++));
+      LRU->at(ind)->replace(way,s.at(stateIndex++));
       // Place in tag.
-      if(stateIndex == s->size()) {
+      if(stateIndex == s.size()) {
         return;
       }
-      tags->at(ind)->replace(way,s->at(stateIndex++));
+      tags->at(ind)->replace(way,s.at(stateIndex++));
       // Place in valid.
-      if(stateIndex == s->size()) {
+      if(stateIndex == s.size()) {
         return;
       }
-      valid->at(ind)->replace(way,s->at(stateIndex++));
+      valid->at(ind)->replace(way,s.at(stateIndex++));
     }
   }
 }

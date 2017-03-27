@@ -17,6 +17,11 @@ Computer::Computer(){
 
 void Computer::init(QList<QVariant> instructions){
     qDebug() <<"COM: init";
+    //Blocked 
+    if(currState == BLOCKED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    }
     if(currState != DEAD){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Stop current program first"}));
         return;
@@ -43,10 +48,16 @@ void Computer::init(QList<QVariant> instructions){
 
 void Computer::step(int nCycle){
     qDebug() << "COM: step";
+    //Blocked 
+    if(currState == BLOCKED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    } 
     if(currState == DEAD){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
         return;
     }
+
     currState = RUNNING;
     emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {RUNNING}));
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
@@ -107,6 +118,10 @@ void Computer::step(int nCycle){
 
 void Computer::stop(){
     qDebug() << "COM: stop";
+    if(currState == BLOCKED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    } 
     if(currState == DEAD){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
         return;
@@ -120,6 +135,10 @@ void Computer::stop(){
 
 void Computer::pause(){
     qDebug() << "COM: pause";
+    if(currState == BLOCKED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    } 
     if(currState == PAUSED || currState == DEAD){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program is already paused"}));
         return;
@@ -152,6 +171,10 @@ void Computer::addBreakPoint(uint address, BreakPoint::BreakPoint bp){
 
 void Computer::handleMemoryView(uint address){
     qDebug() <<"COM: make memory view";
+    if(currState == BLOCKED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    }  
     QList<QVariant> ret;
     //Put requested address in first index to display them
     ret.append(address);
@@ -177,6 +200,10 @@ void Computer::handleMemoryView(uint address){
 
 void Computer::handleRegisterView(QString line){
     qDebug() << "COM: make register view";
+    if(currState == BLOCKED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    } 
     QList<QVariant> ret;
     ret.append(line);
     if(line == "General Registers"){
@@ -213,6 +240,75 @@ void Computer::handleRegisterView(QString line){
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_REGISTER, ret));
     return;
 }
+void Computer::handleSaveState(QString fileName){
+    if(currState != PAUSED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program must be paused"}));
+        return;
+    }
+    currState = BLOCKED;
+    QList<QByteArray> ret;
+    ret << regs->save();
+    ret << mems->_mainMemory->save();
+
+    QList<QByteArray> compressed;
+    for(QByteArray tmp : ret){
+        //Compress as much as possible
+        compressed.append(qCompress(tmp,9));
+    }
+
+    qDebug() << ret[0];
+
+    QFile file("data");
+    file.open(QIODevice::WriteOnly);
+    file.write(compressed[0]);
+    file.close();
+
+    QFile file1("data1");
+    file1.open(QIODevice::WriteOnly);
+    file1.write(compressed[1]);
+    file1.close();
+
+    //TODO should I notify?
+    emit sendMessage(ThreadMessage(ThreadMessage::A_SAVE_STATE, {}));
+    currState = PAUSED;
+    return;
+}
+
+void Computer::handleRestoreState(QString fileName){
+    if(currState != PAUSED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program must be paused"}));
+        return;
+    }
+    currState = BLOCKED;
+
+
+    QList<QByteArray> uncompressed;
+    QFile file("data");
+    file.open(QIODevice::ReadOnly);
+    uncompressed.append(file.readAll());
+    file.close();
+
+    QFile file1("data1");
+    file1.open(QIODevice::ReadOnly);
+    uncompressed.append(file1.readAll());
+    file1.close();
+
+    QList<QByteArray> ret;
+    for(QByteArray array: uncompressed){
+        ret.append(qUncompress(array));
+    }
+    qDebug() << ret[0];
+
+    regs->restore(ret[0]);
+    mems->_mainMemory->restore(ret[1]); 
+
+    //TODO should I notify?
+    emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {}));
+    emit sendMessage(ThreadMessage(ThreadMessage::A_RESTORE_STATE, {}));
+    currState = PAUSED;
+    return;
+}
+
 void Computer::procMessage(ThreadMessage message){
     ThreadMessage::Type type = message.type;
 
@@ -255,6 +351,14 @@ void Computer::procMessage(ThreadMessage message){
             qDebug() << "COM: RECV FROM GUI: R_VIEW_MEMORY";
 
             handleMemoryView(info.toUInt());
+            break;
+        case ThreadMessage::R_SAVE_STATE:
+            qDebug() << "COM: RECV FROM GUI: R_SAVE_STATE";
+            handleSaveState(info.toString());
+            break;
+        case ThreadMessage::R_RESTORE_STATE:
+            qDebug() << "COM: RECV FROM GUI: R_RESTORE_STATE";
+            handleRestoreState(info.toString());
             break;
         default:
             qDebug() <<"COM: Invalid message";

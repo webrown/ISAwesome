@@ -12,8 +12,8 @@ class MemoryInterface{
     virtual double write(QVector<Value> *value, unsigned int address)=0;
     virtual double write(Value value, unsigned int address)=0;
 
-    virtual QString *save()=0;
-    virtual void restore(QString *state)=0;
+    virtual QByteArray save()=0;
+    virtual void restore(QByteArray state)=0;
 
     double write(QVector<int> *value, unsigned int address);
     double write(int value, unsigned int address);

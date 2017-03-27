@@ -14,7 +14,6 @@ MainMemory::~MainMemory(){
     //Do nothing
 }
 
-
 void MainMemory::init(){
     _contents.clear();
     _contents.resize(MEMORY_CHUNKS);
@@ -81,26 +80,29 @@ double MainMemory::write(Value input, unsigned int address){
     return result;
 }
 
-QString *MainMemory::save(){
+QByteArray MainMemory::save(){
     QVector<int> result;
+    QByteArray ret;
     for(int i = 0; i < _contents.size(); i++) {
         result.push_back(_contents.at(i).size());
         for(int j = 0; j < _contents.at(i).size(); j++) {
             result.push_back(_contents.at(i).at(j).i);
         }
     }
-    return serialize(&result);
+    serialize(&ret, &result);
+    return ret;
 }
 
-void MainMemory::restore(QString *state){
-    QVector<int> *stateVector = deserialize(state);
+void MainMemory::restore(QByteArray state){
+    QVector<int> stateVector;
+    deserialize(&state, &stateVector);
 
     // Remove old contents.
     _contents = QVector<QVector<Value> >();
     // Load in new contents.
     size_t remainingElements = 0;
-    for(int stateIndex = 0; stateIndex < stateVector->size(); stateIndex++) {
-        int nextVal = stateVector->at(stateIndex);
+    for(int stateIndex = 0; stateIndex < stateVector.size(); stateIndex++) {
+        int nextVal = stateVector.at(stateIndex);
         if(remainingElements == 0) {
             // Looks like it's time for a new vector!
             _contents.push_back(QVector<Value>());

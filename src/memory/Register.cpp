@@ -136,8 +136,9 @@ void Register::writeFlags(QVector<Value> v){
     _flags = v;
 }
 
-QString *Register::save(){
+QByteArray Register::save(){
     QVector<int> result;
+    QByteArray ret;
 
     result += _flag.i;
     for(int i = 0; i < _scas.size(); i++) {
@@ -151,31 +152,32 @@ QString *Register::save(){
             result += _vecs.at(i).at(j).i;
         }
     }
-    return serialize(&result);
+    serialize(&ret, &result);
+    return ret;
 }
 
-void Register::restore(QString *state){
-    QVector<int> *stateVector = deserialize(state);
+void Register::restore(QByteArray state){
+    QVector<int> stateVector; 
+    deserialize(&state, &stateVector);
     int vectorBoundary = 1+_scas.size()+_flags.size();
-    for(int i = 0; i < stateVector->size(); i++) {
+    for(int i = 0; i < stateVector.size(); i++) {
         if(i < 1) {
-            _flag.i = stateVector->at(i);
+            _flag.i = stateVector.at(i);
             continue;
         }
         if(i < 1+_scas.size()) {
-           _scas[i-1].i = stateVector->at(i); 
+           _scas[i-1].i = stateVector.at(i); 
            continue;
         }
         if(i < vectorBoundary) {
-           _flags[i-(1+_scas.size())].i = stateVector->at(i); 
+           _flags[i-(1+_scas.size())].i = stateVector.at(i); 
            continue;
         }
         if(i < vectorBoundary+_vecs.size()*VECTOR_SIZE) {
-           _vecs[(i-vectorBoundary)/VECTOR_SIZE][(i-vectorBoundary)%VECTOR_SIZE].i = stateVector->at(i); 
+           _vecs[(i-vectorBoundary)/VECTOR_SIZE][(i-vectorBoundary)%VECTOR_SIZE].i = stateVector.at(i); 
            continue;
         }
     }
-    delete stateVector;
 }
 
 bool Register::isVectorIndex(int index){

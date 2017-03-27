@@ -10,7 +10,7 @@
 class HexSpinBox : public QSpinBox
 {
     public:
-        HexSpinBox(bool only16Bits, QWidget *parent = 0) : QSpinBox(parent), m_only16Bits(only16Bits){
+        HexSpinBox(bool only16Bits = false, QWidget *parent = 0) : QSpinBox(parent), m_only16Bits(only16Bits){
         setPrefix("0x");
         setDisplayIntegerBase(16);
         if (only16Bits){

@@ -28,7 +28,9 @@ class ThreadMessage{
         R_ADDBREAK,
         R_VIEW_CACHE, A_VIEW_CACHE,
         R_VIEW_MEMORY, A_VIEW_MEMORY,
-        R_VIEW_REGISTER, A_VIEW_REGISTER
+        R_VIEW_REGISTER, A_VIEW_REGISTER,
+        R_SAVE_STATE, A_SAVE_STATE,
+        R_RESTORE_STATE, A_RESTORE_STATE
     };
 
     Type type;

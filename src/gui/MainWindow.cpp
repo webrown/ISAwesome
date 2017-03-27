@@ -512,6 +512,12 @@ void MainWindow::procMessage(ThreadMessage message){
             qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_REGISTER";
             _ui.tab_register->display(info.toList());
             break;
+        case ThreadMessage::A_SAVE_STATE:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_SAVE_STATE";
+            break;
+        case ThreadMessage::A_RESTORE_STATE:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_RESTORE_STATE";
+            break;
         default:
             qDebug() << "GUI: Invalid message";
             exit(-1);
@@ -583,3 +589,14 @@ void MainWindow::updateMemoryWidget(){
     }
 
 }
+void MainWindow::handleSaveState(){
+    qDebug() << "GUI: save state";
+    QString fileName = "data";
+    sendMessage(ThreadMessage(ThreadMessage::R_SAVE_STATE, {fileName}));
+}
+void MainWindow::handleRestoreState(){
+    qDebug() << "GUI: restore state";
+    QString fileName = "data";
+    sendMessage(ThreadMessage(ThreadMessage::R_RESTORE_STATE, fileName));
+}
+
