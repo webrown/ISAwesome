@@ -12,12 +12,14 @@ void RegisterView::init(MainWindow* main, QTableWidget* regTable, QComboBox* com
     this->regTable =regTable;
     this->comboBox = comboBox;
 
-    regTable->setRowCount(64);
-    for(int row = 0; row < 64; row++){
-        regTable->setItem(row, 0, new QTableWidgetItem());
-        regTable->setItem(row, 1, new QTableWidgetItem());
-        regTable->setItem(row, 2, new QTableWidgetItem());
-        regTable->setItem(row, 3, new QTableWidgetItem());
+    regTable->setRowCount(65);
+    for(int row = 0; row < 65; row++){
+        for(int col =0; col < 20; col++){
+            regTable->setItem(row, col, new QTableWidgetItem());
+        }
+    }
+    for(int i = 4; i < 20; i++){
+        regTable->setColumnWidth(i, 37);
     }
     connect(comboBox, SIGNAL (activated(int)), this, SLOT(updateWithComboBox()));
 
@@ -26,8 +28,7 @@ void RegisterView::init(MainWindow* main, QTableWidget* regTable, QComboBox* com
 }
 
 void RegisterView::update(){
-    updateWithComboBox();
-}
+    updateWithComboBox(); }
 
 void RegisterView::updateWithComboBox(){
     qDebug() << "GUI: Update with ComboBox";
@@ -37,6 +38,65 @@ void RegisterView::updateWithComboBox(){
 
 void RegisterView::display(QList<QVariant> list){
     QString line = list[0].toString();
+    //display something that is flag
+    if(line == "Flag Registers"){
+        regTable->setRowHidden(64, false);
+        regTable->setColumnHidden(1,true);
+        regTable->setColumnHidden(2,true);
+        regTable->setColumnHidden(3,true);
+
+        regTable->setColumnHidden(4,false);
+        regTable->setColumnHidden(5,false);
+        regTable->setColumnHidden(6,false);
+        regTable->setColumnHidden(7,false);
+        regTable->setColumnHidden(8,false);
+        regTable->setColumnHidden(9,false);
+        regTable->setColumnHidden(10,false);
+        regTable->setColumnHidden(11,false);
+        regTable->setColumnHidden(12,false);
+        regTable->setColumnHidden(13,false);
+        regTable->setColumnHidden(14,false);
+        regTable->setColumnHidden(15,false);
+        regTable->setColumnHidden(16,false);
+        regTable->setColumnHidden(17,false);
+        regTable->setColumnHidden(18,false);
+        regTable->setColumnHidden(19,false);
+
+        line = "FLAG #";
+        regTable->item(0, 0)->setText("The Flag");
+        color(0, list[1].toUInt());
+
+        for(int row = 0; row < 64; row++){
+            uint content = list[row+2].toUInt();
+            regTable->item(row+1, 0)->setText(line + QString::number(row));
+            color(row+1, content);
+        }
+        return;
+
+    }
+    //display something that is not flag
+    regTable->setRowHidden(64, true);
+    regTable->setColumnHidden(2,false);
+    regTable->setColumnHidden(3,false);
+
+    regTable->setColumnHidden(4,true);
+    regTable->setColumnHidden(5,true);
+    regTable->setColumnHidden(6,true);
+    regTable->setColumnHidden(7,true);
+    regTable->setColumnHidden(8,true);
+    regTable->setColumnHidden(9,true);
+    regTable->setColumnHidden(10,true);
+    regTable->setColumnHidden(11,true);
+    regTable->setColumnHidden(12,true);
+    regTable->setColumnHidden(13,true);
+    regTable->setColumnHidden(14,true);
+    regTable->setColumnHidden(15,true);
+    regTable->setColumnHidden(16,true);
+    regTable->setColumnHidden(17,true);
+    regTable->setColumnHidden(18,true);
+    regTable->setColumnHidden(19,true);
+
+
     if(line == "General Registers"){
         line = "R";
     }
@@ -48,30 +108,31 @@ void RegisterView::display(QList<QVariant> list){
         int num = line.remove("Float Vector #").toInt();
         line = "R" + QString::number(num+28) + "_";
     }
-    else if(line == "Flag Registers"){
-        line = "FLAG #";
-    }
-    //dirty fix to show flag
     for(int row =0; row< 64; row++){
         uint content = list[row+1].toUInt();
-        if(line == "R" && row == 24){
-            regTable->item(row, 0)->setText("FLAG");
-            regTable->item(row, 1)->setText("0X" + QString::number(content,16).rightJustified(8, '0'));
-            regTable->item(row, 2)->setText(QString::number(content,10));
-            regTable->item(row, 3)->setText("0B" + QString::number(content,2).rightJustified(32,'0'));
-        }
-        else if(line == "R" && row >= 25){
+        if(line == "R" && row >= 25){
             regTable->item(row, 0)->setText("");
             regTable->item(row, 1)->setText("");
             regTable->item(row, 2)->setText("");
             regTable->item(row, 3)->setText("");
         }
         else{
-        regTable->item(row, 0)->setText(line+ QString::number(row).toUpper());
-        regTable->item(row, 1)->setText("0X" + QString::number(content,16).rightJustified(8, '0'));
-        regTable->item(row, 2)->setText(QString::number(content,10));
-        regTable->item(row, 3)->setText("0B" + QString::number(content,2).rightJustified(32,'0'));
+            regTable->item(row, 0)->setText(line+ QString::number(row).toUpper());
+            regTable->item(row, 1)->setText("0X" + QString::number(content,16).rightJustified(8, '0'));
+            regTable->item(row, 2)->setText(QString::number(content,10));
+            regTable->item(row, 3)->setText("0B" + QString::number(content,2).rightJustified(32,'0'));
         }
     }
 }
+void RegisterView::color(int row, uint v){
+    int x = 1;
+    for(int i =0; i < 16 ;i++){
 
+        int flag = v & x;
+        if(flag != 0)
+            regTable->item(row, i + 4)->setBackground(Qt::red);
+        else
+            regTable->item(row, i + 4)->setBackground(Qt::white);
+        x = x << 1;
+    }
+}

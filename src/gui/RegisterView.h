@@ -23,6 +23,7 @@ public:
     void showGeneral();
     void showVector(int n);
     void display(QList<QVariant> list);
+    void color(int row, uint v);
 
 
 public slots:

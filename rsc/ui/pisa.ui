@@ -406,8 +406,8 @@
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
             </property>
-            <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>120</number>
+            <attribute name="horizontalHeaderCascadingSectionResizes">
+             <bool>true</bool>
             </attribute>
             <attribute name="horizontalHeaderStretchLastSection">
              <bool>true</bool>
@@ -433,6 +433,86 @@
             <column>
              <property name="text">
               <string>Binary</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>EQ</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>NE</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>CS</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>CC</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>MI</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>PL</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>VS</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>VC</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>DZ</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>NZ</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>LE</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>GE</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>LT</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>GT</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>AL</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>UN</string>
              </property>
             </column>
            </widget>
@@ -1451,8 +1531,8 @@
    <slot>handleRestoreState()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>959</x>
-     <y>539</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>

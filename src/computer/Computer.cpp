@@ -212,10 +212,6 @@ void Computer::handleRegisterView(QString line){
             uint content = regs->_scas[row].asUInt;
             ret.append(content);
         }
-        for(; row < 25; row++){
-            uint content = regs->_flag.asUInt;
-            ret.append(content);
-        }
 
         for(;row<64;row++){
             ret.append(0u);
@@ -236,6 +232,8 @@ void Computer::handleRegisterView(QString line){
         }
     } 
     else if(line == "Flag Registers"){
+        uint content = regs->_flag.asUInt;
+        ret.append(content);
         for(int row =0; row< 64; row++){
             uint content = regs->_flags[row].asUInt;
             ret.append(content);
