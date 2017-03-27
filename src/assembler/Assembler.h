@@ -31,6 +31,7 @@ class Assembled{
     QString fileName;
     bool isAssembled; 
     int elaspedTime;
+    uint endAddress;
 
     QVector<uint>* instructions;
     QList<Problem>* problemLog;
@@ -74,7 +75,9 @@ class Assembler: public QObject{
     //Fields
     bool _success;
     bool _hasWarning;
-    uint mainAddress = INSTRUCTION_SIZE;
+    bool _dataMode;
+    uint _endAddress;
+    uint mainAddress;
 
     const InstructionResolver IRS;
     const ConditionResolver CRS;

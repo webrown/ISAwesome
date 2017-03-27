@@ -28,6 +28,8 @@ void Assembler::init(){
     qDebug() << "ASM: Initiating assembler" ;
     _success = true;
     _hasWarning = false;
+    _dataMode = false;
+    _endAddress = 0;
     mainAddress = HEADER_BUFFER;
 
     _labelTable = new QMap<QString, QString>();
@@ -322,46 +324,15 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         nextAddress = _preprocessedQueue->last().address + INSTRUCTION_SIZE;
     }
 
-    if(line.startsWith("D")){
-        (*_log) << "Data detected" << endl;
-
-        QStringList tokens;
-        tokens << "D";
-        QString str = line.remove(0,1).simplified();
-
-        if(str.startsWith("#0X")){
-            str.remove(0,3);
-            bool success;
-            tokens[1] = QString::number(str.toInt(&success, 16));
-            (*_log) << "HEX to DEC: " << str  <<endl;
-            if(success == false){
-                throwError(fileName, lineNumber, 1, "Invalid Format:  Not Hexadecimal");
-                return;
-            }
-        }
-        if(str.startsWith("#0B")){
-            str.remove(0,3);
-            bool success;
-            tokens[1] = QString::number(str.toInt(&success, 2));
-            (*_log) << "BIN to DEC: " << str <<endl;
-            if(success == false){
-                throwError(fileName ,lineNumber, 1, "Invalid Format: Not Binary");
-                return;
-            }
-        }
-        tokens << str;
-        (*_log) << "Data processed" << str << endl;
-
-        //Preprcoessed data will be stored here
-        Preprocessed preprocessed;
-        preprocessed.fileName = fileName;
-        preprocessed.lineNumber = lineNumber;
-        preprocessed.address = nextAddress;
-        preprocessed.tokens = tokens;
-        _preprocessedQueue->append(preprocessed);
-        nextAddress += INSTRUCTION_SIZE;
+    if(line.startsWith("#DATA")){
+        (*_log) << "Data mode on" << endl;
+        _dataMode = true;
+        //previous should be the last one
+        _endAddress = _preprocessedQueue->empty() ? nextAddress : _preprocessedQueue->last().address;
         return;
     }
+    
+
 
     //Check import
     if(line.startsWith("#IMPORT")){
@@ -419,6 +390,46 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         return;
     }
     else{
+        if(_dataMode == true){
+
+            QStringList dataList = line.split(QRegExp("\\s+"));
+            for(QString str : dataList){
+                QStringList tokens;
+                tokens << "DATA";
+                if(str.startsWith("#0X")){
+                    str.remove(0,3);
+                    bool success;
+                    tokens[1] = QString::number(str.toInt(&success, 16));
+                    (*_log) << "HEX to DEC: " << str  <<endl;
+                    if(success == false){
+                        throwError(fileName, lineNumber, 1, "Invalid Format:  Not Hexadecimal");
+                        return;
+                    }
+                }
+                if(str.startsWith("#0B")){
+                    str.remove(0,3);
+                    bool success;
+                    tokens[1] = QString::number(str.toInt(&success, 2));
+                    (*_log) << "BIN to DEC: " << str <<endl;
+                    if(success == false){
+                        throwError(fileName ,lineNumber, 1, "Invalid Format: Not Binary");
+                        return;
+                    }
+                }
+                tokens << str;
+                (*_log) << "Data processed: " << str << endl;
+
+                //Preprcoessed data will be stored here
+                Preprocessed preprocessed;
+                preprocessed.fileName = fileName;
+                preprocessed.lineNumber = lineNumber;
+                preprocessed.address = nextAddress;
+                preprocessed.tokens = tokens;
+                _preprocessedQueue->append(preprocessed);
+                nextAddress += INSTRUCTION_SIZE;
+            }
+            return;
+        }
         //find out instruction location
         int instructionLoc =0;
         if(CRS.nameTable.contains(tokens[0])){
@@ -568,7 +579,7 @@ void Assembler::processLine(Preprocessed prep){
     // uint address = prep.address;
     QStringList tokens = prep.tokens;
 
-    if(tokens[0] == "D"){
+    if(tokens[0] == "DATA"){
         (*_log) << "Processing data: " << tokens[1] <<endl;
 
         bool ok;

@@ -58,7 +58,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     preprocessFormat.setFontWeight(QFont::Bold);
     QStringList preprocessPatterns;
     preprocessPatterns << "^#ALIAS\\b" << "^#UNALIAS\\b" << "^#IMPORT\\b"
-                    << "^#DEFINEMACRO\\b" << "^#ENDMACRO\\b" << "^#MERGE\\b";
+                    << "^#DEFINEMACRO\\b" << "^#ENDMACRO\\b" << "^#MERGE\\b" << "^#DATA\\b";
     foreach (const QString &pattern, preprocessPatterns) {
         rule.pattern = QRegExp(pattern,Qt::CaseInsensitive);
         rule.format = preprocessFormat;

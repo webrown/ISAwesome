@@ -25,15 +25,26 @@ bool _parse(QStringList tokens, ParseResult* result, QRegExp srcI, QRegExp srcF,
     } if(statusI == 1 && statusF == 1){ result->warning = "Type mix warning";
         result->failureLocation = 1;
     }
-    uint src= tokens[0].remove(0,1).toInt();
-    uint dest =tokens[1].remove(0,1).toInt();
+    bool ok;
+    uint src= tokens[0].remove(0,1).toInt(&ok);
+    if(ok == false){
+        result->failureLocation = 0;
+        result->error = "Invalid arguments";
+        return false;
+    }
+    uint dest =tokens[1].remove(0,1).toInt(&ok);
+    if(ok == false){
+        result->failureLocation = 1;
+        result->error = "Invalid arguments";
+        return false;
+    }
     result->parsed = (((1 << 16) | src) << 5) |dest;
     return true;
 }
 bool _parse2(QStringList tokens, ParseResult* result, QRegExp destI, QRegExp destF){
     bool ok;
     uint src = tokens[0].toInt(&ok);
-    if(ok == false && src >= ( 1<< 17)){
+    if(ok == false || src >= ( 1<< 17)){
         return false;
     }
     if(destI.exactMatch(tokens[1])){
@@ -46,7 +57,12 @@ bool _parse2(QStringList tokens, ParseResult* result, QRegExp destI, QRegExp des
     else{
         return false;
     }
-    uint dest =tokens[1].remove(0,1).toInt();
+    uint dest =tokens[1].remove(0,1).toInt(&ok);
+    if(ok == false){
+        result->failureLocation = 1;
+        result->error = "Invalid arguments";
+        return false;
+    } 
     result->parsed = (src << 5) |dest;
     return true;
 }
@@ -62,8 +78,19 @@ bool _parse3(QStringList tokens, ParseResult* result, QRegExp srcI, QRegExp srcF
         result->warning = "Same type";
         result->failureLocation = 1;
     }
-    uint src= tokens[0].remove(0,1).toInt();
-    uint dest =tokens[1].remove(0,1).toInt();
+    bool ok;
+    uint src= tokens[0].remove(0,1).toInt(&ok);
+    if(ok == false){
+        result->failureLocation = 0;
+        result->error = "Invalid arguments";
+        return false;
+    } 
+    uint dest =tokens[1].remove(0,1).toInt(&ok);
+    if(ok == false){
+        result->failureLocation = 1;
+        result->error = "Invalid arguments";
+        return false;
+    } 
     result->parsed = (((1 << 16) | src) << 5) |dest;
     return true;
 }
