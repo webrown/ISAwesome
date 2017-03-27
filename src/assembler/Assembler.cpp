@@ -244,6 +244,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         return;
     }
 
+
     //Check Merge;
     if(line.startsWith("#MERGE")){
         QFileInfo info(fileName); 
@@ -319,6 +320,47 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
     }
     else{
         nextAddress = _preprocessedQueue->last().address + INSTRUCTION_SIZE;
+    }
+
+    if(line.startsWith("D")){
+        (*_log) << "Data detected" << endl;
+
+        QStringList tokens;
+        tokens << "D";
+        QString str = line.remove(0,1).simplified();
+
+        if(str.startsWith("#0X")){
+            str.remove(0,3);
+            bool success;
+            tokens[1] = QString::number(str.toInt(&success, 16));
+            (*_log) << "HEX to DEC: " << str  <<endl;
+            if(success == false){
+                throwError(fileName, lineNumber, 1, "Invalid Format:  Not Hexadecimal");
+                return;
+            }
+        }
+        if(str.startsWith("#0B")){
+            str.remove(0,3);
+            bool success;
+            tokens[1] = QString::number(str.toInt(&success, 2));
+            (*_log) << "BIN to DEC: " << str <<endl;
+            if(success == false){
+                throwError(fileName ,lineNumber, 1, "Invalid Format: Not Binary");
+                return;
+            }
+        }
+        tokens << str;
+        (*_log) << "Data processed" << str << endl;
+
+        //Preprcoessed data will be stored here
+        Preprocessed preprocessed;
+        preprocessed.fileName = fileName;
+        preprocessed.lineNumber = lineNumber;
+        preprocessed.address = nextAddress;
+        preprocessed.tokens = tokens;
+        _preprocessedQueue->append(preprocessed);
+        nextAddress += INSTRUCTION_SIZE;
+        return;
     }
 
     //Check import
@@ -525,6 +567,22 @@ void Assembler::processLine(Preprocessed prep){
     int lineNumber = prep.lineNumber;
     // uint address = prep.address;
     QStringList tokens = prep.tokens;
+
+    if(tokens[0] == "D"){
+        (*_log) << "Processing data: " << tokens[1] <<endl;
+
+        bool ok;
+        uint data = tokens[1].toUInt(&ok);
+        if(ok == false){
+            throwError(fileName, lineNumber, 1, "INVALID FORMAT: "+tokens[1] + " is not a number");
+            return;
+        }
+        _instructions->append(data);
+        //TODO check ok and printo ut stuff for D in preprocess
+        (*_log) << "Data inserted: " << tokens[1] <<endl;
+        (*_log) << "---" <<endl;
+        return;
+    }
 
     uint flag = CRS.nameTable["AL"];
     uint opcode = IRS.nameTable["NOP"]->opcode; //=NOP

@@ -64,8 +64,8 @@ SOURCES       = src/main.cpp \
 		src/gui/HighLighter.cpp \
 		src/gui/MainWindow.cpp \
 		src/gui/MemoryView.cpp \
-		src/gui/MyQSpinBox.cpp \
 		src/gui/MiscDialog.cpp \
+		src/gui/MyQSpinBox.cpp \
 		src/gui/PreferenceDialog.cpp \
 		src/gui/RegisterView.cpp \
 		src/gui/Tracker.cpp \
@@ -120,8 +120,8 @@ OBJECTS       = build/main.o \
 		build/HighLighter.o \
 		build/MainWindow.o \
 		build/MemoryView.o \
-		build/MyQSpinBox.o \
 		build/MiscDialog.o \
+		build/MyQSpinBox.o \
 		build/PreferenceDialog.o \
 		build/RegisterView.o \
 		build/Tracker.o \
@@ -420,8 +420,8 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/HighLighter.cpp \
 		src/gui/MainWindow.cpp \
 		src/gui/MemoryView.cpp \
-		src/gui/MyQSpinBox.cpp \
 		src/gui/MiscDialog.cpp \
+		src/gui/MyQSpinBox.cpp \
 		src/gui/PreferenceDialog.cpp \
 		src/gui/RegisterView.cpp \
 		src/gui/Tracker.cpp \
@@ -869,7 +869,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/CacheModel.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/AddOperation.h src/pipeline/AndOperation.h src/pipeline/ArithmeticOperation.h src/pipeline/Banana.h src/pipeline/Baseline.h src/pipeline/CompareOperation.h src/pipeline/CopyOperation.h src/pipeline/LoadOperation.h src/pipeline/MemoryOperation.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/StageData.h src/pipeline/StoreOperation.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MyQSpinBox.cpp src/gui/MiscDialog.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/LoadOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/LoadOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -1470,10 +1470,6 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/gui/MyQSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryView.o src/gui/MemoryView.cpp
 
-build/MyQSpinBox.o: src/gui/MyQSpinBox.cpp src/gui/MyQSpinBox.h \
-		src/gui/HexSpinBox.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MyQSpinBox.o src/gui/MyQSpinBox.cpp
-
 build/MiscDialog.o: src/gui/MiscDialog.cpp src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
 		src/gui/ui_newfiledialog.h \
@@ -1483,6 +1479,10 @@ build/MiscDialog.o: src/gui/MiscDialog.cpp src/gui/MiscDialog.h \
 		src/memory/Value.h \
 		src/memory/MemoryInterface.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MiscDialog.o src/gui/MiscDialog.cpp
+
+build/MyQSpinBox.o: src/gui/MyQSpinBox.cpp src/gui/MyQSpinBox.h \
+		src/gui/HexSpinBox.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MyQSpinBox.o src/gui/MyQSpinBox.cpp
 
 build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.h \
 		src/gui/ui_preferencedialog.h \
