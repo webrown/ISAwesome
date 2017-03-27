@@ -41,10 +41,11 @@ Status Baseline::run(void){
     registers->write(registers->getPC()+INSTRUCTION_SIZE, Register::PC);
     // What is instruction type?
     unsigned int opcode = spliceMachineCode(nextInstruction, 22, 27);
+
     Instruction instructionType;
     if(opcode == toB(QString("000000"))) instructionType     =  B         ;
     if(opcode == toB(QString("000001"))) instructionType    =  BL         ;
-    if(opcode == toB(QString("000010"))) instructionType   =  CMP         ;
+    if(opcode == toB(QString("000011"))) instructionType   =  CMP         ;
     if(opcode == toB(QString("000100"))) instructionType   =  CPY         ;
     if(opcode == toB(QString("000101"))) instructionType   =  LOD         ;
     if(opcode == toB(QString("000110"))) instructionType   =  STO         ;
@@ -137,7 +138,8 @@ Status Baseline::run(void){
     //int ternaryOperand2 = spliceMachineCode(nextInstruction, 8, 13);
     //int ternaryOperand3 = spliceMachineCode(nextInstruction, 0, 4);
 
-    qDebug() << "nextInstruction:" << nextInstruction << intToBinary(nextInstruction);
+    qDebug() << "COM: nextInstruction:" << nextInstruction << intToBinary(nextInstruction);
+    qDebug() << "COM: nextOpCode:" << opcode << intToBinary(opcode);
    
     // Do what the instruction tells you to.
     switch(instructionType) {
@@ -187,11 +189,13 @@ Status Baseline::run(void){
             if(conditionScalar) {
                 LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
+            break;
         }
         case STO: {
             if(conditionScalar) {
                 StoreOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
+            break;
         }
         default: {
             break;
