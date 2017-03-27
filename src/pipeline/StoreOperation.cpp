@@ -13,5 +13,15 @@ void StoreOperation::memoryOperation(Register *registers, MemoryStructure *memor
     // You're writing just a single value.
     data += registers->read(registerIndex);
   }
-  memory->getDataAccess()->write(&data, address);
+  // Space out for byte addressing.
+  QVector<Value> filteredData;
+  Value zero;
+  for(int i = 0; i < data.size(); i++) {
+    filteredData.push_back(data.at(i));
+    //filteredData.push_back(zero);
+    //filteredData.push_back(zero);
+    //filteredData.push_back(zero);
+  }
+  // Put in data.
+  memory->getDataAccess()->write(&filteredData, address);
 }
