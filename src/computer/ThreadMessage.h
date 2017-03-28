@@ -18,6 +18,7 @@ class ThreadMessage{
         A_STATE_CHANGE,
         A_UPDATE,
         A_REMOVEBREAK,
+        A_FEED,
 
         R_SET_PC,
         A_SET_PC,

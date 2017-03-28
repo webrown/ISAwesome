@@ -1,7 +1,6 @@
 #include "Assembler.h" 
 
-Assembler::Assembler(){
-    qDebug() << "ASM: creating assembler";
+Assembler::Assembler(){ qDebug() << "ASM: creating assembler";
     qRegisterMetaType<AssemblerConfiguration>();
     qRegisterMetaType<Assembled>();
 }
@@ -29,7 +28,7 @@ void Assembler::init(){
     _success = true;
     _hasWarning = false;
     _dataMode = false;
-    _endAddress = 0;
+    _endAddress = _config.useMainEntry ? HEADER_BUFFER : 0;
     mainAddress = HEADER_BUFFER;
 
     _labelTable = new QMap<QString, QString>();
@@ -130,7 +129,12 @@ void Assembler::assemble(QString fileName, AssemblerConfiguration config, bool r
     if(_success){
         (*_log) << "Success: true" <<endl;
         assembled->isAssembled = true;
-        assembled->instructions = _instructions; 
+        assembled->program = new Program();
+        assembled->program->instructions = _instructions; 
+        assembled->program->instructionEndAddress = _endAddress;
+        assembled->program->dataEndAddress = _instructions->size() * INSTRUCTION_SIZE;
+        assembled->program->size = _instructions->size();
+
     }
     //else we failed to assemble, then remvoe assembly part
     else{
@@ -328,7 +332,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         (*_log) << "Data mode on" << endl;
         _dataMode = true;
         //previous should be the last one
-        _endAddress = _preprocessedQueue->empty() ? nextAddress : _preprocessedQueue->last().address;
+        _endAddress = nextAddress;
         return;
     }
     
@@ -511,6 +515,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
                 preprocessed.tokens = tokens;
                 _preprocessedQueue->append(preprocessed);
                 nextAddress += INSTRUCTION_SIZE;
+                _endAddress = nextAddress;
             }
             return;
         }
@@ -555,6 +560,8 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         preprocessed.address = nextAddress;
         preprocessed.tokens = tokens;
         _preprocessedQueue->append(preprocessed);
+        _endAddress = nextAddress;
+        
         return;
     }
 }
@@ -692,16 +699,9 @@ void Assembler::throwWarning(QString fileName, int lineNumber, int wordNumber, Q
 
 void Assembler::writeHeader(){
     (*_log) << "Writing header" << endl;
-    uint lastAddress;
-    if(_preprocessedQueue->empty()){
-        lastAddress = _config.useMainEntry ? HEADER_BUFFER : 0u;
-    }
-    else{
-        lastAddress = _preprocessedQueue->last().address + INSTRUCTION_SIZE;
-    }
 
-    uint a = lastAddress & ~((1u<<16u)-1u);
-    uint b = lastAddress & ((1u<<16u)-1u);
+    uint a = _endAddress & ~((1u<<16u)-1u);
+    uint b = _endAddress & ((1u<<16u)-1u);
     uint c = mainAddress & ~((1u<<16u)-1u);
     uint d = mainAddress & ((1u<<16u)-1u);
     QStringList header;

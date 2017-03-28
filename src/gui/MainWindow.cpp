@@ -309,7 +309,7 @@ void MainWindow::finishAssemble(Assembled* assembled, bool runAfter){
     QString fileName = assembled->fileName;
     if(isAssembled == true){
         printlnConsole("Build succeeded.");
-        ProgramManagerX::saveProgram(fileName +".out", assembled->instructions);
+        ProgramManagerX::saveProgram(fileName +".out", assembled->program);
         printlnConsole(fileName + " is saved.");
     }
     else{
@@ -421,16 +421,18 @@ void MainWindow::uploadProgram(QString fileName){
     printlnConsole("Run: " + fileName);
 
 
-    QList<uint> instructions = ProgramManagerX::loadProgram(fileName);
+    //Computer will do this job now on
+    // QList<uint> instructions = ProgramManagerX::loadProgram(fileName);
 
-    QList<QVariant> _instructions;
-    for(uint x : instructions){
-        _instructions.append(x);
-    }
+    // QList<QVariant> _instructions;
+    // for(uint x : instructions){
+    //     _instructions.append(x);
+    // } 
 
-    _ui.tracker->clear();
-    _ui.tracker->feed(_instructions);
-    sendMessage(ThreadMessage(ThreadMessage::R_INIT,_instructions));
+    //TODO move this
+    /* _ui.tracker->clear(); */
+    /* _ui.tracker->feed(_instructions); */
+    sendMessage(ThreadMessage(ThreadMessage::R_INIT,fileName));
 }
 
 
@@ -492,6 +494,11 @@ void MainWindow::procMessage(ThreadMessage message){
             qDebug() << "GUI: RECV FROM COMPUTER: A_UPDATE";
             update(info.toUInt());
             return;
+        case ThreadMessage::A_FEED:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_FEED";
+            _ui.tracker->clear();
+            _ui.tracker->feed(info.toList());
+            return;
         case ThreadMessage::A_SET_PC:
             qDebug() << "GUI: RECV FROM COMPUTER: A_SET_PC";
             updateMemoryWidget();
@@ -536,6 +543,8 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionpause->setEnabled(false);
             _ui.actionstop->setEnabled(false);
             _ui.actionforward->setEnabled(false);
+            _ui.actionSave_state->setEnabled(false);
+            _ui.actionRestore_State->setEnabled(true);
             break;
         case Computer::RUNNING:
             _ui.actionUpload->setEnabled(false);
@@ -543,6 +552,8 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionpause->setEnabled(true);
             _ui.actionstop->setEnabled(true);
             _ui.actionforward->setEnabled(false);
+            _ui.actionSave_state->setEnabled(false);
+            _ui.actionRestore_State->setEnabled(false);
             break;
         case Computer::PAUSED:
             _ui.actionUpload->setEnabled(false);
@@ -550,6 +561,8 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionpause->setEnabled(false);
             _ui.actionstop->setEnabled(true);
             _ui.actionforward->setEnabled(true);
+            _ui.actionSave_state->setEnabled(true);
+            _ui.actionRestore_State->setEnabled(false);
             break;
     }
 }
@@ -591,12 +604,25 @@ void MainWindow::updateMemoryWidget(){
 }
 void MainWindow::handleSaveState(){
     qDebug() << "GUI: save state";
-    QString fileName = "data";
+    QString docLoc = settings.value("general/workdirectory",getDocDir()).toString();
+    QString fileName = QFileDialog::getSaveFileName(
+            this,
+            "Save state",
+            docLoc,
+            "State (*.state)");
+    qDebug() << fileName;
     sendMessage(ThreadMessage(ThreadMessage::R_SAVE_STATE, {fileName}));
 }
 void MainWindow::handleRestoreState(){
     qDebug() << "GUI: restore state";
-    QString fileName = "data";
+    QString docLoc = settings.value("general/workdirectory",getDocDir()).toString();
+    QString fileName = QFileDialog::getOpenFileName(
+            this,
+            "Open state",
+            docLoc,
+            "State (*.state)");
+    qDebug() << fileName;
+
     sendMessage(ThreadMessage(ThreadMessage::R_RESTORE_STATE, fileName));
 }
 

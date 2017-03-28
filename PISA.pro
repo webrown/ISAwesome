@@ -39,6 +39,7 @@ HEADERS += src/Utility.h \
            src/computer/Status.h \
            src/computer/ThreadMessage.h \
            src/computer/ThreadMessageQueue.h \
+           src/computer/ProgramManager.h \ 
            src/gui/CacheModel.h \
            src/gui/CacheView.h \
            src/gui/CodeEditor.h \

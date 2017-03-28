@@ -4,42 +4,55 @@
 #include <QFile>
 #include <QDataStream>
 #include <QDebug>
+#include "Assembler.h"
 class ProgramManagerX{
     public:
-    static void saveProgram(QString fileName, QVector<uint>* instructions){
+    static void saveProgram(QString fileName, Program* program){
         qDebug() << "SAVE: " <<fileName;
         QFile file(fileName);
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+            qDebug() << "PROGRAM SAVE FAILED";
             return;
+        }
+
 
         QDataStream out(&file);
-        out << (qint32)instructions->size();
-        qDebug() << "SIZE: " << instructions->size();
-        for(int i = 0; i < instructions->size(); i++){
+
+        out << (qint32)program->instructionEndAddress;
+        out << (qint32)program->dataEndAddress;
+        qDebug() << program->size;
+        out << (qint32)program->size;
+
+        QVector<uint>* instructions = program->instructions;
+        for(uint i = 0; i < program->size; i++){
             out << (qint32)instructions->at(i);
         }
     }
 
-    static QList<uint> loadProgram(QString fileName){
+    static Program* loadProgram(QString fileName){
         qDebug() << "LOAD: " << fileName;
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly)){
-            return QList<uint>();
+            qDebug() << "PROGRAM LOAD FAILED";
+            return NULL;
         }
 
-        QList<uint> instructions;
+        Program* program  = new Program();
         QDataStream in(&file);
-        QString str;
-        qint32 size;
-        in >> size; 
-        // qDebug() <<"SIZE: " << size;
-        for(int i =0; i < size; i++){
+
+        in >> (program->instructionEndAddress);
+        in >> (program->dataEndAddress);
+        in >> (program->size); 
+
+        program->instructions = new QVector<uint>();
+        for(uint i =0; i < program->size; i++){
             qint32 a;
             in  >> a;
-            instructions.append(a);
+            program->instructions->append(a);
         }
+        qDebug() << "LOAD: FINSIH";
 
-        return instructions;
+        return program;
     }
 
 };

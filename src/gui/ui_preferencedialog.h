@@ -39,10 +39,13 @@ public:
     QWidget *tab_general;
     QVBoxLayout *verticalLayout;
     QWidget *widget;
-    QHBoxLayout *horizontalLayout;
+    QGridLayout *gridLayout;
     QLabel *label;
     QLineEdit *lineEdit_WorkDirectory;
     QPushButton *button_open2;
+    QLabel *label_2;
+    QLineEdit *lineEdit;
+    QPushButton *pushButton;
     QWidget *widget_4;
     QHBoxLayout *horizontalLayout_3;
     QLabel *label_4;
@@ -84,22 +87,37 @@ public:
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         widget = new QWidget(tab_general);
         widget->setObjectName(QStringLiteral("widget"));
-        horizontalLayout = new QHBoxLayout(widget);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        gridLayout = new QGridLayout(widget);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
         label = new QLabel(widget);
         label->setObjectName(QStringLiteral("label"));
 
-        horizontalLayout->addWidget(label);
+        gridLayout->addWidget(label, 0, 0, 1, 1);
 
         lineEdit_WorkDirectory = new QLineEdit(widget);
         lineEdit_WorkDirectory->setObjectName(QStringLiteral("lineEdit_WorkDirectory"));
 
-        horizontalLayout->addWidget(lineEdit_WorkDirectory);
+        gridLayout->addWidget(lineEdit_WorkDirectory, 0, 1, 1, 1);
 
         button_open2 = new QPushButton(widget);
         button_open2->setObjectName(QStringLiteral("button_open2"));
 
-        horizontalLayout->addWidget(button_open2);
+        gridLayout->addWidget(button_open2, 0, 2, 1, 1);
+
+        label_2 = new QLabel(widget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+
+        gridLayout->addWidget(label_2, 2, 0, 1, 1);
+
+        lineEdit = new QLineEdit(widget);
+        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+
+        gridLayout->addWidget(lineEdit, 2, 1, 1, 1);
+
+        pushButton = new QPushButton(widget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+
+        gridLayout->addWidget(pushButton, 2, 2, 1, 1);
 
 
         verticalLayout->addWidget(widget);
@@ -219,7 +237,9 @@ public:
     {
         PreferenceDialog->setWindowTitle(QApplication::translate("PreferenceDialog", "Dialog", Q_NULLPTR));
         label->setText(QApplication::translate("PreferenceDialog", "Work Directory:", Q_NULLPTR));
-        button_open2->setText(QApplication::translate("PreferenceDialog", "Open...", Q_NULLPTR));
+        button_open2->setText(QApplication::translate("PreferenceDialog", "Open", Q_NULLPTR));
+        label_2->setText(QApplication::translate("PreferenceDialog", "Ouput Extension: ", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("PreferenceDialog", "Default", Q_NULLPTR));
         label_4->setText(QApplication::translate("PreferenceDialog", "Font:", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_general), QApplication::translate("PreferenceDialog", "General", Q_NULLPTR));
         groupBox->setTitle(QApplication::translate("PreferenceDialog", "Misc. Setting", Q_NULLPTR));
@@ -233,7 +253,7 @@ public:
         preserveCommetnCheckBox->setText(QApplication::translate("PreferenceDialog", "Preserve Comment", Q_NULLPTR));
         globalAliasCheckBox->setText(QApplication::translate("PreferenceDialog", "Global Alias", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_assembly), QApplication::translate("PreferenceDialog", "Assembly", Q_NULLPTR));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("PreferenceDialog", "Disassembly", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("PreferenceDialog", "Simulation", Q_NULLPTR));
     } // retranslateUi
 
 };

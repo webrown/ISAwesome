@@ -1,4 +1,6 @@
 #include "Computer.h"
+#include "ProgramManagerY.h"
+
 #include <QDebug>
 
 Computer::Computer(){
@@ -7,15 +9,20 @@ Computer::Computer(){
     mems = new MemoryStructure(MAIN_MEMORY_DELAY);
     exec = new Baseline(regs, mems);
     currState = DEAD;
-    qDebug() << "COM: Computer created"; } Computer::~Computer(){
+    qDebug() << "COM: Computer created"; } 
+    Computer::~Computer(){
         qDebug() << "COM: Removing Computer";
         delete regs;
         delete mems;
         delete exec;
+        if(program != NULL){
+            delete program;
+        }
         qDebug() << "COM: Computer is removed!";
     }
 
-void Computer::init(QList<QVariant> instructions){
+
+void Computer::init(QString fileName){
     qDebug() <<"COM: init";
     //Blocked 
     if(currState == BLOCKED){
@@ -26,16 +33,25 @@ void Computer::init(QList<QVariant> instructions){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Stop current program first"}));
         return;
     }
+    QVector<Value>* vec = new QVector<Value>();
+    
+    program = ProgramManagerX::loadProgram(fileName);
+
+    if(program == NULL){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program doesn't exist"}));
+        return;
+    }
+    for(int i =0 ; i < program->size; i++){
+        Value v = {program->instructions->at(i)};
+        vec->append(v);
+    }
+    feedInstructions();
+
+
     exec->init();
     regs->init();
     mems->init();
 
-    QVector<Value>* vec = new QVector<Value>();
-    for(int i =0 ; i < instructions.size(); i++){
-        uint instruction = instructions[i].toUInt(); 
-        Value v = {instruction};
-        vec->append(v);
-    }
     mems->_mainMemory->write(vec, 0);
 
     currState = PAUSED;
@@ -43,6 +59,17 @@ void Computer::init(QList<QVariant> instructions){
     emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
     emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
     return;
+}
+void Computer::feedInstructions(){
+    QList<QVariant> instructions;
+    for(int i =0 ;i <= program->instructionEndAddress/INSTRUCTION_SIZE; i++){
+        if(program->instructionEndAddress <= program->dataEndAddress ){
+            QVariant v = program->instructions->at(i);
+            instructions.append(v);
+        }
+    }
+    emit sendMessage(ThreadMessage(ThreadMessage::A_FEED, instructions));
+
 }
 
 
@@ -128,6 +155,7 @@ void Computer::stop(){
     }
     currState = DEAD;
     exec->stop();
+    program == NULL;
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
     emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {DEAD}));
     return;
@@ -248,66 +276,40 @@ void Computer::handleSaveState(QString fileName){
         return;
     }
     currState = BLOCKED;
-    QList<QByteArray> ret;
-    ret << regs->save();
-    ret << mems->_mainMemory->save();
 
-    QList<QByteArray> compressed;
-    for(QByteArray tmp : ret){
-        //Compress as much as possible
-        compressed.append(qCompress(tmp,9));
+    if(ProgramManagerY::save(this, fileName) == false){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, "save failed"));
+        currState = PAUSED;
+        return;
     }
 
-    qDebug() << ret[0];
-
-    QFile file("data");
-    file.open(QIODevice::WriteOnly);
-    file.write(compressed[0]);
-    file.close();
-
-    QFile file1("data1");
-    file1.open(QIODevice::WriteOnly);
-    file1.write(compressed[1]);
-    file1.close();
-
-    //TODO should I notify?
     emit sendMessage(ThreadMessage(ThreadMessage::A_SAVE_STATE, {}));
     currState = PAUSED;
     return;
 }
 
 void Computer::handleRestoreState(QString fileName){
-    if(currState != PAUSED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program must be paused"}));
+    if(currState != DEAD){
+        qDebug() << currState;
+        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program must be stopped"}));
         return;
     }
     currState = BLOCKED;
 
-
-    QList<QByteArray> uncompressed;
-    QFile file("data");
-    file.open(QIODevice::ReadOnly);
-    uncompressed.append(file.readAll());
-    file.close();
-
-    QFile file1("data1");
-    file1.open(QIODevice::ReadOnly);
-    uncompressed.append(file1.readAll());
-    file1.close();
-
-    QList<QByteArray> ret;
-    for(QByteArray array: uncompressed){
-        ret.append(qUncompress(array));
+    if(ProgramManagerY::restore(this,fileName) == false){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, "restore failed"));
+        currState = DEAD;
+        return;
     }
-    qDebug() << ret[0];
+    feedInstructions();
 
-    regs->restore(ret[0]);
-    mems->_mainMemory->restore(ret[1]); 
+    //TODO maybe?
 
-    //TODO should I notify?
-    emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {}));
-    emit sendMessage(ThreadMessage(ThreadMessage::A_RESTORE_STATE, {}));
     currState = PAUSED;
+    emit sendMessage(ThreadMessage(ThreadMessage::A_RESTORE_STATE, {}));
+    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
+    emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
+    qDebug() << regs->getPC();
     return;
 }
 
@@ -318,7 +320,7 @@ void Computer::procMessage(ThreadMessage message){
     switch(type){
         case ThreadMessage::R_INIT:
             qDebug() << "COM: RECV FROM GUI: R_INIT";
-            init(info.toList());
+            init(info.toString());
             break;
         case ThreadMessage::R_SET_PC:
             qDebug() << "COM: RECV FROM GUI: R_SET_PC";

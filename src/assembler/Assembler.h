@@ -17,24 +17,33 @@
 #include "ConditionResolver.h"
 
 
+class Program{
+    public:
+        ~Program(){
+            delete instructions;
+        }
+    unsigned int size;
+    unsigned int instructionEndAddress;
+    unsigned int dataEndAddress;
+    QVector<uint>* instructions;
+};
 
 /* This class will contain the result of compilation
  * If isAssembled is true, then errorList will point to NULL 
  * If isAssembled is false, then assembly will point to NULL
  */
 class Assembled{
-  public:
-      ~Assembled(){
-          delete instructions;
-          delete problemLog;
-      }
-    QString fileName;
-    bool isAssembled; 
-    int elaspedTime;
-    uint endAddress;
+    public:
+        ~Assembled(){
+            delete program;
+            delete problemLog;
+        }
+        bool isAssembled; 
+        QString fileName;
+        int elaspedTime;
 
-    QVector<uint>* instructions;
-    QList<Problem>* problemLog;
+        Program * program;
+        QList<Problem>* problemLog;
 };
 Q_DECLARE_METATYPE(Assembled);
 

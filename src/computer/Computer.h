@@ -16,6 +16,8 @@
 #include "ThreadMessage.h"
 #include <QThread>
 #include <QFile>
+#include "../assembler/Assembler.h" 
+#include "../assembler/ProgramManagerX.h"
 
 class Computer: public QObject{
     Q_OBJECT
@@ -34,7 +36,8 @@ class Computer: public QObject{
         Register* regs = NULL;
         MemoryStructure* mems = NULL;
         Banana* exec = NULL;
-        QString a;
+        Program* program = NULL;
+
         Computer();
         ~Computer();
 
@@ -42,7 +45,7 @@ class Computer: public QObject{
          * Initiate computer, after step, pause, stop will be called only after init is called
          *
          */
-        void init(QList<QVariant> instructions);
+        void init(QString fileName);
 
         
         /*
@@ -63,9 +66,9 @@ class Computer: public QObject{
          */
         void stop();
 
+        void feedInstructions();
         void delay();
         void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
-
         void handleMemoryView(uint startAddress);
         void handleRegisterView(QString type);
         void handleSaveState(QString fileName);
