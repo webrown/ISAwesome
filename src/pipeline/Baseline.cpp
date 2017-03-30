@@ -9,6 +9,7 @@
 #include "CopyOperation.h"
 #include "LoadOperation.h"
 #include "StoreOperation.h"
+#include "SubtractOperation.h"
 #include "WriteVectorElementOperation.h"
 #include "ReadVectorElementOperation.h"
 #include <QDebug>
@@ -231,6 +232,10 @@ Status Baseline::run(void){
             if(conditionScalar) {
                 StoreOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
+            break;
+        }
+        case SUB: {
+            SubtractOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
         case WVE: {
