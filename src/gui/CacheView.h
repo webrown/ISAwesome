@@ -18,12 +18,17 @@ class CacheView : public QTableWidget
         CacheView(QWidget* parent = 0);
         ~CacheView();
         void update();
-        void init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit, QLineEdit* indexEdit, QLineEdit* offsetEdit);
+        void init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit, QLineEdit* indexEdit, QLineEdit* offsetEdit, QPushButton* nextButton, QPushButton* prevButton);
         void display(QList<QVariant> list);
         public slots:
             void updateWithComboBox();
         void updateWithSearch();
+        void handleNextButton();
+        void handlePrevButton();
     private:
+        bool updatedWithComboBox = true;
+        int prevId = 0;
+        int count =0;
         MainWindow* main;
         QTableWidget* table;
         QComboBox* comboBox;
@@ -31,6 +36,8 @@ class CacheView : public QTableWidget
         QLineEdit* tagEdit;
         QLineEdit* indexEdit;
         QLineEdit* offsetEdit;
+        QPushButton* nextButton;
+        QPushButton* prevButton;
 };
 
 #endif

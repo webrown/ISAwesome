@@ -119,6 +119,10 @@ public:
     QLineEdit *offsetLine;
     QPushButton *pushButton_2;
     QTableWidget *tableWidget_7;
+    QWidget *widget_5;
+    QHBoxLayout *horizontalLayout_6;
+    QPushButton *prevButton;
+    QPushButton *nextButton;
     MemoryView *tab_memory;
     QVBoxLayout *verticalLayout_7;
     QWidget *widget_2;
@@ -560,6 +564,23 @@ public:
 
         verticalLayout_9->addWidget(tableWidget_7);
 
+        widget_5 = new QWidget(tab_cache);
+        widget_5->setObjectName(QStringLiteral("widget_5"));
+        horizontalLayout_6 = new QHBoxLayout(widget_5);
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        prevButton = new QPushButton(widget_5);
+        prevButton->setObjectName(QStringLiteral("prevButton"));
+
+        horizontalLayout_6->addWidget(prevButton);
+
+        nextButton = new QPushButton(widget_5);
+        nextButton->setObjectName(QStringLiteral("nextButton"));
+
+        horizontalLayout_6->addWidget(nextButton);
+
+
+        verticalLayout_9->addWidget(widget_5);
+
         tabWidget_memory->addTab(tab_cache, QString());
         tab_memory = new MemoryView();
         tab_memory->setObjectName(QStringLiteral("tab_memory"));
@@ -926,6 +947,8 @@ public:
         ___qtablewidgetitem30->setText(QApplication::translate("MainWindow", "Offset", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem31 = tableWidget_7->horizontalHeaderItem(6);
         ___qtablewidgetitem31->setText(QApplication::translate("MainWindow", "Value", Q_NULLPTR));
+        prevButton->setText(QApplication::translate("MainWindow", "<<", Q_NULLPTR));
+        nextButton->setText(QApplication::translate("MainWindow", ">>", Q_NULLPTR));
         tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_cache), QApplication::translate("MainWindow", "Cache", Q_NULLPTR));
         label->setText(QString());
         label_3->setText(QApplication::translate("MainWindow", "Address: ", Q_NULLPTR));
