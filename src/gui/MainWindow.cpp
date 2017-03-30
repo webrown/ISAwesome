@@ -1,8 +1,7 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535","PISA")
+MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535","PISA") ,container(0, true)
 {
-    qRegisterMetaType<CacheModel>();
     qRegisterMetaType<ThreadMessage>();
     qDebug() << "GUI: MainWindow starts...";
     //Set up gui
@@ -60,6 +59,7 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
 
     _ui.tab_memory->init(this,_ui.tableWidget_memory,_ui.spinBox,_ui.pushButton, _ui.lineEdit);
     _ui.tab_register->init(this,_ui.tableWidget_6,_ui.comboBox);
+    _ui.tab_cache->init(this,_ui.tableWidget_7,_ui.cacheListBox, _ui.pushButton_2, _ui.lineEdit_2);
     _ui.tracker->init(this);
 
 
@@ -204,49 +204,36 @@ void MainWindow::handleAboutPISA()
 
 void MainWindow::handleAddCache(){ 
     qDebug() << "GUI: Add Cache button is clicked";
-    NewCacheDialog dialog(&cacheModels, this);
+    NewCacheDialog dialog(&container, this);
     int result = dialog.exec();
     if(result == QDialog::Accepted){
-        printlnConsole("Cache added");
-        CacheModel info = dialog.getModel();
+        qDebug() << "GUI: Adding a cache";
+        printlnConsole("Cache added...");
+        MemoryStructure::setUpPlz(_ui.cacheListBox, &container);
+        QList<QVariant> toSend;
+        toSend << container._lastAdded->next->id;
+        toSend << container._lastAdded->type;
+        toSend << container._lastAdded->indexBits;
+        toSend << container._lastAdded->logDataWordCount;
+        toSend << container._lastAdded->logAssociativity;
+        toSend << container._lastAdded->delay;
+        sendMessage(ThreadMessage(ThreadMessage::R_ADD_CACHE, toSend));
+        updateMemoryWidget();
    }
 }
 
 void MainWindow::handleRemoveCache(){
-/*     qDebug() << "Remove Cache button is clicked"; */
-    // QWidget* widget = _ui.tabWidget_memory->currentWidget();
-    // if(CacheView* cacheView = dynamic_cast<CacheView*>(widget)) {
-    //     printlnConsole("Cache removed");
-    //     Cache* cache = cacheView->cache;
-    //     Cache* prevCache = cache->prevCache;
-    //     Cache* nextCache = cache->nextCache;
-    //     if(prevCache != NULL && nextCache != NULL){
-    //         prevCache->nextCache = nextCache;
-    //         nextCache->prevCache = prevCache;
-    //     }
-    //     else if(prevCache != NULL){
-    //         prevCache->nextCache = NULL;
-    //     }
-    //     else if(nextCache != NULL){
-    //         nextCache->prevCache = NULL;
-    //         computer->topCache = nextCache;
-    //     } //     else{
-    //         computer->topCache = NULL;
-    //     }
-    //     int _index = _ui.tabWidget_memory->currentIndex();
-    //     _ui.tabWidget_memory->removeTab(_index);
-    //     delete cache;
-    //     delete cacheView;
-    //
-    //     int index = 1;
-    //     //reset name
-    //     for(Cache* curr = computer->topCache; curr != NULL; curr = curr->nextCache){
-    //         _ui.tabWidget_memory->setTabText(_ui.tabWidget_memory->indexOf(curr->view),(new QString("Cache %1(BOTH)"))->arg(index++));
-    //     }
-    // }
-    // else{
-    //     printlnConsole("No cache to remove");
-/*     } */
+    qDebug() << "Remove Cache button is clicked";
+    if(_ui.tabWidget_memory->currentWidget() != _ui.tab_cache || _ui.cacheListBox->count() == 0){
+        QMessageBox msgBox;
+        msgBox.critical(0, "Error", "No cache is selected");
+        return;
+    }
+    container.removeCache(_ui.cacheListBox->currentData().toInt());
+    MemoryStructure::setUpPlz(_ui.cacheListBox, &container);
+    sendMessage(ThreadMessage(ThreadMessage::R_REMOVE_CACHE, container._lastAdded->id));
+    updateMemoryWidget();
+
 }
 
 
@@ -515,6 +502,10 @@ void MainWindow::procMessage(ThreadMessage message){
             qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_MEMORY";
             _ui.tab_memory->display(info.toList());
             break;
+        case ThreadMessage::A_VIEW_CACHE:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_CACHE";
+            _ui.tab_cache->display(info.toList());
+            break;
         case ThreadMessage::A_VIEW_REGISTER:
             qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_REGISTER";
             _ui.tab_register->display(info.toList());
@@ -545,6 +536,10 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionforward->setEnabled(false);
             _ui.actionSave_state->setEnabled(false);
             _ui.actionRestore_State->setEnabled(true);
+            _ui.actionAddCache->setEnabled(true);
+            _ui.actionRemoveCache->setEnabled(true);
+            _ui.actionClearCache->setEnabled(true);
+
             break;
         case Computer::RUNNING:
             _ui.actionUpload->setEnabled(false);
@@ -554,6 +549,11 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionforward->setEnabled(false);
             _ui.actionSave_state->setEnabled(false);
             _ui.actionRestore_State->setEnabled(false);
+            _ui.actionAddCache->setEnabled(false);
+            _ui.actionRemoveCache->setEnabled(false);
+            _ui.actionClearCache->setEnabled(false);
+
+
             break;
         case Computer::PAUSED:
             _ui.actionUpload->setEnabled(false);
@@ -563,6 +563,11 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionforward->setEnabled(true);
             _ui.actionSave_state->setEnabled(true);
             _ui.actionRestore_State->setEnabled(false);
+            _ui.actionAddCache->setEnabled(false);
+            _ui.actionRemoveCache->setEnabled(false);
+            _ui.actionClearCache->setEnabled(false);
+
+
             break;
     }
 }
@@ -595,7 +600,7 @@ void MainWindow::updateMemoryWidget(){
     }
     else if (widget == _ui.tab_cache){
         // _ui.tab_register->update();
-        // TODO
+        _ui.tab_cache->update();
     }
     else if (widget == _ui.tab_memory){
         _ui.tab_memory->update();

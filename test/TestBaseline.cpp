@@ -2,7 +2,7 @@
 
 void TestBaseline::initTestCase(){
     regs = new Register();
-    mem = new MemoryStructure(MAIN_MEMORY_DELAY);
+    mem = new MemoryStructure(MAIN_MEMORY_DELAY, false);
     base = new Baseline(regs,mem);
 }
 void TestBaseline::load(QVector<uint> in){

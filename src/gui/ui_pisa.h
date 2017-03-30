@@ -31,6 +31,7 @@
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "CacheView.h"
 #include "EditorTab.h"
 #include "HexSpinBox.h"
 #include "MemoryView.h"
@@ -107,14 +108,12 @@ public:
     QComboBox *comboBox;
     QSpacerItem *horizontalSpacer_2;
     QTableWidget *tableWidget_6;
-    QWidget *tab_cache;
+    CacheView *tab_cache;
     QVBoxLayout *verticalLayout_9;
     QWidget *widget_4;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_4;
-    QComboBox *comboBox_2;
-    QLabel *label_5;
-    QComboBox *comboBox_3;
+    QComboBox *cacheListBox;
     QLineEdit *lineEdit_2;
     QPushButton *pushButton_2;
     QTableWidget *tableWidget_7;
@@ -485,7 +484,7 @@ public:
         verticalLayout_10->addWidget(tableWidget_6);
 
         tabWidget_memory->addTab(tab_register, QString());
-        tab_cache = new QWidget();
+        tab_cache = new CacheView();
         tab_cache->setObjectName(QStringLiteral("tab_cache"));
         verticalLayout_9 = new QVBoxLayout(tab_cache);
         verticalLayout_9->setObjectName(QStringLiteral("verticalLayout_9"));
@@ -498,20 +497,10 @@ public:
 
         horizontalLayout_5->addWidget(label_4);
 
-        comboBox_2 = new QComboBox(widget_4);
-        comboBox_2->setObjectName(QStringLiteral("comboBox_2"));
+        cacheListBox = new QComboBox(widget_4);
+        cacheListBox->setObjectName(QStringLiteral("cacheListBox"));
 
-        horizontalLayout_5->addWidget(comboBox_2);
-
-        label_5 = new QLabel(widget_4);
-        label_5->setObjectName(QStringLiteral("label_5"));
-
-        horizontalLayout_5->addWidget(label_5);
-
-        comboBox_3 = new QComboBox(widget_4);
-        comboBox_3->setObjectName(QStringLiteral("comboBox_3"));
-
-        horizontalLayout_5->addWidget(comboBox_3);
+        horizontalLayout_5->addWidget(cacheListBox);
 
         lineEdit_2 = new QLineEdit(widget_4);
         lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
@@ -523,6 +512,10 @@ public:
 
         horizontalLayout_5->addWidget(pushButton_2);
 
+        horizontalLayout_5->setStretch(0, 1);
+        horizontalLayout_5->setStretch(1, 5);
+        horizontalLayout_5->setStretch(2, 5);
+        horizontalLayout_5->setStretch(3, 1);
 
         verticalLayout_9->addWidget(widget_4);
 
@@ -546,7 +539,8 @@ public:
         tableWidget_7->setObjectName(QStringLiteral("tableWidget_7"));
         tableWidget_7->setFrameShape(QFrame::NoFrame);
         tableWidget_7->setSelectionBehavior(QAbstractItemView::SelectRows);
-        tableWidget_7->horizontalHeader()->setDefaultSectionSize(100);
+        tableWidget_7->horizontalHeader()->setCascadingSectionResizes(true);
+        tableWidget_7->horizontalHeader()->setDefaultSectionSize(150);
         tableWidget_7->horizontalHeader()->setStretchLastSection(true);
         tableWidget_7->verticalHeader()->setVisible(false);
 
@@ -899,18 +893,17 @@ public:
         ___qtablewidgetitem24->setText(QApplication::translate("MainWindow", "UN", Q_NULLPTR));
         tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_register), QApplication::translate("MainWindow", "Register", Q_NULLPTR));
         label_4->setText(QApplication::translate("MainWindow", "Type:", Q_NULLPTR));
-        label_5->setText(QApplication::translate("MainWindow", "Page:", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MainWindow", "Search", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem25 = tableWidget_7->horizontalHeaderItem(0);
-        ___qtablewidgetitem25->setText(QApplication::translate("MainWindow", "Tag", Q_NULLPTR));
+        ___qtablewidgetitem25->setText(QApplication::translate("MainWindow", "V", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem26 = tableWidget_7->horizontalHeaderItem(1);
-        ___qtablewidgetitem26->setText(QApplication::translate("MainWindow", "Index", Q_NULLPTR));
+        ___qtablewidgetitem26->setText(QApplication::translate("MainWindow", "D", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem27 = tableWidget_7->horizontalHeaderItem(2);
-        ___qtablewidgetitem27->setText(QApplication::translate("MainWindow", "Dirty", Q_NULLPTR));
+        ___qtablewidgetitem27->setText(QApplication::translate("MainWindow", "LRU", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem28 = tableWidget_7->horizontalHeaderItem(3);
-        ___qtablewidgetitem28->setText(QApplication::translate("MainWindow", "LRU", Q_NULLPTR));
+        ___qtablewidgetitem28->setText(QApplication::translate("MainWindow", "Tag", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem29 = tableWidget_7->horizontalHeaderItem(4);
-        ___qtablewidgetitem29->setText(QApplication::translate("MainWindow", "Valid", Q_NULLPTR));
+        ___qtablewidgetitem29->setText(QApplication::translate("MainWindow", "Index", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem30 = tableWidget_7->horizontalHeaderItem(5);
         ___qtablewidgetitem30->setText(QApplication::translate("MainWindow", "Offset", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem31 = tableWidget_7->horizontalHeaderItem(6);

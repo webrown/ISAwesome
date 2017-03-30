@@ -352,20 +352,20 @@ ParseResult parseWVE(QStringList tokens){
         qDebug() << tokens[1];
 
     QString copy(tokens[1]);
-    uint src = copy.toInt(&ok);
+    uint src = copy.toUInt(&ok);
     if(ok == false || src >= ( 1<< 17)){
         qDebug() << tokens[1];
         if(intReg.exactMatch(tokens[1])){
             tokens[1].remove(0,1);
             result.parsed = L_BIT;
-            
+
         }
         else if(floatReg.exactMatch(tokens[1])){
             tokens[1].remove(0,1);
             result.warning = "WHAT?";
             result.failureLocation = 1;
             result.parsed = L_BIT;
-            
+
         }
         else{
             result.failureLocation = 2;
@@ -374,8 +374,8 @@ ParseResult parseWVE(QStringList tokens){
         }
     }
     else{
-        tokens[1] = QString::number(src,10);
     }
+    qDebug() << result.parsed;
     tokens[0].remove(0,1);
     tokens[2].remove(0,1);
     result.parsed |= (tokens[0].toInt() << 15) | (tokens[1].toInt() <<8) | (tokens[2].toInt());

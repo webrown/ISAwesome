@@ -11,6 +11,9 @@ class ParseResult{
         int failureLocation = -1;
         QString error = "None";
         QString warning = "None";
+        ParseResult(){
+            parsed = 0;
+        }
 };
 
 class InstructionDefinition{

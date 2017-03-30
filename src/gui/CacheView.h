@@ -3,21 +3,32 @@
 
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QPushButton>
 #include <QDebug>
 #include "../memory/Cache.h"
+#include <QComboBox>
+class MainWindow;
 
-
-class Cache;
 
 class CacheView : public QTableWidget
 {
     Q_OBJECT
 
-public:
-    Cache* cache;
-    CacheView(Cache* cache);
-    ~CacheView();
-    void update();
+    public:
+        CacheView(QWidget* parent = 0);
+        ~CacheView();
+        void update();
+        void init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit);
+        void display(QList<QVariant> list);
+        public slots:
+            void updateWithComboBox();
+        void updateWithSearch();
+    private:
+        MainWindow* main;
+        QTableWidget* table;
+        QComboBox* comboBox;
+        QPushButton* searchButton;
+        QLineEdit* lineEdit;
 };
 
 #endif

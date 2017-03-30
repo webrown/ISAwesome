@@ -1,61 +1,94 @@
 #include "CacheView.h"
+#include "MainWindow.h"
 #define NUMBER_OF_DEFAULT_HEADERS 5
 
 
-CacheView::CacheView(Cache* cache){
-    this->cache = cache;
-    size_t dataWordCount =1<< cache->logDataWordCount;
-    size_t ways = 1<< cache->logAssociativity;
-    size_t maxIndex = 1 << cache->indexBits;
-
-
-    int col = dataWordCount + NUMBER_OF_DEFAULT_HEADERS;
-    int row = ways * maxIndex;
-    this->setRowCount(row);
-    this->setColumnCount(col);
-    this->setSelectionBehavior(QAbstractItemView::SelectRows);
-    QStringList header;
-    header << "Tag" <<"Index"<< "Dirty" <<"LRU" << "Valid";
-
-    for(int i =0; i < dataWordCount; i ++){
-        header << QString("Line %1").arg(i);
-    }
-    this->setHorizontalHeaderLabels(header);
-    this->verticalHeader()->setVisible(false);
-
-    //Create tablewidget
-    for(int ind = 0; ind < cache->contents->size(); ind++) {
-        for(int way = 0; way < cache->contents->at(0)->size(); way++) {
-            this->setItem(ind * cache->contents->at(0)->size() + way, 0, new QTableWidgetItem(QString::number(cache->tags->at(ind)->at(way))));
-            this->setItem(ind * cache->contents->at(0)->size() + way, 1, new QTableWidgetItem(QString::number(ind)));
-            this->setItem(ind * cache->contents->at(0)->size() + way, 2, new QTableWidgetItem(QString::number(cache->dirty->at(ind)->at(way))));
-            this->setItem(ind * cache->contents->at(0)->size() + way, 3, new QTableWidgetItem(QString::number(cache->LRU->at(ind)->at(way))));
-            this->setItem(ind * cache->contents->at(0)->size() + way, 4, new QTableWidgetItem(QString::number(cache->valid->at(ind)->at(way))));
-
-            for(int offset = 0; offset < cache->contents->at(0)->at(0)->size(); offset++) {
-                this->setItem(ind * cache->contents->at(0)->size() + way, NUMBER_OF_DEFAULT_HEADERS + offset, new QTableWidgetItem(QString::number(cache->contents->at(ind)->at(way)->at(offset).asInt)));
-            }
-        }
-    }
-
-
-    update();
+CacheView::CacheView(QWidget * parent) : QTableWidget(parent){
 }
 CacheView::~CacheView(){
 }
+void CacheView::init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit){
+    this->main = main;
+    this->table = memoryTable;
+    this->comboBox = comboBox;
+    this->searchButton =searchButton;
+    this->lineEdit = lineEdit;
+
+    table->setRowCount(64);
+    for(int row = 0; row < 64; row++){
+        table->setItem(row, 0, new QTableWidgetItem());
+        table->setItem(row, 1, new QTableWidgetItem());
+        table->setItem(row, 2, new QTableWidgetItem());
+        table->setItem(row, 3, new QTableWidgetItem());
+        table->setItem(row, 4, new QTableWidgetItem());
+        table->setItem(row, 5, new QTableWidgetItem());
+        table->setItem(row, 6, new QTableWidgetItem());
+    }
+
+    table->setColumnWidth(0,20);
+    table->setColumnWidth(1,20);
+    table->setColumnWidth(2,45);
+
+    connect(comboBox, SIGNAL (activated(int)), this, SLOT(updateWithComboBox()));
+    connect(searchButton, SIGNAL (clicked()), this, SLOT(updateWithSearch()));
+
+}
+
+
+
 
 void CacheView::update(){
-    for(int ind = 0; ind < cache->contents->size(); ind++) {
-        for(int way = 0; way < cache->contents->at(0)->size(); way++) {
-            this->item(ind * cache->contents->at(0)->size() + way, 0)->setText(QString::number(cache->tags->at(ind)->at(way),2));
-            this->item(ind * cache->contents->at(0)->size() + way, 1)->setText(QString::number(ind,2));
-            this->item(ind * cache->contents->at(0)->size() + way, 2)->setText(QString::number(cache->dirty->at(ind)->at(way),2));
-            this->item(ind * cache->contents->at(0)->size() + way, 3)->setText(QString::number(cache->LRU->at(ind)->at(way),2));
-            this->item(ind * cache->contents->at(0)->size() + way, 4)->setText(QString::number(cache->valid->at(ind)->at(way),2));
+    updateWithComboBox();
+}
 
-            for(int offset = 0; offset < cache->contents->at(0)->at(0)->size(); offset++) {
-                this->item(ind * cache->contents->at(0)->size() + way, NUMBER_OF_DEFAULT_HEADERS + offset)->setText(QString::number(cache->contents->at(ind)->at(way)->at(offset).asInt));
-            }
-        }
+void CacheView::display(QList<QVariant> list){
+    int id = list.takeFirst().toInt();
+    DummyMem* model = (DummyMem*) main->container.map[id];
+    // qDebug() << list;
+    // qDebug() << list.size();
+    int i;
+    table->setColumnHidden(2, model->logAssociativity==0);
+    table->setColumnHidden(4, model->indexBits==0);
+    table->setColumnHidden(5, model->logDataWordCount==0);
+    
+    int tagSize = 32-model->indexBits-model->logDataWordCount;
+    int bitSize = fontMetrics().width('0');
+
+    int tagWidth = qMax(bitSize * 3 + 15, tagSize * bitSize + 10);
+    int indexWidth = qMax(bitSize * 5 + 15, model->indexBits * bitSize + 10);
+    int offsetWidth = qMax(bitSize * 6 + 15, model->logDataWordCount * bitSize + 10);
+    
+    table->setColumnWidth(3,tagWidth);
+    table->setColumnWidth(4,indexWidth);
+    table->setColumnWidth(5,offsetWidth);
+
+
+    for(i = 0;i < list.size()/7; i++){
+        table->item(i, 0)->setBackground(list[7*i].toInt()==1 ? Qt::red : Qt::white);
+        table->item(i, 1)->setBackground(list[7*i+1].toInt()==1 ? Qt::blue : Qt::white);
+        table->item(i, 2)->setText(QString::number(list[7*i+2].toUInt()));
+        table->item(i, 3)->setText(QString::number(list[7*i+3].toUInt(),2).rightJustified(tagSize, '0'));
+        table->item(i, 4)->setText(QString::number(list[7*i+4].toUInt(),2).rightJustified(model->indexBits, '0'));
+        table->item(i, 5)->setText(QString::number(list[7*i+5].toUInt(),2).rightJustified(model->logDataWordCount,'0'));
+        table->item(i, 6)->setText(QString::number(list[7*i+6].toUInt()));
     }
+    for(;i < 64; i++){
+        table->item(i, 0)->setBackground(Qt::white);
+        table->item(i, 1)->setBackground(Qt::white);
+        table->item(i, 2)->setText("");
+        table->item(i, 3)->setText("");
+        table->item(i, 4)->setText("");
+        table->item(i, 5)->setText("");
+        table->item(i, 6)->setText("");
+
+    }
+
+
+}
+void CacheView::updateWithSearch(){
+    qDebug() << "GUI: Update with search button";
+}
+void CacheView::updateWithComboBox(){
+    qDebug() << "GUI: Update with combo box";
+    main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_CACHE, comboBox->currentData()));
 }

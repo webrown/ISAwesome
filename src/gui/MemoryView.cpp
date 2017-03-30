@@ -14,8 +14,8 @@ void MemoryView::init(MainWindow* main, QTableWidget* memoryTable, HexSpinBox* s
     this->searchButton =searchButton;
     this->lineEdit = lineEdit;
 
-    memoryTable->setRowCount(256);
-    for(int row = 0; row < 256; row++){
+    memoryTable->setRowCount(64);
+    for(int row = 0; row < 64; row++){
         memoryTable->setItem(row, 0, new QTableWidgetItem());
         memoryTable->setItem(row, 1, new QTableWidgetItem());
         memoryTable->setItem(row, 2, new QTableWidgetItem());

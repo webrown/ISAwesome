@@ -1,30 +1,37 @@
 #include "MiscDialog.h"
-NewCacheDialog::NewCacheDialog(QList<CacheModel>* cacheModels,  QWidget *parent )
+NewCacheDialog::NewCacheDialog(MemoryStructure* container,  QWidget *parent )
     : QDialog( parent )
 {
-    this->cacheModels = cacheModels;
+    this->container = container;
     _ui.setupUi( this );
 
-    
-
-
-    int index = 0;
-   for(CacheModel  curr : *cacheModels){ 
-       QString line = "Cache #" + curr.level;
-        if(curr.type == Cache::DATA_ONLY){
-            line += " (Data Only)";
+    MemoryInterface* instM = container->_instructionAccess;
+    MemoryInterface* dataM = container->_dataAccess;
+    int level = 1;
+    while(dataM->type != Cache::BOTH || instM->type != Cache::BOTH){
+        if(instM->type != Cache::BOTH){
+            _ui.nextBox->addItem("Level " + QString::number(level) + " Cache(I)", {instM->id});
+            qDebug() << "INST " << instM->id << "->" <<instM->next->id;
+            instM = instM->next;
         }
-        else if(curr.type == Cache::INSTRUCTION_ONLY){
-            line += " (Instruction Only)";
-        }
-        else if(curr.type == Cache::BOTH){
-            line += " (Both)";
-        }
-        _ui.nextBox->addItem(line, {index++});
-   } 
-    _ui.nextBox->addItem("Main Memory");
+        if(dataM->type != Cache::BOTH){
+            _ui.nextBox->addItem("Level " + QString::number(level) + " Cache(D)", {dataM->id});
+            qDebug() << "DATA " << dataM->id << "->" << dataM->next->id;
+            dataM = dataM->next;
 
-    _ui.nextBox->setCurrentIndex(0);
+        }
+        level++;
+    }
+    for(; instM != NULL; instM = instM->next){
+        _ui.nextBox->addItem("Level " + QString::number(level) + " Cache(I&D)", {instM->id});
+        QString something = (instM->id ==0) ? "" : QString::number(instM->next->id);
+            qDebug() << "BOTH " <<instM->id << "->" << something;
+
+        level++;
+    }
+
+    _ui.nextBox->setItemText(_ui.nextBox->count()-1, "Main Memory");
+
 }
 
 NewCacheDialog::~NewCacheDialog(){
@@ -33,57 +40,51 @@ NewCacheDialog::~NewCacheDialog(){
 
 void NewCacheDialog::accept(){
     //If size is zero, then only main memory exists, so no error
-    if(cacheModels->size() == 0){
-        QDialog::accept();
+    qDebug() << _ui.nextBox->currentText();
+    qDebug() << _ui.nextBox->currentData();
+    if(container->addCache(_ui.nextBox->currentData().toInt(), getType(), getIndex(), getOffset(), getWay(), getDelay()) == false){
+        qDebug() << "GUI: Invalid Cache structure";
         return;
     }
-    CacheModel next =  cacheModels->at(_ui.nextBox->currentData().toInt());
-    if(next.type != Cache::BOTH && _ui.typeBox->currentText() == "Both"){
-        //Invalid selection
-        return;
-    }
-    
     QDialog::accept();
 }
 
-CacheModel NewCacheDialog::getModel(){
-    CacheModel model;
+
+Cache::Type NewCacheDialog::getType(){
     if(_ui.typeBox->currentText() == "Both"){
-        model.type = Cache::BOTH;
+        return Cache::BOTH;
     }
     else if(_ui.typeBox->currentText() == "Data Only"){
-        model.type = Cache::DATA_ONLY;
+        return Cache::DATA_ONLY;
     }
     else if(_ui.typeBox->currentText() == "Instruction Only"){
-        model.type = Cache::INSTRUCTION_ONLY;
+        return Cache::INSTRUCTION_ONLY;
     }
     else{
-        qDebug() << "Oops -from cache new dialog";
+        qDebug() << "Oops -from new cache dialog";
         exit(-1);
     }
-    if(cacheModels->size() == 0){
-        model.level = 1;
-        cacheModels->append(model);
-    }
-    else{
-        int index =_ui.nextBox->currentData().toInt( );
-        while(index > 0 && cacheModels->at(index-1).level == cacheModels->at(index).level){
-            index--;
-        }
-        model.level = cacheModels->at(index).level;
-        for(int i = index+1; i < cacheModels->size();i++){
-            // cacheModels->at(i).level =cacheModels->at(i).level + 1;
-        }
-        cacheModels->insert(index, model) ;
-        
-
-    }
-    model.indexBits = _ui.indexSpin->value();
-    model.logDataWordCount = _ui.offsetSpin->value();
-    model.logAssociativity = _ui.waySpin->value();
-    model.delay = _ui.delaySpin->value();
-    return model;
 }
+
+int NewCacheDialog::getIndex(){
+    return _ui.indexSpin->value();
+}
+
+int NewCacheDialog::getOffset(){
+    return _ui.offsetSpin->value();
+}
+int NewCacheDialog::getWay(){
+    return _ui.waySpin->value();
+}
+double NewCacheDialog::getDelay(){
+    return _ui.delaySpin->value();
+} 
+
+
+
+
+
+//----------------------------------------------------
 NewFileDialog::NewFileDialog(QString dir, QWidget *parent )
     : QDialog( parent )
 {

@@ -10,17 +10,25 @@
 #include <QDebug>
 #include "ui_newcachedialog.h"
 #include "ui_newfiledialog.h"
-#include "CacheModel.h"
 #include "../memory/Cache.h"
+#include "../memory/MemoryStructure.h"
 
 class NewCacheDialog : public QDialog
 {
     Q_OBJECT
     public:
-        QList<CacheModel>* cacheModels;
-        NewCacheDialog(QList<CacheModel>* cacheModels, QWidget *parent = 0);
+        MemoryStructure* container;
+        NewCacheDialog(MemoryStructure * container, QWidget *parent = 0);
         ~NewCacheDialog();
-        CacheModel getModel();
+
+        //Internal use only
+        Cache::Type getType();
+        int getIndex();
+        int getOffset();
+        int getWay();
+        double getDelay();
+        int getNext();
+
 
     public slots:
         void accept();

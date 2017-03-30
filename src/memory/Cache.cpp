@@ -11,7 +11,7 @@ Cache::Cache(int indexBits, int logDataWordCount, int logAssociativity, double d
   // Load in params.
   this->indexBits = indexBits;
   this->logDataWordCount = logDataWordCount;
-  this->nextMemory = nextMemory;
+  this->next = nextMemory;
   this->delay = delay;
   this->logAssociativity = logAssociativity;
 
@@ -79,27 +79,24 @@ void Cache::init(){
   size_t ways = 1 << logAssociativity;
   size_t dataWordCount = 1 << logDataWordCount;
   for(size_t index = 0; index < maxIndex; index++) {
-      for(size_t index2 = 0; index2 < ways; index2++){
-          // reset tag bits.
-          tags->at(index2)->fill(0);
-          // Add content cells.
-          QVector< QVector<Value> * > *_contents = contents->at(index2);
-          for(size_t word = 0;word < dataWordCount; word++) {
-              Value v = {0};
-              _contents->at(word)->fill(v);
-          }
-          // reset LRU bit
-          LRU->at(index2)->fill(0);
-          // reset dirty bit
-          dirty->at(index2)->fill(0);
-          // reset valid bit
-          valid->at(index2)->fill(0);
+      // reset tag bits.
+      tags->at(index)->fill(0);
+      // Add content cells.
+      for(size_t way = 0; way < ways; way++) {
+          Value v = {0};
+          contents->at(index)->at(way)->fill(v);
       }
-     }
+      // reset LRU bit
+      LRU->at(index)->fill(0);
+      // reset dirty bit
+      dirty->at(index)->fill(0);
+      // reset valid bit
+      valid->at(index)->fill(0);
+  }
 }
 unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned int offset){
-  // Concatenate tag, index, and offset into an address.
-  return (tag << (indexBits + logDataWordCount)) | (index << logDataWordCount) | offset;
+    // Concatenate tag, index, and offset into an address.
+    return (tag << (indexBits + logDataWordCount)) | (index << logDataWordCount) | offset;
 }
 
 QueryResult *Cache::read(unsigned int address, unsigned int length){
@@ -344,15 +341,15 @@ double Cache::fetch(unsigned int address){
   // What is the first address on the evicted line?
   int firstEvictedAddress = buildAddress(tags->at(index)->at(way), index, 0);
   // Write to the cache below if dirty and able.
-  if(dirty->at(index)->at(way) && nextMemory) {
-    wait += nextMemory->write(contents->at(index)->at(way), firstEvictedAddress);
+  if(dirty->at(index)->at(way) && next) {
+    wait += next->write(contents->at(index)->at(way), firstEvictedAddress);
   }
   // Set tag and valid bits
   tags->at(index)->replace(way, tag);
   valid->at(index)->replace(way, 1);
   // Get value from below.
-  if(nextMemory) {
-    QueryResult *resultFromBelow = nextMemory->read(firstInLine(address), contents->at(0)->at(0)->size());
+  if(next) {
+    QueryResult *resultFromBelow = next->read(firstInLine(address), contents->at(0)->at(0)->size());
    for(int i = 0; i < contents->at(0)->at(0)->size(); i++) {
       contents->at(index)->at(way)->replace(i,resultFromBelow->result.at(i));
     }

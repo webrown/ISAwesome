@@ -14,8 +14,8 @@
 #include <QLabel>
 #include <QDesktopServices>
 #include <QDebug>
-#include <QMainWindow>
-#include <QSpinBox>
+#include <QMainWindow> 
+#include <QSpinBox> 
 #include <QWidget>
 #include <QPlainTextEdit>
 #include <QFileSystemModel>
@@ -34,11 +34,10 @@
 #include "../assembler/ProgramManagerX.h"
 #include "HexSpinBox.h"
 #include "../computer/BreakPoint.h"
-#include "CacheModel.h"
 #include "MyQSpinBox.h"
 #include <QByteArray>
+#include "../memory/MemoryStructure.h"
 Q_DECLARE_METATYPE(ThreadMessage);
-Q_DECLARE_METATYPE(CacheModel);
 
 class MainWindow : public QMainWindow
 {
@@ -52,7 +51,8 @@ class MainWindow : public QMainWindow
 
         QQueue<ThreadMessage> messageQueue;
 
-        QList<CacheModel> cacheModels;
+        //TODO make another container for this?
+        MemoryStructure container;
 
         QSpinBox* cycleSpinBox;
         MyQSpinBox* pcSpinBox; 

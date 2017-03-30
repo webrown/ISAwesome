@@ -6,20 +6,21 @@
 Computer::Computer(){
     qDebug() << "COM: Creating computer";
     regs = new Register();
-    mems = new MemoryStructure(MAIN_MEMORY_DELAY);
+    mems = new MemoryStructure(MAIN_MEMORY_DELAY, false);
     exec = new Baseline(regs, mems);
     currState = DEAD;
-    qDebug() << "COM: Computer created"; } 
-    Computer::~Computer(){
-        qDebug() << "COM: Removing Computer";
-        delete regs;
-        delete mems;
-        delete exec;
-        if(program != NULL){
-            delete program;
-        }
-        qDebug() << "COM: Computer is removed!";
+    qDebug() << "COM: Computer created"; 
+} 
+Computer::~Computer(){
+    qDebug() << "COM: Removing Computer";
+    delete regs;
+    delete mems;
+    delete exec;
+    if(program != NULL){ 
+        delete program;
     }
+    qDebug() << "COM: Computer is removed!";
+}
 
 
 void Computer::init(QString fileName){
@@ -225,7 +226,42 @@ void Computer::handleMemoryView(uint address){
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_MEMORY, ret));
     return;
 }
+void Computer::handleCacheView(int id){
+    Cache * cache = (Cache *) mems->map[id];
+    if(currState == BLOCKED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    }
 
+    if(mems->map.size() == 1){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    }
+    QList<QVariant> list;
+    list.append(id);
+    int size =cache->contents->size();
+    int _size=cache->contents->at(0)->size();
+    int __size = cache->contents->at(0)->at(0)->size();
+    int count =0;
+    for(int ind = 0; ind < size && count <64; ind++) {
+        for(int way = 0; way < _size && count < 64; way++) {
+            for(int offset = 0; offset < __size && count < 64; offset++) {
+                QList<QVariant> _list;
+                _list.append(cache->valid->at(ind)->at(way));
+                _list.append(cache->dirty->at(ind)->at(way));
+                _list.append(cache->LRU->at(ind)->at(way));
+                _list.append(cache->tags->at(ind)->at(way));
+                _list.append(ind);
+                _list.append(offset);
+                _list.append(cache->contents->at(ind)->at(way)->at(offset).asInt);
+                list.append(_list);
+                count++;
+            }
+        }
+    }
+    emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_CACHE, list));
+    return;
+}
 void Computer::handleRegisterView(QString line){
     qDebug() << "COM: make register view";
     if(currState == BLOCKED){
@@ -356,6 +392,10 @@ void Computer::procMessage(ThreadMessage message){
 
             handleMemoryView(info.toUInt());
             break;
+        case ThreadMessage::R_VIEW_CACHE:
+            qDebug() << "COM: RECV FROM GUI: R_VIEW_CACHE";
+            handleCacheView(info.toInt());
+            break;
         case ThreadMessage::R_SAVE_STATE:
             qDebug() << "COM: RECV FROM GUI: R_SAVE_STATE";
             handleSaveState(info.toString());
@@ -363,6 +403,16 @@ void Computer::procMessage(ThreadMessage message){
         case ThreadMessage::R_RESTORE_STATE:
             qDebug() << "COM: RECV FROM GUI: R_RESTORE_STATE";
             handleRestoreState(info.toString());
+            break;
+        case ThreadMessage::R_ADD_CACHE:
+            qDebug() << "COM: RECV FROM GUI: R_ADD_CACHE";
+            mems->addCache(info.toList()[0].toInt(), MemoryStructure::convert(info.toList()[1].toInt()), info.toList()[2].toInt(), info.toList()[3].toInt(),info.toList()[4].toInt(), info.toList()[5].toDouble());
+            emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+            break;
+        case ThreadMessage::R_REMOVE_CACHE:
+            qDebug() << "COM: RECV FROM GUI: R_REMOVE_CACHE";
+            mems->removeCache(info.toInt());
+            emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
             break;
         default:
             qDebug() <<"COM: Invalid message";

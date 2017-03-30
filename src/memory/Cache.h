@@ -13,17 +13,8 @@ class CacheView;
 class Cache : public MemoryInterface{
 
   public:
-    enum CacheType{
-        DATA_ONLY, INSTRUCTION_ONLY, BOTH
-    };
-
     using MemoryInterface::write;
-    CacheType type;
-    int indexBits;
-    int logDataWordCount;
-    int logAssociativity;
-    double delay;
-    MemoryInterface *nextMemory = NULL;
+
     QVector< QVector<int> * > *tags;
     QVector< QVector< QVector<Value> * > * > *contents;
     QVector< QVector<int> * > *LRU;

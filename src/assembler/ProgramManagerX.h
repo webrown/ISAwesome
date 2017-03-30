@@ -51,6 +51,10 @@ class ProgramManagerX{
             program->instructions->append(a);
         }
         qDebug() << "LOAD: FINSIH";
+        qDebug() << QString::number(program->instructionEndAddress).rightJustified(32,'0');
+        qDebug() << QString::number(program->dataEndAddress).rightJustified(32,'0');
+        qDebug() << QString::number(program->size).rightJustified(32,'0');
+
 
         return program;
     }
