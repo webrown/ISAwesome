@@ -114,7 +114,9 @@ public:
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_4;
     QComboBox *cacheListBox;
-    QLineEdit *lineEdit_2;
+    QLineEdit *tagLine;
+    QLineEdit *indexLine;
+    QLineEdit *offsetLine;
     QPushButton *pushButton_2;
     QTableWidget *tableWidget_7;
     MemoryView *tab_memory;
@@ -143,7 +145,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(1920, 1080);
+        MainWindow->resize(1920, 1081);
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -502,10 +504,20 @@ public:
 
         horizontalLayout_5->addWidget(cacheListBox);
 
-        lineEdit_2 = new QLineEdit(widget_4);
-        lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
+        tagLine = new QLineEdit(widget_4);
+        tagLine->setObjectName(QStringLiteral("tagLine"));
 
-        horizontalLayout_5->addWidget(lineEdit_2);
+        horizontalLayout_5->addWidget(tagLine);
+
+        indexLine = new QLineEdit(widget_4);
+        indexLine->setObjectName(QStringLiteral("indexLine"));
+
+        horizontalLayout_5->addWidget(indexLine);
+
+        offsetLine = new QLineEdit(widget_4);
+        offsetLine->setObjectName(QStringLiteral("offsetLine"));
+
+        horizontalLayout_5->addWidget(offsetLine);
 
         pushButton_2 = new QPushButton(widget_4);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
@@ -513,9 +525,11 @@ public:
         horizontalLayout_5->addWidget(pushButton_2);
 
         horizontalLayout_5->setStretch(0, 1);
-        horizontalLayout_5->setStretch(1, 5);
+        horizontalLayout_5->setStretch(1, 8);
         horizontalLayout_5->setStretch(2, 5);
-        horizontalLayout_5->setStretch(3, 1);
+        horizontalLayout_5->setStretch(3, 5);
+        horizontalLayout_5->setStretch(4, 5);
+        horizontalLayout_5->setStretch(5, 2);
 
         verticalLayout_9->addWidget(widget_4);
 
@@ -893,6 +907,10 @@ public:
         ___qtablewidgetitem24->setText(QApplication::translate("MainWindow", "UN", Q_NULLPTR));
         tabWidget_memory->setTabText(tabWidget_memory->indexOf(tab_register), QApplication::translate("MainWindow", "Register", Q_NULLPTR));
         label_4->setText(QApplication::translate("MainWindow", "Type:", Q_NULLPTR));
+        tagLine->setInputMask(QString());
+        tagLine->setPlaceholderText(QApplication::translate("MainWindow", "Tag", Q_NULLPTR));
+        indexLine->setPlaceholderText(QApplication::translate("MainWindow", "Index", Q_NULLPTR));
+        offsetLine->setPlaceholderText(QApplication::translate("MainWindow", "Offset", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MainWindow", "Search", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem25 = tableWidget_7->horizontalHeaderItem(0);
         ___qtablewidgetitem25->setText(QApplication::translate("MainWindow", "V", Q_NULLPTR));

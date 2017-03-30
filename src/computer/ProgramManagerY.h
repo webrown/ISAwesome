@@ -19,7 +19,8 @@ namespace ProgramManagerY{
 
 
         //If change, change program x
-        out << (qint32)computer->program->instructionEndAddress;
+        //Dirty hack to fix instruciton address error
+        out << (qint32)(computer->program->instructionEndAddress);
         out << (qint32)computer->program->dataEndAddress;
         out << (qint32)computer->program->size;
 

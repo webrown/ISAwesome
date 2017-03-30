@@ -18,7 +18,7 @@ class CacheView : public QTableWidget
         CacheView(QWidget* parent = 0);
         ~CacheView();
         void update();
-        void init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit);
+        void init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit, QLineEdit* indexEdit, QLineEdit* offsetEdit);
         void display(QList<QVariant> list);
         public slots:
             void updateWithComboBox();
@@ -28,7 +28,9 @@ class CacheView : public QTableWidget
         QTableWidget* table;
         QComboBox* comboBox;
         QPushButton* searchButton;
-        QLineEdit* lineEdit;
+        QLineEdit* tagEdit;
+        QLineEdit* indexEdit;
+        QLineEdit* offsetEdit;
 };
 
 #endif

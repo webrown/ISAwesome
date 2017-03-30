@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>1080</height>
+    <height>1081</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -526,7 +526,7 @@
          <layout class="QVBoxLayout" name="verticalLayout_9">
           <item>
            <widget class="QWidget" name="widget_4" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,5,5,1">
+            <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,8,5,5,5,2">
              <item>
               <widget class="QLabel" name="label_4">
                <property name="text">
@@ -538,7 +538,28 @@
               <widget class="QComboBox" name="cacheListBox"/>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_2"/>
+              <widget class="QLineEdit" name="tagLine">
+               <property name="inputMask">
+                <string/>
+               </property>
+               <property name="placeholderText">
+                <string>Tag</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="indexLine">
+               <property name="placeholderText">
+                <string>Index</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="offsetLine">
+               <property name="placeholderText">
+                <string>Offset</string>
+               </property>
+              </widget>
              </item>
              <item>
               <widget class="QPushButton" name="pushButton_2">

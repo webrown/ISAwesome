@@ -9,12 +9,14 @@ CacheView::CacheView(QWidget * parent) : QTableWidget(parent){
 CacheView::~CacheView(){
 }
 
-void CacheView::init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit){
+void CacheView::init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit, QLineEdit* indexEdit, QLineEdit* offsetEdit){
     this->main = main;
     this->table = memoryTable;
     this->comboBox = comboBox;
     this->searchButton =searchButton;
-    this->lineEdit = lineEdit;
+    this->tagEdit = lineEdit;
+    this->indexEdit = indexEdit;
+    this->offsetEdit = offsetEdit;
 
     table->setRowCount(64);
     for(int row = 0; row < 64; row++){
@@ -54,16 +56,16 @@ void CacheView::display(QList<QVariant> list){
     table->setColumnHidden(5, model->logDataWordCount==0);
     
     int tagSize = 32-model->indexBits-model->logDataWordCount;
-    int bitSize = fontMetrics().width('0');
+    int bitSize = fontMetrics().width('0') + 1;
 
-    int tagWidth = qMax(bitSize * 3 + 15, tagSize * bitSize + 10);
-    int indexWidth = qMax(bitSize * 5 + 15, model->indexBits * bitSize + 10);
-    int offsetWidth = qMax(bitSize * 6 + 15, model->logDataWordCount * bitSize + 10);
+    int tagWidth = qMax(bitSize * 3 + 15, tagSize * bitSize);
+    int indexWidth = qMax(bitSize * 5 + 15, model->indexBits * bitSize);
+    int offsetWidth = qMax(bitSize * 6 + 15, model->logDataWordCount * bitSize);
     
     table->setColumnWidth(3,tagWidth);
     table->setColumnWidth(4,indexWidth);
     table->setColumnWidth(5,offsetWidth);
-
+    qDebug() << list;
 
     for(i = 0;i < list.size()/7; i++){
         table->item(i, 0)->setBackground(list[7*i].toInt()==1 ? Qt::red : Qt::white);
@@ -89,11 +91,19 @@ void CacheView::updateWithSearch(){
     qDebug() << "GUI: Update with search button";
     QList<QVariant> list;
     list << comboBox->currentData();
+    bool okay;
+    list << tagEdit->text();
+    list << indexEdit->text();
+    list << offsetEdit->text();
     main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_CACHE,list)); 
 }
 void CacheView::updateWithComboBox(){
     qDebug() << "GUI: Update with combo box";
     QList<QVariant> list;
     list << comboBox->currentData();
+
+    list << "";
+    list << "";
+    list << "";
     main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_CACHE, list));
 }

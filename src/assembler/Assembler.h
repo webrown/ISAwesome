@@ -18,8 +18,7 @@
 
 
 class Program{
-    public:
-        ~Program(){
+    public: ~Program(){
             delete instructions;
         }
     unsigned int size;
@@ -68,7 +67,7 @@ class AssemblerConfiguration{
 };
 Q_DECLARE_METATYPE(AssemblerConfiguration);
 
-#define HEADER_BUFFER 32u
+#define HEADER_BUFFER 8u
 /* Assembler is a singleton object.
  * 
  *
