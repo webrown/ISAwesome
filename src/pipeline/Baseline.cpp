@@ -193,7 +193,7 @@ Status Baseline::run(void){
                     // Link back.
                     registers->write(Register::PC, Register::LR);
                     // Move PC
-                    registers->write(unaryOperand, Register::PC);
+                    registers->write(registers->read(unaryOperand), Register::PC);
                 }
             }
             break;
