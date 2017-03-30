@@ -174,10 +174,20 @@ Status Baseline::run(void){
             }
             break;
         }
-        case CMP: {
-qDebug() << "I AM CMP";
+        case BL: {
             if(conditionScalar) {
-qDebug() << "CONDITION ENTERED";
+                // Is this register valid for reading?
+                if(Register::indexExists(unaryOperand) && Register::isScalarIndex(unaryOperand)) {
+                    // Link back.
+                    registers->write(Register::PC, Register::LR);
+                    // Move PC
+                    registers->write(unaryOperand, Register::PC);
+                }
+            }
+            break;
+        }
+        case CMP: {
+            if(conditionScalar) {
                 CompareOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2);
             }
             break;
