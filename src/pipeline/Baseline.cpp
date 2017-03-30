@@ -5,10 +5,14 @@
 #include "AddOperation.h"
 #include "AndOperation.h"
 #include "ArithmeticOperation.h"
+#include "ArithmeticShiftLeftOperation.h"
+#include "ArithmeticShiftRightOperation.h"
 #include "CompareOperation.h"
 #include "CopyOperation.h"
 #include "DivideOperation.h"
 #include "LoadOperation.h"
+#include "LogicalShiftLeftOperation.h"
+#include "LogicalShiftRightOperation.h"
 #include "ModOperation.h"
 #include "MultiplyOperation.h"
 #include "NandOperation.h"
@@ -181,6 +185,14 @@ Status Baseline::run(void){
             }
             break;
         }
+        case ASL: {
+            ArithmeticShiftLeftOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case ASR: {
+            ArithmeticShiftRightOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
         case B: {
             if(conditionScalar) {
                 registers->write(unaryOperand, Register::PC);
@@ -220,6 +232,14 @@ Status Baseline::run(void){
             if(conditionScalar) {
                 LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
+            break;
+        }
+        case LSL: {
+            LogicalShiftLeftOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case LSR: {
+            LogicalShiftRightOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
         case MOD: {
