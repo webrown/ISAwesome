@@ -52,7 +52,7 @@ class Computer: public QObject{
          * Run this computer for nCycle 
          * If nCycle = -1, run indefintely
          */
-        void step(int nCycle);
+        void step(int nCycle, double delay);
         
         /*
          * Pause the cycle of computer
@@ -67,7 +67,7 @@ class Computer: public QObject{
         void stop();
 
         void feedInstructions();
-        void delay();
+        void delay(double delay);
         void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
         void handleMemoryView(uint startAddress);
         void handleRegisterView(QString type);

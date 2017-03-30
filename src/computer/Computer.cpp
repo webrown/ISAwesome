@@ -74,7 +74,7 @@ void Computer::feedInstructions(){
 }
 
 
-void Computer::step(int nCycle){
+void Computer::step(int nCycle, double _delay){
     qDebug() << "COM: step";
     //Blocked 
     if(currState == BLOCKED){
@@ -93,7 +93,8 @@ void Computer::step(int nCycle){
 
     while(currState == RUNNING){
         //sleep for sanity
-        delay();
+        qDebug() << _delay;
+        delay(_delay);
 
         uint pc = regs->getPC(); 
 
@@ -134,11 +135,15 @@ void Computer::step(int nCycle){
         if(nCycle == 0){
             currState = PAUSED;
         }
-        emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
+        if(_delay != 0){
+            qDebug() << "A";
+            emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
+        }
     }
 
     //Distinguish from stop
     if(currState == PAUSED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
         emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
     }   
     return;
@@ -177,9 +182,9 @@ void Computer::pause(){
 }
 
 //http://stackoverflow.com/questions/3752742/how-do-i-create-a-pause-wait-function-using-qt
-void Computer::delay()
+void Computer::delay(double d)
 {
-    QTime dieTime= QTime::currentTime().addSecs(1);
+    QTime dieTime= QTime::currentTime().addSecs(d);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
@@ -365,7 +370,7 @@ void Computer::procMessage(ThreadMessage message){
             break;
         case ThreadMessage::R_STEP:
             qDebug() << "COM: RECV FROM GUI: R_STEP";
-            step(info.toInt());
+            step(info.toInt(), message.message2.toDouble());
             break;
         case ThreadMessage::R_STOP:
             qDebug() << "COM: RECV FROM GUI: R_STOP";

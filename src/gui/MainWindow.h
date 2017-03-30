@@ -55,6 +55,7 @@ class MainWindow : public QMainWindow
         MemoryStructure container;
 
         QSpinBox* cycleSpinBox;
+        QDoubleSpinBox* delayBox;
         MyQSpinBox* pcSpinBox; 
 
         void updateNavigation();

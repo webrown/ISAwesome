@@ -40,7 +40,13 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     pcSpinBox->setSingleStep(INSTRUCTION_SIZE);
     _ui.toolBar->addWidget(pcSpinBox);
     connect(pcSpinBox, SIGNAL(valueChangedNotBySet(int)) ,this, SLOT(handleUpdatePC(int)));
-
+    
+    delayBox = new QDoubleSpinBox(this);
+    delayBox->setValue(.5);
+    delayBox->setRange(0,1);
+    delayBox->setPrefix("Delay: ");
+    delayBox->setSingleStep(0.1);
+    _ui.toolBar->insertWidget(_ui.actionRun,delayBox);
 
     //disable both undo and redo
     _ui.actionUndo->setEnabled(false);
@@ -431,7 +437,7 @@ void MainWindow::handleForward(){
 
 void MainWindow::handlePlay(){
     qDebug() << "GUI: Play button is clicked";
-    sendMessage(ThreadMessage(ThreadMessage::R_STEP, {-1}));
+    sendMessage(ThreadMessage(ThreadMessage::R_STEP, {-1}, {delayBox->value()}));
 }
 
 void MainWindow::handleBackward(){

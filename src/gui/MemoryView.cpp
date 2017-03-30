@@ -51,7 +51,7 @@ void MemoryView::display(QList<QVariant> list){
     //check empty
     for(uint i = 0; i < 64; i++){
         uint content = list[i+1].toUInt();
-        memoryTable->item(i, 0)->setText("0X" + QString::number(chunkBit + x + i *INSTRUCTION_SIZE,16).rightJustified(8,'0'));
+        memoryTable->item(i, 0)->setText("0X" + QString::number(chunkBit + x + i ,16).rightJustified(8,'0'));
         memoryTable->item(i, 1)->setText("0X" + QString::number(content, 16).rightJustified(8,'0'));
         memoryTable->item(i, 2)->setText(QString::number(content, 10));
         memoryTable->item(i, 3)->setText("0B" + QString::number(content, 2).rightJustified(32,'0'));

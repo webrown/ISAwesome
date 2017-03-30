@@ -1,5 +1,6 @@
 #include "InstructionResolver.h"
-#define L_BIT toB("1000000000000000000000")
+#define L_BIT  toB("1000000000000000000000")
+#define L2_BIT toB("0000000100000000000000")
 #include <QDebug>
 
 QRegExp intReg("^R([0-9]|2[0-3])$");
@@ -208,7 +209,7 @@ ParseResult parseSTO(QStringList tokens){
         return result;
     }
     if(RR(tokens, &result)) ;
-    else if(VR(tokens, &result)) ;
+    else if(RV(tokens, &result)) ;
     else{
         result.error = "Invalid argument";
         result.failureLocation = 1;
@@ -357,14 +358,14 @@ ParseResult parseWVE(QStringList tokens){
         qDebug() << tokens[1];
         if(intReg.exactMatch(tokens[1])){
             tokens[1].remove(0,1);
-            result.parsed = L_BIT;
+            result.parsed = L2_BIT;
 
         }
         else if(floatReg.exactMatch(tokens[1])){
             tokens[1].remove(0,1);
             result.warning = "WHAT?";
             result.failureLocation = 1;
-            result.parsed = L_BIT;
+            result.parsed = L2_BIT;
 
         }
         else{
@@ -427,14 +428,14 @@ ParseResult parseRVE(QStringList tokens){
     if(ok == false || src >= ( 1<< 17)){
         if(intReg.exactMatch(tokens[1])){
             tokens[1].remove(0,1);
-            result.parsed = L_BIT;
+            result.parsed = L2_BIT;
             
         }
         else if(floatReg.exactMatch(tokens[1])){
             tokens[1].remove(0,1);
             result.warning = "WHAT?";
             result.failureLocation = 1;
-            result.parsed = L_BIT;
+            result.parsed = L2_BIT;
             
         }
         else{
@@ -506,7 +507,7 @@ ParseResult unparseTernary(uint args){
     uint secondArg = ((args & ~L_BIT)& (((1<<5)-1) << 8)) >> 8;
 
     //register
-    if((args & L_BIT) == L_BIT){
+    if((args & L2_BIT) == L2_BIT){
         result.unparsed += "R" + QString::number(secondArg & ((1<<5)-1),10) + " ";
     }
     //immediate

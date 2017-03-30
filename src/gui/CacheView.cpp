@@ -5,8 +5,10 @@
 
 CacheView::CacheView(QWidget * parent) : QTableWidget(parent){
 }
+
 CacheView::~CacheView(){
 }
+
 void CacheView::init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit){
     this->main = main;
     this->table = memoryTable;
@@ -82,13 +84,16 @@ void CacheView::display(QList<QVariant> list){
         table->item(i, 6)->setText("");
 
     }
-
-
 }
 void CacheView::updateWithSearch(){
     qDebug() << "GUI: Update with search button";
+    QList<QVariant> list;
+    list << comboBox->currentData();
+    main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_CACHE,list)); 
 }
 void CacheView::updateWithComboBox(){
     qDebug() << "GUI: Update with combo box";
-    main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_CACHE, comboBox->currentData()));
+    QList<QVariant> list;
+    list << comboBox->currentData();
+    main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_CACHE, list));
 }

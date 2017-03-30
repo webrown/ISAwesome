@@ -23,10 +23,6 @@ INCLUDEPATH += .
 
 # Input
 HEADERS += src/Utility.h \
-           test/TestAssembler.h \
-           test/TestBaseline.h \
-           test/TestComputer.h \
-           test/TestInstructionResolver.h \
            src/assembler/Assembler.h \
            src/assembler/ConditionResolver.h \
            src/assembler/Disassembler.h \
@@ -83,11 +79,6 @@ SOURCES += invisible/crunchyCache.cpp \
            invisible/pipelineTests.cpp \
            src/main.cpp \
            src/Utility.cpp \
-           test/main.cpp \
-           test/TestAssembler.cpp \
-           test/TestBaseline.cpp \
-           test/TestComputer.cpp \
-           test/TestInstructionResolver.cpp \
            src/assembler/Assembler.cpp \
            src/assembler/Disassembler.cpp \
            src/assembler/InstructionResolver.cpp \

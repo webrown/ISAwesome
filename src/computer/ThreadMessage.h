@@ -39,11 +39,17 @@ class ThreadMessage{
 
     Type type;
     QVariant message;
+    QVariant message2;
     ThreadMessage(){
     }
     ThreadMessage(Type type, QVariant message){
         this->type = type;
         this->message = message;
+    }
+    ThreadMessage(Type type, QVariant message, QVariant message2){
+        this->type = type;
+        this->message = message;
+        this->message2 = message2;
     }
 };
 

@@ -63,7 +63,7 @@ double MainMemory::write(QVector<Value> *value, unsigned int address){
     for(int i = 0; i < value->size(); i++) {
       uint ind1;
       uint ind2;
-      indexPair(address+i * INSTRUCTION_SIZE, &ind1, &ind2);
+      indexPair(address+i, &ind1, &ind2);
       if(_contents.at(ind1).size() == 0) {
         // Ooops!  This memory chunk has not been instantiated yet!
         _contents[ind1].resize(MEMORY_CHUNK_SIZE);

@@ -1,5 +1,6 @@
 //Size of each instruction
-#define INSTRUCTION_SIZE 4
+#define INSTRUCTION_SIZE 1
+#define GUI_MEMORY_VIEW_SIZE 64
 
 #define VECTOR_SIZE 64
 #define NUMBER_OF_SCALAR_REGISTER 24
