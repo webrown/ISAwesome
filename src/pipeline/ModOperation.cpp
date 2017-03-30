@@ -5,7 +5,12 @@ ModOperation ModOperation ::singleton;
 
 Value ModOperation::scalarOperation(int a, int b){
   Value v;
-  v.i = a % b;
+  if(a == 0) {
+    v.i = -1;
+  }
+  else {
+    v.i = b % a;
+  }
   return v;
 }
 
