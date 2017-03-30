@@ -425,3 +425,8 @@ void Computer::procMessage(ThreadMessage message){
     }
 
 }
+
+void Computer::step(int nCycle) {
+    // TODO:  DESTROY THIS!!!
+    step(nCycle, 1.0);
+}

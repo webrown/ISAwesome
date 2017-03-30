@@ -53,6 +53,14 @@ class Computer: public QObject{
          * If nCycle = -1, run indefintely
          */
         void step(int nCycle, double delay);
+
+
+        /*
+         * TODO:  THIS IS EVIL.
+         */
+        void step(int nCycle);
+
+
         
         /*
          * Pause the cycle of computer
