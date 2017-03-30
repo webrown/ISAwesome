@@ -7,11 +7,21 @@
 #include "ArithmeticOperation.h"
 #include "CompareOperation.h"
 #include "CopyOperation.h"
+#include "DivideOperation.h"
 #include "LoadOperation.h"
+#include "ModOperation.h"
+#include "MultiplyOperation.h"
+#include "NandOperation.h"
+#include "NorOperation.h"
+#include "NotOperation.h"
+#include "OrOperation.h"
+#include "ReadVectorElementOperation.h"
 #include "StoreOperation.h"
 #include "SubtractOperation.h"
+#include "ToFloatOperation.h"
+#include "ToIntOperation.h"
 #include "WriteVectorElementOperation.h"
-#include "ReadVectorElementOperation.h"
+#include "XorOperation.h"
 #include <QDebug>
 
 using namespace Flag;
@@ -143,7 +153,8 @@ Status Baseline::run(void){
    
     // Do what the instruction tells you to.
     switch(instructionType) {
-        case ADD: {
+        case ADD:
+        case SOE: {
             AddOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
@@ -197,10 +208,39 @@ Status Baseline::run(void){
             CopyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
+        case DIV: {
+            DivideOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
         case LOD: {
             if(conditionScalar) {
                 LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
+            break;
+        }
+        case MOD: {
+            ModOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case MUL:
+        case MOE: {
+            MultiplyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case NAND: {
+            NandOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case NOR: {
+            NorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case NOT: {
+            NotOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case OR: {
+            OrOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
         case RVE: {
@@ -236,6 +276,18 @@ Status Baseline::run(void){
         }
         case SUB: {
             SubtractOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case TOF: {
+            ToFloatOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case TOI: {
+            ToIntOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case XOR: {
+            XorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
         case WVE: {
