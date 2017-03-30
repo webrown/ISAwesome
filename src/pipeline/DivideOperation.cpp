@@ -30,13 +30,13 @@ Value DivideOperation::scalarOperation(float a, float b){
   if(a == 0) {
     // /0 is just big number.
     if(b > 0) {
-      v.f = std::numeric_limits<float>::infinity;
+      v.f = std::numeric_limits<float>::infinity();
     }
     if(b == 0) {
       v.f = 0;
     }
     if(b < 0) {
-      v.f = -std::numeric_limits<float>::infinity;
+      v.f = -std::numeric_limits<float>::infinity();
     }
   }
   else {
