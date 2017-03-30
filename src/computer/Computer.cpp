@@ -63,7 +63,7 @@ void Computer::init(QString fileName){
 }
 void Computer::feedInstructions(){
     QList<QVariant> instructions;
-    for(int i =0 ;i < program->instructionEndAddress/INSTRUCTION_SIZE; i++){
+    for(int i =0 ;i < program->size; i++){
         if(program->instructionEndAddress < program->dataEndAddress ){
             QVariant v = program->instructions->at(i);
             instructions.append(v);
@@ -243,6 +243,50 @@ void Computer::handleCacheView(QList<QVariant> arg){
         emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
         return;
     }
+
+    bool tagB = arg[0].toString() == "" ? false : true;
+    bool indexB = arg[1].toString() == "" ? false : true;
+    bool offsetB = arg[2].toString() == "" ? false : true;
+    bool okay;
+    uint tagS, indexS, offsetS;
+    uint tagM = 1, indexM = 1, offsetM = 1;
+    if(tagB == true){
+        tagS = arg[0].toString().toUInt(&okay,2);
+        if(okay == false){
+            emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Invalid argument for tag"}));
+            return;
+        }
+        for(int i =0 ; i < arg[0].toString().length(); i ++){
+            tagM <<= 1;
+        }
+        tagM -=1;
+    }
+    if(indexB == true){
+        indexS = arg[1].toString().toUInt(&okay,2);
+        if(okay == false){
+            emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Invalid argument for index"}));
+            return;
+        }
+        for(int i =0 ; i < arg[1].toString().length(); i ++){
+            indexM <<= 1;
+        }
+        indexM -=1;
+    }
+    if(offsetB == true){
+        offsetS = arg[2].toString().toUInt(&okay,2);
+        if(okay == false){
+            emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Invalid argument for offset"}));
+            return;
+        }
+        for(int i =0 ; i < arg[2].toString().length(); i ++){
+            offsetM <<= 1;
+        }
+        offsetM -=1;
+    }
+    // qDebug() << QString::number(tagS, 2);
+    
+    // qDebug() << QString::number(tagM, 2);
+
     QList<QVariant> list;
     list.append(id);
     int size =cache->contents->size();
@@ -250,8 +294,28 @@ void Computer::handleCacheView(QList<QVariant> arg){
     int __size = cache->contents->at(0)->at(0)->size();
     int count =0;
     for(int ind = 0; ind < size && count <64; ind++) {
+        uint indV = ind & indexM;
+        // qDebug() << indexB <<indV << indexS;
+        if(indexB == true && indV != indexS){
+            continue;
+        }
         for(int way = 0; way < _size && count < 64; way++) {
             for(int offset = 0; offset < __size && count < 64; offset++) {
+
+                uint offsetV = offset & offsetM;
+                // qDebug() << offsetB <<offsetV << offsetS;
+
+                if(offsetB == true && offsetV != offsetS){
+
+                    continue;
+                }
+                uint tagBit = cache->tags->at(ind)->at(way);
+                uint tagV = tagBit & tagM;
+                // qDebug() << tagB <<tagV << tagS;
+
+                if(tagB == true && tagV != tagS){
+                    continue;
+                }
                 QList<QVariant> _list;
                 _list.append(cache->valid->at(ind)->at(way));
                 _list.append(cache->dirty->at(ind)->at(way));

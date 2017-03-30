@@ -50,6 +50,10 @@ OBJECTS_DIR   = build/
 
 SOURCES       = src/main.cpp \
 		src/Utility.cpp \
+		test/TestAssembler.cpp \
+		test/TestBaseline.cpp \
+		test/TestComputer.cpp \
+		test/TestInstructionResolver.cpp \
 		src/assembler/Assembler.cpp \
 		src/assembler/Disassembler.cpp \
 		src/assembler/InstructionResolver.cpp \
@@ -79,10 +83,28 @@ SOURCES       = src/main.cpp \
 		src/pipeline/Baseline.cpp \
 		src/pipeline/CompareOperation.cpp \
 		src/pipeline/CopyOperation.cpp \
+		src/pipeline/DivideOperation.cpp \
 		src/pipeline/LoadOperation.cpp \
 		src/pipeline/MemoryOperation.cpp \
+		src/pipeline/ModOperation.cpp \
+		src/pipeline/MultiplyOperation.cpp \
+		src/pipeline/NandOperation.cpp \
+		src/pipeline/NorOperation.cpp \
+		src/pipeline/NotOperation.cpp \
+		src/pipeline/OrOperation.cpp \
+		src/pipeline/ReadVectorElementOperation.cpp \
 		src/pipeline/StageData.cpp \
-		src/pipeline/StoreOperation.cpp build/qrc_pisa.cpp \
+		src/pipeline/StoreOperation.cpp \
+		src/pipeline/SubtractOperation.cpp \
+		src/pipeline/TernaryOperation.cpp \
+		src/pipeline/ToFloatOperation.cpp \
+		src/pipeline/ToIntOperation.cpp \
+		src/pipeline/WriteVectorElementOperation.cpp \
+		src/pipeline/XorOperation.cpp build/qrc_pisa.cpp \
+		build/moc_TestAssembler.cpp \
+		build/moc_TestBaseline.cpp \
+		build/moc_TestComputer.cpp \
+		build/moc_TestInstructionResolver.cpp \
 		build/moc_Assembler.cpp \
 		build/moc_Computer.cpp \
 		build/moc_CacheView.cpp \
@@ -98,6 +120,10 @@ SOURCES       = src/main.cpp \
 		build/moc_Tracker.cpp
 OBJECTS       = build/main.o \
 		build/Utility.o \
+		build/TestAssembler.o \
+		build/TestBaseline.o \
+		build/TestComputer.o \
+		build/TestInstructionResolver.o \
 		build/Assembler.o \
 		build/Disassembler.o \
 		build/InstructionResolver.o \
@@ -127,11 +153,29 @@ OBJECTS       = build/main.o \
 		build/Baseline.o \
 		build/CompareOperation.o \
 		build/CopyOperation.o \
+		build/DivideOperation.o \
 		build/LoadOperation.o \
 		build/MemoryOperation.o \
+		build/ModOperation.o \
+		build/MultiplyOperation.o \
+		build/NandOperation.o \
+		build/NorOperation.o \
+		build/NotOperation.o \
+		build/OrOperation.o \
+		build/ReadVectorElementOperation.o \
 		build/StageData.o \
 		build/StoreOperation.o \
+		build/SubtractOperation.o \
+		build/TernaryOperation.o \
+		build/ToFloatOperation.o \
+		build/ToIntOperation.o \
+		build/WriteVectorElementOperation.o \
+		build/XorOperation.o \
 		build/qrc_pisa.o \
+		build/moc_TestAssembler.o \
+		build/moc_TestBaseline.o \
+		build/moc_TestComputer.o \
+		build/moc_TestInstructionResolver.o \
 		build/moc_Assembler.o \
 		build/moc_Computer.o \
 		build/moc_CacheView.o \
@@ -338,6 +382,10 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		PISA.pro src/Utility.h \
+		test/TestAssembler.h \
+		test/TestBaseline.h \
+		test/TestComputer.h \
+		test/TestInstructionResolver.h \
 		src/assembler/Assembler.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/Disassembler.h \
@@ -379,13 +427,31 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/Baseline.h \
 		src/pipeline/CompareOperation.h \
 		src/pipeline/CopyOperation.h \
+		src/pipeline/DivideOperation.h \
 		src/pipeline/LoadOperation.h \
 		src/pipeline/MemoryOperation.h \
+		src/pipeline/ModOperation.h \
+		src/pipeline/MultiplyOperation.h \
+		src/pipeline/NandOperation.h \
+		src/pipeline/NorOperation.h \
+		src/pipeline/NotOperation.h \
+		src/pipeline/OrOperation.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/PipelineGlobals.h \
+		src/pipeline/ReadVectorElementOperation.h \
 		src/pipeline/StageData.h \
-		src/pipeline/StoreOperation.h src/main.cpp \
+		src/pipeline/StoreOperation.h \
+		src/pipeline/SubtractOperation.h \
+		src/pipeline/TernaryOperation.h \
+		src/pipeline/ToFloatOperation.h \
+		src/pipeline/ToIntOperation.h \
+		src/pipeline/WriteVectorElementOperation.h \
+		src/pipeline/XorOperation.h src/main.cpp \
 		src/Utility.cpp \
+		test/TestAssembler.cpp \
+		test/TestBaseline.cpp \
+		test/TestComputer.cpp \
+		test/TestInstructionResolver.cpp \
 		src/assembler/Assembler.cpp \
 		src/assembler/Disassembler.cpp \
 		src/assembler/InstructionResolver.cpp \
@@ -415,10 +481,24 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/Baseline.cpp \
 		src/pipeline/CompareOperation.cpp \
 		src/pipeline/CopyOperation.cpp \
+		src/pipeline/DivideOperation.cpp \
 		src/pipeline/LoadOperation.cpp \
 		src/pipeline/MemoryOperation.cpp \
+		src/pipeline/ModOperation.cpp \
+		src/pipeline/MultiplyOperation.cpp \
+		src/pipeline/NandOperation.cpp \
+		src/pipeline/NorOperation.cpp \
+		src/pipeline/NotOperation.cpp \
+		src/pipeline/OrOperation.cpp \
+		src/pipeline/ReadVectorElementOperation.cpp \
 		src/pipeline/StageData.cpp \
-		src/pipeline/StoreOperation.cpp
+		src/pipeline/StoreOperation.cpp \
+		src/pipeline/SubtractOperation.cpp \
+		src/pipeline/TernaryOperation.cpp \
+		src/pipeline/ToFloatOperation.cpp \
+		src/pipeline/ToIntOperation.cpp \
+		src/pipeline/WriteVectorElementOperation.cpp \
+		src/pipeline/XorOperation.cpp
 QMAKE_TARGET  = PISA
 DESTDIR       = bin/
 TARGET        = bin/PISA
@@ -844,8 +924,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Utility.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/ProgramManagerY.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/AddOperation.h src/pipeline/AndOperation.h src/pipeline/ArithmeticOperation.h src/pipeline/Banana.h src/pipeline/Baseline.h src/pipeline/CompareOperation.h src/pipeline/CopyOperation.h src/pipeline/LoadOperation.h src/pipeline/MemoryOperation.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/StageData.h src/pipeline/StoreOperation.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/LoadOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/ProgramManagerY.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/AddOperation.h src/pipeline/AndOperation.h src/pipeline/ArithmeticOperation.h src/pipeline/Banana.h src/pipeline/Baseline.h src/pipeline/CompareOperation.h src/pipeline/CopyOperation.h src/pipeline/DivideOperation.h src/pipeline/LoadOperation.h src/pipeline/MemoryOperation.h src/pipeline/ModOperation.h src/pipeline/MultiplyOperation.h src/pipeline/NandOperation.h src/pipeline/NorOperation.h src/pipeline/NotOperation.h src/pipeline/OrOperation.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/ReadVectorElementOperation.h src/pipeline/StageData.h src/pipeline/StoreOperation.h src/pipeline/SubtractOperation.h src/pipeline/TernaryOperation.h src/pipeline/ToFloatOperation.h src/pipeline/ToIntOperation.h src/pipeline/WriteVectorElementOperation.h src/pipeline/XorOperation.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/DivideOperation.cpp src/pipeline/LoadOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/ModOperation.cpp src/pipeline/MultiplyOperation.cpp src/pipeline/NandOperation.cpp src/pipeline/NorOperation.cpp src/pipeline/NotOperation.cpp src/pipeline/OrOperation.cpp src/pipeline/ReadVectorElementOperation.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp src/pipeline/SubtractOperation.cpp src/pipeline/TernaryOperation.cpp src/pipeline/ToFloatOperation.cpp src/pipeline/ToIntOperation.cpp src/pipeline/WriteVectorElementOperation.cpp src/pipeline/XorOperation.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -914,9 +994,70 @@ compiler_moc_predefs_clean:
 build/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -dM -E -o build/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
+compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
+	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
+build/moc_TestAssembler.cpp: src/assembler/Assembler.h \
+		src/assembler/Problem.h \
+		src/computer/Architecture.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
+		test/TestAssembler.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestAssembler.h -o build/moc_TestAssembler.cpp
+
+build/moc_TestBaseline.cpp: src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/pipeline/Baseline.h \
+		src/computer/Status.h \
+		src/pipeline/Banana.h \
+		src/memory/Flag.h \
+		src/Utility.h \
+		test/TestBaseline.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestBaseline.h -o build/moc_TestBaseline.cpp
+
+build/moc_TestComputer.cpp: src/computer/Computer.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/BreakPoint.h \
+		src/pipeline/Banana.h \
+		src/computer/Status.h \
+		src/pipeline/Baseline.h \
+		src/computer/ThreadMessage.h \
+		src/assembler/Assembler.h \
+		src/assembler/Problem.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
+		src/assembler/ProgramManagerX.h \
+		test/TestComputer.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestComputer.h -o build/moc_TestComputer.cpp
+
+build/moc_TestInstructionResolver.cpp: src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		test/TestInstructionResolver.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include test/TestInstructionResolver.h -o build/moc_TestInstructionResolver.cpp
+
 build/moc_Assembler.cpp: src/assembler/Problem.h \
 		src/computer/Architecture.h \
 		src/assembler/InstructionResolver.h \
@@ -1218,6 +1359,59 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 
 build/Utility.o: src/Utility.cpp src/Utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Utility.o src/Utility.cpp
+
+build/TestAssembler.o: test/TestAssembler.cpp test/TestAssembler.h \
+		src/assembler/Assembler.h \
+		src/assembler/Problem.h \
+		src/computer/Architecture.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestAssembler.o test/TestAssembler.cpp
+
+build/TestBaseline.o: test/TestBaseline.cpp test/TestBaseline.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/pipeline/Baseline.h \
+		src/computer/Status.h \
+		src/pipeline/Banana.h \
+		src/memory/Flag.h \
+		src/Utility.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestBaseline.o test/TestBaseline.cpp
+
+build/TestComputer.o: test/TestComputer.cpp test/TestComputer.h \
+		src/computer/Computer.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/BreakPoint.h \
+		src/pipeline/Banana.h \
+		src/computer/Status.h \
+		src/pipeline/Baseline.h \
+		src/computer/ThreadMessage.h \
+		src/assembler/Assembler.h \
+		src/assembler/Problem.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h \
+		src/assembler/ConditionResolver.h \
+		src/assembler/ProgramManagerX.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestComputer.o test/TestComputer.cpp
+
+build/TestInstructionResolver.o: test/TestInstructionResolver.cpp test/TestInstructionResolver.h \
+		src/assembler/InstructionResolver.h \
+		src/Utility.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestInstructionResolver.o test/TestInstructionResolver.cpp
 
 build/Assembler.o: src/assembler/Assembler.cpp src/assembler/Assembler.h \
 		src/assembler/Problem.h \
@@ -1616,9 +1810,23 @@ build/Baseline.o: src/pipeline/Baseline.cpp src/pipeline/Baseline.h \
 		src/pipeline/AndOperation.h \
 		src/pipeline/CompareOperation.h \
 		src/pipeline/CopyOperation.h \
+		src/pipeline/DivideOperation.h \
 		src/pipeline/LoadOperation.h \
 		src/pipeline/MemoryOperation.h \
-		src/pipeline/StoreOperation.h
+		src/pipeline/ModOperation.h \
+		src/pipeline/MultiplyOperation.h \
+		src/pipeline/NandOperation.h \
+		src/pipeline/NorOperation.h \
+		src/pipeline/NotOperation.h \
+		src/pipeline/OrOperation.h \
+		src/pipeline/ReadVectorElementOperation.h \
+		src/pipeline/TernaryOperation.h \
+		src/pipeline/StoreOperation.h \
+		src/pipeline/SubtractOperation.h \
+		src/pipeline/ToFloatOperation.h \
+		src/pipeline/ToIntOperation.h \
+		src/pipeline/WriteVectorElementOperation.h \
+		src/pipeline/XorOperation.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Baseline.o src/pipeline/Baseline.cpp
 
 build/CompareOperation.o: src/pipeline/CompareOperation.cpp src/pipeline/CompareOperation.h \
@@ -1636,6 +1844,14 @@ build/CopyOperation.o: src/pipeline/CopyOperation.cpp src/pipeline/CopyOperation
 		src/memory/Value.h \
 		src/computer/Architecture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CopyOperation.o src/pipeline/CopyOperation.cpp
+
+build/DivideOperation.o: src/pipeline/DivideOperation.cpp src/pipeline/DivideOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/DivideOperation.o src/pipeline/DivideOperation.cpp
 
 build/LoadOperation.o: src/pipeline/LoadOperation.cpp src/pipeline/LoadOperation.h \
 		src/memory/MemoryStructure.h \
@@ -1660,6 +1876,62 @@ build/MemoryOperation.o: src/pipeline/MemoryOperation.cpp src/pipeline/MemoryOpe
 		src/memory/Register.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryOperation.o src/pipeline/MemoryOperation.cpp
 
+build/ModOperation.o: src/pipeline/ModOperation.cpp src/pipeline/ModOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ModOperation.o src/pipeline/ModOperation.cpp
+
+build/MultiplyOperation.o: src/pipeline/MultiplyOperation.cpp src/pipeline/MultiplyOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MultiplyOperation.o src/pipeline/MultiplyOperation.cpp
+
+build/NandOperation.o: src/pipeline/NandOperation.cpp src/pipeline/NandOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NandOperation.o src/pipeline/NandOperation.cpp
+
+build/NorOperation.o: src/pipeline/NorOperation.cpp src/pipeline/NorOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NorOperation.o src/pipeline/NorOperation.cpp
+
+build/NotOperation.o: src/pipeline/NotOperation.cpp src/pipeline/NotOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NotOperation.o src/pipeline/NotOperation.cpp
+
+build/OrOperation.o: src/pipeline/OrOperation.cpp src/pipeline/OrOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/OrOperation.o src/pipeline/OrOperation.cpp
+
+build/ReadVectorElementOperation.o: src/pipeline/ReadVectorElementOperation.cpp src/pipeline/ReadVectorElementOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/pipeline/TernaryOperation.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ReadVectorElementOperation.o src/pipeline/ReadVectorElementOperation.cpp
+
 build/StageData.o: src/pipeline/StageData.cpp src/pipeline/StageData.h \
 		src/pipeline/PipelineGlobals.h \
 		src/memory/Value.h
@@ -1677,8 +1949,67 @@ build/StoreOperation.o: src/pipeline/StoreOperation.cpp src/pipeline/StoreOperat
 		src/pipeline/MemoryOperation.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/StoreOperation.o src/pipeline/StoreOperation.cpp
 
+build/SubtractOperation.o: src/pipeline/SubtractOperation.cpp src/pipeline/SubtractOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/SubtractOperation.o src/pipeline/SubtractOperation.cpp
+
+build/TernaryOperation.o: src/pipeline/TernaryOperation.cpp src/pipeline/TernaryOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TernaryOperation.o src/pipeline/TernaryOperation.cpp
+
+build/ToFloatOperation.o: src/pipeline/ToFloatOperation.cpp src/pipeline/ToFloatOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ToFloatOperation.o src/pipeline/ToFloatOperation.cpp
+
+build/ToIntOperation.o: src/pipeline/ToIntOperation.cpp src/pipeline/ToIntOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ToIntOperation.o src/pipeline/ToIntOperation.cpp
+
+build/WriteVectorElementOperation.o: src/pipeline/WriteVectorElementOperation.cpp src/pipeline/WriteVectorElementOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/pipeline/TernaryOperation.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/WriteVectorElementOperation.o src/pipeline/WriteVectorElementOperation.cpp
+
+build/XorOperation.o: src/pipeline/XorOperation.cpp src/pipeline/XorOperation.h \
+		src/pipeline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/XorOperation.o src/pipeline/XorOperation.cpp
+
 build/qrc_pisa.o: build/qrc_pisa.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_pisa.o build/qrc_pisa.cpp
+
+build/moc_TestAssembler.o: build/moc_TestAssembler.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestAssembler.o build/moc_TestAssembler.cpp
+
+build/moc_TestBaseline.o: build/moc_TestBaseline.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestBaseline.o build/moc_TestBaseline.cpp
+
+build/moc_TestComputer.o: build/moc_TestComputer.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestComputer.o build/moc_TestComputer.cpp
+
+build/moc_TestInstructionResolver.o: build/moc_TestInstructionResolver.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_TestInstructionResolver.o build/moc_TestInstructionResolver.cpp
 
 build/moc_Assembler.o: build/moc_Assembler.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_Assembler.o build/moc_Assembler.cpp
