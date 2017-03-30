@@ -65,6 +65,9 @@ class Register{
         static const unsigned int PC = 23;
         static bool isVectorIndex(int index);
         static bool isFloatIndex(int index);
+        static bool isScalarIndex(int index);
+        static bool isIntIndex(int index);
+        static bool indexExists(int index);
 };
 
 #endif

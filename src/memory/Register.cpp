@@ -188,3 +188,14 @@ bool Register::isFloatIndex(int index){
     return (index >= (int)scalarFloats && index < (int)specials) || (index >= (int)vectorFloats);
 }
 
+bool Register::indexExists(int index){
+    return (index < TOTAL_NUMBER_OF_REGISTERS);
+}
+
+bool Register::isScalarIndex(int index){
+    return !isVectorIndex(index);
+}
+
+bool Register::isIntIndex(int index){
+    return !isFloatIndex(index);
+}
