@@ -16,6 +16,7 @@
 #include "NotOperation.h"
 #include "OrOperation.h"
 #include "ReadVectorElementOperation.h"
+#include "Shift.h"
 #include "StoreOperation.h"
 #include "SubtractOperation.h"
 #include "ToFloatOperation.h"
@@ -228,6 +229,18 @@ Status Baseline::run(void){
         case MUL:
         case MOE: {
             MultiplyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case MVD: {
+            if(conditionScalar) {
+                Shift::executeDown(registers, useImmediate, binaryOperand1, binaryOperand2);
+            }
+            break;
+        }
+        case MVU: {
+            if(conditionScalar) {
+                Shift::executeUp(registers, useImmediate, binaryOperand1, binaryOperand2);
+            }
             break;
         }
         case NAND: {
