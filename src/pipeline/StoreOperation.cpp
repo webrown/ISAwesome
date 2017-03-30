@@ -1,9 +1,11 @@
 #include "StoreOperation.h"
 #include "../memory/QueryResult.h"
+#include <QDebug>
 
 StoreOperation StoreOperation::singleton;
 
 void StoreOperation::memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex) {
+qDebug() << "IN STORE";
   QVector<Value> data;
   if(Register::isVectorIndex(registerIndex)) {
     // You're writting a whole VECTOR_SIZE vector!
@@ -18,9 +20,6 @@ void StoreOperation::memoryOperation(Register *registers, MemoryStructure *memor
   Value zero;
   for(int i = 0; i < data.size(); i++) {
     filteredData.push_back(data.at(i));
-    //filteredData.push_back(zero);
-    //filteredData.push_back(zero);
-    //filteredData.push_back(zero);
   }
   // Put in data.
   memory->getDataAccess()->write(&filteredData, address);
