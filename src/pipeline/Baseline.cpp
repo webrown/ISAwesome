@@ -203,10 +203,27 @@ Status Baseline::run(void){
             break;
         }
         case RVE: {
-qDebug() << "HOLY CRAP IT'S RVE!!!";
             if(conditionScalar) {
-qDebug() << "AND I'm RUNNING RVE!!!";
                 ReadVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
+            }
+            break;
+        }
+        case SEQ: {
+            // SEQ makes no sense with scalars or immediates
+            if(!Register::isScalarIndex(unaryOperand) && Register::indexExists(unaryOperand)) {
+                QVector<Value> newVector;
+                for(int i = 0; i < registers->readVector(unaryOperand).size(); i++) {
+                    if(conditionVector.at(i)) {
+                        Value v;
+                        v.i = i;
+                        newVector.push_back(v);
+                    }
+                    else {
+                        // Don't replace unflagged indexes.
+                        newVector.push_back(registers->readVector(unaryOperand).at(i));
+                    }
+                }
+                registers->writeVector(newVector, unaryOperand);
             }
             break;
         }
