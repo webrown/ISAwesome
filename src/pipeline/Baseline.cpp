@@ -9,6 +9,8 @@
 #include "CopyOperation.h"
 #include "LoadOperation.h"
 #include "StoreOperation.h"
+#include "WriteVectorElementOperation.h"
+#include "ReadVectorElementOperation.h"
 #include <QDebug>
 
 using namespace Flag;
@@ -34,9 +36,6 @@ Status Baseline::run(void){
     qr = memory->getInstructionAccess()->read(registers->getPC());
     unsigned int nextInstruction = qr->result.at(0).asUInt;
     delete qr;
-    /* Walter, I think PC should increase by 4
-     *
-     */
     // Move to next instruction address.
     registers->write(registers->getPC()+INSTRUCTION_SIZE, Register::PC);
     // What is instruction type?
@@ -124,7 +123,7 @@ Status Baseline::run(void){
    
     // Determine if operand 1 is an immediate
     int useImmediate = !spliceMachineCode(nextInstruction, 21, 21);
-    //int useImmediateTernary = !spliceMachineCode(nextInstruction, 14, 14);
+    int useImmediateTernary = !spliceMachineCode(nextInstruction, 14, 14);
    
     // Grab unary operand
     int unaryOperand = spliceMachineCode(nextInstruction, 0, 20);
@@ -133,10 +132,10 @@ Status Baseline::run(void){
     int binaryOperand1 = spliceMachineCode(nextInstruction, 5, 20);
     int binaryOperand2 = spliceMachineCode(nextInstruction, 0, 4);
    
-    //// Grab ternary operands TODO
-    //int ternaryOperand1 = spliceMachineCode(nextInstruction, 15, 20);
-    //int ternaryOperand2 = spliceMachineCode(nextInstruction, 8, 13);
-    //int ternaryOperand3 = spliceMachineCode(nextInstruction, 0, 4);
+    // Grab ternary operands
+    int ternaryOperand1 = spliceMachineCode(nextInstruction, 15, 20);
+    int ternaryOperand2 = spliceMachineCode(nextInstruction, 8, 13);
+    int ternaryOperand3 = spliceMachineCode(nextInstruction, 0, 4);
 
     qDebug() << "COM: nextInstruction:" << nextInstruction << intToBinary(nextInstruction);
     qDebug() << "COM: nextOpCode:" << opcode << intToBinary(opcode);
@@ -193,9 +192,23 @@ qDebug() << "CONDITION ENTERED";
             }
             break;
         }
+        case RVE: {
+qDebug() << "HOLY CRAP IT'S RVE!!!";
+            if(conditionScalar) {
+qDebug() << "AND I'm RUNNING RVE!!!";
+                ReadVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
+            }
+            break;
+        }
         case STO: {
             if(conditionScalar) {
                 StoreOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
+            }
+            break;
+        }
+        case WVE: {
+            if(conditionScalar) {
+                WriteVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
             }
             break;
         }
