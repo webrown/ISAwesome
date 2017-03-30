@@ -63,8 +63,8 @@ void Computer::init(QString fileName){
 }
 void Computer::feedInstructions(){
     QList<QVariant> instructions;
-    for(int i =0 ;i <= program->instructionEndAddress/INSTRUCTION_SIZE; i++){
-        if(program->instructionEndAddress <= program->dataEndAddress ){
+    for(int i =0 ;i < program->instructionEndAddress/INSTRUCTION_SIZE; i++){
+        if(program->instructionEndAddress < program->dataEndAddress ){
             QVariant v = program->instructions->at(i);
             instructions.append(v);
         }
@@ -231,7 +231,8 @@ void Computer::handleMemoryView(uint address){
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_MEMORY, ret));
     return;
 }
-void Computer::handleCacheView(int id){
+void Computer::handleCacheView(QList<QVariant> arg){
+    int id = arg.takeFirst().toInt();
     Cache * cache = (Cache *) mems->map[id];
     if(currState == BLOCKED){
         emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
@@ -399,7 +400,7 @@ void Computer::procMessage(ThreadMessage message){
             break;
         case ThreadMessage::R_VIEW_CACHE:
             qDebug() << "COM: RECV FROM GUI: R_VIEW_CACHE";
-            handleCacheView(info.toInt());
+            handleCacheView(info.toList());
             break;
         case ThreadMessage::R_SAVE_STATE:
             qDebug() << "COM: RECV FROM GUI: R_SAVE_STATE";

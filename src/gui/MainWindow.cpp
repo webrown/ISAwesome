@@ -65,7 +65,7 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
 
     _ui.tab_memory->init(this,_ui.tableWidget_memory,_ui.spinBox,_ui.pushButton, _ui.lineEdit);
     _ui.tab_register->init(this,_ui.tableWidget_6,_ui.comboBox);
-    _ui.tab_cache->init(this,_ui.tableWidget_7,_ui.cacheListBox, _ui.pushButton_2, _ui.lineEdit_2);
+    _ui.tab_cache->init(this,_ui.tableWidget_7,_ui.cacheListBox, _ui.pushButton_2, _ui.tagLine, _ui.indexLine, _ui.offsetLine);
     _ui.tracker->init(this);
 
 

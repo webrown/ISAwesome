@@ -73,7 +73,7 @@ class Computer: public QObject{
         void handleRegisterView(QString type);
         void handleSaveState(QString fileName);
         void handleRestoreState(QString fileName);
-        void handleCacheView(int id);
+        void handleCacheView(QList<QVariant> list);
 
         public slots:
             void procMessage(ThreadMessage message);

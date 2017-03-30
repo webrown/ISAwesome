@@ -132,7 +132,7 @@ void Assembler::assemble(QString fileName, AssemblerConfiguration config, bool r
         assembled->program = new Program();
         assembled->program->instructions = _instructions; 
         assembled->program->instructionEndAddress = _endAddress;
-        assembled->program->dataEndAddress = _instructions->size() * INSTRUCTION_SIZE;
+        assembled->program->dataEndAddress = _instructions->size() * INSTRUCTION_SIZE + INSTRUCTION_SIZE;
         assembled->program->size = _instructions->size();
 
     }
@@ -332,7 +332,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         (*_log) << "Data mode on" << endl;
         _dataMode = true;
         //previous should be the last one
-        _endAddress = nextAddress;
+        _endAddress = nextAddress ;
         return;
     }
     

@@ -9,12 +9,14 @@ CacheView::CacheView(QWidget * parent) : QTableWidget(parent){
 CacheView::~CacheView(){
 }
 
-void CacheView::init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit){
+void CacheView::init(MainWindow* main, QTableWidget* memoryTable, QComboBox* comboBox, QPushButton* searchButton, QLineEdit* lineEdit, QLineEdit* indexEdit, QLineEdit* offsetEdit){
     this->main = main;
     this->table = memoryTable;
     this->comboBox = comboBox;
     this->searchButton =searchButton;
-    this->lineEdit = lineEdit;
+    this->tagEdit = lineEdit;
+    this->indexEdit = indexEdit;
+    this->offsetEdit = offsetEdit;
 
     table->setRowCount(64);
     for(int row = 0; row < 64; row++){
@@ -64,7 +66,6 @@ void CacheView::display(QList<QVariant> list){
     table->setColumnWidth(4,indexWidth);
     table->setColumnWidth(5,offsetWidth);
 
-
     for(i = 0;i < list.size()/7; i++){
         table->item(i, 0)->setBackground(list[7*i].toInt()==1 ? Qt::red : Qt::white);
         table->item(i, 1)->setBackground(list[7*i+1].toInt()==1 ? Qt::blue : Qt::white);
@@ -89,6 +90,10 @@ void CacheView::updateWithSearch(){
     qDebug() << "GUI: Update with search button";
     QList<QVariant> list;
     list << comboBox->currentData();
+    bool okay;
+    list << tagEdit->text();
+    list << indexEdit->text();
+    list << offsetEdit->text();
     main->sendMessage(ThreadMessage(ThreadMessage::R_VIEW_CACHE,list)); 
 }
 void CacheView::updateWithComboBox(){
