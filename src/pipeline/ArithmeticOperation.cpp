@@ -61,7 +61,6 @@ void ArithmeticOperation::execute(Register *registers, bool arg1IsImmediate, uns
     // Non-immediate operations
     if(!Register::isVectorIndex(arg1) && !Register::isVectorIndex(arg2)) {
       //pure scalar operation
-qDebug() << "PURE SCALAR";
       if(flag) registers->write(scalarOperation(Register::isFloatIndex(arg1), Register::isFloatIndex(arg2), registers->read(arg1), registers->read(arg2)), arg2);
     }
     if(!Register::isVectorIndex(arg1) &&  Register::isVectorIndex(arg2)) {
