@@ -190,10 +190,12 @@ Status Baseline::run(void){
             if(conditionScalar) {
                 // Is this register valid for reading?
                 if(Register::indexExists(unaryOperand) && Register::isScalarIndex(unaryOperand)) {
+                    // Grab address you want to follow
+                    Value newPC = registers->read(unaryOperand);
                     // Link back.
                     registers->write(Register::PC, Register::LR);
                     // Move PC
-                    registers->write(registers->read(unaryOperand), Register::PC);
+                    registers->write(newPC, Register::PC);
                 }
             }
             break;
