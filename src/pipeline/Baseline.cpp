@@ -7,8 +7,21 @@
 #include "ArithmeticOperation.h"
 #include "CompareOperation.h"
 #include "CopyOperation.h"
+#include "DivideOperation.h"
 #include "LoadOperation.h"
+#include "ModOperation.h"
+#include "MultiplyOperation.h"
+#include "NandOperation.h"
+#include "NorOperation.h"
+#include "NotOperation.h"
+#include "OrOperation.h"
+#include "ReadVectorElementOperation.h"
 #include "StoreOperation.h"
+#include "SubtractOperation.h"
+#include "ToFloatOperation.h"
+#include "ToIntOperation.h"
+#include "WriteVectorElementOperation.h"
+#include "XorOperation.h"
 #include <QDebug>
 
 using namespace Flag;
@@ -34,9 +47,6 @@ Status Baseline::run(void){
     qr = memory->getInstructionAccess()->read(registers->getPC());
     unsigned int nextInstruction = qr->result.at(0).asUInt;
     delete qr;
-    /* Walter, I think PC should increase by 4
-     *
-     */
     // Move to next instruction address.
     registers->write(registers->getPC()+INSTRUCTION_SIZE, Register::PC);
     // What is instruction type?
@@ -124,7 +134,7 @@ Status Baseline::run(void){
    
     // Determine if operand 1 is an immediate
     int useImmediate = !spliceMachineCode(nextInstruction, 21, 21);
-    //int useImmediateTernary = !spliceMachineCode(nextInstruction, 14, 14);
+    int useImmediateTernary = !spliceMachineCode(nextInstruction, 14, 14);
    
     // Grab unary operand
     int unaryOperand = spliceMachineCode(nextInstruction, 0, 20);
@@ -133,17 +143,18 @@ Status Baseline::run(void){
     int binaryOperand1 = spliceMachineCode(nextInstruction, 5, 20);
     int binaryOperand2 = spliceMachineCode(nextInstruction, 0, 4);
    
-    //// Grab ternary operands TODO
-    //int ternaryOperand1 = spliceMachineCode(nextInstruction, 15, 20);
-    //int ternaryOperand2 = spliceMachineCode(nextInstruction, 8, 13);
-    //int ternaryOperand3 = spliceMachineCode(nextInstruction, 0, 4);
+    // Grab ternary operands
+    int ternaryOperand1 = spliceMachineCode(nextInstruction, 15, 20);
+    int ternaryOperand2 = spliceMachineCode(nextInstruction, 8, 13);
+    int ternaryOperand3 = spliceMachineCode(nextInstruction, 0, 4);
 
     qDebug() << "COM: nextInstruction:" << nextInstruction << intToBinary(nextInstruction);
     qDebug() << "COM: nextOpCode:" << opcode << intToBinary(opcode);
    
     // Do what the instruction tells you to.
     switch(instructionType) {
-        case ADD: {
+        case ADD:
+        case SOE: {
             AddOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
@@ -175,10 +186,20 @@ Status Baseline::run(void){
             }
             break;
         }
-        case CMP: {
-qDebug() << "I AM CMP";
+        case BL: {
             if(conditionScalar) {
-qDebug() << "CONDITION ENTERED";
+                // Is this register valid for reading?
+                if(Register::indexExists(unaryOperand) && Register::isScalarIndex(unaryOperand)) {
+                    // Link back.
+                    registers->write(Register::PC, Register::LR);
+                    // Move PC
+                    registers->write(registers->read(unaryOperand), Register::PC);
+                }
+            }
+            break;
+        }
+        case CMP: {
+            if(conditionScalar) {
                 CompareOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2);
             }
             break;
@@ -187,15 +208,91 @@ qDebug() << "CONDITION ENTERED";
             CopyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
+        case DIV: {
+            DivideOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
         case LOD: {
             if(conditionScalar) {
                 LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
             break;
         }
+        case MOD: {
+            ModOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case MUL:
+        case MOE: {
+            MultiplyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case NAND: {
+            NandOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case NOR: {
+            NorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case NOT: {
+            NotOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case OR: {
+            OrOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case RVE: {
+            if(conditionScalar) {
+                ReadVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
+            }
+            break;
+        }
+        case SEQ: {
+            // SEQ makes no sense with scalars or immediates
+            if(!Register::isScalarIndex(unaryOperand) && Register::indexExists(unaryOperand)) {
+                QVector<Value> newVector;
+                for(int i = 0; i < registers->readVector(unaryOperand).size(); i++) {
+                    if(conditionVector.at(i)) {
+                        Value v;
+                        v.i = i;
+                        newVector.push_back(v);
+                    }
+                    else {
+                        // Don't replace unflagged indexes.
+                        newVector.push_back(registers->readVector(unaryOperand).at(i));
+                    }
+                }
+                registers->writeVector(newVector, unaryOperand);
+            }
+            break;
+        }
         case STO: {
             if(conditionScalar) {
                 StoreOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
+            }
+            break;
+        }
+        case SUB: {
+            SubtractOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case TOF: {
+            ToFloatOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case TOI: {
+            ToIntOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case XOR: {
+            XorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
+        case WVE: {
+            if(conditionScalar) {
+                WriteVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
             }
             break;
         }

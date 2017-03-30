@@ -3,28 +3,28 @@
 #include "../Utility.h"
 
 Value ArithmeticOperation::scalarOperation(int a, int b){
-  qDebug() << "NOOPed int int";
+  qDebug() << "COM: ArithmeticOperation: NOOPed int int";
   (void) a;
   Value v;
   v.i = b;
   return v;
 }
 Value ArithmeticOperation::scalarOperation(float a, float b){
-  qDebug() << "NOOPed float float";
+  qDebug() << "COM: ArithmeticOperation: NOOPed float float";
   (void) a;
   Value v;
   v.f = b;
   return v;
 }
 Value ArithmeticOperation::scalarOperation(float a, int b){
-  qDebug() << "NOOPed float int";
+  qDebug() << "COM: ArithmeticOperation: NOOPed float int";
   (void) a;
   Value v;
   v.i = b;
   return v;
 }
 Value ArithmeticOperation::scalarOperation(int a, float b){
-  qDebug() << "NOOPed int float";
+  qDebug() << "COM: ArithmeticOperation: NOOPed int float";
   (void) a;
   Value v;
   v.f = b;

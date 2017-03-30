@@ -1,6 +1,5 @@
 #include "TernaryOperation.h"
 #include "../computer/Architecture.h"
-#include <QDebug>
 
 void TernaryOperation::decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3) {
     (void) registers;
@@ -10,7 +9,6 @@ void TernaryOperation::decodeOperation(Register *registers, Value arg1, Value ar
 };
 
 void TernaryOperation::decode(Register *registers, bool arg1IsImmediate, unsigned int arg1, bool arg2IsImmediate, unsigned int arg2, unsigned int arg3) {
-qDebug() << "TO " << arg1IsImmediate << " " << arg1 << " " << arg2IsImmediate << " " << arg2 << " " << arg3;
     Value arg1Value;
     Value arg2Value;
     Value arg3Value;
