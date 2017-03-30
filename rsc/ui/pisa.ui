@@ -628,6 +628,26 @@
             </column>
            </widget>
           </item>
+          <item>
+           <widget class="QWidget" name="widget_5" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QPushButton" name="prevButton">
+               <property name="text">
+                <string>&lt;&lt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="nextButton">
+               <property name="text">
+                <string>&gt;&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
         </widget>
         <widget class="MemoryView" name="tab_memory">
@@ -1150,6 +1170,10 @@
    <extends>QWidget</extends>
    <header>CacheView.h</header>
    <container>1</container>
+   <slots>
+    <slot>handlePrevButton()</slot>
+    <slot>handleNextButton()</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -110,7 +110,7 @@ void RegisterView::display(QList<QVariant> list){
     }
     for(int row =0; row< 64; row++){
         uint content = list[row+1].toUInt();
-        if(line == "R" && row >= 25){
+        if(line == "R" && row >= 24){
             regTable->item(row, 0)->setText("");
             regTable->item(row, 1)->setText("");
             regTable->item(row, 2)->setText("");

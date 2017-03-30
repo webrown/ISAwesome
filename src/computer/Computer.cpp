@@ -293,14 +293,16 @@ void Computer::handleCacheView(QList<QVariant> arg){
     int _size=cache->contents->at(0)->size();
     int __size = cache->contents->at(0)->at(0)->size();
     int count =0;
-    for(int ind = 0; ind < size && count <64; ind++) {
+    int min = arg[3].toInt();
+    int max = arg[3].toInt() + 64;
+    for(int ind = 0; ind < size && count <max; ind++) {
         uint indV = ind & indexM;
         // qDebug() << indexB <<indV << indexS;
         if(indexB == true && indV != indexS){
             continue;
         }
-        for(int way = 0; way < _size && count < 64; way++) {
-            for(int offset = 0; offset < __size && count < 64; offset++) {
+        for(int way = 0; way < _size && count < max; way++) {
+            for(int offset = 0; offset < __size && count < max; offset++) {
 
                 uint offsetV = offset & offsetM;
                 // qDebug() << offsetB <<offsetV << offsetS;
@@ -316,6 +318,10 @@ void Computer::handleCacheView(QList<QVariant> arg){
                 if(tagB == true && tagV != tagS){
                     continue;
                 }
+                //TODO check this
+                if(count++ < min){
+                    continue;
+                }
                 QList<QVariant> _list;
                 _list.append(cache->valid->at(ind)->at(way));
                 _list.append(cache->dirty->at(ind)->at(way));
@@ -325,10 +331,10 @@ void Computer::handleCacheView(QList<QVariant> arg){
                 _list.append(offset);
                 _list.append(cache->contents->at(ind)->at(way)->at(offset).asInt);
                 list.append(_list);
-                count++;
             }
         }
     }
+    list <<count;
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_CACHE, list));
     return;
 }
