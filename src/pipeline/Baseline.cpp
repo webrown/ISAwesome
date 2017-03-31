@@ -14,6 +14,8 @@
 #include "LogicalShiftLeftOperation.h"
 #include "LogicalShiftRightOperation.h"
 #include "LongAddOperation.h"
+#include "LongMultiplyOperation.h"
+#include "LongSubtractOperation.h"
 #include "LongOperation.h"
 #include "ModOperation.h"
 #include "MultiplyOperation.h"
@@ -234,6 +236,10 @@ Status Baseline::run(void){
             DivideOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
+        case LMUL: {
+            LongMultiplyOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
         case LOD: {
             if(conditionScalar) {
                 LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
@@ -289,6 +295,10 @@ Status Baseline::run(void){
             if(conditionScalar) {
                 ReadVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
             }
+            break;
+        }
+        case SBC: {
+            LongSubtractOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
             break;
         }
         case SEQ: {
