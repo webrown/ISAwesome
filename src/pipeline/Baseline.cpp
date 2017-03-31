@@ -13,6 +13,8 @@
 #include "LoadOperation.h"
 #include "LogicalShiftLeftOperation.h"
 #include "LogicalShiftRightOperation.h"
+#include "LongAddOperation.h"
+#include "LongOperation.h"
 #include "ModOperation.h"
 #include "MultiplyOperation.h"
 #include "NandOperation.h"
@@ -158,6 +160,10 @@ Status Baseline::run(void){
    
     // Do what the instruction tells you to.
     switch(instructionType) {
+        case ADC: {
+            LongAddOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            break;
+        }
         case ADD:
         case SOE: {
             AddOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
