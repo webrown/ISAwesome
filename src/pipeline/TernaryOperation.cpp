@@ -1,5 +1,6 @@
 #include "TernaryOperation.h"
 #include "../computer/Architecture.h"
+#include <QDebug>
 
 void TernaryOperation::decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3) {
     (void) registers;
@@ -16,7 +17,9 @@ void TernaryOperation::decode(Register *registers, bool arg1IsImmediate, unsigne
     arg2Value.asUInt = arg2;
     arg3Value.asUInt = arg3;
 
-    if(!arg1IsImmediate && Register::indexExists(arg1) && Register::isScalarIndex(arg1)) {
+    //if(!arg1IsImmediate && Register::indexExists(arg1) && Register::isScalarIndex(arg1)) {
+    (void) arg1IsImmediate;
+    if(Register::indexExists(arg1) && Register::isScalarIndex(arg1)) {
         arg1Value = registers->read(arg1);
     }
 
