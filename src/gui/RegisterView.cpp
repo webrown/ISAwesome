@@ -21,8 +21,7 @@ void RegisterView::init(MainWindow* main, QTableWidget* regTable, QComboBox* com
         regTable->setColumnWidth(i, 37);
     }
     connect(comboBox, SIGNAL (activated(int)), this, SLOT(updateWithComboBox()));
-    connect(regTable->horizontalHeader(),SIGNAL(sectionDoubleClicked(int)),
-              this,SLOT(handleHeader(int)));
+    connect(regTable->horizontalHeader(),SIGNAL(sectionDoubleClicked(int)),this,SLOT(handleHeader(int)));
 
     update();
     //Yeah, why not?

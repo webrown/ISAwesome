@@ -11,7 +11,7 @@ class Banana {
         virtual void init(void)=0;
         virtual Status run(void)=0;
         virtual void stop(void)=0;
-        long instructionsDone;
-        long cyclesDone;
+        qint64 instructionsDone =0;
+        qint64 cyclesDone = 0;
 };
 #endif

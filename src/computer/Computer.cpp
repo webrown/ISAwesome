@@ -25,6 +25,7 @@ Computer::~Computer(){
 
 void Computer::init(QString fileName){
     qDebug() <<"COM: init";
+    totalElapsed = 0;
     //Blocked 
     if(currState == BLOCKED){
         emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
@@ -89,7 +90,9 @@ void Computer::step(int nCycle, double _delay){
     currState = RUNNING;
     emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {RUNNING}));
     emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-
+    // timer.restart();
+    QTime timer;
+    timer.start();
 
     while(currState == RUNNING){
         //sleep for sanity
@@ -138,6 +141,7 @@ void Computer::step(int nCycle, double _delay){
             emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
         }
     }
+    totalElapsed += timer.elapsed();
 
     //Distinguish from stop
     if(currState == PAUSED){
@@ -424,20 +428,20 @@ void Computer::handleRestoreState(QString fileName){
     return;
 }
 void Computer::handlePerformance(){
-    qDebug() << "handle performance view";
+    qDebug() << "COM: handle performance view";
     if(currState == BLOCKED){
         emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
         return;
     }
 
     QMap<QString, QVariant> map;
-    map["/General/Cycle/Total"] = 2;
-    map["/General/Cycle/CPI"] = 2;
-    map["/General/Instruction/Total"] = 2;
-    map["/General/Instruction/IPC"] = 2;
-    map["/General/Time/Total"] = 2;
-    map["/General/Time/IPT"] = 2;
-    map["/General/Time/CPT"] = 2;
+    map["/General/Cycle/Total"] = exec-> cyclesDone;
+    map["/General/Cycle/CPI"] = (double) exec->cyclesDone / exec->instructionsDone;
+    map["/General/Cycle/IPC"] = (double) exec->instructionsDone / exec->cyclesDone;
+    map["/Instruction/Total"] = exec->instructionsDone;
+    map["/General/Time/Total"] = totalElapsed;
+    map["/General/Time/IPT"] = (double) exec->cyclesDone / totalElapsed;
+    map["/General/Time/CPT"] =  (double) exec->instructionsDone / totalElapsed;
 
 
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_PERFORMANCE, map));

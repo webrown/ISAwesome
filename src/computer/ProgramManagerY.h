@@ -7,8 +7,12 @@
 namespace ProgramManagerY{
     bool save(Computer* computer, QString fileName){
 
-        QByteArray regData = qCompress(computer->regs->save(),9);
-        QByteArray memData = qCompress(computer->mems->_mainMemory->save(), 9);
+        QByteArray regData = computer->regs->save();
+        QByteArray memData = computer->mems->_mainMemory->save();
+
+
+        // QByteArray regData = qCompress(computer->regs->save(),9);
+        // QByteArray memData = qCompress(computer->mems->_mainMemory->save(), 9);
 
         QFile file(fileName);
         //file can't be open return false
@@ -66,8 +70,9 @@ namespace ProgramManagerY{
 
         computer->program->instructions = new QVector<uint>();
         for(int i =0; i < computer->program->size; i++){
-            qint32 a;
+            quint32 a;
             in  >> a;
+            qDebug() << QString::number(a,2);
             computer->program->instructions->append(a);
         }
 
@@ -90,7 +95,9 @@ namespace ProgramManagerY{
             tmp.append(x);
         }
 
-        QByteArray regData = qUncompress(tmp);
+        // QByteArray regData = qUncompress(tmp);
+        QByteArray regData = tmp;
+
 
         //TODO cache...
     
@@ -104,8 +111,9 @@ namespace ProgramManagerY{
             in >> x;
             tmp2.append(x);
         }
-        QByteArray memData = qUncompress(tmp2);
-
+        // QByteArray memData = qUncompress(tmp2);
+        QByteArray memData = tmp2;
+        // qDebug() << memData;
         //Start to load up the data
         computer->regs->restore(regData);
         computer->mems->_mainMemory->restore(memData);
