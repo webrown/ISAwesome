@@ -1,0 +1,503 @@
+CPY 0 SP
+NOT SP SP ; Start stack pointer far away
+CPY MAIN R4
+BL R4
+add 0 R1
+add 0 R1 
+add 0 R1
+B END
+
+; Test for GETMATRIXDIMS
+;MAIN:
+CPY matrix1 R0
+CPY GETMATRIXDIMS R4
+CPY LR R19 ; Save LR.
+BL R4
+CPY R19 LR ; Restore LR.
+add 0 R1
+add 0 R1
+add 0 R1
+
+; Test for INITMATRIX
+;MAIN:
+CPY matrix3 R0
+CPY 42 R1
+CPY 43 R2
+CPY INITMATRIX R4
+CPY LR R19 ; Save LR.
+BL R4
+CPY R19 LR ; Restore LR.
+add 0 R1
+add 0 R1
+add 0 R1
+
+; Test for GETMATRIXVAL
+;MAIN:
+CPY matrix2 R0
+CPY 1 R1
+CPY 2 R2
+CPY GETMATRIXVAL R4
+CPY LR R19 ; Save LR.
+BL R4 ; expect R3 to be 7
+CPY R19 LR ; Restore LR.
+add 0 R1
+add 0 R1
+add 0 R1
+
+
+
+;void getMatrixDims(vector<int> *matrix, int *r, int *c) {
+GETMATRIXDIMS:
+;  // R0 = matrixAddr
+;  // R1 = r
+;  // R2 = c
+; Oddly, no stack management is needed for this one... no mutation.
+;  *r = (*matrix)[0];
+LOD R0 R1
+;  *c = (*matrix)[1];
+CPY R0 R2
+ADD  1 R2
+LOD R2 R2
+;}
+CPY LR PC
+
+
+;void initMatrix(vector<int> *matrix, int r, int c) {
+INITMATRIX:
+;  // R0 = matrixAddr
+;  // R1 = r
+;  // R2 = c
+; The only mutation that happens should be in the result.  no stack needed.
+;  matrix->resize(2+r*c);
+;  (*matrix)[0] = r;
+STO R0 R1
+ADD  1 R0
+;  (*matrix)[1] = c;
+STO R0 R2
+ADD  1 R0
+;}
+CPY LR PC
+
+;void matrixGetVal(vector<int> *matrix, int r, int c, int *result) {
+GETMATRIXVAL:
+;  // R0 = matrixAddr
+;  // R1 = r           AT START, BUT QUICKLY BECOMES mr                          <-must save
+;  // R2 = c           AT START, BUT QUICKLY BECOMES mc, then r*mc   <-must save
+;  // R3 = result
+;  // R4 = GENERAL SPARE     <-must save
+;  // R5 = r longterm                 <-must save
+;  // R6 = c longterm                 <-must save
+; stack stuff
+STO SP R1
+SUB 1 SP
+STO SP R2
+SUB 1 SP
+STO SP R4
+SUB 1 SP
+STO SP R5
+SUB 1 SP
+STO SP R6
+SUB 1 SP
+STO SP R19
+SUB 1 SP
+
+; move these values out of the call area
+CPY R1 R5
+CPY R2 R6
+;  int mr;
+;  int mc;
+;  getMatrixDims(matrix, &mr, &mc);;
+CPY GETMATRIXDIMS R4
+
+CPY LR R19 ; Save LR.
+BL R4
+CPY R19 LR ; Restore LR.
+;  *result = 2;
+CPY 2 R3
+;  mc *= r;
+MUL R5 R2
+;  *result += mc;
+ADD R2 R3
+;  *result += c;
+ADD R6 R3
+;  *result = matrix->at(*result);
+ADD R0 R3
+LOD R3 R3
+;}
+
+; stack stuff
+ADD 1 SP
+LOD SP R19
+ADD 1 SP
+LOD SP R6
+ADD 1 SP
+LOD SP R5
+ADD 1 SP
+LOD SP R4
+ADD 1 SP
+LOD SP R2
+ADD 1 SP
+LOD SP R1
+
+CPY LR PC
+
+;void matrixMult(vector<int> *matrix1, vector<int> *matrix2, vector<int> *result){
+MATRIXMULT:
+;  // R0 = matrix1Addr <-mustsavee
+;  // R1 = matrix2Addr <-mustsave
+;  // R2 = resultAddr+writeTo <-mustsave
+;  // R3 = GENERAL SPARE <-mustsave
+;  // R4 = m1r <-mustsave
+;  // R5 = mmatching <-mustsave
+;  // R6 = innerStrobe <-mustsave
+;  // R7 = m2c <-mustsave
+;  // R8 = result_row <-mustsave
+;  // R9 = result_column; <-mustsave
+;  // R10 = sum; <-mustsave
+;  // R11 = mult1; <-mustsave
+;  // R12 = mult2; <-mustsave
+;  // R13 = extra matrix1Addr <-mustsave
+;  // R14 = extra matrix2Addr <-mustsave
+;  // R15 = extra result <-mustsave
+;  // R19 = Place to hide LR <-mustsave
+; stack stuff
+STO SP R0
+SUB 1 SP
+STO SP R1
+SUB 1 SP
+STO SP R2
+SUB 1 SP
+STO SP R3
+SUB 1 SP
+STO SP R4
+SUB 1 SP
+STO SP R5
+SUB 1 SP
+STO SP R6
+SUB 1 SP
+STO SP R7
+SUB 1 SP
+STO SP R8
+SUB 1 SP
+STO SP R9
+SUB 1 SP
+STO SP R10
+SUB 1 SP
+STO SP R11
+SUB 1 SP
+STO SP R12
+SUB 1 SP
+STO SP R13
+SUB 1 SP
+STO SP R14
+SUB 1 SP
+STO SP R15
+SUB 1 SP
+STO SP R19
+SUB 1 SP
+
+;  // Check if dimensions match.
+;  int m1r;
+;  int mmatching;
+;  int innerStrobe; // Just being used early for recycling's sake
+;  int m2c;
+;
+;  getMatrixDims(matrix1, &m1r, &mmatching);
+CPY R0 R13; save matrix1Addr away in an arbitrary space.
+CPY R1 R14; save matrix2Addr away in an arbitrary space.
+CPY R2 R15; save result away in an arbitrary space.
+CPY GETMATRIXDIMS R3
+CPY LR R19 ; Save LR.
+BL R3
+CPY R19 LR ; Restore LR.
+CPY R1 R4
+CPY R2 R5
+;  getMatrixDims(matrix2, &innerStrobe, &m2c);
+CPY R14 R0
+CPY LR R19 ; Save LR.
+BL R3
+CPY R19 LR ; Restore LR.
+CPY R1 R6
+CPY R2 R7
+;  if(mmatching != innerStrobe) {
+CMP R5 R6
+;    // Matrix dims don't match.  Barf.
+;    initMatrix(result, 0, 0);
+;    return;
+;  }
+;  // Matrix dims healthy, carry on!
+;  initMatrix(result, m1r, m2c);
+CPY R15 R0 ; Place result (both cases).
+NE CPY 0 R1 
+EQ CPY R4 R1 
+NE CPY 0 R2 
+EQ CPY R7 R2 
+CPY LR R19 ; Save LR.
+CPY INITMATRIX R3
+BL R3 ; Call initMatrix
+CPY R19 LR ; Restore LR.
+NE BL LR ; return if mismatch
+
+;Move R0-R2 back in place.  Make R chart correct again.
+CPY R13 R0
+CPY R14 R1
+CPY R15 R2
+
+ADD 2 R2
+;
+;  int writeTo = 2;
+;  int result_row;
+;  int result_column;
+;  int sum;
+;  int mult1;
+;  int mult2;
+CPY 0 R8
+;  for(result_row = 0; result_row < m1r; result_row++) {
+OUTERLOOP:
+;    // For every row...
+;    for(result_column = 0; result_column < m2c; result_column++) {
+CPY 0 R9
+MIDDLELOOP:
+;      // For every column, take a sum.
+;      sum = 0;
+CPY  0  R3
+TOF R3 R10 ; Storing stuff in Floats to save space.
+;      for(innerStrobe = 0; innerStrobe < mmatching; innerStrobe++) {
+CPY 0 R6
+INNERLOOP:
+;        matrixGetVal(matrix1, result_row, innerStrobe, &mult1);
+CPY R13 R0 
+CPY R8 R1
+CPY R2 R15 ; Hide resultAddr
+CPY R6 R2
+CPY GETMATRIXVAL R3
+CPY LR R19 ; Save LR.
+BL R3 ; Call to getmatrixval
+CPY R19 LR ; Restore LR.
+TOF R3 R11 ; Store result in mult1
+;        matrixGetVal(matrix2, innerStrobe, result_column, &mult2);
+CPY R14 R0 
+CPY R6 R1
+CPY R9 R2
+CPY GETMATRIXVAL R3
+CPY LR R19 ; Save LR.
+BL R3 ; Call to getmatrixval
+CPY R19 LR ; Restore LR.
+TOF R3 R12 ; Store result in mult1
+CPY R15 R2 ; Bring back resultAddr
+;        mult2 *= mult1;
+MUL R11 R12
+;        sum += mult2;
+ADD R12 R10
+;      }
+ADD  1 R6
+CMP R6 R5
+LT B INNERLOOP
+;      // Record
+;      (*result)[writeTo] = sum;
+TOI R10 R3
+STO R2 R3
+;      writeTo++;
+ADD 1 R2
+;    }
+ADD  1 R9
+CMP R9 R7
+LT B MIDDLELOOP
+;  }
+ADD  1 R8
+CMP R8 R4
+LT B OUTERLOOP
+;}
+
+; stack stuff
+ADD 1 SP
+LOD SP R19
+ADD 1 SP
+LOD SP R15
+ADD 1 SP
+LOD SP R14
+ADD 1 SP
+LOD SP R13
+ADD 1 SP
+LOD SP R12
+ADD 1 SP
+LOD SP R13
+ADD 1 SP
+LOD SP R12
+ADD 1 SP
+LOD SP R11
+ADD 1 SP
+LOD SP R10
+ADD 1 SP
+LOD SP R9
+ADD 1 SP
+LOD SP R8
+ADD 1 SP
+LOD SP R7
+ADD 1 SP
+LOD SP R6
+ADD 1 SP
+LOD SP R5
+ADD 1 SP
+LOD SP R4
+ADD 1 SP
+LOD SP R3
+ADD 1 SP
+LOD SP R2
+ADD 1 SP
+LOD SP R1
+ADD 1 SP
+LOD SP R0
+
+CPY LR PC
+
+
+;int main() {
+MAIN:
+;  // R0 = matrix1
+;  // R1 = matrix2
+;  // R2 = result
+;  // R4 = GENERAL SPARE
+;  // Set up example
+;  vector<int> matrix1;
+;  matrix1.push_back(2);
+;  matrix1.push_back(3);
+;  matrix1.push_back(1);
+;  matrix1.push_back(2);
+;  matrix1.push_back(3);
+;  matrix1.push_back(4);
+;  matrix1.push_back(5);
+;  matrix1.push_back(6);
+;
+;  vector<int> matrix2;
+;  matrix2.push_back(3);
+;  matrix2.push_back(4);
+;  matrix2.push_back(1);
+;  matrix2.push_back(2);
+;  matrix2.push_back(3);
+;  matrix2.push_back(4);
+;  matrix2.push_back(5);
+;  matrix2.push_back(6);
+;  matrix2.push_back(7);
+;  matrix2.push_back(8);
+;  matrix2.push_back(9);
+;  matrix2.push_back(10);
+;  matrix2.push_back(11);
+;  matrix2.push_back(12)
+
+;  vector<int> expected;
+;  expected.push_back(2);
+;  expected.push_back(4);
+;  expected.push_back(38);
+;  expected.push_back(44);
+;  expected.push_back(50);
+;  expected.push_back(56);
+;  expected.push_back(83);
+;  expected.push_back(98);
+;  expected.push_back(113);
+;  expected.push_back(128);
+
+;  vector<int> result;
+
+;  matrixMult(&matrix1, &matrix2, &result);
+CPY matrix1 R0
+CPY matrix2 R1
+CPY matrix3 R2
+CPY MATRIXMULT R4
+CPY LR R19 ; Save LR.
+BL R4 ; expect R3 to be 7
+CPY R19 LR ; Restore LR.
+
+; Also try the mismatch matrix case.
+CPY matrix4 R0
+CPY matrix5 R1
+CPY matrix6 R2
+CPY MATRIXMULT R4
+CPY LR R19 ; Save LR.
+BL R4 ; expect R3 to be 7
+CPY R19 LR ; Restore LR.
+
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+add 0 R1
+
+
+;  // Check result
+;  for(unsigned int i = 0; i < result.size(); i++) {
+;    cout << result.at(i);
+;    if(expected.at(i) != result.at(i)) {
+;      cout << " FAIL!!!!!!!!!!!!!!!!!!! " << expected.at(i);
+;    }
+;    cout << endl;
+;  }
+;}
+
+END:
+
+#DATA
+matrix1:
+2 3 
+
+1 2 3 
+4 5 6
+
+matrix2:
+3 4
+
+1 2 3 4
+5 6 7 8
+9 10 11 12
+
+matrix3:
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+matrix4:
+2 2
+
+1 2
+3 4
+
+matrix5:
+3 3
+
+1 2 3
+4 5 6
+7 8 9
+
+matrix6:
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
