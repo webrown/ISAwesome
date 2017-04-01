@@ -14,8 +14,8 @@ void MemoryView::init(MainWindow* main, QTableWidget* memoryTable, HexSpinBox* s
     this->searchButton =searchButton;
     this->lineEdit = lineEdit;
 
-    memoryTable->setRowCount(64);
-    for(int row = 0; row < 64; row++){
+    memoryTable->setRowCount(256);
+    for(int row = 0; row < 256; row++){
         memoryTable->setItem(row, 0, new QTableWidgetItem());
         memoryTable->setItem(row, 1, new QTableWidgetItem());
         memoryTable->setItem(row, 2, new QTableWidgetItem());
@@ -49,7 +49,7 @@ void MemoryView::display(QList<QVariant> list){
     uint chunkBit = ((mask & address) >> 8) << 16;
     uint x = (((1<<8)-1) & address) << 8;
     //check empty
-    for(uint i = 0; i < 64; i++){
+    for(uint i = 0; i < 256; i++){
         uint content = list[i+1].toUInt();
         memoryTable->item(i, 0)->setText("0X" + QString::number(chunkBit + x + i ,16).rightJustified(8,'0'));
         memoryTable->item(i, 1)->setText("0X" + QString::number(content, 16).rightJustified(8,'0'));

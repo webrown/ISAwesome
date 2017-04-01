@@ -332,7 +332,7 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
         (*_log) << "Data mode on" << endl;
         _dataMode = true;
         //previous should be the last one
-        _endAddress = nextAddress ;
+        _endAddress = nextAddress  ==0 ? 0: nextAddress-1;
         return;
     }
     

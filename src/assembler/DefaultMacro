@@ -4,12 +4,12 @@ CPY $0 $1
 #endmacro
 #definemacro
 PUSH $0
-STO $0 SP 
-ADD 4 SP
+STO SP $0
+ADD 1 SP
 #endmacro
 #definemacro
 POP $0
-SUB 4 SP
+SUB 1 SP
 LOD SP $0
 #endmacro
 

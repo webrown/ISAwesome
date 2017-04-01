@@ -673,10 +673,10 @@ InstructionResolver::InstructionResolver(){
     set("XORS", toB("111001"),parseArith1, unparseBinary);
 
     //NOT
-    set("NOT", toB("111010"),parseArith2, unparseBinary);
+    set("NOT", toB("111010"),parseArith1, unparseBinary);
 
     //NOTS
-    set("NOTS", toB("111011"),parseArith2,unparseBinary);
+    set("NOTS", toB("111011"),parseArith1,unparseBinary);
 
     //To Integer
     set("TOI",toB("111100"), parseArith3, unparseBinary);

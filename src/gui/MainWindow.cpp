@@ -522,6 +522,10 @@ void MainWindow::procMessage(ThreadMessage message){
         case ThreadMessage::A_RESTORE_STATE:
             qDebug() << "GUI: RECV FROM COMPUTER: A_RESTORE_STATE";
             break;
+        case ThreadMessage::A_VIEW_PERFORMANCE:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_PERFORMANCE";
+            _ui.treeWidget->display(info.toMap());
+            break;
         default:
             qDebug() << "GUI: Invalid message";
             exit(-1);
@@ -582,6 +586,9 @@ void MainWindow::update(uint pc){
     pcSpinBox->setHexValue(pc);
     updateMemoryWidget();
     _ui.tracker->mark(pc/INSTRUCTION_SIZE);
+    if(_ui.leftBoard->currentWidget() == _ui.tab_performance){
+        sendMessage(ThreadMessage(ThreadMessage::R_VIEW_PERFORMANCE,{}));
+    }
 }
 void MainWindow::sendMessage(ThreadMessage message){
     qDebug() << "GUI: send message";
