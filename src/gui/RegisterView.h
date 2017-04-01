@@ -15,6 +15,10 @@ class RegisterView : public QTableWidget
     Q_OBJECT
 
 public:
+        enum Mode{
+            DEC = 0, FLOAT = 1, INT =2
+        };
+        Mode mode = DEC;
     RegisterView(QWidget* parent = 0);
     ~RegisterView();
     void update();
@@ -28,6 +32,7 @@ public:
 
 public slots:
     void updateWithComboBox();
+void handleHeader(int x);
 
 private:
     MainWindow* main;

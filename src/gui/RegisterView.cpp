@@ -12,8 +12,7 @@ void RegisterView::init(MainWindow* main, QTableWidget* regTable, QComboBox* com
     this->regTable =regTable;
     this->comboBox = comboBox;
 
-    regTable->setRowCount(65);
-    for(int row = 0; row < 65; row++){
+    regTable->setRowCount(65); for(int row = 0; row < 65; row++){
         for(int col =0; col < 20; col++){
             regTable->setItem(row, col, new QTableWidgetItem());
         }
@@ -22,9 +21,31 @@ void RegisterView::init(MainWindow* main, QTableWidget* regTable, QComboBox* com
         regTable->setColumnWidth(i, 37);
     }
     connect(comboBox, SIGNAL (activated(int)), this, SLOT(updateWithComboBox()));
+    connect(regTable->horizontalHeader(),SIGNAL(sectionDoubleClicked(int)),
+              this,SLOT(handleHeader(int)));
 
     update();
+    //Yeah, why not?
+    regTable->horizontalHeaderItem(2)->setText("Decimal");
 
+
+}
+void RegisterView::handleHeader(int x){
+    if(x == 2){
+        mode = static_cast<Mode>((mode +1) %3);
+        update();
+    }
+    switch(mode){
+        case DEC:
+        regTable->horizontalHeaderItem(2)->setText("Decimal");
+        break;
+        case FLOAT:
+        regTable->horizontalHeaderItem(2)->setText("Float");
+        break;
+        case INT:
+        regTable->horizontalHeaderItem(2)->setText("Integer");
+        break;
+    };
 }
 
 void RegisterView::update(){
@@ -119,7 +140,25 @@ void RegisterView::display(QList<QVariant> list){
         else{
             regTable->item(row, 0)->setText(line+ QString::number(row).toUpper());
             regTable->item(row, 1)->setText("0X" + QString::number(content,16).rightJustified(8, '0'));
-            regTable->item(row, 2)->setText(QString::number(content,10));
+            switch(mode){
+                case FLOAT:
+                    {
+                    // qDebug() << list[row+1];
+                    int v = list[row+1].toUInt();
+                    float * vv= (float *) & v;
+                    regTable->item(row, 2)->setText(QString::number(*vv));
+                    break;
+                    }
+                case INT:
+                    {
+                    int v = list[row+1].toUInt();
+                    regTable->item(row, 2)->setText(QString::number(v));
+                    break;
+                    }
+                case DEC:
+                    regTable->item(row, 2)->setText(QString::number(list[row+1].toUInt()));
+                    break;
+            };
             regTable->item(row, 3)->setText("0B" + QString::number(content,2).rightJustified(32,'0'));
         }
     }
@@ -136,3 +175,4 @@ void RegisterView::color(int row, uint v){
         x = x << 1;
     }
 }
+

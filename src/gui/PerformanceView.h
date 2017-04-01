@@ -19,6 +19,6 @@ class PerformanceView: public QTreeWidget
 
     private:
         void clear();
-        void add(QTreeWidgetItem* parent, QString str, QString prefix, QVariant value);
+        QTreeWidgetItem* add(QTreeWidgetItem* parent, QString str, QString prefix, QVariant value);
 };
 #endif

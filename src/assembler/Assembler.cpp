@@ -400,27 +400,54 @@ void Assembler::preprocessLine(QString fileName, int lineNumber, QString line){
             for(QString str : dataList){
                 QStringList tokens;
                 tokens << "DATA";
-                if(str.startsWith("#0X")){
+                if(str.startsWith("-")){
+                    bool success;
+                    uint v = str.toInt(&success, 10);
+                    tokens << QString::number(v);
+                    (*_log) << "INT to DEC: " << str  <<endl;
+                    if(success == false){
+                        throwError(fileName, lineNumber, 1, "Invalid Format:  Not Integer");
+                        return;
+                    }
+
+                }
+                else if(str.startsWith("#0X")){
                     str.remove(0,3);
                     bool success;
-                    tokens[1] = QString::number(str.toInt(&success, 16));
+                    tokens << QString::number(str.toInt(&success, 16));
                     (*_log) << "HEX to DEC: " << str  <<endl;
                     if(success == false){
                         throwError(fileName, lineNumber, 1, "Invalid Format:  Not Hexadecimal");
                         return;
                     }
                 }
-                if(str.startsWith("#0B")){
+                else if(str.startsWith("#0B")){
                     str.remove(0,3);
                     bool success;
-                    tokens[1] = QString::number(str.toInt(&success, 2));
+                    tokens << QString::number(str.toInt(&success, 2));
                     (*_log) << "BIN to DEC: " << str <<endl;
                     if(success == false){
                         throwError(fileName ,lineNumber, 1, "Invalid Format: Not Binary");
                         return;
                     }
                 }
-                tokens << str;
+                else if(str.endsWith("F")){
+                     str.chop(1);
+                     // qDebug() << str;
+                    bool success;
+                    float v = (float) str.toDouble(&success);
+                    int*  vv= (int*)&v;
+                    tokens<< QString::number(*vv);
+                    (*_log) << "FLOAT to DEC: " << str <<endl;
+                    if(success == false){
+                        throwError(fileName ,lineNumber, 1, "Invalid Format: Not Float");
+                        return;
+                    }
+
+                }
+                else{
+                    tokens << str;
+                }
                 (*_log) << "Data processed: " << str << endl;
 
                 //Preprcoessed data will be stored here
