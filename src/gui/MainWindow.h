@@ -24,7 +24,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include "ui_pisa.h"
-#include "CodeEditor.h"
+#include "CodeEditor.h" 
 #include "../computer/Computer.h"
 #include "MiscDialog.h"
 #include "PreferenceDialog.h"
@@ -57,6 +57,7 @@ class MainWindow : public QMainWindow
         QSpinBox* cycleSpinBox;
         QDoubleSpinBox* delayBox;
         MyQSpinBox* pcSpinBox; 
+
 
         void updateNavigation();
 
@@ -97,6 +98,7 @@ class MainWindow : public QMainWindow
         void handleErrorFromComputer(QString errorMessage);
         void handleSaveState();
         void handleRestoreState();
+
         
         void handleUpdatePC(int);
         void update(uint pc);

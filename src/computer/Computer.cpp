@@ -63,8 +63,8 @@ void Computer::init(QString fileName){
 }
 void Computer::feedInstructions(){
     QList<QVariant> instructions;
-    for(int i =0 ;i < program->size; i++){
-        if(program->instructionEndAddress < program->dataEndAddress ){
+    for(int i =0 ;i <= program->size; i++){
+        if(i< program->instructionEndAddress ){
             QVariant v = program->instructions->at(i);
             instructions.append(v);
         }
@@ -93,7 +93,6 @@ void Computer::step(int nCycle, double _delay){
 
     while(currState == RUNNING){
         //sleep for sanity
-        qDebug() << _delay;
         delay(_delay);
 
         uint pc = regs->getPC(); 
@@ -135,8 +134,7 @@ void Computer::step(int nCycle, double _delay){
         if(nCycle == 0){
             currState = PAUSED;
         }
-        if(_delay != 0){
-            qDebug() << "A";
+        if(_delay > 0.05){
             emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
         }
     }
@@ -159,6 +157,7 @@ void Computer::stop(){
         emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
         return;
     }
+    breakMap.clear();
     currState = DEAD;
     exec->stop();
     program == NULL;
@@ -184,7 +183,7 @@ void Computer::pause(){
 //http://stackoverflow.com/questions/3752742/how-do-i-create-a-pause-wait-function-using-qt
 void Computer::delay(double d)
 {
-    QTime dieTime= QTime::currentTime().addSecs(d);
+    QTime dieTime= QTime::currentTime().addMSecs(d * 1000);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
@@ -218,12 +217,12 @@ void Computer::handleMemoryView(uint address){
     uint x = (((1<<8)-1) & address) << 8;
     //check empty
     if(mems->_mainMemory->_contents[chunkBit].size() ==0){
-        for(int row = 0; row < 64; row++){
+        for(int row = 0; row < 256; row++){
             ret.append(0u);
         }
     }
     else{
-        for(uint i = 0; i < 64; i++){
+        for(uint i = 0; i < 256; i++){
             uint content = mems->_mainMemory->_contents[chunkBit][x + i * INSTRUCTION_SIZE].asUInt;
             ret.append(content);
         }
@@ -421,10 +420,29 @@ void Computer::handleRestoreState(QString fileName){
     emit sendMessage(ThreadMessage(ThreadMessage::A_RESTORE_STATE, {}));
     emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
     emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
-    qDebug() << regs->getPC();
+    // qDebug() << regs->getPC();
     return;
 }
+void Computer::handlePerformance(){
+    qDebug() << "handle performance view";
+    if(currState == BLOCKED){
+        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        return;
+    }
 
+    QMap<QString, QVariant> map;
+    map["/General/Cycle/Total"] = 2;
+    map["/General/Cycle/CPI"] = 2;
+    map["/General/Instruction/Total"] = 2;
+    map["/General/Instruction/IPC"] = 2;
+    map["/General/Time/Total"] = 2;
+    map["/General/Time/IPT"] = 2;
+    map["/General/Time/CPT"] = 2;
+
+
+    emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_PERFORMANCE, map));
+    return; 
+}
 void Computer::procMessage(ThreadMessage message){
     ThreadMessage::Type type = message.type;
 
@@ -489,6 +507,10 @@ void Computer::procMessage(ThreadMessage message){
             qDebug() << "COM: RECV FROM GUI: R_REMOVE_CACHE";
             mems->removeCache(info.toInt());
             emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+            break;
+        case ThreadMessage::R_VIEW_PERFORMANCE:
+            qDebug() << "COM: RECV FROM GUI: R_VIEW_PERFORMANCE";
+            handlePerformance();
             break;
         default:
             qDebug() <<"COM: Invalid message";

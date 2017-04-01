@@ -35,6 +35,7 @@
 #include "EditorTab.h"
 #include "HexSpinBox.h"
 #include "MemoryView.h"
+#include "PerformanceView.h"
 #include "RegisterView.h"
 #include "Tracker.h"
 
@@ -81,6 +82,8 @@ public:
     QVBoxLayout *verticalLayout_3;
     QTreeView *fileSystemView;
     QWidget *tab_performance;
+    QHBoxLayout *horizontalLayout_7;
+    PerformanceView *treeWidget;
     QWidget *Track;
     QVBoxLayout *verticalLayout_8;
     Tracker *tracker;
@@ -283,6 +286,13 @@ public:
         tab_performance->setObjectName(QStringLiteral("tab_performance"));
         sizePolicy.setHeightForWidth(tab_performance->sizePolicy().hasHeightForWidth());
         tab_performance->setSizePolicy(sizePolicy);
+        horizontalLayout_7 = new QHBoxLayout(tab_performance);
+        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
+        treeWidget = new PerformanceView(tab_performance);
+        treeWidget->setObjectName(QStringLiteral("treeWidget"));
+
+        horizontalLayout_7->addWidget(treeWidget);
+
         leftBoard->addTab(tab_performance, QString());
         Track = new QWidget();
         Track->setObjectName(QStringLiteral("Track"));
@@ -769,7 +779,7 @@ public:
         QObject::connect(actionRestore_State, SIGNAL(triggered()), MainWindow, SLOT(handleRestoreState()));
         QObject::connect(actionSave_state, SIGNAL(triggered()), MainWindow, SLOT(handleSaveState()));
 
-        leftBoard->setCurrentIndex(2);
+        leftBoard->setCurrentIndex(1);
         editorTab->setCurrentIndex(-1);
         tabWidget_output->setCurrentIndex(1);
         tabWidget_pipeline->setCurrentIndex(0);
@@ -855,6 +865,8 @@ public:
         actionUpload->setToolTip(QApplication::translate("MainWindow", "Upload file", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         leftBoard->setTabText(leftBoard->indexOf(tab_navigation), QApplication::translate("MainWindow", "Navigation", Q_NULLPTR));
+        QTreeWidgetItem *___qtreewidgetitem = treeWidget->headerItem();
+        ___qtreewidgetitem->setText(0, QApplication::translate("MainWindow", "Performance", Q_NULLPTR));
         leftBoard->setTabText(leftBoard->indexOf(tab_performance), QApplication::translate("MainWindow", "Performance", Q_NULLPTR));
         leftBoard->setTabText(leftBoard->indexOf(Track), QApplication::translate("MainWindow", "Tracker", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem = problemTable->horizontalHeaderItem(0);

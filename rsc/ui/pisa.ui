@@ -56,7 +56,7 @@
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab_navigation">
            <attribute name="title">
@@ -82,6 +82,17 @@
            <attribute name="title">
             <string>Performance</string>
            </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="PerformanceView" name="treeWidget">
+              <column>
+               <property name="text">
+                <string>Performance</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="Track">
            <attribute name="title">
@@ -1174,6 +1185,11 @@
     <slot>handlePrevButton()</slot>
     <slot>handleNextButton()</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>PerformanceView</class>
+   <extends>QTreeWidget</extends>
+   <header>PerformanceView.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

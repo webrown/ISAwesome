@@ -77,6 +77,7 @@ class Computer: public QObject{
         void feedInstructions();
         void delay(double delay);
         void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
+        void handlePerformance();
         void handleMemoryView(uint startAddress);
         void handleRegisterView(QString type);
         void handleSaveState(QString fileName);
