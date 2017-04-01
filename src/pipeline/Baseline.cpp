@@ -37,6 +37,8 @@ using namespace Flag;
 Baseline::Baseline(Register * regs, MemoryStructure *mem){
     this->registers = regs;
     this->memory = mem;
+    this->instructionsDone;
+    this->cyclesDone;
 }
 
 Baseline::~Baseline(){
