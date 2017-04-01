@@ -20,7 +20,7 @@ class ProgramManagerX{
 
         out << (qint32)program->instructionEndAddress;
         out << (qint32)program->dataEndAddress;
-        qDebug() << program->size;
+        // qDebug() << program->size;
         out << (qint32)program->size;
 
         QVector<uint>* instructions = program->instructions;
@@ -50,10 +50,10 @@ class ProgramManagerX{
             in  >> a;
             program->instructions->append(a);
         }
-        qDebug() << "LOAD: FINSIH";
-        qDebug() << QString::number(program->instructionEndAddress).rightJustified(32,'0');
-        qDebug() << QString::number(program->dataEndAddress).rightJustified(32,'0');
-        qDebug() << QString::number(program->size).rightJustified(32,'0');
+        // qDebug() << "LOAD: FINSIH";
+        // qDebug() << QString::number(program->instructionEndAddress).rightJustified(32,'0');
+        // qDebug() << QString::number(program->dataEndAddress).rightJustified(32,'0');
+        // qDebug() << QString::number(program->size).rightJustified(32,'0');
 
 
         return program;

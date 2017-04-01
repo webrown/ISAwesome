@@ -16,6 +16,7 @@
 #include "ThreadMessage.h"
 #include <QThread>
 #include <QFile>
+#include <QTimer>
 #include "../assembler/Assembler.h" 
 #include "../assembler/ProgramManagerX.h"
 
@@ -29,6 +30,8 @@ class Computer: public QObject{
          * If this variable is true, then computer will stop with break (I am not hundred percent sure about how to implement "break functionality"
          * If this variable is false, all break will be ignored
          */
+
+        qint64 totalElapsed = 0;
 
         State currState;
         QMap<uint,BreakPoint::BreakPoint> breakMap;

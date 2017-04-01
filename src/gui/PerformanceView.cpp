@@ -20,6 +20,7 @@ PerformanceView::PerformanceView(QWidget* parent) : QTreeWidget(parent){
 
     //Instruction
     QTreeWidgetItem * instruction = add(root, "/Instruction", "Instruction", {});
+    add(instruction, "/Instruction/Total", "Total: ", {});
 
     //ALU
     QTreeWidgetItem* alu = add(root, "/Alu", "ALU",{});
@@ -57,5 +58,25 @@ QTreeWidgetItem* PerformanceView::add(QTreeWidgetItem* parent, QString str, QStr
 
 void PerformanceView::clear(){
 }
-void PerformanceView::display(QMap<QString, QVariant>){
+void PerformanceView::display(QMap<QString, QVariant> map){
+    for(QString key : map.keys()){
+        if(itemMap.contains(key)){
+            if(map[key].type() == QVariant::Int){
+                itemMap[key]->setText(0,prefixMap[key] + QString::number(map[key].toInt()));
+
+            }
+            else if(map[key].type() == QVariant::Double){
+                itemMap[key]->setText(0, prefixMap[key] + QString::number(map[key].toDouble()));
+            }
+            else if(map[key].type() == QVariant::LongLong){
+                itemMap[key]->setText(0, prefixMap[key] + QString::number(map[key].toLongLong()));
+            }
+            else{
+                itemMap[key]->setText(0, prefixMap[key]);
+            }
+        }
+        else{
+            qDebug() << "Oops";
+        }
+    }
 }
