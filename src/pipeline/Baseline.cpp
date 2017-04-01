@@ -37,8 +37,9 @@ using namespace Flag;
 Baseline::Baseline(Register * regs, MemoryStructure *mem){
     this->registers = regs;
     this->memory = mem;
-    this->instructionsDone;
-    this->cyclesDone;
+    this->instructionsDone = 0;
+    this->cyclesDone = 0;
+    this->_waitLeft = 0;
 }
 
 Baseline::~Baseline(){
@@ -47,10 +48,19 @@ Baseline::~Baseline(){
 void Baseline::init(){
     // Reset PC
     registers->write(0, Register::PC);
+    // You aren't waiting for any instructions!
+    this->_waitLeft = 0;
 }
 
 Status Baseline::run(void){
+    cyclesDone++;
+    // Bail if you're still waiting for the next instruction to finish.
+    if(_waitLeft > 0) {
+        _waitLeft--;
+        return OKAY;
+    }
     // Complete 1 instruction 
+    instructionsDone++;
     QueryResult *qr = NULL;
    
     // Get the next instruction address.
@@ -166,15 +176,18 @@ Status Baseline::run(void){
     switch(instructionType) {
         case ADC: {
             LongAddOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 2;
             break;
         }
         case ADD:
         case SOE: {
             AddOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case AND: {
             AndOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case ARR: {
@@ -193,20 +206,24 @@ Status Baseline::run(void){
                     registers->write(result, binaryOperand2);
                 }
             }
+            _waitLeft += 4;
             break;
         }
         case ASL: {
             ArithmeticShiftLeftOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case ASR: {
             ArithmeticShiftRightOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case B: {
             if(conditionScalar) {
                 registers->write(unaryOperand, Register::PC);
             }
+            _waitLeft += 1;
             break;
         }
         case BL: {
@@ -222,85 +239,103 @@ Status Baseline::run(void){
                     registers->write(newPC, Register::PC);
                 }
             }
+            _waitLeft += 2;
             break;
         }
         case CMP: {
             if(conditionScalar) {
                 CompareOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2);
             }
+            _waitLeft += 3;
             break;
         }
         case CPY: {
             CopyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case DIV: {
             DivideOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 2;
             break;
         }
         case LMUL: {
             LongMultiplyOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 4;
             break;
         }
         case LOD: {
             if(conditionScalar) {
                 LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
+            _waitLeft += 10;
             break;
         }
         case LSL: {
             LogicalShiftLeftOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case LSR: {
             LogicalShiftRightOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case MOD: {
             ModOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 2;
             break;
         }
         case MUL:
         case MOE: {
             MultiplyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 2;
             break;
         }
         case MVD: {
             if(conditionScalar) {
                 Shift::executeDown(registers, useImmediate, binaryOperand1, binaryOperand2);
             }
+            _waitLeft += 4;
             break;
         }
         case MVU: {
             if(conditionScalar) {
                 Shift::executeUp(registers, useImmediate, binaryOperand1, binaryOperand2);
             }
+            _waitLeft += 4;
             break;
         }
         case NAND: {
             NandOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case NOR: {
             NorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case NOT: {
             NotOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case OR: {
             OrOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case RVE: {
             if(conditionScalar) {
                 ReadVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
             }
+            _waitLeft += 1;
             break;
         }
         case SBC: {
             LongSubtractOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 2;
             break;
         }
         case SEQ: {
@@ -320,37 +355,45 @@ Status Baseline::run(void){
                 }
                 registers->writeVector(newVector, unaryOperand);
             }
+            _waitLeft += 1;
             break;
         }
         case STO: {
             if(conditionScalar) {
                 StoreOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
             }
+            _waitLeft += 10;
             break;
         }
         case SUB: {
             SubtractOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case TOF: {
             ToFloatOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case TOI: {
             ToIntOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case XOR: {
             XorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
+            _waitLeft += 1;
             break;
         }
         case WVE: {
             if(conditionScalar) {
                 WriteVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
             }
+            _waitLeft += 1;
             break;
         }
         default: {
+            qDebug() << "OPCODE " << instructionType << " unrecognized.";
             break;
         }
      }
