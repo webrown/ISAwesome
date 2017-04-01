@@ -98,12 +98,28 @@ int main() {
   matrix2.push_back(11);
   matrix2.push_back(12);
 
+  vector<int> expected;
+  expected.push_back(2);
+  expected.push_back(4);
+  expected.push_back(38);
+  expected.push_back(44);
+  expected.push_back(50);
+  expected.push_back(56);
+  expected.push_back(83);
+  expected.push_back(98);
+  expected.push_back(113);
+  expected.push_back(128);
+
   vector<int> result;
 
   matrixMult(&matrix1, &matrix2, &result);
   // Check result
   for(int i = 0; i < result.size(); i++) {
-    cout << result.at(i) << endl;
+    cout << result.at(i);
+    if(expected.at(i) != result.at(i)) {
+      cout << " FAIL!!!!!!!!!!!!!!!!!!! " << expected.at(i);
+    }
+    cout << endl;
   }
 }
 
