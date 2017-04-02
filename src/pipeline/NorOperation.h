@@ -4,6 +4,6 @@
 class NorOperation : public ArithmeticOperation{
     public:
         static NorOperation singleton;
-        Value scalarOperation(int a, int b);
+        Value scalarOperation(int a, int b, int *wait);
 };
 #endif

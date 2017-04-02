@@ -4,6 +4,6 @@
 class ArithmeticShiftRightOperation : public ArithmeticOperation{
     public:
         static ArithmeticShiftRightOperation singleton;
-        Value scalarOperation(int a, int b);
+        Value scalarOperation(int a, int b, int *wait);
 };
 #endif

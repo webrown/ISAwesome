@@ -4,6 +4,6 @@
 class LongAddOperation : public LongOperation{
     public:
         static LongAddOperation singleton;
-        void scalarOperation(int *a, int *b);
+        void scalarOperation(int *a, int *b, int *wait);
 };
 #endif

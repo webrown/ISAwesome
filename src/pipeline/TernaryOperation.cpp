@@ -2,14 +2,15 @@
 #include "../computer/Architecture.h"
 #include <QDebug>
 
-void TernaryOperation::decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3) {
+void TernaryOperation::decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3, int *wait) {
     (void) registers;
     (void) arg1;
     (void) arg2;
     (void) arg3;
+    (void) wait;
 };
 
-void TernaryOperation::decode(Register *registers, bool arg1IsImmediate, unsigned int arg1, bool arg2IsImmediate, unsigned int arg2, unsigned int arg3) {
+void TernaryOperation::decode(Register *registers, bool arg1IsImmediate, unsigned int arg1, bool arg2IsImmediate, unsigned int arg2, unsigned int arg3, int *wait) {
     Value arg1Value;
     Value arg2Value;
     Value arg3Value;
@@ -28,6 +29,6 @@ void TernaryOperation::decode(Register *registers, bool arg1IsImmediate, unsigne
     }
 
     // All values substituted, ready to roll!
-    decodeOperation(registers, arg1Value, arg2Value, arg3Value);
+    decodeOperation(registers, arg1Value, arg2Value, arg3Value, wait);
 }
 

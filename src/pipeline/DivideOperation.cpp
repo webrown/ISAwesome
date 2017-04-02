@@ -4,7 +4,7 @@
 
 DivideOperation DivideOperation ::singleton;
 
-Value DivideOperation::scalarOperation(int a, int b){
+Value DivideOperation::scalarOperation(int a, int b, int *wait){
   Value v;
   if(a == 0) {
     // /0 is just big number.
@@ -22,10 +22,11 @@ Value DivideOperation::scalarOperation(int a, int b){
     // Save division.
     v.i = b / a;
   }
+  *wait = 4;
   return v;
 }
 
-Value DivideOperation::scalarOperation(float a, float b){
+Value DivideOperation::scalarOperation(float a, float b, int *wait){
   Value v;
   if(a == 0) {
     // /0 is just big number.
@@ -43,6 +44,7 @@ Value DivideOperation::scalarOperation(float a, float b){
     // Save division.
     v.f = b / a;
   }
+  *wait = 8;
   return v;
 }
 

@@ -4,6 +4,6 @@
 class ModOperation : public ArithmeticOperation{
     public:
         static ModOperation singleton;
-        Value scalarOperation(int a, int b);
+        Value scalarOperation(int a, int b, int *wait);
 };
 #endif

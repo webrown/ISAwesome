@@ -4,6 +4,6 @@
 class LogicalShiftLeftOperation : public ArithmeticOperation{
     public:
         static LogicalShiftLeftOperation singleton;
-        Value scalarOperation(int a, int b);
+        Value scalarOperation(int a, int b, int *wait);
 };
 #endif

@@ -5,7 +5,7 @@
 #include <QBitArray>
 class LongOperation{
     public:
-        void execute(Register *registers, unsigned int arg1, unsigned int arg2, bool flag, QBitArray flags);
-        virtual void scalarOperation(int *a, int *b);
+        void execute(Register *registers, unsigned int arg1, unsigned int arg2, bool flag, QBitArray flags, int *wait);
+        virtual void scalarOperation(int *a, int *b, int *wait);
 };
 #endif

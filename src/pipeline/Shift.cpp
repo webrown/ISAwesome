@@ -2,7 +2,8 @@
 #include "../memory/Value.h"
 #include <QVector>
 #include <QDebug>
-void Shift::execute(Register *registers, bool arg1IsImmediate, int arg1, int arg2, int scale) {
+void Shift::execute(Register *registers, bool arg1IsImmediate, int arg1, int arg2, int scale, int *wait) {
+  *wait = 4;
   // Doesn't make sense to shift on a scalar.
   if(Register::isScalarIndex(arg2) || !Register::indexExists(arg2)) return;
   // Init new vector.
@@ -22,15 +23,15 @@ void Shift::execute(Register *registers, bool arg1IsImmediate, int arg1, int arg
       }
     }
     int newIndex = (i+shiftAmount*scale+newVector.size()) % newVector.size();
-qDebug() << "newIndex = " << newIndex;
     newVector[newIndex] = registers->readVector(arg2).at(i);
   }
   registers->writeVector(newVector, arg2);
 }
 
-void Shift::executeUp(Register *registers, bool arg1Immediate, int arg1, int arg2) {
-  execute(registers, arg1Immediate, arg1, arg2, 1);
+void Shift::executeUp(Register *registers, bool arg1Immediate, int arg1, int arg2, int *wait) {
+  execute(registers, arg1Immediate, arg1, arg2, 1, wait);
 }
-void Shift::executeDown(Register *registers, bool arg1Immediate, int arg1, int arg2) {
-  execute(registers, arg1Immediate, arg1, arg2, -1);
+
+void Shift::executeDown(Register *registers, bool arg1Immediate, int arg1, int arg2, int *wait) {
+  execute(registers, arg1Immediate, arg1, arg2, -1, wait);
 }

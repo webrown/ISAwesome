@@ -1,6 +1,6 @@
 #include "MemoryOperation.h"
 
-void MemoryOperation::memory(Register *registers, MemoryStructure *memory, bool arg1IsImmediate, unsigned int arg1, unsigned int arg2) {
+void MemoryOperation::memory(Register *registers, MemoryStructure *memory, bool arg1IsImmediate, unsigned int arg1, unsigned int arg2, int *wait) {
     if(!arg1IsImmediate) {
       // Looks like we'll need to replace arg1 with its register value....
       // If arg1 is a vector, it doesn't make sense as an address.
@@ -14,10 +14,10 @@ void MemoryOperation::memory(Register *registers, MemoryStructure *memory, bool 
     }
 
     // Send query to memory.
-    memoryOperation(registers, memory, arg1, arg2);
+    memoryOperation(registers, memory, arg1, arg2, wait);
 }
 
-void MemoryOperation::memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex) {
+void MemoryOperation::memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex, int *wait) {
   (void)registers;
   (void)memory;
   (void)address;

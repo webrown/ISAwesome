@@ -3,7 +3,8 @@
 
 LongMultiplyOperation LongMultiplyOperation::singleton;
 
-void LongMultiplyOperation::scalarOperation(int *a, int *b){
+void LongMultiplyOperation::scalarOperation(int *a, int *b, int *wait){
+  *wait = 4;
   // Calculate
   long unsigned bigA = *a;
   long unsigned bigB = *b;

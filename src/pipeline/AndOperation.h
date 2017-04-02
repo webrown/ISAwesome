@@ -4,6 +4,6 @@
 class AndOperation : public ArithmeticOperation{
     public:
         static AndOperation singleton;
-        Value scalarOperation(int a, int b);
+        Value scalarOperation(int a, int b, int *wait);
 };
 #endif

@@ -4,6 +4,6 @@
 class NandOperation : public ArithmeticOperation{
     public:
         static NandOperation singleton;
-        Value scalarOperation(int a, int b);
+        Value scalarOperation(int a, int b, int *wait);
 };
 #endif

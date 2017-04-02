@@ -3,13 +3,15 @@
 
 MultiplyOperation MultiplyOperation ::singleton;
 
-Value MultiplyOperation::scalarOperation(int a, int b){
+Value MultiplyOperation::scalarOperation(int a, int b, int *wait){
+  *wait = 2;
   Value v;
   v.i = a * b;
   return v;
 }
 
-Value MultiplyOperation::scalarOperation(float a, float b){
+Value MultiplyOperation::scalarOperation(float a, float b, int *wait){
+  *wait = 4;
   Value v;
   v.f = a * b;
   return v;

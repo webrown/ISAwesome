@@ -4,6 +4,6 @@
 class XorOperation : public ArithmeticOperation{
     public:
         static XorOperation singleton;
-        Value scalarOperation(int a, int b);
+        Value scalarOperation(int a, int b, int *wait);
 };
 #endif

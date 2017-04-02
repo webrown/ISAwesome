@@ -4,6 +4,6 @@
 class LongMultiplyOperation : public LongOperation{
     public:
         static LongMultiplyOperation singleton;
-        void scalarOperation(int *a, int *b);
+        void scalarOperation(int *a, int *b, int *wait);
 };
 #endif

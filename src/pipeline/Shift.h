@@ -3,9 +3,9 @@
 #include "../memory/Register.h"
 class Shift {
   public:
-    static void executeUp(Register *registers, bool arg1Immediate, int arg1, int arg2);
-    static void executeDown(Register *registers, bool arg1Immediate, int arg1, int arg2);
+    static void executeUp(Register *registers, bool arg1Immediate, int arg1, int arg2, int *wait);
+    static void executeDown(Register *registers, bool arg1Immediate, int arg1, int arg2, int *wait);
   private:
-    static void execute(Register *registers, bool arg1Immediate, int arg1, int arg2, int scale);
+    static void execute(Register *registers, bool arg1Immediate, int arg1, int arg2, int scale, int *wait);
 };
 #endif

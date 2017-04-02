@@ -2,13 +2,14 @@
 #include <QDebug>
 #include "../Utility.h"
 
-void LongOperation::scalarOperation(int *a, int *b){
+void LongOperation::scalarOperation(int *a, int *b, int *wait){
   qDebug() << "COM: LongOperation: NOOPed int int";
   (void) a;
   (void) b;
+  (void) wait;
 }
 
-void LongOperation::execute(Register *registers, unsigned int arg1, unsigned int arg2, bool flag, QBitArray flags){
+void LongOperation::execute(Register *registers, unsigned int arg1, unsigned int arg2, bool flag, QBitArray flags, int *wait){
   // Barf unless we're dealing with ints.
   if(Register::isFloatIndex(arg1) || Register::isFloatIndex(arg2) || !Register::indexExists(arg1) || !Register::indexExists(arg2)) {
     qDebug() << "COM:  LongOperation:  Can only work with int registers.";
@@ -20,7 +21,7 @@ void LongOperation::execute(Register *registers, unsigned int arg1, unsigned int
     if(flag){
       int newArg1 = registers->read(arg1).i;
       int newArg2 = registers->read(arg2).i;
-      scalarOperation(&newArg1, &newArg2);
+      scalarOperation(&newArg1, &newArg2, wait);
       registers->write(newArg1, arg1);
       registers->write(newArg2, arg2);
     }
@@ -33,7 +34,7 @@ void LongOperation::execute(Register *registers, unsigned int arg1, unsigned int
       if(flags.at(i)) {
         int newArg1 = registers->readVector(arg1).at(i).i;
         int newArg2 = registers->readVector(arg2).at(i).i;
-        scalarOperation(&newArg1, &newArg2);
+        scalarOperation(&newArg1, &newArg2, wait);
         Value v;
         v.i = newArg1;
         result1 += v;

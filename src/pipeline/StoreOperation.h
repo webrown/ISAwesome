@@ -6,6 +6,6 @@
 class StoreOperation : public MemoryOperation{
     public:
         static StoreOperation singleton;
-        void memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex);
+        void memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex, int *wait);
 };
 #endif

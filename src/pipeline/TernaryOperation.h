@@ -4,7 +4,7 @@
 #include "../memory/Value.h"
 class TernaryOperation{
     public:
-        void decode(Register *registers, bool arg1IsImmediate, unsigned int arg1, bool arg2IsImmediate, unsigned int arg2, unsigned int arg3);
-        virtual void decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3);
+        void decode(Register *registers, bool arg1IsImmediate, unsigned int arg1, bool arg2IsImmediate, unsigned int arg2, unsigned int arg3, int *wait);
+        virtual void decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3, int *wait);
 };
 #endif

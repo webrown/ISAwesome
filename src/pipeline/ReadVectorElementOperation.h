@@ -5,6 +5,6 @@
 class ReadVectorElementOperation : public TernaryOperation{
     public:
         static ReadVectorElementOperation singleton;
-        void decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3);
+        void decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3, int *wait);
 };
 #endif

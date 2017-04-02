@@ -4,6 +4,6 @@
 class OrOperation : public ArithmeticOperation{
     public:
         static OrOperation singleton;
-        Value scalarOperation(int a, int b);
+        Value scalarOperation(int a, int b, int *wait);
 };
 #endif

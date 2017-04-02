@@ -3,7 +3,8 @@
 
 LongAddOperation LongAddOperation::singleton;
 
-void LongAddOperation::scalarOperation(int *a, int *b){
+void LongAddOperation::scalarOperation(int *a, int *b, int *wait){
+  *wait = 2;
   // Calculate
   Value v;
   v.i = *a;

@@ -3,13 +3,15 @@
 
 SubtractOperation SubtractOperation ::singleton;
 
-Value SubtractOperation::scalarOperation(int a, int b){
+Value SubtractOperation::scalarOperation(int a, int b, int *wait){
+  *wait = 1;
   Value v;
   v.i = b - a;
   return v;
 }
 
-Value SubtractOperation::scalarOperation(float a, float b){
+Value SubtractOperation::scalarOperation(float a, float b, int *wait){
+  *wait = 2;
   Value v;
   v.f = b - a;
   return v;

@@ -4,8 +4,7 @@
 
 StoreOperation StoreOperation::singleton;
 
-void StoreOperation::memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex) {
-qDebug() << "IN STORE";
+void StoreOperation::memoryOperation(Register *registers, MemoryStructure *memory, unsigned int address, unsigned int registerIndex, int *wait) {
   QVector<Value> data;
   if(Register::isVectorIndex(registerIndex)) {
     // You're writting a whole VECTOR_SIZE vector!
@@ -22,5 +21,5 @@ qDebug() << "IN STORE";
     filteredData.push_back(data.at(i));
   }
   // Put in data.
-  memory->getDataAccess()->write(&filteredData, address);
+  *wait = memory->getDataAccess()->write(&filteredData, address);
 }

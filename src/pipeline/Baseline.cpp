@@ -55,8 +55,7 @@ void Baseline::init(){
 Status Baseline::run(void){
     cyclesDone++;
     // Bail if you're still waiting for the next instruction to finish.
-    if(_waitLeft > 0) {
-        _waitLeft--;
+    if(--_waitLeft > 0) {
         return OKAY;
     }
     // Complete 1 instruction 
@@ -175,23 +174,22 @@ Status Baseline::run(void){
     // Do what the instruction tells you to.
     switch(instructionType) {
         case ADC: {
-            LongAddOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 2;
+            LongAddOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case ADD:
         case SOE: {
-            AddOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            AddOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case AND: {
-            AndOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            AndOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case ARR: {
+            _waitLeft = 1;
             if(conditionScalar) {
+                _waitLeft = 3;
                 // Only fires if both items are vectors and vs must be an int
                 if(Register::isVectorIndex(binaryOperand1) && Register::isVectorIndex(binaryOperand2) && !Register::isFloatIndex(binaryOperand1)) {
                     QVector<Value> vs = registers->readVector(binaryOperand1);
@@ -206,28 +204,27 @@ Status Baseline::run(void){
                     registers->write(result, binaryOperand2);
                 }
             }
-            _waitLeft += 4;
             break;
         }
         case ASL: {
-            ArithmeticShiftLeftOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            ArithmeticShiftLeftOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case ASR: {
-            ArithmeticShiftRightOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            ArithmeticShiftRightOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case B: {
+            _waitLeft = 1;
             if(conditionScalar) {
                 registers->write(unaryOperand, Register::PC);
             }
-            _waitLeft += 1;
             break;
         }
         case BL: {
+            _waitLeft = 1;
             if(conditionScalar) {
+                _waitLeft = 2;
                 // Is this register valid for reading?
                 if(Register::indexExists(unaryOperand) && Register::isScalarIndex(unaryOperand)) {
                     // Grab the things you want to write.
@@ -239,106 +236,94 @@ Status Baseline::run(void){
                     registers->write(newPC, Register::PC);
                 }
             }
-            _waitLeft += 2;
             break;
         }
         case CMP: {
+            _waitLeft = 1;
             if(conditionScalar) {
-                CompareOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2);
+                CompareOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, &_waitLeft);
             }
-            _waitLeft += 3;
             break;
         }
         case CPY: {
-            CopyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            CopyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case DIV: {
-            DivideOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 2;
+            DivideOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case LMUL: {
-            LongMultiplyOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 4;
+            LongMultiplyOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case LOD: {
+            _waitLeft = 1;
             if(conditionScalar) {
-                LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
+                LoadOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2, &_waitLeft);
             }
-            _waitLeft += 10;
             break;
         }
         case LSL: {
-            LogicalShiftLeftOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            LogicalShiftLeftOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case LSR: {
-            LogicalShiftRightOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            LogicalShiftRightOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case MOD: {
-            ModOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 2;
+            ModOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case MUL:
         case MOE: {
-            MultiplyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 2;
+            MultiplyOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case MVD: {
+            _waitLeft = 1;
             if(conditionScalar) {
-                Shift::executeDown(registers, useImmediate, binaryOperand1, binaryOperand2);
+                Shift::executeDown(registers, useImmediate, binaryOperand1, binaryOperand2, &_waitLeft);
             }
-            _waitLeft += 4;
             break;
         }
         case MVU: {
+            _waitLeft = 1;
             if(conditionScalar) {
-                Shift::executeUp(registers, useImmediate, binaryOperand1, binaryOperand2);
+                Shift::executeUp(registers, useImmediate, binaryOperand1, binaryOperand2, &_waitLeft);
             }
-            _waitLeft += 4;
             break;
         }
         case NAND: {
-            NandOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            NandOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case NOR: {
-            NorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            NorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case NOT: {
-            NotOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            NotOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case OR: {
-            OrOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            OrOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case RVE: {
+            _waitLeft = 1;
             if(conditionScalar) {
-                ReadVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
+                ReadVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3, &_waitLeft);
             }
-            _waitLeft += 1;
             break;
         }
         case SBC: {
-            LongSubtractOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 2;
+            LongSubtractOperation::singleton.execute(registers, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case SEQ: {
+            _waitLeft = 1;
             // SEQ makes no sense with scalars or immediates
             if(!Register::isScalarIndex(unaryOperand) && Register::indexExists(unaryOperand)) {
                 QVector<Value> newVector;
@@ -355,45 +340,40 @@ Status Baseline::run(void){
                 }
                 registers->writeVector(newVector, unaryOperand);
             }
-            _waitLeft += 1;
             break;
         }
         case STO: {
+            _waitLeft = 1;
             if(conditionScalar) {
-                StoreOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2);
+                StoreOperation::singleton.memory(registers, memory, useImmediate, binaryOperand1, binaryOperand2, &_waitLeft);
             }
-            _waitLeft += 10;
             break;
         }
         case SUB: {
-            SubtractOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            SubtractOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case TOF: {
-            ToFloatOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            ToFloatOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case TOI: {
-            ToIntOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            ToIntOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case XOR: {
-            XorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector);
-            _waitLeft += 1;
+            XorOperation::singleton.execute(registers, useImmediate, binaryOperand1, binaryOperand2, conditionScalar, conditionVector, &_waitLeft);
             break;
         }
         case WVE: {
             if(conditionScalar) {
-                WriteVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3);
+                WriteVectorElementOperation::singleton.decode(registers, useImmediate, ternaryOperand1, useImmediateTernary, ternaryOperand2, ternaryOperand3, &_waitLeft);
             }
-            _waitLeft += 1;
             break;
         }
         default: {
             qDebug() << "OPCODE " << instructionType << " unrecognized.";
+            _waitLeft = 1;
             break;
         }
      }
