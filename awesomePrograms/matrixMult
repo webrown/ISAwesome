@@ -417,6 +417,17 @@ CPY LR R19 ; Save LR.
 BL R4 ; expect R3 to be 7
 CPY R19 LR ; Restore LR.
 
+; clear the cache
+CPY dataend R5
+CPY dataend R6
+ADD 1000 R6
+CLEARCACHELOOP:
+LOD R5 R7
+ADD 1 R5
+CMP R5 R6
+LT B CLEARCACHELOOP
+
+
 add 0 R1
 add 0 R1
 add 0 R1
@@ -501,3 +512,5 @@ matrix6:
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+dataend:
