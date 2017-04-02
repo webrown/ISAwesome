@@ -589,9 +589,7 @@ void MainWindow::update(uint pc){
     pcSpinBox->setHexValue(pc);
     updateMemoryWidget();
     _ui.tracker->mark(pc/INSTRUCTION_SIZE);
-    if(_ui.leftBoard->currentWidget() == _ui.tab_performance){
-        sendMessage(ThreadMessage(ThreadMessage::R_VIEW_PERFORMANCE,{}));
-    }
+    sendMessage(ThreadMessage(ThreadMessage::R_VIEW_PERFORMANCE,{}));
 }
 void MainWindow::sendMessage(ThreadMessage message){
     qDebug() << "GUI: send message";
