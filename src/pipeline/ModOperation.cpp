@@ -4,7 +4,7 @@
 ModOperation ModOperation ::singleton;
 
 Value ModOperation::scalarOperation(int a, int b, int *wait){
-  *wait = 2;
+  *wait = 4;
   Value v;
   if(a == 0) {
     v.i = -1;

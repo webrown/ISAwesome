@@ -13,6 +13,6 @@ Value AddOperation::scalarOperation(int a, int b, int *wait){
 Value AddOperation::scalarOperation(float a, float b, int *wait){
   Value v;
   v.f = a+b;
-  *wait = 1;
+  *wait = 2;
   return v;
 }
