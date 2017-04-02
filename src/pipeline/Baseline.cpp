@@ -55,7 +55,8 @@ void Baseline::init(){
 Status Baseline::run(void){
     cyclesDone++;
     // Bail if you're still waiting for the next instruction to finish.
-    if(--_waitLeft > 0) {
+    _waitLeft--;
+    if(_waitLeft > 0) {
         return OKAY;
     }
     // Complete 1 instruction 
