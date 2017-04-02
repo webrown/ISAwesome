@@ -1,0 +1,14 @@
+CPY numerator R0
+LOD R0 R0
+TOF R0 R10
+CPY divisor R0
+LOD R0 R0
+TOF R0 R11
+DIV R11 R10
+ADD 0 R0
+
+#DATA
+numerator:
+2
+divisor:
+3
