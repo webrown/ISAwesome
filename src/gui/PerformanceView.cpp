@@ -56,6 +56,42 @@ QTreeWidgetItem* PerformanceView::add(QTreeWidgetItem* parent, QString str, QStr
     return item;
 }
 
+void PerformanceView::syncCache(MemoryStructure * str){
+    //It is very inefficient, but it won't be called during the run.
+    QTreeWidgetItem * memory = itemMap["/Memory"];
+    for(int i =memory->childCount() -1; i >= 0; i--){
+        QTreeWidgetItem * child = memory->child(i);
+        if(child->text(0).contains("Cache") == true){
+            memory->removeChild(child);
+        }
+    }
+
+    for(QPair<QString, int> pair : str->getIds()){
+        QString entry = "/Memory/" + pair.first;
+        QTreeWidgetItem * cache = add(memory, entry, pair.first, {});
+
+        add(cache, entry + "/Id", "ID: ", pair.second); 
+        //TODO calculate this plz
+        add(cache, entry + "/Size", "Size: ", 1 << (str->map[pair.second]->indexBits + str->map[pair.second]->logDataWordCount + str->map[pair.second]->logAssociativity));
+        add(cache, entry + "/IndexBit", "Indexes: ", (1 << str->map[pair.second]->indexBits));
+        add(cache, entry + "/WordBit", "Words: ", (1 << str->map[pair.second]->logDataWordCount));
+        add(cache, entry + "/WayBit", "Ways: ", (1 << str->map[pair.second]->logAssociativity));
+        add(cache, entry + "/Delay", "Delay: ", str->map[pair.second]->delay);
+
+        QTreeWidgetItem * stat = add(cache, entry +"/Stat", "Stat", {});
+        add(stat, entry +"/Stat/HitRate", "Hit Rate: ", {0});
+        add(stat, entry +"/Stat/HitCount", "H Count: ", {0});
+        add(stat, entry +"/Stat/CompulsuryMiss", "C Miss: ", {0});
+        add(stat, entry +"/Stat/ConflictMiss", "X Miss: ", {0});
+    }
+    //reorder ram   
+    QTreeWidgetItem * ram = itemMap["/Memory/Ram"];
+    int index = memory->indexOfChild(ram);
+    memory->takeChild(index);
+    memory->insertChild(memory->childCount(), ram);
+
+}
+
 void PerformanceView::clear(){
 }
 void PerformanceView::display(QMap<QString, QVariant> map){
@@ -76,6 +112,7 @@ void PerformanceView::display(QMap<QString, QVariant> map){
             }
         }
         else{
+            qDebug() << key;
             qDebug() << "Oops";
         }
     }

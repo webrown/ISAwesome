@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QDir>
+#include "../memory/MemoryStructure.h"
 class PerformanceView: public QTreeWidget
 {
     Q_OBJECT
@@ -16,6 +17,8 @@ class PerformanceView: public QTreeWidget
         PerformanceView(QWidget* parent = 0);
         ~PerformanceView();
         void display(QMap<QString, QVariant>);
+        void syncCache(MemoryStructure * str);
+        
 
     private:
         void clear();

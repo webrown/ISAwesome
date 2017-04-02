@@ -14,6 +14,10 @@ class Cache : public MemoryInterface{
 
   public:
     using MemoryInterface::write;
+    qint64 hit = 0;
+    qint64 compulsuryMiss = 0;
+    qint64 conflictMiss = 0;
+    QList<unsigned int> entered;
 
     QVector< QVector<int> * > *tags;
     QVector< QVector< QVector<Value> * > * > *contents;

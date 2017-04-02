@@ -216,6 +216,7 @@ void MainWindow::handleAddCache(){
         qDebug() << "GUI: Adding a cache";
         printlnConsole("Cache added...");
         MemoryStructure::setUpPlz(_ui.cacheListBox, &container);
+        _ui.treeWidget->syncCache(&container);
         QList<QVariant> toSend;
         toSend << container._lastAdded->next->id;
         toSend << container._lastAdded->type;
@@ -237,6 +238,8 @@ void MainWindow::handleRemoveCache(){
     }
     container.removeCache(_ui.cacheListBox->currentData().toInt());
     MemoryStructure::setUpPlz(_ui.cacheListBox, &container);
+    _ui.treeWidget->syncCache(&container);
+
     sendMessage(ThreadMessage(ThreadMessage::R_REMOVE_CACHE, container._lastAdded->id));
     updateMemoryWidget();
 

@@ -1143,7 +1143,14 @@ build/moc_CacheView.cpp: src/memory/Cache.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/CacheView.h -o build/moc_CacheView.cpp
 
-build/moc_PerformanceView.cpp: src/gui/PerformanceView.h \
+build/moc_PerformanceView.cpp: src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h \
+		src/gui/PerformanceView.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/PerformanceView.h -o build/moc_PerformanceView.cpp
@@ -1189,11 +1196,11 @@ build/moc_MainWindow.cpp: src/gui/MemoryView.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/computer/Architecture.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
-		src/computer/Architecture.h \
 		src/computer/Computer.h \
-		src/memory/MemoryStructure.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1265,11 +1272,11 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/computer/Architecture.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
-		src/computer/Architecture.h \
 		src/computer/Computer.h \
-		src/memory/MemoryStructure.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1351,7 +1358,14 @@ src/gui/ui_pisa.h: rsc/ui/pisa.ui \
 		src/memory/Cache.h \
 		src/memory/QueryResult.h \
 		src/memory/Value.h \
-		src/memory/MemoryInterface.h
+		src/memory/MemoryInterface.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h
 	/usr/bin/uic rsc/ui/pisa.ui -o src/gui/ui_pisa.h
 
 src/gui/ui_preferencedialog.h: rsc/ui/preferencedialog.ui \
@@ -1390,11 +1404,11 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/computer/Architecture.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
-		src/computer/Architecture.h \
 		src/computer/Computer.h \
-		src/memory/MemoryStructure.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1527,11 +1541,11 @@ build/CacheView.o: src/gui/CacheView.cpp src/gui/CacheView.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/computer/Architecture.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
-		src/computer/Architecture.h \
 		src/computer/Computer.h \
-		src/memory/MemoryStructure.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1581,11 +1595,11 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/computer/Architecture.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
-		src/computer/Architecture.h \
 		src/computer/Computer.h \
-		src/memory/MemoryStructure.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1621,11 +1635,11 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/computer/Architecture.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
-		src/computer/Architecture.h \
 		src/computer/Computer.h \
-		src/memory/MemoryStructure.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1639,7 +1653,14 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/gui/MyQSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryView.o src/gui/MemoryView.cpp
 
-build/PerformanceView.o: src/gui/PerformanceView.cpp src/gui/PerformanceView.h
+build/PerformanceView.o: src/gui/PerformanceView.cpp src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PerformanceView.o src/gui/PerformanceView.cpp
 
 build/MiscDialog.o: src/gui/MiscDialog.cpp src/gui/MiscDialog.h \
@@ -1682,11 +1703,11 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/computer/Architecture.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
-		src/computer/Architecture.h \
 		src/computer/Computer.h \
-		src/memory/MemoryStructure.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1723,8 +1744,8 @@ build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
-		src/computer/Computer.h \
 		src/memory/MemoryStructure.h \
+		src/computer/Computer.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
@@ -1760,11 +1781,11 @@ build/Tracker.o: src/gui/Tracker.cpp src/gui/Tracker.h \
 		src/gui/HighLighter.h \
 		src/assembler/Problem.h \
 		src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/computer/Architecture.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
-		src/computer/Architecture.h \
 		src/computer/Computer.h \
-		src/memory/MemoryStructure.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \

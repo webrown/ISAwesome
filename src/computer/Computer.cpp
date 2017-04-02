@@ -443,6 +443,17 @@ void Computer::handlePerformance(){
     map["/General/Time/IPT"] = (double) exec->cyclesDone / totalElapsed;
     map["/General/Time/CPT"] =  (double) exec->instructionsDone / totalElapsed;
 
+    for(QPair<QString, int> str : this->mems->getIds()){
+        QString entry = "/Memory/" + str.first;
+        Cache * cache = (Cache* )this->mems->map[str.second];
+        qint64 total = cache->hit + cache->compulsuryMiss + cache->conflictMiss;
+        map[entry + "/Stat/HitRate"] = (double)cache->hit / total;
+        map[entry + "/Stat/HitCount"] = cache->hit;
+        map[entry + "/Stat/CompulsuryMiss"] = cache->compulsuryMiss;
+        map[entry + "/Stat/ConflictMiss"] = cache->conflictMiss;
+
+    }
+
 
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_PERFORMANCE, map));
     return; 

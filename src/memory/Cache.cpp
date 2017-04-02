@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
+#include <QtMath>
 
 using namespace std;
 
@@ -75,6 +76,10 @@ Cache::~Cache() {
 }
 
 void Cache::init(){
+    hit =0;
+    compulsuryMiss = 0;
+    conflictMiss =0;
+    entered.clear();
   size_t maxIndex = 1 << indexBits;
   size_t ways = 1 << logAssociativity;
   size_t dataWordCount = 1 << logDataWordCount;
@@ -328,7 +333,15 @@ double Cache::fetch(unsigned int address){
   int way = addressWay(address);
   if(way != -1) {
     // We don't need to do anything!
+    hit++;
     return 0;
+  }
+  if(entered.contains(address)){
+      conflictMiss++;
+  }
+  else{
+      compulsuryMiss++;
+      entered.append(address);
   }
   double wait = 0;
   QVector<int> *tagIndOff = splitAddress(address);

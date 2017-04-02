@@ -81,6 +81,8 @@ QVector<Value> Register::readVector(int i){
 
 void Register::writeVector(QVector<Value> v, int i){
     Q_ASSERT(NUMBER_OF_SCALAR_REGISTER <= i && i <NUMBER_OF_SCALAR_REGISTER + NUMBER_OF_VECTOR_REGISTER);
+    if(v.size () != VECTOR_SIZE);
+    qDebug() << v.size();
     Q_ASSERT(v.size() == VECTOR_SIZE);
     _vecs[i-NUMBER_OF_SCALAR_REGISTER] = v;
 }

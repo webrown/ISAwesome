@@ -1,0 +1,42 @@
+#alias arrayEnd R4
+#alias arrayStart R7
+#alias i R5
+#alias j R6
+;25.26
+CPY array1 i
+CPY array1 arrayEnd
+ADD 100 arrayEnd
+
+while1:
+CMP i arrayEnd
+EQ B exitWhile1
+
+CPY i j
+while2:
+CMP j arrayEnd
+EQ B exitWhile2
+LOD i R0
+LOD j R1
+CMP R0 R1
+GT STO j R0
+GT STO i R1
+ADD 1 j
+B while2
+exitWhile2:
+ADD 1 i
+B while1
+exitWhile1:
+ADD 1 R9
+
+#DATA
+array1:
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1
+10 9 8 7 6 5 4 3 2 1

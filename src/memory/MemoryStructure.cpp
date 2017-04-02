@@ -128,8 +128,7 @@ bool MemoryStructure::removeCache(int id){
             _instructionAccess = next;
         }
         else{
-            prev_inst->next= next;
-        }
+            prev_inst->next= next; }
         if(prev_data == NULL){
             _dataAccess = next;
         }
@@ -157,6 +156,43 @@ bool MemoryStructure::removeCache(int id){
     _lastAdded = curr;
     return true;
 }
+
+QList<QPair<QString, int>> MemoryStructure::getIds(){
+    QList<QPair<QString, int>> ret;
+    if(map.size() == 1){
+        return  ret;
+    }
+    MemoryInterface* instM = _instructionAccess;
+    MemoryInterface* dataM = _dataAccess;
+    int level = 1;
+    while(dataM->type != Cache::BOTH || instM->type != Cache::BOTH){
+        if(instM->type != Cache::BOTH){
+            QPair<QString, int> p;
+            p.first =  "Level " + QString::number(level) + " Cache(I)";
+            p.second= instM->id; 
+            ret << p;
+            instM = instM->next;
+        }
+        if(dataM->type != Cache::BOTH){
+            QPair<QString, int> p;
+            p.first=  "Level " + QString::number(level) + " Cache(D)";
+            p.second = dataM->id;
+            ret << p; 
+            dataM = dataM->next;
+        }
+        level++;
+    }
+    for(; instM != NULL; instM = instM->next){
+        QPair<QString, int> p;
+        p.first=  "Level " + QString::number(level) + " Cache(I&D)";
+        p.second = instM->id;
+        ret << p;
+        level++;
+    }
+    ret.removeLast();
+    return ret;
+}
+
 
 QStringList MemoryStructure::getNames(){
     QStringList ret;

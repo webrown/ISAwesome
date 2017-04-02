@@ -29,6 +29,8 @@ class MemoryStructure {
 
 
         QStringList getNames();
+        QList<QPair<QString, int>> getIds();
+
         MemoryInterface* findPrev(MemoryInterface * target, MemoryInterface::Type type);
         static void setUpPlz(QComboBox* box, MemoryStructure * container);
         static MemoryInterface::Type convert(int i){
