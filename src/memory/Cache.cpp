@@ -104,7 +104,22 @@ unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned 
     return (tag << (indexBits + logDataWordCount)) | (index << logDataWordCount) | offset;
 }
 
-QueryResult *Cache::read(unsigned int address, unsigned int length){
+QueryResult *Cache::read(unsigned int address, unsigned int length) {
+  QVector<Value> resultVector;
+  double time = 0;
+  // Repeatedly calls atomicReads until you the entire span that you want.
+  while(length > 0) {
+    QueryResult *atomicQR = atomicRead(address, maxLength(address));
+    resultVector += atomicQR->result;
+    time += atomicQR->time;
+    length -= atomicQR->size();
+    address += atomicQR->size();
+    delete atomicQR;
+  }
+  return new QueryResult(resultVector, time);
+}
+
+QueryResult *Cache::atomicRead(unsigned int address, unsigned int length){
   // Hardware constraint:  Can't parallel load more values than there are in the cache.
   size_t mL = maxLength(address);
   if(length > mL) {

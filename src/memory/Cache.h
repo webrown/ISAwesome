@@ -30,6 +30,7 @@ class Cache : public MemoryInterface{
     virtual ~Cache();
     void init();
 
+    QueryResult *atomicRead(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address, unsigned int length);
     QueryResult *read(unsigned int address);
     double write(QVector<Value> *value, unsigned int address);
