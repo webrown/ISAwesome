@@ -26,6 +26,7 @@ class MemoryStructure {
         MemoryInterface *getLastAdded();
         bool addCache(int nextId, MemoryInterface::Type type, int indexBits, int logDataWordCount, int logAssociativity, double delay);
         bool removeCache(int id);
+        void clear();
 
 
         QStringList getNames();

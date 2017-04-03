@@ -15,6 +15,7 @@ MainMemory::~MainMemory(){
 }
 
 void MainMemory::init(){
+    memoryInUse = 0;
     _contents.clear();
     _contents.resize(MEMORY_CHUNKS);
 }
@@ -67,6 +68,7 @@ double MainMemory::write(QVector<Value> *value, unsigned int address){
       if(_contents.at(ind1).size() == 0) {
         // Ooops!  This memory chunk has not been instantiated yet!
         _contents[ind1].resize(MEMORY_CHUNK_SIZE);
+        memoryInUse++;
       }
       _contents[ind1][ind2] =value->at(i);
     }
