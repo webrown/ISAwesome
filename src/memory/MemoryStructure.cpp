@@ -256,6 +256,19 @@ MemoryInterface *MemoryStructure::findPrev(MemoryInterface* target, Cache::Type 
 
 
 }
+void MemoryStructure::clear(){
+    for(int key : map.keys()){
+        //If item is not main memory/dummy main memory, then kill it
+        if(key != 0){
+            delete map[key];
+            map.remove(key);
+        }
+    }
+    _dataAccess = map[0];
+    _instructionAccess = map[0];
+    //reset id
+    id = 1;
+}
 
 void MemoryStructure::setUpPlz(QComboBox * box, MemoryStructure * container){
     MemoryInterface* instM = container->_instructionAccess;
@@ -263,6 +276,7 @@ void MemoryStructure::setUpPlz(QComboBox * box, MemoryStructure * container){
     box->clear();
     int level = 1;
     while(dataM->type != Cache::BOTH || instM->type != Cache::BOTH){
+        qDebug() << dataM->type << instM->type;
         if(instM->type != Cache::BOTH){
             box->addItem("Level " + QString::number(level) + " Cache(I)", {instM->id});
             qDebug() << "INST " << instM->id << "->" <<instM->next->id;

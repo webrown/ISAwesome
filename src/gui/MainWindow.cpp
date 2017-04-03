@@ -247,19 +247,15 @@ void MainWindow::handleRemoveCache(){
 
 
 void MainWindow::handleClearCache(){
-    /* qDebug() << "Clear Cache button is clicked"; */
-    // printlnConsole("Cache cleared");
-    // Cache* nextCache;
-    // for(Cache* cache = computer->topCache; cache != NULL; cache = nextCache){
-    //     CacheView* cacheView =cache->view;
-    //
-    //     _ui.tabWidget_memory->removeTab(_ui.tabWidget_memory->indexOf(cacheView));
-    //
-    //     nextCache = cache->nextCache;
-    //     delete cache;
-    //     delete cacheView;
-    // }
-    /* computer->topCache =NULL; */
+    qDebug() << "Clear Cache button is clicked";
+    container.clear();
+    MemoryStructure::setUpPlz(_ui.cacheListBox, &container);
+    _ui.treeWidget->syncCache(&container);
+
+    sendMessage(ThreadMessage(ThreadMessage::R_CLEAR_CACHE, {}));
+    updateMemoryWidget();
+
+
 } 
 
 void MainWindow::handleBuild(){

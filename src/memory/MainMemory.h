@@ -18,6 +18,7 @@ class MainMemory : public MemoryInterface{
 
     double delay;
     QVector< QVector< Value > > _contents;
+    qint32 memoryInUse = 0;
 
 
     MainMemory(double delay);

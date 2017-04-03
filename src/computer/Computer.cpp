@@ -451,8 +451,8 @@ void Computer::handlePerformance(){
         map[entry + "/Stat/HitCount"] = cache->hit;
         map[entry + "/Stat/CompulsuryMiss"] = cache->compulsuryMiss;
         map[entry + "/Stat/ConflictMiss"] = cache->conflictMiss;
-
     }
+    map["/Memory/Ram/Page"] = mems->_mainMemory->memoryInUse;
 
 
     emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_PERFORMANCE, map));
@@ -521,6 +521,11 @@ void Computer::procMessage(ThreadMessage message){
         case ThreadMessage::R_REMOVE_CACHE:
             qDebug() << "COM: RECV FROM GUI: R_REMOVE_CACHE";
             mems->removeCache(info.toInt());
+            emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+            break;
+        case ThreadMessage::R_CLEAR_CACHE:
+            qDebug() << "COM: RECV FROM GUI: R_CLEAR_CACHE";
+            mems->clear();
             emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
             break;
         case ThreadMessage::R_VIEW_PERFORMANCE:

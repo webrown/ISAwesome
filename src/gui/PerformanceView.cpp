@@ -30,6 +30,10 @@ PerformanceView::PerformanceView(QWidget* parent) : QTreeWidget(parent){
 
     QTreeWidgetItem* reg = add(memory, "/Memory/Register", "Register",{});
     QTreeWidgetItem* main = add(memory, "/Memory/Ram", "RAM",{});
+    add(main, "/Memory/Ram/Size", "Size: 4GB", {});
+    add(main, "/Memory/Ram/Delay", "Delay: ", {MAIN_MEMORY_DELAY});
+    add(main, "/Memory/Ram/Page", "Page: ", {0});
+    
 
 
 
