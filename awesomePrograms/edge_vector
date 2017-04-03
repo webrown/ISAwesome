@@ -1,0 +1,5 @@
+NOT 0 R0
+LOD R0 R1
+
+NOT 0 R0
+LOD R0 V0
