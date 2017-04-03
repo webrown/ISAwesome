@@ -117,6 +117,11 @@ QueryResult *Cache::read(unsigned int address, unsigned int length) {
     time += atomicQR->time;
     length -= atomicQR->size();
     address += atomicQR->size();
+#if 0
+qDebug() << "atomicLength" << atomicLength;
+qDebug() << "length" << length;
+qDebug() << "atomicQR->size()" << atomicQR->size();
+#endif
     delete atomicQR;
   }
   return new QueryResult(resultVector, time);
@@ -124,16 +129,20 @@ QueryResult *Cache::read(unsigned int address, unsigned int length) {
 
 QueryResult *Cache::atomicRead(unsigned int address, unsigned int length){
   // Hardware constraint:  Can't parallel load more values than there are in the cache.
+  qDebug() << "COM: atomicRead(" << address << " ," << length << ")";
   size_t mL = maxLength(address);
   if(length > mL) {
     length = mL;
     cout << "WARNING:  read given too large a QVector, shrinking size to " << mL << "." << endl;
   }
+  unsigned long longAddress = address; // Useful for edges of memory.
+  unsigned long longLength = length;
+  unsigned long tooFarAddress = address+longLength; // Useful for edges of memory.
   double wait = delay;
   // Get these values into the cache if they are not already.
   double fetchWait = 0;
   QVector<Value> *data = new QVector<Value>();
-  for(unsigned int i = address; i < address+length; i++) {
+  for(unsigned long i = longAddress; i < tooFarAddress; i++) {
     // TODO May be able to be optimized later; often tag and index won't change for long periods of time.
     fetchWait = max(fetchWait, fetch(i));
     // Now at front of LRU queue
