@@ -105,11 +105,14 @@ unsigned int Cache::buildAddress(unsigned int tag, unsigned int index, unsigned 
 }
 
 QueryResult *Cache::read(unsigned int address, unsigned int length) {
+  qDebug() << "COM: Cache read addr" << address << ", length of " << length;
   QVector<Value> resultVector;
   double time = 0;
   // Repeatedly calls atomicReads until you the entire span that you want.
   while(length > 0) {
-    QueryResult *atomicQR = atomicRead(address, maxLength(address));
+    unsigned int atomicLength = maxLength(address);
+    if(atomicLength > length) atomicLength = length;
+    QueryResult *atomicQR = atomicRead(address, atomicLength);
     resultVector += atomicQR->result;
     time += atomicQR->time;
     length -= atomicQR->size();
