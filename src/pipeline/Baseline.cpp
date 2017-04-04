@@ -50,6 +50,9 @@ void Baseline::init(){
     registers->write(0, Register::PC);
     // You aren't waiting for any instructions!
     this->_waitLeft = 0;
+    this->instructionsDone = 0;
+    this->cyclesDone = 0;
+ 
 }
 
 Status Baseline::run(void){

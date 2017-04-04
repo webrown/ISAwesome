@@ -6,7 +6,7 @@
 CPY array1 i
 CPY array1 arrayEnd
 ADD 100 arrayEnd
-
+;2421477 -> 
 while1:
 CMP i arrayEnd
 EQ B exitWhile1
