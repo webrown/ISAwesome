@@ -70,6 +70,7 @@ Status Baseline::run(void){
     // Get next instruction from memory.
     qr = memory->getInstructionAccess()->read(registers->getPC());
     unsigned int nextInstruction = qr->result.at(0).asUInt;
+    double instructionFetchWait = qr->time;
     delete qr;
     // Move to next instruction address.
     registers->write(registers->getPC()+INSTRUCTION_SIZE, Register::PC);
@@ -381,6 +382,8 @@ Status Baseline::run(void){
             break;
         }
      }
+     // Don't forget the instructionFetchWait!
+     _waitLeft += instructionFetchWait;
      // Yay!  no error!  Well done!
      return OKAY;
 }
