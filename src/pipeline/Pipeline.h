@@ -2,35 +2,40 @@
 #define PIPELINE_H
 #include "../memory/MemoryInterface.h"
 #include "../memory/Register.h"
+#include "../memory/MemoryStructure.h"
 #include "StageData.h"
+#include "Banana.h"
+#include "PrefetchStage.h"
+#include "DecodeStage.h"
+#include "MemoryStage.h"
+#include "ExecuteStage.h"
+#include "WriteStage.h"
 
-class Pipeline {
+
+class Pipeline : public Banana{
     public:
-        Pipeline(MemoryInterface *dataMemory, MemoryInterface *instructionMemory, Register *registers);
-
-        MemoryInterface *dataMemory;
-        MemoryInterface *instructionMemory;
         Register *registers;
+        MemoryStructure *memory;
+        StageDataPool pool;
 
-        void cycle();
-        void _writeBack();
-        void _memory();
-        void _execute();
-        void _decode();
-        void _instructionFetch();
+        Pipeline(Register * regs, MemoryStructure *mem);
+        ~Pipeline();
 
-        StageData *_writeBackStageData;
-        StageData *_memoryStageData;
-        StageData *_executeStageData;
-        StageData *_decodeStageData;
-        StageData *_instructionFetchStageData;
+        void init();
+        Status run(void);
+        void stop(void);
 
-        bool _writeBackStageDone;
-        bool _memoryStageDone;
-        bool _executeStageDone;
-        bool _decodeStageDone;
-        bool _instructionFetchStageDone;
-
-        double _instructionFetchStageWait;
+        PrefetchStage prefetchStage;
+        DecodeStage decodeStage;
+        ExecuteStage executeStage;
+        MemoryStage memoryStage;
+        WriteStage writeStage;
+        // bool _writeBackStageDone;
+        // bool _memoryStageDone;
+        // bool _executeStageDone;
+        // bool _decodeStageDone;
+        // bool _instructionFetchStageDone;
+        //
+        /* double _instructionFetchStageWait; */
 };
 #endif

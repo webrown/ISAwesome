@@ -22,12 +22,7 @@ test{
 }
 else{
     message(Normal build)
-    SOURCES -= test/main.cpp \\
-        src/pipeline/Pipeline.h \\
-        src/pipeline/splicedMachineCode.h \\
-        src/pipeline/StageData.h \\
-        src/pipeline/PipelineGlobals.h \\
-        src/pipeline/Pipeline.cpp 
+    SOURCES -= test/main.cpp 
 
 
 }

@@ -64,9 +64,9 @@ SOURCES       = src/main.cpp \
 		src/gui/HighLighter.cpp \
 		src/gui/MainWindow.cpp \
 		src/gui/MemoryView.cpp \
-		src/gui/PerformanceView.cpp \
 		src/gui/MiscDialog.cpp \
 		src/gui/MyQSpinBox.cpp \
+		src/gui/PerformanceView.cpp \
 		src/gui/PreferenceDialog.cpp \
 		src/gui/RegisterView.cpp \
 		src/gui/Tracker.cpp \
@@ -86,7 +86,9 @@ SOURCES       = src/main.cpp \
 		src/pipeline/Baseline.cpp \
 		src/pipeline/CompareOperation.cpp \
 		src/pipeline/CopyOperation.cpp \
+		src/pipeline/DecodeStage.cpp \
 		src/pipeline/DivideOperation.cpp \
+		src/pipeline/ExecuteStage.cpp \
 		src/pipeline/LoadOperation.cpp \
 		src/pipeline/LogicalShiftLeftOperation.cpp \
 		src/pipeline/LogicalShiftRightOperation.cpp \
@@ -95,12 +97,15 @@ SOURCES       = src/main.cpp \
 		src/pipeline/LongOperation.cpp \
 		src/pipeline/LongSubtractOperation.cpp \
 		src/pipeline/MemoryOperation.cpp \
+		src/pipeline/MemoryStage.cpp \
 		src/pipeline/ModOperation.cpp \
 		src/pipeline/MultiplyOperation.cpp \
 		src/pipeline/NandOperation.cpp \
 		src/pipeline/NorOperation.cpp \
 		src/pipeline/NotOperation.cpp \
 		src/pipeline/OrOperation.cpp \
+		src/pipeline/Pipeline.cpp \
+		src/pipeline/PrefetchStage.cpp \
 		src/pipeline/ReadVectorElementOperation.cpp \
 		src/pipeline/Shift.cpp \
 		src/pipeline/StageData.cpp \
@@ -109,6 +114,7 @@ SOURCES       = src/main.cpp \
 		src/pipeline/TernaryOperation.cpp \
 		src/pipeline/ToFloatOperation.cpp \
 		src/pipeline/ToIntOperation.cpp \
+		src/pipeline/WriteStage.cpp \
 		src/pipeline/WriteVectorElementOperation.cpp \
 		src/pipeline/XorOperation.cpp build/qrc_pisa.cpp \
 		build/moc_TestAssembler.cpp \
@@ -118,7 +124,6 @@ SOURCES       = src/main.cpp \
 		build/moc_Assembler.cpp \
 		build/moc_Computer.cpp \
 		build/moc_CacheView.cpp \
-		build/moc_PerformanceView.cpp \
 		build/moc_CodeEditor.cpp \
 		build/moc_EditorTab.cpp \
 		build/moc_HighLighter.cpp \
@@ -126,6 +131,7 @@ SOURCES       = src/main.cpp \
 		build/moc_MemoryView.cpp \
 		build/moc_MiscDialog.cpp \
 		build/moc_MyQSpinBox.cpp \
+		build/moc_PerformanceView.cpp \
 		build/moc_PreferenceDialog.cpp \
 		build/moc_RegisterView.cpp \
 		build/moc_Tracker.cpp
@@ -145,9 +151,9 @@ OBJECTS       = build/main.o \
 		build/HighLighter.o \
 		build/MainWindow.o \
 		build/MemoryView.o \
-		build/PerformanceView.o \
 		build/MiscDialog.o \
 		build/MyQSpinBox.o \
+		build/PerformanceView.o \
 		build/PreferenceDialog.o \
 		build/RegisterView.o \
 		build/Tracker.o \
@@ -167,7 +173,9 @@ OBJECTS       = build/main.o \
 		build/Baseline.o \
 		build/CompareOperation.o \
 		build/CopyOperation.o \
+		build/DecodeStage.o \
 		build/DivideOperation.o \
+		build/ExecuteStage.o \
 		build/LoadOperation.o \
 		build/LogicalShiftLeftOperation.o \
 		build/LogicalShiftRightOperation.o \
@@ -176,12 +184,15 @@ OBJECTS       = build/main.o \
 		build/LongOperation.o \
 		build/LongSubtractOperation.o \
 		build/MemoryOperation.o \
+		build/MemoryStage.o \
 		build/ModOperation.o \
 		build/MultiplyOperation.o \
 		build/NandOperation.o \
 		build/NorOperation.o \
 		build/NotOperation.o \
 		build/OrOperation.o \
+		build/Pipeline.o \
+		build/PrefetchStage.o \
 		build/ReadVectorElementOperation.o \
 		build/Shift.o \
 		build/StageData.o \
@@ -190,6 +201,7 @@ OBJECTS       = build/main.o \
 		build/TernaryOperation.o \
 		build/ToFloatOperation.o \
 		build/ToIntOperation.o \
+		build/WriteStage.o \
 		build/WriteVectorElementOperation.o \
 		build/XorOperation.o \
 		build/qrc_pisa.o \
@@ -200,7 +212,6 @@ OBJECTS       = build/main.o \
 		build/moc_Assembler.o \
 		build/moc_Computer.o \
 		build/moc_CacheView.o \
-		build/moc_PerformanceView.o \
 		build/moc_CodeEditor.o \
 		build/moc_EditorTab.o \
 		build/moc_HighLighter.o \
@@ -208,6 +219,7 @@ OBJECTS       = build/main.o \
 		build/moc_MemoryView.o \
 		build/moc_MiscDialog.o \
 		build/moc_MyQSpinBox.o \
+		build/moc_PerformanceView.o \
 		build/moc_PreferenceDialog.o \
 		build/moc_RegisterView.o \
 		build/moc_Tracker.o
@@ -251,7 +263,6 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/modules/qt_KIOFileWidgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KIOGui.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KIOWidgets.pri \
-		/usr/lib/qt/mkspecs/modules/qt_Kirigami2.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KItemModels.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KItemViews.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KJobWidgets.pri \
@@ -334,10 +345,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quick_private.pri \
-		/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2.pri \
-		/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickparticles_private.pri \
-		/usr/lib/qt/mkspecs/modules/qt_lib_quicktemplates2_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_script.pri \
@@ -426,7 +434,6 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/computer/ThreadMessage.h \
 		src/computer/ThreadMessageQueue.h \
 		src/gui/CacheView.h \
-		src/gui/PerformanceView.h \
 		src/gui/CodeEditor.h \
 		src/gui/EditorTab.h \
 		src/gui/HexSpinBox.h \
@@ -435,6 +442,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/MemoryView.h \
 		src/gui/MiscDialog.h \
 		src/gui/MyQSpinBox.h \
+		src/gui/PerformanceView.h \
 		src/gui/PreferenceDialog.h \
 		src/gui/RegisterView.h \
 		src/gui/Tracker.h \
@@ -456,7 +464,9 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/Baseline.h \
 		src/pipeline/CompareOperation.h \
 		src/pipeline/CopyOperation.h \
+		src/pipeline/DecodeStage.h \
 		src/pipeline/DivideOperation.h \
+		src/pipeline/ExecuteStage.h \
 		src/pipeline/LoadOperation.h \
 		src/pipeline/LogicalShiftLeftOperation.h \
 		src/pipeline/LogicalShiftRightOperation.h \
@@ -465,6 +475,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/LongOperation.h \
 		src/pipeline/LongSubtractOperation.h \
 		src/pipeline/MemoryOperation.h \
+		src/pipeline/MemoryStage.h \
 		src/pipeline/ModOperation.h \
 		src/pipeline/MultiplyOperation.h \
 		src/pipeline/NandOperation.h \
@@ -473,14 +484,17 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/OrOperation.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
 		src/pipeline/ReadVectorElementOperation.h \
 		src/pipeline/Shift.h \
+		src/pipeline/Stage.h \
 		src/pipeline/StageData.h \
 		src/pipeline/StoreOperation.h \
 		src/pipeline/SubtractOperation.h \
 		src/pipeline/TernaryOperation.h \
 		src/pipeline/ToFloatOperation.h \
 		src/pipeline/ToIntOperation.h \
+		src/pipeline/WriteStage.h \
 		src/pipeline/WriteVectorElementOperation.h \
 		src/pipeline/XorOperation.h src/main.cpp \
 		src/Utility.cpp \
@@ -498,9 +512,9 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/gui/HighLighter.cpp \
 		src/gui/MainWindow.cpp \
 		src/gui/MemoryView.cpp \
-		src/gui/PerformanceView.cpp \
 		src/gui/MiscDialog.cpp \
 		src/gui/MyQSpinBox.cpp \
+		src/gui/PerformanceView.cpp \
 		src/gui/PreferenceDialog.cpp \
 		src/gui/RegisterView.cpp \
 		src/gui/Tracker.cpp \
@@ -520,7 +534,9 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/Baseline.cpp \
 		src/pipeline/CompareOperation.cpp \
 		src/pipeline/CopyOperation.cpp \
+		src/pipeline/DecodeStage.cpp \
 		src/pipeline/DivideOperation.cpp \
+		src/pipeline/ExecuteStage.cpp \
 		src/pipeline/LoadOperation.cpp \
 		src/pipeline/LogicalShiftLeftOperation.cpp \
 		src/pipeline/LogicalShiftRightOperation.cpp \
@@ -529,12 +545,15 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/LongOperation.cpp \
 		src/pipeline/LongSubtractOperation.cpp \
 		src/pipeline/MemoryOperation.cpp \
+		src/pipeline/MemoryStage.cpp \
 		src/pipeline/ModOperation.cpp \
 		src/pipeline/MultiplyOperation.cpp \
 		src/pipeline/NandOperation.cpp \
 		src/pipeline/NorOperation.cpp \
 		src/pipeline/NotOperation.cpp \
 		src/pipeline/OrOperation.cpp \
+		src/pipeline/Pipeline.cpp \
+		src/pipeline/PrefetchStage.cpp \
 		src/pipeline/ReadVectorElementOperation.cpp \
 		src/pipeline/Shift.cpp \
 		src/pipeline/StageData.cpp \
@@ -543,6 +562,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/TernaryOperation.cpp \
 		src/pipeline/ToFloatOperation.cpp \
 		src/pipeline/ToIntOperation.cpp \
+		src/pipeline/WriteStage.cpp \
 		src/pipeline/WriteVectorElementOperation.cpp \
 		src/pipeline/XorOperation.cpp
 QMAKE_TARGET  = PISA
@@ -597,7 +617,6 @@ Makefile: PISA.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 		/usr/lib/qt/mkspecs/modules/qt_KIOFileWidgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KIOGui.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KIOWidgets.pri \
-		/usr/lib/qt/mkspecs/modules/qt_Kirigami2.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KItemModels.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KItemViews.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KJobWidgets.pri \
@@ -680,10 +699,7 @@ Makefile: PISA.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 		/usr/lib/qt/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quick_private.pri \
-		/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2.pri \
-		/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickparticles_private.pri \
-		/usr/lib/qt/mkspecs/modules/qt_lib_quicktemplates2_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_script.pri \
@@ -800,7 +816,6 @@ Makefile: PISA.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 /usr/lib/qt/mkspecs/modules/qt_KIOFileWidgets.pri:
 /usr/lib/qt/mkspecs/modules/qt_KIOGui.pri:
 /usr/lib/qt/mkspecs/modules/qt_KIOWidgets.pri:
-/usr/lib/qt/mkspecs/modules/qt_Kirigami2.pri:
 /usr/lib/qt/mkspecs/modules/qt_KItemModels.pri:
 /usr/lib/qt/mkspecs/modules/qt_KItemViews.pri:
 /usr/lib/qt/mkspecs/modules/qt_KJobWidgets.pri:
@@ -883,10 +898,7 @@ Makefile: PISA.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 /usr/lib/qt/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quick.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quick_private.pri:
-/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2.pri:
-/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quickparticles_private.pri:
-/usr/lib/qt/mkspecs/modules/qt_lib_quicktemplates2_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_script.pri:
@@ -978,8 +990,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/ProgramManagerY.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/CacheView.h src/gui/PerformanceView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/AddOperation.h src/pipeline/AndOperation.h src/pipeline/ArithmeticOperation.h src/pipeline/ArithmeticShiftLeftOperation.h src/pipeline/ArithmeticShiftRightOperation.h src/pipeline/Banana.h src/pipeline/Baseline.h src/pipeline/CompareOperation.h src/pipeline/CopyOperation.h src/pipeline/DivideOperation.h src/pipeline/LoadOperation.h src/pipeline/LogicalShiftLeftOperation.h src/pipeline/LogicalShiftRightOperation.h src/pipeline/LongAddOperation.h src/pipeline/LongMultiplyOperation.h src/pipeline/LongOperation.h src/pipeline/LongSubtractOperation.h src/pipeline/MemoryOperation.h src/pipeline/ModOperation.h src/pipeline/MultiplyOperation.h src/pipeline/NandOperation.h src/pipeline/NorOperation.h src/pipeline/NotOperation.h src/pipeline/OrOperation.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/ReadVectorElementOperation.h src/pipeline/Shift.h src/pipeline/StageData.h src/pipeline/StoreOperation.h src/pipeline/SubtractOperation.h src/pipeline/TernaryOperation.h src/pipeline/ToFloatOperation.h src/pipeline/ToIntOperation.h src/pipeline/WriteVectorElementOperation.h src/pipeline/XorOperation.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/PerformanceView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/ArithmeticShiftLeftOperation.cpp src/pipeline/ArithmeticShiftRightOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/DivideOperation.cpp src/pipeline/LoadOperation.cpp src/pipeline/LogicalShiftLeftOperation.cpp src/pipeline/LogicalShiftRightOperation.cpp src/pipeline/LongAddOperation.cpp src/pipeline/LongMultiplyOperation.cpp src/pipeline/LongOperation.cpp src/pipeline/LongSubtractOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/ModOperation.cpp src/pipeline/MultiplyOperation.cpp src/pipeline/NandOperation.cpp src/pipeline/NorOperation.cpp src/pipeline/NotOperation.cpp src/pipeline/OrOperation.cpp src/pipeline/ReadVectorElementOperation.cpp src/pipeline/Shift.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp src/pipeline/SubtractOperation.cpp src/pipeline/TernaryOperation.cpp src/pipeline/ToFloatOperation.cpp src/pipeline/ToIntOperation.cpp src/pipeline/WriteVectorElementOperation.cpp src/pipeline/XorOperation.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/ProgramManagerY.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PerformanceView.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/AddOperation.h src/pipeline/AndOperation.h src/pipeline/ArithmeticOperation.h src/pipeline/ArithmeticShiftLeftOperation.h src/pipeline/ArithmeticShiftRightOperation.h src/pipeline/Banana.h src/pipeline/Baseline.h src/pipeline/CompareOperation.h src/pipeline/CopyOperation.h src/pipeline/DecodeStage.h src/pipeline/DivideOperation.h src/pipeline/ExecuteStage.h src/pipeline/LoadOperation.h src/pipeline/LogicalShiftLeftOperation.h src/pipeline/LogicalShiftRightOperation.h src/pipeline/LongAddOperation.h src/pipeline/LongMultiplyOperation.h src/pipeline/LongOperation.h src/pipeline/LongSubtractOperation.h src/pipeline/MemoryOperation.h src/pipeline/MemoryStage.h src/pipeline/ModOperation.h src/pipeline/MultiplyOperation.h src/pipeline/NandOperation.h src/pipeline/NorOperation.h src/pipeline/NotOperation.h src/pipeline/OrOperation.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/PrefetchStage.h src/pipeline/ReadVectorElementOperation.h src/pipeline/Shift.h src/pipeline/Stage.h src/pipeline/StageData.h src/pipeline/StoreOperation.h src/pipeline/SubtractOperation.h src/pipeline/TernaryOperation.h src/pipeline/ToFloatOperation.h src/pipeline/ToIntOperation.h src/pipeline/WriteStage.h src/pipeline/WriteVectorElementOperation.h src/pipeline/XorOperation.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PerformanceView.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/ArithmeticShiftLeftOperation.cpp src/pipeline/ArithmeticShiftRightOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/DecodeStage.cpp src/pipeline/DivideOperation.cpp src/pipeline/ExecuteStage.cpp src/pipeline/LoadOperation.cpp src/pipeline/LogicalShiftLeftOperation.cpp src/pipeline/LogicalShiftRightOperation.cpp src/pipeline/LongAddOperation.cpp src/pipeline/LongMultiplyOperation.cpp src/pipeline/LongOperation.cpp src/pipeline/LongSubtractOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/MemoryStage.cpp src/pipeline/ModOperation.cpp src/pipeline/MultiplyOperation.cpp src/pipeline/NandOperation.cpp src/pipeline/NorOperation.cpp src/pipeline/NotOperation.cpp src/pipeline/OrOperation.cpp src/pipeline/Pipeline.cpp src/pipeline/PrefetchStage.cpp src/pipeline/ReadVectorElementOperation.cpp src/pipeline/Shift.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp src/pipeline/SubtractOperation.cpp src/pipeline/TernaryOperation.cpp src/pipeline/ToFloatOperation.cpp src/pipeline/ToIntOperation.cpp src/pipeline/WriteStage.cpp src/pipeline/WriteVectorElementOperation.cpp src/pipeline/XorOperation.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -1048,9 +1060,9 @@ compiler_moc_predefs_clean:
 build/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -dM -E -o build/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_PerformanceView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
+compiler_moc_header_make_all: build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PerformanceView.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_PerformanceView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
+	-$(DEL_FILE) build/moc_TestAssembler.cpp build/moc_TestBaseline.cpp build/moc_TestComputer.cpp build/moc_TestInstructionResolver.cpp build/moc_Assembler.cpp build/moc_Computer.cpp build/moc_CacheView.cpp build/moc_CodeEditor.cpp build/moc_EditorTab.cpp build/moc_HighLighter.cpp build/moc_MainWindow.cpp build/moc_MemoryView.cpp build/moc_MiscDialog.cpp build/moc_MyQSpinBox.cpp build/moc_PerformanceView.cpp build/moc_PreferenceDialog.cpp build/moc_RegisterView.cpp build/moc_Tracker.cpp
 build/moc_TestAssembler.cpp: src/assembler/Assembler.h \
 		src/assembler/Problem.h \
 		src/computer/Architecture.h \
@@ -1094,10 +1106,19 @@ build/moc_TestComputer.cpp: src/computer/Computer.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
 		src/computer/ThreadMessage.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/Utility.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
-		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/ProgramManagerX.h \
 		test/TestComputer.h \
@@ -1135,10 +1156,19 @@ build/moc_Computer.cpp: src/memory/Register.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
 		src/computer/ThreadMessage.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/Utility.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
-		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/ProgramManagerX.h \
 		src/computer/Computer.h \
@@ -1154,18 +1184,6 @@ build/moc_CacheView.cpp: src/memory/Cache.h \
 		build/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/CacheView.h -o build/moc_CacheView.cpp
-
-build/moc_PerformanceView.cpp: src/memory/MemoryStructure.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/memory/MainMemory.h \
-		src/memory/Cache.h \
-		src/computer/Architecture.h \
-		src/gui/PerformanceView.h \
-		build/moc_predefs.h \
-		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/PerformanceView.h -o build/moc_PerformanceView.cpp
 
 build/moc_CodeEditor.cpp: src/gui/HighLighter.h \
 		src/assembler/Problem.h \
@@ -1216,6 +1234,15 @@ build/moc_MainWindow.cpp: src/gui/MemoryView.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1261,6 +1288,18 @@ build/moc_MyQSpinBox.cpp: src/gui/HexSpinBox.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/MyQSpinBox.h -o build/moc_MyQSpinBox.cpp
 
+build/moc_PerformanceView.cpp: src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h \
+		src/gui/PerformanceView.h \
+		build/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include build/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/younglee/Dropbox/Projects/c++/PISA -I/home/younglee/Dropbox/Projects/c++/PISA -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtTest -I/usr/include/qt/QtCore -I/usr/include/c++/6.3.1 -I/usr/include/c++/6.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/6.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.1/include-fixed -I/usr/include src/gui/PerformanceView.h -o build/moc_PerformanceView.cpp
+
 build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/gui/MainWindow.h \
 		src/gui/MemoryView.h \
@@ -1292,6 +1331,15 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1424,6 +1472,15 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1477,10 +1534,19 @@ build/TestComputer.o: test/TestComputer.cpp test/TestComputer.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
 		src/computer/ThreadMessage.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/Utility.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
-		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/ProgramManagerX.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestComputer.o test/TestComputer.cpp
@@ -1522,10 +1588,19 @@ build/Computer.o: src/computer/Computer.cpp src/computer/Computer.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
 		src/computer/ThreadMessage.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/Utility.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/Problem.h \
 		src/assembler/InstructionResolver.h \
-		src/Utility.h \
 		src/assembler/ConditionResolver.h \
 		src/assembler/ProgramManagerX.h \
 		src/computer/ProgramManagerY.h
@@ -1561,6 +1636,15 @@ build/CacheView.o: src/gui/CacheView.cpp src/gui/CacheView.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1615,6 +1699,15 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1655,6 +1748,15 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1664,16 +1766,6 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/gui/ui_preferencedialog.h \
 		src/gui/MyQSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryView.o src/gui/MemoryView.cpp
-
-build/PerformanceView.o: src/gui/PerformanceView.cpp src/gui/PerformanceView.h \
-		src/memory/MemoryStructure.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/memory/MainMemory.h \
-		src/memory/Cache.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PerformanceView.o src/gui/PerformanceView.cpp
 
 build/MiscDialog.o: src/gui/MiscDialog.cpp src/gui/MiscDialog.h \
 		src/gui/ui_newcachedialog.h \
@@ -1690,6 +1782,16 @@ build/MiscDialog.o: src/gui/MiscDialog.cpp src/gui/MiscDialog.h \
 build/MyQSpinBox.o: src/gui/MyQSpinBox.cpp src/gui/MyQSpinBox.h \
 		src/gui/HexSpinBox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MyQSpinBox.o src/gui/MyQSpinBox.cpp
+
+build/PerformanceView.o: src/gui/PerformanceView.cpp src/gui/PerformanceView.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PerformanceView.o src/gui/PerformanceView.cpp
 
 build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.h \
 		src/gui/ui_preferencedialog.h \
@@ -1723,6 +1825,15 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1761,6 +1872,15 @@ build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1801,6 +1921,15 @@ build/Tracker.o: src/gui/Tracker.cpp src/gui/Tracker.h \
 		src/pipeline/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/Baseline.h \
+		src/pipeline/Pipeline.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/pipeline/WriteStage.h \
 		src/assembler/Assembler.h \
 		src/assembler/ProgramManagerX.h \
 		src/gui/MiscDialog.h \
@@ -1963,6 +2092,24 @@ build/CopyOperation.o: src/pipeline/CopyOperation.cpp src/pipeline/CopyOperation
 		src/computer/Architecture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CopyOperation.o src/pipeline/CopyOperation.cpp
 
+build/DecodeStage.o: src/pipeline/DecodeStage.cpp src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/pipeline/PrefetchStage.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h \
+		src/memory/Register.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/Utility.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/DecodeStage.o src/pipeline/DecodeStage.cpp
+
 build/DivideOperation.o: src/pipeline/DivideOperation.cpp src/pipeline/DivideOperation.h \
 		src/pipeline/ArithmeticOperation.h \
 		src/memory/Register.h \
@@ -1970,6 +2117,24 @@ build/DivideOperation.o: src/pipeline/DivideOperation.cpp src/pipeline/DivideOpe
 		src/memory/Value.h \
 		src/computer/Architecture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/DivideOperation.o src/pipeline/DivideOperation.cpp
+
+build/ExecuteStage.o: src/pipeline/ExecuteStage.cpp src/pipeline/ExecuteStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/PrefetchStage.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h \
+		src/memory/Register.h \
+		src/Utility.h \
+		src/pipeline/MemoryStage.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ExecuteStage.o src/pipeline/ExecuteStage.cpp
 
 build/LoadOperation.o: src/pipeline/LoadOperation.cpp src/pipeline/LoadOperation.h \
 		src/memory/MemoryStructure.h \
@@ -2042,6 +2207,19 @@ build/MemoryOperation.o: src/pipeline/MemoryOperation.cpp src/pipeline/MemoryOpe
 		src/memory/Register.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryOperation.o src/pipeline/MemoryOperation.cpp
 
+build/MemoryStage.o: src/pipeline/MemoryStage.cpp src/pipeline/MemoryStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryStage.o src/pipeline/MemoryStage.cpp
+
 build/ModOperation.o: src/pipeline/ModOperation.cpp src/pipeline/ModOperation.h \
 		src/pipeline/ArithmeticOperation.h \
 		src/memory/Register.h \
@@ -2089,6 +2267,46 @@ build/OrOperation.o: src/pipeline/OrOperation.cpp src/pipeline/OrOperation.h \
 		src/memory/Value.h \
 		src/computer/Architecture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/OrOperation.o src/pipeline/OrOperation.cpp
+
+build/Pipeline.o: src/pipeline/Pipeline.cpp src/pipeline/Pipeline.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/Register.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/pipeline/Banana.h \
+		src/computer/Status.h \
+		src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/Utility.h \
+		src/pipeline/WriteStage.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Pipeline.o src/pipeline/Pipeline.cpp
+
+build/PrefetchStage.o: src/pipeline/PrefetchStage.cpp src/pipeline/PrefetchStage.h \
+		src/pipeline/DecodeStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/pipeline/ExecuteStage.h \
+		src/pipeline/MemoryStage.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h \
+		src/Utility.h \
+		src/memory/Register.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PrefetchStage.o src/pipeline/PrefetchStage.cpp
 
 build/ReadVectorElementOperation.o: src/pipeline/ReadVectorElementOperation.cpp src/pipeline/ReadVectorElementOperation.h \
 		src/memory/Register.h \
@@ -2153,6 +2371,16 @@ build/ToIntOperation.o: src/pipeline/ToIntOperation.cpp src/pipeline/ToIntOperat
 		src/computer/Architecture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ToIntOperation.o src/pipeline/ToIntOperation.cpp
 
+build/WriteStage.o: src/pipeline/WriteStage.cpp src/pipeline/WriteStage.h \
+		src/pipeline/Stage.h \
+		src/pipeline/StageData.h \
+		src/pipeline/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/WriteStage.o src/pipeline/WriteStage.cpp
+
 build/WriteVectorElementOperation.o: src/pipeline/WriteVectorElementOperation.cpp src/pipeline/WriteVectorElementOperation.h \
 		src/memory/Register.h \
 		src/memory/QueryResult.h \
@@ -2193,9 +2421,6 @@ build/moc_Computer.o: build/moc_Computer.cpp
 build/moc_CacheView.o: build/moc_CacheView.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_CacheView.o build/moc_CacheView.cpp
 
-build/moc_PerformanceView.o: build/moc_PerformanceView.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_PerformanceView.o build/moc_PerformanceView.cpp
-
 build/moc_CodeEditor.o: build/moc_CodeEditor.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_CodeEditor.o build/moc_CodeEditor.cpp
 
@@ -2216,6 +2441,9 @@ build/moc_MiscDialog.o: build/moc_MiscDialog.cpp
 
 build/moc_MyQSpinBox.o: build/moc_MyQSpinBox.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_MyQSpinBox.o build/moc_MyQSpinBox.cpp
+
+build/moc_PerformanceView.o: build/moc_PerformanceView.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_PerformanceView.o build/moc_PerformanceView.cpp
 
 build/moc_PreferenceDialog.o: build/moc_PreferenceDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_PreferenceDialog.o build/moc_PreferenceDialog.cpp

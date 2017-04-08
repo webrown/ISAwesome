@@ -1,98 +1,63 @@
 #include "Pipeline.h"
 
-Pipeline::Pipeline(MemoryInterface *dataMemory, MemoryInterface *instructionMemory, Register *registers) {
+Pipeline::Pipeline(Register * regs, MemoryStructure * mem) {
+    this->registers =  regs;
+    this->memory = mem;
+    this->instructionsDone = 0;
+    this->cyclesDone = 0;
+
+    //Set the stage link
+    prefetchStage.next = (Stage *) &decodeStage;
+    prefetchStage.mems = mem;
+    prefetchStage.regs =  regs;
+    prefetchStage.pool = & pool;
+
+    decodeStage.prev = (Stage *) & prefetchStage;
+    decodeStage.next = (Stage *) & executeStage;
+    decodeStage.regs = regs;
+
+
+    executeStage.prev = (Stage *) & decodeStage;
+    executeStage.next = (Stage *) & memoryStage;
+
+    memoryStage.prev = (Stage *) & executeStage;
+    memoryStage.next = (Stage *) & writeStage;
+    memoryStage.mems = mem;
+
+    writeStage.prev = (Stage *) & memoryStage;
+    writeStage.regs =regs;
+    writeStage.pool = & pool;
 }
 
-void Pipeline::cycle() {
-    _writeBack();
-    _memory();
-    _execute();
-    _decode();
-    _instructionFetch();
+Pipeline::~Pipeline(){
+    //Do nothing
 }
 
-void Pipeline::_writeBack() {
-    if(!_writeBackStageDone) {
-        // Write to register file where applicable.
-    }
-    if(_writeBackStageDone) {
-        // You are done with this instruction.
-        _writeBackStageData = NULL;
-    }
+void Pipeline::init(){
+    prefetchStage.init();
+    decodeStage.init();
+    executeStage.init();
+    memoryStage.init();
+    writeStage.init();
 }
+Status Pipeline::run(){
+    writeStage.cycleUp();
+    memoryStage.cycleUp();
+    executeStage.cycleUp();
+    decodeStage.cycleUp();
 
-void Pipeline::_memory() {
-    if(!_memoryStageDone) {
-        // Where applicable, dump values to memory.
-        // OR maybe load values from memory?
-    }
-    if(_memoryStageDone) {
-        // Try to push this instruction along.
-        if(!_writeBackStageData) {
-            _writeBackStageData = _memoryStageData;
-            _memoryStageData = NULL;
-            _writeBackStageDone = false;
-        }
-    }
+    prefetchStage.cycleUp();
+
+    writeStage.cycleDown();
+    memoryStage.cycleDown();
+    executeStage.cycleDown();
+    decodeStage.cycleDown();
+    prefetchStage.cycleDown();
+
+
+    //Because..., why not?
+    return OKAY;
 }
-
-void Pipeline::_execute() {
-    if(!_executeStageDone) {
-        // Do the requested operation
-    }
-    if(_executeStageDone) {
-        // Try to push this instruction along.
-        if(!_memoryStageData) {
-            _memoryStageData = _executeStageData;
-            _executeStageData = NULL;
-            _memoryStageDone = false;
-        }
-    }
+void Pipeline::stop(){
+    //Do nothing
 }
-
-void Pipeline::_decode() {
-    if(!_decodeStageDone) {
-        // Check that register values and condition values are settled.
-        // TODO: there's no speculation for now.
-        // Grab register values
-        // Grab condition values
-        // Determine conditional results; will this fire/for which vector indexes?
-        // If this instruction will not fire at all, it can be safely removed.
-    }
-    if(_decodeStageDone) {
-        // Try to push this instruction along.
-        if(!_executeStageData) {
-            _executeStageData = _decodeStageData;
-            _decodeStageData = NULL;
-            _executeStageDone = false;
-        }
-    }
-}
-
-void Pipeline::_instructionFetch() {
-    if(!_instructionFetchStageDone) {
-        if(!_instructionFetchStageData) {
-            // Hey, which instruction do you want?  PC will know!
-            int nextLine = registers->getPC();
-            // Fetch from instruction memory. (might take some cycles)
-            QueryResult *qr = instructionMemory->read(nextLine);
-            _instructionFetchStageWait = qr->time;
-            _instructionFetchStageData->takeInstructionCode(qr->result.at(0));
-            delete qr;
-        }
-        // Wait for instruction to fetch...
-        _instructionFetchStageWait --;
-        if(_instructionFetchStageWait <= 0) {
-            _instructionFetchStageDone = true;
-        }
-    }
-    if(_instructionFetchStageDone) {
-        // Try to push this instruction along.
-        if(!_decodeStageData) {
-            _decodeStageData = _instructionFetchStageData;
-            _instructionFetchStageData = NULL;
-            _decodeStageDone = false;
-        }
-    }
-}
-

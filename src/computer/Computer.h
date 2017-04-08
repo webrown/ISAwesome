@@ -15,6 +15,7 @@
 #include "Status.h"
 #include "ThreadMessage.h"
 #include <QThread>
+#include "../pipeline/Pipeline.h"
 #include <QFile>
 #include <QTimer>
 #include "../assembler/Assembler.h" 
