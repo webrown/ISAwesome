@@ -5,6 +5,7 @@
 Value ArithmeticOperation::scalarOperation(int a, int b, int *wait){
   qDebug() << "COM: ArithmeticOperation: NOOPed int int";
   (void) a;
+  (void) wait;
   Value v;
   v.i = b;
   return v;
@@ -12,6 +13,7 @@ Value ArithmeticOperation::scalarOperation(int a, int b, int *wait){
 Value ArithmeticOperation::scalarOperation(float a, float b, int *wait){
   qDebug() << "COM: ArithmeticOperation: NOOPed float float";
   (void) a;
+  (void) wait;
   Value v;
   v.f = b;
   return v;
@@ -19,6 +21,7 @@ Value ArithmeticOperation::scalarOperation(float a, float b, int *wait){
 Value ArithmeticOperation::scalarOperation(float a, int b, int *wait){
   qDebug() << "COM: ArithmeticOperation: NOOPed float int";
   (void) a;
+  (void) wait;
   Value v;
   v.i = b;
   return v;
@@ -26,6 +29,7 @@ Value ArithmeticOperation::scalarOperation(float a, int b, int *wait){
 Value ArithmeticOperation::scalarOperation(int a, float b, int *wait){
   qDebug() << "COM: ArithmeticOperation: NOOPed int float";
   (void) a;
+  (void) wait;
   Value v;
   v.f = b;
   return v;

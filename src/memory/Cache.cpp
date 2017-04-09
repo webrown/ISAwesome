@@ -82,7 +82,6 @@ void Cache::init(){
     entered.clear();
   size_t maxIndex = 1 << indexBits;
   size_t ways = 1 << logAssociativity;
-  size_t dataWordCount = 1 << logDataWordCount;
   for(size_t index = 0; index < maxIndex; index++) {
       // reset tag bits.
       tags->at(index)->fill(0);

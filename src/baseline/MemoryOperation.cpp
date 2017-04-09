@@ -22,4 +22,5 @@ void MemoryOperation::memoryOperation(Register *registers, MemoryStructure *memo
   (void)memory;
   (void)address;
   (void)registerIndex;
+  (void)wait;
 }

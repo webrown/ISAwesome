@@ -254,6 +254,8 @@ MemoryInterface *MemoryStructure::findPrev(MemoryInterface* target, Cache::Type 
 
     }
 
+    qDebug() << "COM: Terminating, MemoryInterface::findPrev finished without returning a value.";
+    exit(-1);
 
 }
 void MemoryStructure::clear(){

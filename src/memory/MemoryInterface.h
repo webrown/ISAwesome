@@ -51,18 +51,25 @@ class DummyMem: public MemoryInterface{
 
 
         QueryResult *read(unsigned int address, unsigned int length){
+            (void) address; // Just to stop -Wall from complaining
+            (void) length;
             qDebug() << "dummy dum dum dum";
             exit(-1);
         }
         QueryResult *read(unsigned int address){
+            (void) address; // Just to stop -Wall from complaining
             qDebug() << "dummy dum dum dum";
             exit(-1);
         }
         double write(QVector<Value> *value, unsigned int address){
+            (void) address; // Just to stop -Wall from complaining
+            (void) value;
             qDebug() << "dummy dum dum dum";
             exit(-1);
         }
         double write(Value value, unsigned int address){
+            (void) address; // Just to stop -Wall from complaining
+            (void) value;
             qDebug() << "dummy dum dum dum";
             exit(-1);
         }
@@ -72,6 +79,7 @@ class DummyMem: public MemoryInterface{
             exit(-1);
         }
         void restore(QByteArray state){
+            (void) state; // Just to stop -Wall from complaining
             qDebug() << "dummy dum dum dum";
             exit(-1);
         }
