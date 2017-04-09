@@ -4,7 +4,7 @@
 #include "../memory/Register.h"
 #include "../memory/MemoryStructure.h"
 #include "StageData.h"
-#include "Banana.h"
+#include "../banana/Banana.h"
 #include "PrefetchStage.h"
 #include "DecodeStage.h"
 #include "MemoryStage.h"

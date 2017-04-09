@@ -1,6 +1,6 @@
 #ifndef STAGEDATA_H
 #define STAGEDATA_H
-#include "PipelineGlobals.h"
+#include "../banana/PipelineGlobals.h"
 #include "../memory/Value.h"
 #include <QVector>
 #include <QQueue>

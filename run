@@ -5,6 +5,10 @@ if [ "$1" = "test" ]
 then
     arg="CONFIG +=test"
 fi
+if [ "$1" = "baseline" ]
+then
+    arg="CONFIG +=baseline"
+fi
 qmake "$arg"
 make -s
 if [ $? -eq 0 ]

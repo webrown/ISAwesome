@@ -10,8 +10,8 @@
 #include "../memory/Register.h"
 #include "../memory/MemoryStructure.h"
 #include "BreakPoint.h"
-#include "../pipeline/Banana.h"
-#include "../pipeline/Baseline.h"
+#include "../banana/Banana.h"
+#include "../baseline/Baseline.h"
 #include "Status.h"
 #include "ThreadMessage.h"
 #include <QThread>

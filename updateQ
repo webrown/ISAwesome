@@ -26,5 +26,13 @@ else{
 
 
 }
+
+baseline{
+    message(Using baseline...)
+    DEFINES += USE_BASELINE
+}
+else{
+    message(Using pipeline...)
+}
 SOURCES -= \$\$files(invisible/*)" 
 

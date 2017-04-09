@@ -1,6 +1,6 @@
 #include "Baseline.h"
 #include "../Utility.h"
-#include "PipelineGlobals.h"
+#include "../banana/PipelineGlobals.h"
 #include "../memory/Flag.h"
 #include "AddOperation.h"
 #include "AndOperation.h"
