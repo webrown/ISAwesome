@@ -33,6 +33,7 @@ void ExecuteStage::cycleDown(void){
     //Some execute logic here.
     switch(currData->opcode){
         case Opcode::B:
+
             break;
         case Opcode::ADD:
             currData->dest= {currData->dest.asUInt + currData->src.asUInt};
