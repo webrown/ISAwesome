@@ -2,11 +2,13 @@
 #define STAGEDATA_H
 #include "../banana/PipelineGlobals.h"
 #include "../memory/Value.h"
+#include "../memory/Flag.h"
 //#include "Instruction.h"
 #include <QVector>
 #include <QQueue>
 #include <QDebug>
 #include <QMap>
+#include <QBitArray>
 
 //based on https://en.wikipedia.org/wiki/Classic_RISC_pipeline
 class Instruction;
@@ -34,7 +36,9 @@ class StageData{
 
         //@@@Decode will fill up these fields
         //Conditionalflag
-        char condFlag;
+        Flag::FlagType condFlag;
+        bool flagValue;
+        QBitArray flagValues;
 
         //Opcode
         Opcode::Opcode opcode;

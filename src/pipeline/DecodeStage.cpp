@@ -1,5 +1,6 @@
 #include "DecodeStage.h"
 #include "BranchInstruction.h"
+#include "../memory/Flag.h"
 #define L_BIT  toB("1000000000000000000000")
 #define L2_BIT toB("0000000100000000000000")
 
@@ -29,7 +30,25 @@ void DecodeStage::cycleDown(void){
     }
 
     uint vvv = currData->instruction;
-    currData->condFlag = vvv & (15u << 28);
+    
+    unsigned int flagCode = (vvv >> 28) & 15u;
+    if(flagCode ==  0) currData->condFlag = Flag::EQ;
+    if(flagCode ==  1) currData->condFlag = Flag::NE;
+    if(flagCode ==  2) currData->condFlag = Flag::CS;
+    if(flagCode ==  3) currData->condFlag = Flag::CC;
+    if(flagCode ==  4) currData->condFlag = Flag::MI;
+    if(flagCode ==  5) currData->condFlag = Flag::PL;
+    if(flagCode ==  6) currData->condFlag = Flag::VS;
+    if(flagCode ==  7) currData->condFlag = Flag::VC;
+    if(flagCode ==  8) currData->condFlag = Flag::DZ;
+    if(flagCode ==  9) currData->condFlag = Flag::NZ;
+    if(flagCode == 10) currData->condFlag = Flag::LE;
+    if(flagCode == 11) currData->condFlag = Flag::GE;
+    if(flagCode == 12) currData->condFlag = Flag::LT;
+    if(flagCode == 13) currData->condFlag = Flag::GT;
+    if(flagCode == 14) currData->condFlag = Flag::AL;
+    if(flagCode == 15) currData->condFlag = Flag::UN;
+
     currData->opcode = Opcode::opcodes[(vvv>>22 )& (63u)];
 
     if(currData->instructionFunctions == NULL) {
@@ -213,8 +232,22 @@ void DecodeStage::cycleDown(void){
         return;
     }
 
-    // Decode the instruction.
-    currData->instructionFunctions->decode(currData, regs);
+    // OK!  Flags are settled!  We checked if anyone was messing with -1 in dependencies!
+    currData->flagValue  = Flag::has(regs->readFlag(), currData->condFlag);
+    currData->flagValues = Flag::has(regs->readFlags(), currData->condFlag);
+    qDebug() << "readFlag" << regs->readFlag().i;
+    qDebug() << "condFlag" << currData->condFlag;
+    qDebug() << "flagValue" << currData->flagValue;
+
+    // If this instruction obeys the scalar flag, we might be able to remove it now.
+    if(currData->instructionFunctions->useFlag() && !currData->flagValue) {
+        delete currData;
+        currData = NULL;
+    }
+    else {
+        // Decode the instruction.
+        currData->instructionFunctions->decode(currData, regs);
+    }
 
     delay = 1;
 }
@@ -247,7 +280,10 @@ bool DecodeStage::isDependent(QVector<char> regNums) const{
 }
 
 bool DecodeStage::isDependent(StageData *sd) const{
-    return sd && sd->instructionFunctions && isDependent(sd->instructionFunctions->registerDependencies(sd));
+    if(sd == NULL || sd->instructionFunctions == NULL) return false;
+    QVector<char> dependencies = sd->instructionFunctions->registerDependencies(sd);
+    dependencies.push_back(-1); // -1 = condition flag.  EVERYONE depends on condition flags!
+    return isDependent(dependencies);
 }
 
 

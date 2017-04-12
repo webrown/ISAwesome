@@ -9,6 +9,8 @@ class ArithmeticInstruction : public Instruction {
     virtual void execute(StageData *)=0;
     virtual void memory(StageData *, MemoryStructure *); // Nothing
     virtual void writeBack(StageData *, Register *)=0;
+    virtual bool useFlag(void);
+    virtual bool useFlags(void);
   
 };
 #endif

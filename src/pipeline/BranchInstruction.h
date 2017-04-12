@@ -10,5 +10,7 @@ class BranchInstruction : public UnaryInstruction {
     virtual void writeBack(StageData *, Register *);
     virtual QVector<char> registerDependencies(StageData *sd);
     virtual QVector<char> registersToSet(StageData *sd);
+    virtual bool useFlag(void);
+    virtual bool useFlags(void);
 };
 #endif

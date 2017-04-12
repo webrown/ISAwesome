@@ -26,3 +26,9 @@ QVector<char> BranchInstruction::registersToSet(StageData *sd){
   result.push_back(Register::PC);
   return result;
 }
+bool BranchInstruction::useFlag(void){
+  return true;
+}
+bool BranchInstruction::useFlags(void){
+  return false;
+}
