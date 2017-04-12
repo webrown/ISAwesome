@@ -1,4 +1,5 @@
 #include "ExecuteStage.h"
+#include "Instruction.h"
 
 void ExecuteStage::cycleUp(void){
     //Check delay
@@ -19,7 +20,7 @@ void ExecuteStage::cycleUp(void){
 }
 
 void ExecuteStage::cycleDown(void){
-    if(currData == NULL){
+    if(currData == NULL || currData->instructionFunctions == NULL){
         return;
     }
     if(currData->isSquashed() == true){
@@ -31,13 +32,14 @@ void ExecuteStage::cycleDown(void){
     
     
     //Some execute logic here.
-    switch(currData->opcode){
-        case Opcode::B:
-            break;
-        case Opcode::ADD:
-            currData->dest= {currData->dest.asUInt + currData->src.asUInt};
-            break;
-    }
+    currData->instructionFunctions->execute(currData);
+    //switch(currData->opcode){
+    //    case Opcode::B:
+    //        break;
+    //    case Opcode::ADD:
+    //        currData->dest= {currData->dest.asUInt + currData->src.asUInt};
+    //        break;
+    //}
     //except memory related instruction
     
     //Some delay logic here

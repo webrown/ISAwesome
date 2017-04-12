@@ -2,12 +2,14 @@
 #define STAGEDATA_H
 #include "../banana/PipelineGlobals.h"
 #include "../memory/Value.h"
+//#include "Instruction.h"
 #include <QVector>
 #include <QQueue>
 #include <QDebug>
 #include <QMap>
 
 //based on https://en.wikipedia.org/wiki/Classic_RISC_pipeline
+class Instruction;
 class StageData{
 
     public:
@@ -36,9 +38,14 @@ class StageData{
 
         //Opcode
         Opcode::Opcode opcode;
+        Instruction *instructionFunctions = NULL;
+        Value operand1; // Used in unary, binary, and ternary instructions
+        Value operand2; // Used in binary and ternary instructions
+        Value operand3; // Used in ternary instructions
 
         //Destination
         char destReg;
+        char srcReg; // Oddly, useful for Long Operations
 
         //This will be 32 bit long bit array.
         unsigned int regInUse;
@@ -51,15 +58,11 @@ class StageData{
         QVector<Value> srcVec;
         QVector<Value> destVec;
 
-        bool isSquashed(){
-            return (info & 1 == 1);
-        }
-        bool isVector(){
-            return (info & 4 == 4);
-        }
-        bool isFloat(){
-            return (info * 8 == 8);
-        }
+        bool isSquashed();
+        bool isVector();
+        bool isFloat();
+
+
 };
 
 class StageDataPool{
