@@ -235,12 +235,9 @@ void DecodeStage::cycleDown(void){
     // OK!  Flags are settled!  We checked if anyone was messing with -1 in dependencies!
     currData->flagValue  = Flag::has(regs->readFlag(), currData->condFlag);
     currData->flagValues = Flag::has(regs->readFlags(), currData->condFlag);
-    qDebug() << "readFlag" << regs->readFlag().i;
-    qDebug() << "condFlag" << currData->condFlag;
-    qDebug() << "flagValue" << currData->flagValue;
 
     // If this instruction obeys the scalar flag, we might be able to remove it now.
-    if(currData->instructionFunctions->useFlag() && !currData->flagValue) {
+    if(currData->instructionFunctions->decodeDump(currData, regs)) {
         delete currData;
         currData = NULL;
     }

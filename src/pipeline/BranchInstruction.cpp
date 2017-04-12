@@ -26,9 +26,7 @@ QVector<char> BranchInstruction::registersToSet(StageData *sd){
   result.push_back(Register::PC);
   return result;
 }
-bool BranchInstruction::useFlag(void){
-  return true;
-}
-bool BranchInstruction::useFlags(void){
-  return false;
+bool BranchInstruction::decodeDump(StageData *sd, Register *r){
+  // If scalar flag is 0, dump.
+  return !sd->flagValue;
 }
