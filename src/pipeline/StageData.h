@@ -43,9 +43,11 @@ class StageData{
         //Opcode
         Opcode::Opcode opcode;
         Instruction *instructionFunctions = NULL;
-        Value operand1; // Used in unary, binary, and ternary instructions
-        Value operand2; // Used in binary and ternary instructions
-        Value operand3; // Used in ternary instructions
+        Value operand1;    // Used in unary, binary, and ternary instructions
+        bool isImmediate1; // Used in binary and ternary instructions
+        Value operand2;    // Used in binary and ternary instructions
+        bool isImmediate2; // Used in ternary instructions
+        Value operand3;    // Used in ternary instructions
 
         //Destination
         char destReg;
