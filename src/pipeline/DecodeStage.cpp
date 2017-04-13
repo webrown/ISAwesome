@@ -1,4 +1,5 @@
 #include "DecodeStage.h"
+#include "AddInstruction.h"
 #include "BranchInstruction.h"
 #include "CompareInstruction.h"
 #include "../memory/Flag.h"
@@ -12,8 +13,7 @@ void DecodeStage::cycleUp(void){
     delay--;
     if(delay > 0){
         return;
-    }
-    else{
+    } else{
         if(next->currData != NULL || dependencyFlag){
             //Structural hazard
             return;
@@ -57,9 +57,6 @@ void DecodeStage::cycleDown(void){
       switch(currData->opcode){
           case Opcode::B: 
               currData->instructionFunctions = new BranchInstruction();
-              //currData->dest = {vvv & ((1<<23)-1)};
-              //currData->destReg= 23;
-              //currData->regInUse = 0;
               break;
           case Opcode::BL:
               if(isDependent(vvv & 31)){
@@ -142,8 +139,12 @@ void DecodeStage::cycleDown(void){
           case Opcode::ARR:
           case Opcode::MOE:
           case Opcode::SOE:
+
           case Opcode::ADD:
           case Opcode::ADDS:
+              currData->instructionFunctions = new AddInstruction();
+              break;
+          
           case Opcode::ADC:
           case Opcode::ADCS:
           case Opcode::SUB:
@@ -283,6 +284,10 @@ bool DecodeStage::isDependent(StageData *sd) const{
     if(sd == NULL || sd->instructionFunctions == NULL) return false;
     QVector<char> dependencies = sd->instructionFunctions->registerDependencies(sd);
     dependencies.push_back(-1); // -1 = condition flag.  EVERYONE depends on condition flags!
+#if 0
+qDebug() << "DEPENDENCIES:";
+for(int i = 0; i < dependencies.size(); i++) qDebug() << QString::number(dependencies.at(i));
+#endif
     return isDependent(dependencies);
 }
 
