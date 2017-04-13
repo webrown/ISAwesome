@@ -50,6 +50,10 @@ Value Register::read(int i){
     return _scas[i];
 }
 
+Value Register::read(Value i){
+    return read(i.i);
+}
+
 void Register::write(Value v, int i){
     Q_ASSERT(0<= i &&i < NUMBER_OF_SCALAR_REGISTER);
     _scas[i] = v;
@@ -73,6 +77,9 @@ void Register::write(float v, int address) {
     write(value, address);
 }
 
+QVector<Value> Register::readVector(Value i){
+    return readVector(i.i);
+}
 
 QVector<Value> Register::readVector(int i){
     Q_ASSERT(NUMBER_OF_SCALAR_REGISTER <= i && i <NUMBER_OF_SCALAR_REGISTER + NUMBER_OF_VECTOR_REGISTER);
@@ -199,4 +206,24 @@ bool Register::isScalarIndex(int index){
 
 bool Register::isIntIndex(int index){
     return !isFloatIndex(index);
+}
+
+bool Register::isVectorIndex(Value index){
+    return isVectorIndex(index.i);
+}
+
+bool Register::isFloatIndex(Value index){
+    return isFloatIndex(index.i);
+}
+
+bool Register::indexExists(Value index){
+    return indexExists(index.i);
+}
+
+bool Register::isScalarIndex(Value index){
+    return isScalarIndex(index.i);
+}
+
+bool Register::isIntIndex(Value index){
+    return isIntIndex(index.i);
 }

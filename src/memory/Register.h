@@ -23,7 +23,9 @@ class Register{
         
 
         Value read(int i);
+        Value read(Value i);
         QVector<Value> readVector(int address);
+        QVector<Value> readVector(Value address);
 
         //Scalar write
         void write(Value v, int address);
@@ -68,6 +70,11 @@ class Register{
         static bool isScalarIndex(int index);
         static bool isIntIndex(int index);
         static bool indexExists(int index);
+        static bool isVectorIndex(Value index);
+        static bool isFloatIndex(Value index);
+        static bool isScalarIndex(Value index);
+        static bool isIntIndex(Value index);
+        static bool indexExists(Value index);
 };
 
 #endif

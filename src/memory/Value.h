@@ -2,6 +2,7 @@
 #define VALUE_H
 union Value{
   unsigned int asUInt;
+  unsigned int u;
   int asInt;
   float asFloat;
   int toInt;
