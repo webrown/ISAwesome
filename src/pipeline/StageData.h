@@ -63,11 +63,13 @@ class StageData{
 
         QVector<Value> srcVec;
         QVector<Value> destVec;
+        QVector<Value> auxVec;
 
         bool isSquashed();
         bool isVector();
         bool isFloat();
 
+        bool broken = false; // This instruction has something stupid in it (add float and int for example.)
 
 };
 

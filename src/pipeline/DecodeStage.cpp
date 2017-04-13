@@ -1,5 +1,6 @@
 #include "DecodeStage.h"
 #include "BranchInstruction.h"
+#include "CompareInstruction.h"
 #include "../memory/Flag.h"
 #define L_BIT  toB("1000000000000000000000")
 #define L2_BIT toB("0000000100000000000000")
@@ -132,6 +133,8 @@ void DecodeStage::cycleDown(void){
               }
 
           case Opcode::CMP:
+              currData->instructionFunctions = new CompareInstruction();
+              break;
           case Opcode::LOD:
           case Opcode::STO:
           case Opcode::MVD:
@@ -236,8 +239,8 @@ void DecodeStage::cycleDown(void){
     currData->flagValue  = Flag::has(regs->readFlag(), currData->condFlag);
     currData->flagValues = Flag::has(regs->readFlags(), currData->condFlag);
 
-    // If this instruction obeys the scalar flag, we might be able to remove it now.
-    if(currData->instructionFunctions->decodeDump(currData, regs)) {
+    // If this instruction obeys the scalar flag or is malformed, we might be able to remove it now.
+    if(currData->instructionFunctions->decodeDump(currData, regs) || currData->broken) {
         delete currData;
         currData = NULL;
     }
