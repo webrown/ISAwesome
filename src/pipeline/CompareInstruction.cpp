@@ -53,7 +53,6 @@ void CompareInstruction::execute(StageData *sd) {
   if(!Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
     //pure scalar operation
     sd->aux = newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->dest, sd->aux, wait);
-qDebug() << "((((((((((((((((((((((((((((((((((((((((((";
   }
   if(!Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
     // broadcast sd->operand1 across sd->operand2
