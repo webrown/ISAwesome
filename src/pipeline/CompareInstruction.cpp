@@ -50,33 +50,41 @@ void CompareInstruction::execute(StageData *sd) {
   qDebug() << "COM: CompareInstruction: execute";
   int w;
   int *wait = &w; // Trash value for now, only to allow code reuse.
-  if(!Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
-    //pure scalar operation
-    sd->aux = newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->dest, sd->aux, wait);
-  }
-  if(!Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
-    // broadcast sd->operand1 across sd->operand2
-    QVector<Value> result;
-    for(int i = 0; i < sd->destVec.size(); i++) {
-      result += newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->destVec.at(i), sd->auxVec.at(i), wait);
+  if(sd->isImmediate1) {
+    if(Register::isScalarIndex(sd->operand2)) {
+      //pure scalar operation
+      sd->aux = newFlag(Register::isFloatIndex(sd->operand2), Register::isFloatIndex(sd->operand2), sd->src, sd->dest, sd->aux, wait);
     }
-    sd->auxVec = result;
-  }
-  if( Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
-    // broadcast sd->operand2 across sd->operand1
-    QVector<Value> result;
-    for(int i = 0; i < sd->srcVec.size(); i++) {
-      result += newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->dest, sd->auxVec.at(i), wait);
+    if(Register::isVectorIndex(sd->operand2)) {
+      // broadcast 
+      for(int i = 0; i < sd->srcVec.size(); i++) {
+        sd->auxVec[i] = newFlag(Register::isFloatIndex(sd->operand2), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->dest, sd->auxVec.at(i), wait);
+      }
     }
-    sd->auxVec = result;
   }
-  if( Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
-    // dot sd->operand1 with sd->operand2
-    QVector<Value> result;
-    for(int i = 0; i < sd->destVec.size(); i++) {
-      result += newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->destVec.at(i), sd->auxVec.at(i), wait);
+  else {
+    if(!Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
+      //pure scalar operation
+      sd->aux = newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->dest, sd->aux, wait);
     }
-    sd->auxVec = result;
+    if(!Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
+      // broadcast sd->operand1 across sd->operand2
+      for(int i = 0; i < sd->destVec.size(); i++) {
+        sd->auxVec[i] = newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->destVec.at(i), sd->auxVec.at(i), wait);
+      }
+    }
+    if( Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
+      // broadcast sd->operand2 across sd->operand1
+      for(int i = 0; i < sd->srcVec.size(); i++) {
+        sd->auxVec[i] = newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->dest, sd->auxVec.at(i), wait);
+      }
+    }
+    if( Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
+      // dot sd->operand1 with sd->operand2
+      for(int i = 0; i < sd->destVec.size(); i++) {
+        sd->auxVec[i] = newFlag(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->destVec.at(i), sd->auxVec.at(i), wait);
+      }
+    }
   }
 }
 

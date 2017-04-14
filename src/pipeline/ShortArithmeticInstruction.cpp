@@ -37,33 +37,49 @@ Value ShortArithmeticInstruction::scalarOperation(bool arg1IsFloat, bool arg2IsF
 }
 
 void ShortArithmeticInstruction::execute(StageData *sd){
-  if(!Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
-    //pure scalar operand
-    if(sd->flagValue) sd->dest = scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->dest);
-  }
-  if(!Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
-    // broadcast sd->operand1 across sd->operand2
-    QVector<Value> result;
-    for(int i = 0; i < sd->destVec.size(); i++) {
-      if(sd->flagValues.at(i)) result += scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->destVec.at(i));
-      else result += sd->destVec.at(i);
+  if(sd->isImmediate1) {
+    if(Register::isScalarIndex(sd->operand2)) {
+      //pure scalar operand
+      if(sd->flagValue) sd->dest = scalarOperation(Register::isFloatIndex(sd->operand2), Register::isFloatIndex(sd->operand2), sd->src, sd->dest);
     }
-    sd->destVec = result;
-  }
-  if( Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
-    // Reduce sd->operand1 onto sd->operand2
-    for(int i = 0; i < sd->srcVec.size(); i++) {
-      if(sd->flagValues.at(i)) sd->dest = scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->dest);
+    if(Register::isVectorIndex(sd->operand2)) {
+      // broadcast sd->operand1 across sd->operand2
+      for(int i = 0; i < sd->destVec.size(); i++) {
+        if(sd->flagValues.at(i)) {
+          sd->destVec[i] = scalarOperation(Register::isFloatIndex(sd->operand2), Register::isFloatIndex(sd->operand2), sd->src, sd->destVec.at(i));
+        }
+      }
     }
   }
-  if( Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
-    // dot sd->operand1 with sd->operand2
-    QVector<Value> result;
-    for(int i = 0; i < sd->destVec.size(); i++) {
-      if(sd->flagValues.at(i)) result += scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->destVec.at(i));
-      else result += sd->destVec.at(i);
+  else{
+    if(!Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
+      //pure scalar operand
+      if(sd->flagValue) sd->dest = scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->dest);
     }
-    sd->destVec = result;
+    if(!Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
+      // broadcast sd->operand1 across sd->operand2
+      QVector<Value> result;
+      for(int i = 0; i < sd->destVec.size(); i++) {
+        if(sd->flagValues.at(i)) result += scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->destVec.at(i));
+        else result += sd->destVec.at(i);
+      }
+      sd->destVec = result;
+    }
+    if( Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
+      // Reduce sd->operand1 onto sd->operand2
+      for(int i = 0; i < sd->srcVec.size(); i++) {
+        if(sd->flagValues.at(i)) sd->dest = scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->dest);
+      }
+    }
+    if( Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
+      // dot sd->operand1 with sd->operand2
+      QVector<Value> result;
+      for(int i = 0; i < sd->destVec.size(); i++) {
+        if(sd->flagValues.at(i)) result += scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->destVec.at(i));
+        else result += sd->destVec.at(i);
+      }
+      sd->destVec = result;
+    }
   }
 }
 
