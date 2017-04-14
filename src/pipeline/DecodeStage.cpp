@@ -2,7 +2,9 @@
 #include "AddInstruction.h"
 #include "BranchInstruction.h"
 #include "CompareInstruction.h"
+#include "WriteVectorElementInstruction.h"
 #include "../memory/Flag.h"
+#include "../Utility.h"
 #define L_BIT  toB("1000000000000000000000")
 #define L2_BIT toB("0000000100000000000000")
 
@@ -31,6 +33,8 @@ void DecodeStage::cycleDown(void){
     }
 
     uint vvv = currData->instruction;
+
+    qDebug() << "COM: DecodeStage: Sees instruction " << intToBinary(currData->instruction) << ", PC of" << currData->instructionAddress;
     
     unsigned int flagCode = (vvv >> 28) & 15u;
     if(flagCode ==  0) currData->condFlag = Flag::EQ;
@@ -51,6 +55,7 @@ void DecodeStage::cycleDown(void){
     if(flagCode == 15) currData->condFlag = Flag::UN;
 
     currData->opcode = Opcode::opcodes[(vvv>>22 )& (63u)];
+
 
     if(currData->instructionFunctions == NULL) {
       // What instruction are we looking at?
@@ -81,6 +86,8 @@ void DecodeStage::cycleDown(void){
               currData->regInUse = 1 << (vvv & 31);
               break;
           case Opcode::WVE:
+              currData->instructionFunctions = new WriteVectorElementInstruction();
+              break;
           case Opcode::RVE:
               {
                   if(isDependent((vvv > 15) & 31) || isDependent(vvv & 31)){
