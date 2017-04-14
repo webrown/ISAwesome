@@ -224,12 +224,16 @@ void DecodeStage::cycleDown(void){
       }
     }
     
-    dependencyFlag = false;
     if(currData == NULL || currData->instructionFunctions == NULL) {
       // Something's gone wrong.  Don't die, just notify.
       qDebug() << "COM:  DecodeStage: Not sure what to do with opcode" << currData->opcode;
       return;
     }
+
+    // Try to decode, just for the heck of it.  Might get dumped later.
+    currData->instructionFunctions->decode(currData, regs);
+
+    dependencyFlag = false;
     if(isDependent(currData)) {
         // Hey!  We can't decode this instruction yet!  Its dependencies are not resolved!
         dependencyFlag= true;
@@ -245,11 +249,16 @@ void DecodeStage::cycleDown(void){
         delete currData;
         currData = NULL;
     }
-    else {
-        // Decode the instruction.
-        currData->instructionFunctions->decode(currData, regs);
-    }
-
+#if 1
+qDebug() << "COM: DecodeStage: Newly decoded instruction:";
+if(currData != NULL) {
+  qDebug() << "COM: DecodeStage: src:"  << currData->src.i;
+  qDebug() << "COM: DecodeStage: dest:" << currData->dest.i;
+}
+else {
+  qDebug() << "COM: DecodeStage: NULLED out";
+}
+#endif
     delay = 1;
 }
 
