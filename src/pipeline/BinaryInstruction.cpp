@@ -7,6 +7,10 @@ void BinaryInstruction::decode(StageData *sd, Register *r) {
   sd->operand2.i = spliceMachineCode(nextInstruction, 0, 4);
   sd->isImmediate1 = !spliceMachineCode(nextInstruction, 21, 21);
 
+  qDebug() << "COM: BinaryInstruction: operand1=" << sd->operand1.i;
+  qDebug() << "COM: BinaryInstruction: operand2=" << sd->operand2.i;
+  qDebug() << "COM: BinaryInstruction: isImmediate1=" << sd->isImmediate1;
+
   // Translate first param. (not required by binaries, but pretty universal)
   QVector<Value> pdvResult = pipelineDecideValue(sd->operand1, sd->isImmediate1, r);
   if(pdvResult.size() == 0) {

@@ -1,5 +1,7 @@
 #include "InstructionUtil.h"
+#include <QDebug>
 QVector<Value> pipelineDecideValue(Value operand, bool isImmediate, Register *r){
+  qDebug() << "COM: pipelineDecideValue(" << operand.i << "," << isImmediate << "," << r << ")";
   QVector<Value> result;
   if(isImmediate) {
     result.push_back(operand);

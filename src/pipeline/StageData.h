@@ -15,6 +15,7 @@ class Instruction;
 class StageData{
 
     public:
+        unsigned instructionAddress; // Records what memory address the PC took this instruction from.
         enum InfoStuff{
             SCALAR = 0,
             VECTOR = 4,
@@ -70,7 +71,6 @@ class StageData{
         bool isFloat();
 
         bool broken = false; // This instruction has something stupid in it (add float and int for example.)
-
 };
 
 class StageDataPool{

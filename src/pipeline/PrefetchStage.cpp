@@ -45,6 +45,7 @@ void PrefetchStage::cycleDown(void){
 
     //Get the data into system.
     currData->instruction = qr->result.at(0).asUInt;  
+    currData->instructionAddress = regs->getPC();
     // delay = qr->time;
     delay = 1;
 

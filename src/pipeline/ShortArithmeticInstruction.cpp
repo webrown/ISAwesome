@@ -75,8 +75,17 @@ void ShortArithmeticInstruction::memory(StageData *sd, MemoryStructure *ms) {
 
 
 void ShortArithmeticInstruction::writeBack(StageData *sd, Register *r){
-  if(Register::isScalarIndex(sd->operand2)) r->write(sd->dest, sd->operand2.u);
-  if(Register::isVectorIndex(sd->operand2)) r->writeVector(sd->destVec, sd->operand2.u);
+  qDebug() << "COM: ShortArithmeticInstruction: About to write to" << sd->operand2.i;
+  if(Register::isScalarIndex(sd->operand2)){
+    qDebug() << "COM: ShortArithmeticInstruction: " << sd->operand2.i << "started at" << r->read(sd->operand2).i;
+    r->write(sd->dest, sd->operand2.u);
+    qDebug() << "COM: ShortArithmeticInstruction: " << sd->operand2.i << "was changed to" << r->read(sd->operand2).i;
+  }
+  if(Register::isVectorIndex(sd->operand2)){
+    qDebug() << "COM: ShortArithmeticInstruction: " << sd->operand2.i << "[0] started at" << r->readVector(sd->operand2).at(0).i;
+    r->writeVector(sd->destVec, sd->operand2.u);
+    qDebug() << "COM: ShortArithmeticInstruction: " << sd->operand2.i << "[0] was changed to" << r->readVector(sd->operand2).at(0).i;
+  }
   
 }
 
