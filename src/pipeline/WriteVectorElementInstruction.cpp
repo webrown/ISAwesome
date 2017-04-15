@@ -24,7 +24,7 @@ void WriteVectorElementInstruction::decode(StageData *sd, Register *r) {
   }
 }
 void WriteVectorElementInstruction::execute(StageData *sd) {
-  sd->destVec[sd->aux.i] = sd->src;
+  sd->destVec[sd->aux.i % sd->destVec.size()] = sd->src;
 }
 void WriteVectorElementInstruction::memory(StageData *sd, MemoryStructure *m) {
   (void) sd;
