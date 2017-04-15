@@ -15,6 +15,7 @@ class Instruction;
 class StageData{
 
     public:
+        unsigned instructionAddress; // Records what memory address the PC took this instruction from.
         enum InfoStuff{
             SCALAR = 0,
             VECTOR = 4,
@@ -43,9 +44,11 @@ class StageData{
         //Opcode
         Opcode::Opcode opcode;
         Instruction *instructionFunctions = NULL;
-        Value operand1; // Used in unary, binary, and ternary instructions
-        Value operand2; // Used in binary and ternary instructions
-        Value operand3; // Used in ternary instructions
+        Value operand1;    // Used in unary, binary, and ternary instructions
+        bool isImmediate1; // Used in binary and ternary instructions
+        Value operand2;    // Used in binary and ternary instructions
+        bool isImmediate2; // Used in ternary instructions
+        Value operand3;    // Used in ternary instructions
 
         //Destination
         char destReg;
@@ -61,12 +64,13 @@ class StageData{
 
         QVector<Value> srcVec;
         QVector<Value> destVec;
+        QVector<Value> auxVec;
 
         bool isSquashed();
         bool isVector();
         bool isFloat();
 
-
+        bool broken = false; // This instruction has something stupid in it (add float and int for example.)
 };
 
 class StageDataPool{

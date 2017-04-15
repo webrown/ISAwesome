@@ -13,7 +13,6 @@ class Instruction {
     virtual void writeBack(StageData *sd, Register *r)=0;
     virtual QVector<char> registerDependencies(StageData *sd)=0; // Returns a vector of registers this instruction depends on.
     virtual QVector<char> registersToSet(StageData *sd)=0; // Returns a vector of registers this instruction might modify.
-    virtual bool useFlag(void)=0; // Does this instruction abide by the scalar flag?
-    virtual bool useFlags(void)=0; // Does this instruction abide by the vector flags?
+    virtual bool decodeDump(StageData *, Register *r)=0; // If returns true, destroy this instruction right when it comes in.
 };
 #endif

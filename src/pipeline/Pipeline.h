@@ -10,6 +10,7 @@
 #include "MemoryStage.h"
 #include "ExecuteStage.h"
 #include "WriteStage.h"
+#include "Instruction.h"
 
 
 class Pipeline : public Banana{
@@ -30,6 +31,8 @@ class Pipeline : public Banana{
         ExecuteStage executeStage;
         MemoryStage memoryStage;
         WriteStage writeStage;
+
+        QString stageDebug(QString label, Stage *);
         // bool _writeBackStageDone;
         // bool _memoryStageDone;
         // bool _executeStageDone;

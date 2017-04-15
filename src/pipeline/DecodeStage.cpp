@@ -1,6 +1,11 @@
 #include "DecodeStage.h"
+#include "AddInstruction.h"
 #include "BranchInstruction.h"
+#include "CompareInstruction.h"
+#include "LongAddInstruction.h"
+#include "WriteVectorElementInstruction.h"
 #include "../memory/Flag.h"
+#include "../Utility.h"
 #define L_BIT  toB("1000000000000000000000")
 #define L2_BIT toB("0000000100000000000000")
 
@@ -11,8 +16,7 @@ void DecodeStage::cycleUp(void){
     delay--;
     if(delay > 0){
         return;
-    }
-    else{
+    } else{
         if(next->currData != NULL || dependencyFlag){
             //Structural hazard
             return;
@@ -30,6 +34,8 @@ void DecodeStage::cycleDown(void){
     }
 
     uint vvv = currData->instruction;
+
+    qDebug() << "COM: DecodeStage: Sees instruction " << intToBinary(currData->instruction) << ", PC of" << currData->instructionAddress;
     
     unsigned int flagCode = (vvv >> 28) & 15u;
     if(flagCode ==  0) currData->condFlag = Flag::EQ;
@@ -51,14 +57,12 @@ void DecodeStage::cycleDown(void){
 
     currData->opcode = Opcode::opcodes[(vvv>>22 )& (63u)];
 
+
     if(currData->instructionFunctions == NULL) {
       // What instruction are we looking at?
       switch(currData->opcode){
           case Opcode::B: 
               currData->instructionFunctions = new BranchInstruction();
-              //currData->dest = {vvv & ((1<<23)-1)};
-              //currData->destReg= 23;
-              //currData->regInUse = 0;
               break;
           case Opcode::BL:
               if(isDependent(vvv & 31)){
@@ -83,6 +87,8 @@ void DecodeStage::cycleDown(void){
               currData->regInUse = 1 << (vvv & 31);
               break;
           case Opcode::WVE:
+              currData->instructionFunctions = new WriteVectorElementInstruction();
+              break;
           case Opcode::RVE:
               {
                   if(isDependent((vvv > 15) & 31) || isDependent(vvv & 31)){
@@ -132,6 +138,8 @@ void DecodeStage::cycleDown(void){
               }
 
           case Opcode::CMP:
+              currData->instructionFunctions = new CompareInstruction();
+              break;
           case Opcode::LOD:
           case Opcode::STO:
           case Opcode::MVD:
@@ -139,9 +147,16 @@ void DecodeStage::cycleDown(void){
           case Opcode::ARR:
           case Opcode::MOE:
           case Opcode::SOE:
+
           case Opcode::ADD:
           case Opcode::ADDS:
+              currData->instructionFunctions = new AddInstruction();
+              break;
+          
           case Opcode::ADC:
+              currData->instructionFunctions = new LongAddInstruction();
+              break;
+          
           case Opcode::ADCS:
           case Opcode::SUB:
           case Opcode::SUBS:
@@ -220,12 +235,16 @@ void DecodeStage::cycleDown(void){
       }
     }
     
-    dependencyFlag = false;
     if(currData == NULL || currData->instructionFunctions == NULL) {
       // Something's gone wrong.  Don't die, just notify.
       qDebug() << "COM:  DecodeStage: Not sure what to do with opcode" << currData->opcode;
       return;
     }
+
+    // Try to decode, just for the heck of it.  Might get dumped later.
+    currData->instructionFunctions->decode(currData, regs);
+
+    dependencyFlag = false;
     if(isDependent(currData)) {
         // Hey!  We can't decode this instruction yet!  Its dependencies are not resolved!
         dependencyFlag= true;
@@ -235,20 +254,22 @@ void DecodeStage::cycleDown(void){
     // OK!  Flags are settled!  We checked if anyone was messing with -1 in dependencies!
     currData->flagValue  = Flag::has(regs->readFlag(), currData->condFlag);
     currData->flagValues = Flag::has(regs->readFlags(), currData->condFlag);
-    qDebug() << "readFlag" << regs->readFlag().i;
-    qDebug() << "condFlag" << currData->condFlag;
-    qDebug() << "flagValue" << currData->flagValue;
 
-    // If this instruction obeys the scalar flag, we might be able to remove it now.
-    if(currData->instructionFunctions->useFlag() && !currData->flagValue) {
+    // If this instruction obeys the scalar flag or is malformed, we might be able to remove it now.
+    if(currData->instructionFunctions->decodeDump(currData, regs) || currData->broken) {
         delete currData;
         currData = NULL;
     }
-    else {
-        // Decode the instruction.
-        currData->instructionFunctions->decode(currData, regs);
-    }
-
+#if 1
+qDebug() << "COM: DecodeStage: Newly decoded instruction:";
+if(currData != NULL) {
+  qDebug() << "COM: DecodeStage: src:"  << currData->src.i;
+  qDebug() << "COM: DecodeStage: dest:" << currData->dest.i;
+}
+else {
+  qDebug() << "COM: DecodeStage: NULLED out";
+}
+#endif
     delay = 1;
 }
 
@@ -283,6 +304,10 @@ bool DecodeStage::isDependent(StageData *sd) const{
     if(sd == NULL || sd->instructionFunctions == NULL) return false;
     QVector<char> dependencies = sd->instructionFunctions->registerDependencies(sd);
     dependencies.push_back(-1); // -1 = condition flag.  EVERYONE depends on condition flags!
+#if 0
+qDebug() << "DEPENDENCIES:";
+for(int i = 0; i < dependencies.size(); i++) qDebug() << QString::number(dependencies.at(i));
+#endif
     return isDependent(dependencies);
 }
 

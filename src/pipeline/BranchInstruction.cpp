@@ -17,18 +17,19 @@ void BranchInstruction::writeBack(StageData *sd, Register *r) {
   r->write(sd->dest, Register::PC);
 }
 QVector<char> BranchInstruction::registerDependencies(StageData *sd){
+  (void) sd;
   QVector<char> result;
   result.push_back(Register::PC);
   return result;
 }
 QVector<char> BranchInstruction::registersToSet(StageData *sd){
+  (void) sd;
   QVector<char> result;
   result.push_back(Register::PC);
   return result;
 }
-bool BranchInstruction::useFlag(void){
-  return true;
-}
-bool BranchInstruction::useFlags(void){
-  return false;
+bool BranchInstruction::decodeDump(StageData *sd, Register *r){
+  (void) r;
+  // If scalar flag is 0, dump.
+  return !sd->flagValue;
 }
