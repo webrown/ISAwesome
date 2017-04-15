@@ -24,8 +24,9 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     computer->moveToThread(computerThread);
     connect(computerThread, &QThread::finished, computer, &QObject::deleteLater);
     connect(this, &MainWindow::_sendMessage, computer, &Computer::procMessage);
-    connect(computer, &Computer::sendMessage, this, &MainWindow::procMessage);
+    connect(computer, &Computer::_sendMessage, this, &MainWindow::procMessage);
     computerThread->start();
+
 
     //add element on toolbar
     cycleSpinBox = new QSpinBox(this);
@@ -48,6 +49,7 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     delayBox->setSingleStep(0.1);
     _ui.toolBar->insertWidget(_ui.actionRun,delayBox);
 
+
     //disable both undo and redo
     _ui.actionUndo->setEnabled(false);
     _ui.actionRedo->setEnabled(false);
@@ -63,10 +65,12 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     QModelIndex idx = fModel->index(settings.value("general/workdirectory",getDocDir()).toString());
     _ui.fileSystemView->setRootIndex(idx);
 
+    //Set up each views
     _ui.tab_memory->init(this,_ui.tableWidget_memory,_ui.spinBox,_ui.pushButton, _ui.lineEdit);
     _ui.tab_register->init(this,_ui.tableWidget_6,_ui.comboBox);
     _ui.tab_cache->init(this,_ui.tableWidget_7,_ui.cacheListBox, _ui.pushButton_2, _ui.tagLine, _ui.indexLine, _ui.offsetLine, _ui.nextButton ,_ui.prevButton);
     _ui.tracker->init(this);
+    _ui.bananaView->init();
 
 
     updateByState(Computer::DEAD);
@@ -525,6 +529,13 @@ void MainWindow::procMessage(ThreadMessage message){
             qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_PERFORMANCE";
             _ui.treeWidget->display(info.toMap());
             break;
+        case ThreadMessage::A_VIEW_BANANA:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_VIEW_BANANA";
+            _ui.bananaView->display(info.toList());
+            break;
+        case ThreadMessage::A_CHANGE_BANANA:
+            qDebug() << "GUI: RECV FROM COMPUTER: A_BANANA_CHANGE";
+            break;
         default:
             qDebug() << "GUI: Invalid message";
             exit(-1);
@@ -548,6 +559,9 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionAddCache->setEnabled(true);
             _ui.actionRemoveCache->setEnabled(true);
             _ui.actionClearCache->setEnabled(true);
+            _ui.actionPipeline_2->setEnabled(true);
+            _ui.actionBaseline->setEnabled(true);
+
 
             break;
         case Computer::RUNNING:
@@ -561,6 +575,9 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionAddCache->setEnabled(false);
             _ui.actionRemoveCache->setEnabled(false);
             _ui.actionClearCache->setEnabled(false);
+            _ui.actionPipeline_2->setEnabled(false);
+            _ui.actionBaseline->setEnabled(false);
+
 
 
             break;
@@ -575,6 +592,9 @@ void MainWindow::updateByState(Computer::State state){
             _ui.actionAddCache->setEnabled(false);
             _ui.actionRemoveCache->setEnabled(false);
             _ui.actionClearCache->setEnabled(false);
+            _ui.actionPipeline_2->setEnabled(false);
+            _ui.actionBaseline->setEnabled(false);
+
 
 
             break;
@@ -586,6 +606,7 @@ void MainWindow::update(uint pc){
     updateMemoryWidget();
     _ui.tracker->mark(pc/INSTRUCTION_SIZE);
     sendMessage(ThreadMessage(ThreadMessage::R_VIEW_PERFORMANCE,{}));
+    sendMessage(ThreadMessage(ThreadMessage::R_VIEW_BANANA,{}));
 }
 void MainWindow::sendMessage(ThreadMessage message){
     qDebug() << "GUI: send message";
@@ -640,4 +661,17 @@ void MainWindow::handleRestoreState(){
 
     sendMessage(ThreadMessage(ThreadMessage::R_RESTORE_STATE, fileName));
 }
+void MainWindow::handlePipeline(){
+    qDebug() << "GUI: handle Pipeline";
+    sendMessage(ThreadMessage(ThreadMessage::R_CHANGE_BANANA, {Banana::PIPELINE}));
+    sendMessage(ThreadMessage(ThreadMessage::R_VIEW_PERFORMANCE, {}));
+
+}
+void MainWindow::handleBaseline(){
+    qDebug() << "GUI: Handle Baseline";
+    sendMessage(ThreadMessage(ThreadMessage::R_CHANGE_BANANA, {Banana::BASELINE}));
+    sendMessage(ThreadMessage(ThreadMessage::R_VIEW_PERFORMANCE, {}));
+
+}
+
 

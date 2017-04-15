@@ -1,10 +1,5 @@
 #include "ShiftGroup.h"
 
-int toInt(float v){
-    Value x;
-    x.f =v;
-    return x.i;
-}
 
 Value LslInstruction::scalarOperation(int a, int b) {
   Value v;

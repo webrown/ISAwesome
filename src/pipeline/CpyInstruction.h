@@ -1,5 +1,5 @@
-#ifndef CpyInstruction_H
-#define CpyInstruction_H
+#ifndef CPYINSTRUCTION_H
+#define CPYINSTRUCTION_H
 #include "ShortArithmeticInstruction.h"
 #include "../memory/Register.h"
 #include "../memory/MemoryStructure.h"

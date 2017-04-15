@@ -8,6 +8,9 @@
 
 class Banana {
     public:
+        enum Type{
+            BASELINE = 0, PIPELINE =1
+        };
         virtual void init(void)=0;
         virtual Status run(void)=0;
         virtual void stop(void)=0;

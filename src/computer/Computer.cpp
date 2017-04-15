@@ -5,24 +5,28 @@
 
 Computer::Computer(){
     qDebug() << "COM: Creating computer";
+    currState = DEAD;
+
+    //Set up memory related stuff
     regs = new Register();
     mems = new MemoryStructure(MAIN_MEMORY_DELAY, false);
-#if USE_BASELINE
+
+    //Set up baseline
     exec = new Baseline(regs, mems);
-#else
-    exec = new Pipeline(regs, mems);
-#endif
-    currState = DEAD;
+
     qDebug() << "COM: Computer created"; 
 } 
 Computer::~Computer(){
     qDebug() << "COM: Removing Computer";
+
     delete regs;
     delete mems;
     delete exec;
+
     if(program != NULL){ 
         delete program;
     }
+
     qDebug() << "COM: Computer is removed!";
 }
 
@@ -30,13 +34,8 @@ Computer::~Computer(){
 void Computer::init(QString fileName){
     qDebug() <<"COM: init";
     totalElapsed = 0;
-    //Blocked 
-    if(currState == BLOCKED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-        return;
-    }
     if(currState != DEAD){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Stop current program first"}));
+        sendMessage(ThreadMessage::A_ERROR, {"Stop current program first"});
         return;
     }
     QVector<Value>* vec = new QVector<Value>();
@@ -44,14 +43,14 @@ void Computer::init(QString fileName){
     program = ProgramManagerX::loadProgram(fileName);
 
     if(program == NULL){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program doesn't exist"}));
+        sendMessage(ThreadMessage::A_ERROR, {"Program doesn't exist"});
         return;
     }
     for(int i =0 ; i < program->size; i++){
         Value v = {program->instructions->at(i)};
         vec->append(v);
     }
-    feedInstructions();
+    handleTrackerView();
 
 
     exec->init();
@@ -61,12 +60,12 @@ void Computer::init(QString fileName){
     mems->_mainMemory->write(vec, 0);
 
     currState = PAUSED;
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
-    emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
+    sendMessage(ThreadMessage::A_OKAY);
+    sendMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED});
+    sendMessage(ThreadMessage::A_UPDATE, {regs->getPC()});
     return;
 }
-void Computer::feedInstructions(){
+void Computer::handleTrackerView(){
     QList<QVariant> instructions;
     for(int i =0 ;i <= program->size; i++){
         if(i< program->instructionEndAddress ){
@@ -74,26 +73,20 @@ void Computer::feedInstructions(){
             instructions.append(v);
         }
     }
-    emit sendMessage(ThreadMessage(ThreadMessage::A_FEED, instructions));
-
+    sendMessage(ThreadMessage::A_FEED, instructions);
 }
 
 
 void Computer::step(int nCycle, double _delay){
     qDebug() << "COM: step";
-    //Blocked 
-    if(currState == BLOCKED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-        return;
-    } 
     if(currState == DEAD){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
+        sendMessage(ThreadMessage::A_ERROR, {"No program is running"});
         return;
     }
 
     currState = RUNNING;
-    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {RUNNING}));
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    sendMessage(ThreadMessage::A_STATE_CHANGE, {RUNNING});
+    sendMessage(ThreadMessage::A_OKAY);
     // timer.restart();
     QTime timer;
     timer.start();
@@ -142,50 +135,42 @@ void Computer::step(int nCycle, double _delay){
             currState = PAUSED;
         }
         if(_delay > 0.05){
-            emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
+            sendMessage(ThreadMessage::A_UPDATE, {regs->getPC()});
         }
     }
     totalElapsed += timer.elapsed();
 
     //Distinguish from stop
     if(currState == PAUSED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
-        emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
+        sendMessage(ThreadMessage::A_UPDATE, {regs->getPC()});
+        sendMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED});
     }   
     return;
 }
 
 void Computer::stop(){
     qDebug() << "COM: stop";
-    if(currState == BLOCKED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-        return;
-    } 
     if(currState == DEAD){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"No program is running"}));
+        sendMessage(ThreadMessage::A_ERROR, {"No program is running"});
         return;
     }
     breakMap.clear();
     currState = DEAD;
     exec->stop();
     program == NULL;
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {DEAD}));
+    sendMessage(ThreadMessage::A_OKAY, {});
+    sendMessage(ThreadMessage::A_STATE_CHANGE, {DEAD});
     return;
 }
 
 void Computer::pause(){
     qDebug() << "COM: pause";
-    if(currState == BLOCKED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-        return;
-    } 
     if(currState == PAUSED || currState == DEAD){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program is already paused"}));
+        sendMessage(ThreadMessage::A_ERROR, {"Program is already paused"});
         return;
     }
     currState = PAUSED;
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+    sendMessage(ThreadMessage::A_OKAY);
 }
 
 //http://stackoverflow.com/questions/3752742/how-do-i-create-a-pause-wait-function-using-qt
@@ -204,18 +189,13 @@ void Computer::addBreakPoint(uint address, BreakPoint::BreakPoint bp){
     else{
         breakMap[address] = bp;
     }
-    emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-
+    sendMessage(ThreadMessage::A_OKAY, {});
 }
 
 
 
 void Computer::handleMemoryView(uint address){
     qDebug() <<"COM: make memory view";
-    if(currState == BLOCKED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-        return;
-    }  
     QList<QVariant> ret;
     //Put requested address in first index to display them
     ret.append(address);
@@ -235,19 +215,15 @@ void Computer::handleMemoryView(uint address){
             ret.append(content);
         }
     }
-    emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_MEMORY, ret));
+    sendMessage(ThreadMessage::A_VIEW_MEMORY, ret);
     return;
 }
 void Computer::handleCacheView(QList<QVariant> arg){
     int id = arg.takeFirst().toInt();
     Cache * cache = (Cache *) mems->map[id];
-    if(currState == BLOCKED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-        return;
-    }
 
     if(mems->map.size() == 1){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+        sendMessage(ThreadMessage::A_OKAY);
         return;
     }
 
@@ -260,7 +236,7 @@ void Computer::handleCacheView(QList<QVariant> arg){
     if(tagB == true){
         tagS = arg[0].toString().toUInt(&okay,2);
         if(okay == false){
-            emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Invalid argument for tag"}));
+            sendMessage(ThreadMessage::A_ERROR, {"Invalid argument for tag"});
             return;
         }
         for(int i =0 ; i < arg[0].toString().length(); i ++){
@@ -271,7 +247,7 @@ void Computer::handleCacheView(QList<QVariant> arg){
     if(indexB == true){
         indexS = arg[1].toString().toUInt(&okay,2);
         if(okay == false){
-            emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Invalid argument for index"}));
+            sendMessage(ThreadMessage::A_ERROR, {"Invalid argument for index"});
             return;
         }
         for(int i =0 ; i < arg[1].toString().length(); i ++){
@@ -282,7 +258,7 @@ void Computer::handleCacheView(QList<QVariant> arg){
     if(offsetB == true){
         offsetS = arg[2].toString().toUInt(&okay,2);
         if(okay == false){
-            emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Invalid argument for offset"}));
+            sendMessage(ThreadMessage::A_ERROR, {"Invalid argument for offset"});
             return;
         }
         for(int i =0 ; i < arg[2].toString().length(); i ++){
@@ -342,15 +318,11 @@ void Computer::handleCacheView(QList<QVariant> arg){
         }
     }
     list <<count;
-    emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_CACHE, list));
+    sendMessage(ThreadMessage::A_VIEW_CACHE, list);
     return;
 }
 void Computer::handleRegisterView(QString line){
     qDebug() << "COM: make register view";
-    if(currState == BLOCKED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
-        return;
-    } 
     QList<QVariant> ret;
     ret.append(line);
     if(line == "General Registers"){
@@ -386,23 +358,23 @@ void Computer::handleRegisterView(QString line){
             ret.append(content);
         }
     }
-    emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_REGISTER, ret));
+    sendMessage(ThreadMessage::A_VIEW_REGISTER, ret);
     return;
 }
 void Computer::handleSaveState(QString fileName){
     if(currState != PAUSED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program must be paused"}));
+        sendMessage(ThreadMessage::A_ERROR, {"Program must be paused"});
         return;
     }
     currState = BLOCKED;
 
     if(ProgramManagerY::save(this, fileName) == false){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, "save failed"));
+        sendMessage(ThreadMessage::A_ERROR, "save failed");
         currState = PAUSED;
         return;
     }
 
-    emit sendMessage(ThreadMessage(ThreadMessage::A_SAVE_STATE, {}));
+    sendMessage(ThreadMessage::A_SAVE_STATE);
     currState = PAUSED;
     return;
 }
@@ -410,33 +382,87 @@ void Computer::handleSaveState(QString fileName){
 void Computer::handleRestoreState(QString fileName){
     if(currState != DEAD){
         qDebug() << currState;
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, {"Program must be stopped"}));
+        sendMessage(ThreadMessage::A_ERROR, {"Program must be stopped"});
         return;
     }
     currState = BLOCKED;
 
     if(ProgramManagerY::restore(this,fileName) == false){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_ERROR, "restore failed"));
+        sendMessage(ThreadMessage::A_ERROR, "restore failed");
         currState = DEAD;
         return;
     }
-    feedInstructions();
+    handleTrackerView();
 
     //TODO maybe?
-
     currState = PAUSED;
-    emit sendMessage(ThreadMessage(ThreadMessage::A_RESTORE_STATE, {}));
-    emit sendMessage(ThreadMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED}));
-    emit sendMessage(ThreadMessage(ThreadMessage::A_UPDATE, {regs->getPC()}));
+    sendMessage(ThreadMessage::A_RESTORE_STATE, {});
+    sendMessage(ThreadMessage::A_STATE_CHANGE, {PAUSED});
+    sendMessage(ThreadMessage::A_UPDATE, {regs->getPC()});
     // qDebug() << regs->getPC();
     return;
 }
-void Computer::handlePerformance(){
-    qDebug() << "COM: handle performance view";
-    if(currState == BLOCKED){
-        emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+void Computer::handleChangeBanana(Banana::Type type){
+    qDebug() << "COM: handle banana change";
+    if(currState != DEAD){
+        sendMessage(ThreadMessage::A_ERROR, {"Program must be stopped first"});
         return;
     }
+    if(type == Banana::PIPELINE){
+        if(dynamic_cast<Pipeline*>(exec) == NULL){
+            delete exec;
+            exec = new Pipeline(regs, mems);
+            sendMessage(ThreadMessage::A_CHANGE_BANANA, {Banana::PIPELINE});
+            return;
+        }
+        else{
+            sendMessage(ThreadMessage::A_ERROR, {"Program is already using Pipeline"});
+            return;
+        }
+    }
+    else if(type == Banana::BASELINE){
+        if(dynamic_cast<Baseline*>(exec) == NULL){
+            delete exec;
+            exec = new Baseline(regs, mems);
+            sendMessage(ThreadMessage::A_CHANGE_BANANA, {Banana::BASELINE});
+            return;
+        }
+        else{
+            sendMessage(ThreadMessage::A_ERROR, {"Program is already using Baseline"});
+            return;
+        }
+    }
+    
+}
+void Computer::handleBananaView(){
+    qDebug() << "COM: handle Banana View";
+    //Baseline
+       QList<QVariant> data;
+    if(dynamic_cast<Pipeline*>(exec) == NULL){
+       Baseline* baseline = dynamic_cast<Baseline*>(exec); 
+       for(int i =0; i < 5; i++){
+           data.append(false);
+           data.append(false);
+           data.append(false);
+           if(baseline->_instructionFetchWait >0){
+                data.append(baseline->_instructionFetchWait);
+                data.append("Fetching...");
+           }
+           else{
+               data.append(baseline->_waitLeft);
+               data.append(QString::number(baseline->nextInstruction));
+           }
+       }
+    }
+    //Pipeline
+    else{
+    }
+    sendMessage(ThreadMessage::A_VIEW_BANANA, data);
+
+    
+}
+void Computer::handlePerformanceView(){
+    qDebug() << "COM: handle performance view";
 
     QMap<QString, QVariant> map;
     map["/General/Cycle/Total"] = exec-> cyclesDone;
@@ -458,12 +484,26 @@ void Computer::handlePerformance(){
     }
     map["/Memory/Ram/Page"] = mems->_mainMemory->memoryInUse;
 
+    if(dynamic_cast<Baseline*>(exec) == NULL){
+        map["/Alu/Type"] = "Pipeline";
+    }
+    else{
+        map["/Alu/Type"] = "Baseline";
 
-    emit sendMessage(ThreadMessage(ThreadMessage::A_VIEW_PERFORMANCE, map));
+    }
+
+
+
+
+    sendMessage(ThreadMessage::A_VIEW_PERFORMANCE, map);
     return; 
 }
 void Computer::procMessage(ThreadMessage message){
     ThreadMessage::Type type = message.type;
+    if(currState == BLOCKED){
+        sendMessage(ThreadMessage::A_OKAY);
+        return;
+    }
 
     QVariant info = message.message;
     switch(type){
@@ -474,7 +514,7 @@ void Computer::procMessage(ThreadMessage message){
         case ThreadMessage::R_SET_PC:
             qDebug() << "COM: RECV FROM GUI: R_SET_PC";
             regs->write(info.toUInt(), Register::PC);
-            emit sendMessage(ThreadMessage(ThreadMessage::A_SET_PC,{}));
+            sendMessage(ThreadMessage::A_SET_PC,{});
             break;
         case ThreadMessage::R_STEP:
             qDebug() << "COM: RECV FROM GUI: R_STEP";
@@ -500,6 +540,10 @@ void Computer::procMessage(ThreadMessage message){
 
             handleRegisterView(info.toString());
             break;
+        case ThreadMessage::R_VIEW_BANANA:
+            qDebug() << "COM: RECV FROM GUI: R_VIEW_BANANA";
+            handleBananaView();
+            break;
         case ThreadMessage::R_VIEW_MEMORY:
             qDebug() << "COM: RECV FROM GUI: R_VIEW_MEMORY";
 
@@ -520,21 +564,25 @@ void Computer::procMessage(ThreadMessage message){
         case ThreadMessage::R_ADD_CACHE:
             qDebug() << "COM: RECV FROM GUI: R_ADD_CACHE";
             mems->addCache(info.toList()[0].toInt(), MemoryStructure::convert(info.toList()[1].toInt()), info.toList()[2].toInt(), info.toList()[3].toInt(),info.toList()[4].toInt(), info.toList()[5].toDouble());
-            emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+            sendMessage(ThreadMessage::A_OKAY);
             break;
         case ThreadMessage::R_REMOVE_CACHE:
             qDebug() << "COM: RECV FROM GUI: R_REMOVE_CACHE";
             mems->removeCache(info.toInt());
-            emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+            sendMessage(ThreadMessage::A_OKAY);
             break;
         case ThreadMessage::R_CLEAR_CACHE:
             qDebug() << "COM: RECV FROM GUI: R_CLEAR_CACHE";
             mems->clear();
-            emit sendMessage(ThreadMessage(ThreadMessage::A_OKAY, {}));
+            sendMessage(ThreadMessage::A_OKAY, {});
             break;
         case ThreadMessage::R_VIEW_PERFORMANCE:
             qDebug() << "COM: RECV FROM GUI: R_VIEW_PERFORMANCE";
-            handlePerformance();
+            handlePerformanceView();
+            break;
+        case ThreadMessage::R_CHANGE_BANANA:
+            qDebug() << "COM: RECV FROM GUI: R_BANANA_CHANGE";
+            handleChangeBanana(static_cast<Banana::Type>(info.toInt()));
             break;
         default:
             qDebug() <<"COM: Invalid message";
@@ -543,6 +591,18 @@ void Computer::procMessage(ThreadMessage message){
 
 }
 
+void Computer::sendMessage(ThreadMessage::Type type){
+    emit _sendMessage(ThreadMessage(type, {}));
+}
+void Computer::sendMessage(ThreadMessage::Type type, QVariant v1){
+    emit _sendMessage(ThreadMessage(type, v1));
+}
+void Computer::sendMessage(ThreadMessage::Type type, QVariant v1, QVariant v2){
+    emit _sendMessage(ThreadMessage(type, v1, v2));
+}
+
+
+//@@@@@@@@@@@@@@@@@DEPRECATED#@@@@@@@@@@@@@@@@@@@@
 void Computer::step(int nCycle) {
     // TODO:  DESTROY THIS!!!
     step(nCycle, 1.0);

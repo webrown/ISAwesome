@@ -6,14 +6,8 @@
 #define __XOR__  ^ 
 #define __NOT__  ~
 
-int toInt(float v){
-    Value x;
-    x.f =v;
-    return x.i;
-}
-
-Value AndInstruction::scalarOperation(int a, int b) {
-  Value v;
+Value AndInstruction::scalarOperation(int a, int b) { 
+    Value v;
   v.i = a __AND__ b;
   return v;
 }
