@@ -2,6 +2,7 @@
 #include "AddInstruction.h"
 #include "BranchInstruction.h"
 #include "CompareInstruction.h"
+#include "LongAddInstruction.h"
 #include "WriteVectorElementInstruction.h"
 #include "../memory/Flag.h"
 #include "../Utility.h"
@@ -153,6 +154,9 @@ void DecodeStage::cycleDown(void){
               break;
           
           case Opcode::ADC:
+              currData->instructionFunctions = new LongAddInstruction();
+              break;
+          
           case Opcode::ADCS:
           case Opcode::SUB:
           case Opcode::SUBS:
