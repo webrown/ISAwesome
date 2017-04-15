@@ -37,12 +37,15 @@ Value ShortArithmeticInstruction::scalarOperation(bool arg1IsFloat, bool arg2IsF
 }
 
 void ShortArithmeticInstruction::execute(StageData *sd){
+  qDebug() << "COM: ShortArithmeticInstruction: execute";
   if(sd->isImmediate1) {
     if(Register::isScalarIndex(sd->operand2)) {
       //pure scalar operand
+      qDebug() << "COM: ShortArithmeticInstruction: immediate & scalar";
       if(sd->flagValue) sd->dest = scalarOperation(Register::isFloatIndex(sd->operand2), Register::isFloatIndex(sd->operand2), sd->src, sd->dest);
     }
     if(Register::isVectorIndex(sd->operand2)) {
+      qDebug() << "COM: ShortArithmeticInstruction: immediate & vector";
       // broadcast sd->operand1 across sd->operand2
       for(int i = 0; i < sd->destVec.size(); i++) {
         if(sd->flagValues.at(i)) {
@@ -53,10 +56,12 @@ void ShortArithmeticInstruction::execute(StageData *sd){
   }
   else{
     if(!Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
+      qDebug() << "COM: ShortArithmeticInstruction: scalar & scalar";
       //pure scalar operand
       if(sd->flagValue) sd->dest = scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->src, sd->dest);
     }
     if(!Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
+      qDebug() << "COM: ShortArithmeticInstruction: scalar & vector";
       // broadcast sd->operand1 across sd->operand2
       QVector<Value> result;
       for(int i = 0; i < sd->destVec.size(); i++) {
@@ -66,12 +71,14 @@ void ShortArithmeticInstruction::execute(StageData *sd){
       sd->destVec = result;
     }
     if( Register::isVectorIndex(sd->operand1) && !Register::isVectorIndex(sd->operand2)) {
+      qDebug() << "COM: ShortArithmeticInstruction: vector & scalar";
       // Reduce sd->operand1 onto sd->operand2
       for(int i = 0; i < sd->srcVec.size(); i++) {
         if(sd->flagValues.at(i)) sd->dest = scalarOperation(Register::isFloatIndex(sd->operand1), Register::isFloatIndex(sd->operand2), sd->srcVec.at(i), sd->dest);
       }
     }
     if( Register::isVectorIndex(sd->operand1) &&  Register::isVectorIndex(sd->operand2)) {
+      qDebug() << "COM: ShortArithmeticInstruction: vector & vector";
       // dot sd->operand1 with sd->operand2
       QVector<Value> result;
       for(int i = 0; i < sd->destVec.size(); i++) {

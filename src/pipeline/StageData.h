@@ -90,7 +90,6 @@ class StageDataPool{
 
     StageData * get(){
         if(buffer.isEmpty() == false){
-            qDebug() << "A";
             StageData * ret = buffer.dequeue();
             return ret;
         }

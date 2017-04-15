@@ -33,14 +33,7 @@ void ExecuteStage::cycleDown(void){
     
     //Some execute logic here.
     currData->instructionFunctions->execute(currData);
-    //switch(currData->opcode){
-    //    case Opcode::B:
-    //        break;
-    //    case Opcode::ADD:
-    //        currData->dest= {currData->dest.asUInt + currData->src.asUInt};
-    //        break;
-    //}
-    //except memory related instruction
+
     
     //Some delay logic here
 }
