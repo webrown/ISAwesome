@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535","PISA") ,container(0, true)
+MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("settings.ini",QSettings::IniFormat) ,container(0, true)
 {
     qRegisterMetaType<ThreadMessage>();
     qDebug() << "GUI: MainWindow starts...";
@@ -72,6 +72,28 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
     _ui.tracker->init(this);
     _ui.bananaView->init();
 
+    //set up correct banana
+    Banana::Type bType = static_cast<Banana::Type>(settings.value("general/defaultbanana", Banana::BASELINE).toInt());
+    if(bType == Banana::BASELINE){
+        //Do nothing
+    }
+    else{
+        handlePipeline();
+    }
+
+    //open previous
+    QStringList prevOpen = settings.value("prevOpen", QStringList()).toStringList();
+    for(QString fileName : prevOpen){
+        qDebug() << "GUI: " << fileName << " open from temp";
+        QFile file(fileName);
+        if(file.exists() == false){
+            continue;
+        }
+        CodeEditor* widget = _ui.editorTab->openTab(fileName);
+        connect(widget, SIGNAL(undoAvailable(bool)), this, SLOT(updateUndo(bool)));
+        connect(widget, SIGNAL(redoAvailable(bool)), this, SLOT(updateRedo(bool)));
+        printlnConsole(fileName + " is opened ");
+    }
 
     updateByState(Computer::DEAD);
     qDebug() << "GUI: MainWindow is initialized...";
@@ -80,6 +102,18 @@ MainWindow::MainWindow( QWidget *parent ): QMainWindow( parent ),settings("CS535
 MainWindow::~MainWindow()
 {
     qDebug() << "GUI: Killing MainWindow";
+    QStringList prevOpen;
+
+    for(int i =0; i < _ui.editorTab->count(); i++){
+        CodeEditor * editor = (CodeEditor * )_ui.editorTab->widget(i);
+        if(editor->sourceFile != NULL){
+            QFileInfo info(*editor->sourceFile) ;
+            qDebug() << "GUI: " << info.absoluteFilePath() << " temp saved";
+            prevOpen << info.absoluteFilePath();
+        }
+    }
+    settings.setValue("prevOpen", prevOpen);
+
     _sendMessage(ThreadMessage(ThreadMessage::R_STOP, {}));
     assemblyThread->quit();
     assemblyThread->wait();
