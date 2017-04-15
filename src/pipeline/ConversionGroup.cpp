@@ -1,6 +1,5 @@
 #include "ConversionGroup.h"
 
-
 Value ToiInstruction::scalarOperation(int a, int b) {
   Value v;
   v.i = (int)a;

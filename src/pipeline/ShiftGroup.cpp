@@ -1,5 +1,10 @@
 #include "ShiftGroup.h"
 
+int toIntSG(float v){
+    Value x;
+    x.f =v;
+    return x.i;
+}
 
 Value LslInstruction::scalarOperation(int a, int b) {
   Value v;
@@ -9,7 +14,7 @@ Value LslInstruction::scalarOperation(int a, int b) {
 
 Value LslInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = toInt(b) << toInt(a);
+  v.f = toIntSG(b) << toIntSG(a);
   return v;
 }
 
@@ -21,7 +26,7 @@ Value LsrInstruction::scalarOperation(int a, int b) {
 
 Value LsrInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = ((unsigned)toInt(b)) >> toInt(a);
+  v.f = ((unsigned)toIntSG(b)) >> toIntSG(a);
   return v;
 }
 Value AslInstruction::scalarOperation(int a, int b) {
@@ -32,7 +37,7 @@ Value AslInstruction::scalarOperation(int a, int b) {
 
 Value AslInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = toInt(b) << toInt(a);
+  v.f = toIntSG(b) << toIntSG(a);
   return v;
 }
 Value AsrInstruction::scalarOperation(int a, int b) {
@@ -52,7 +57,7 @@ Value AsrInstruction::scalarOperation(int a, int b) {
 
 Value AsrInstruction::scalarOperation(float a, float b) {
   Value v;
-  return scalarOperation(toInt(a), toInt(b));
+  return scalarOperation(toIntSG(a), toIntSG(b));
 }
 
 

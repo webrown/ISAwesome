@@ -6,15 +6,21 @@
 #define __XOR__  ^ 
 #define __NOT__  ~
 
-Value AndInstruction::scalarOperation(int a, int b) { 
-    Value v;
+int toIntBG(float v){
+    Value x;
+    x.f =v;
+    return x.i;
+}
+
+Value AndInstruction::scalarOperation(int a, int b) {
+  Value v;
   v.i = a __AND__ b;
   return v;
 }
 
 Value AndInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = toInt(a) __AND__ toInt(b);
+  v.f = toIntBG(a) __AND__ toIntBG(b);
   return v;
 }
 
@@ -26,7 +32,7 @@ Value NandInstruction::scalarOperation(int a, int b) {
 
 Value NandInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = __NAND__(toInt(a),toInt(b));
+  v.f = __NAND__(toIntBG(a),toIntBG(b));
   return v;
 }
 Value OrInstruction::scalarOperation(int a, int b) {
@@ -37,7 +43,7 @@ Value OrInstruction::scalarOperation(int a, int b) {
 
 Value OrInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = toInt(a) __OR__ toInt(b);
+  v.f = toIntBG(a) __OR__ toIntBG(b);
   return v;
 }
 Value NorInstruction::scalarOperation(int a, int b) {
@@ -48,7 +54,7 @@ Value NorInstruction::scalarOperation(int a, int b) {
 
 Value NorInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = __NOR__(toInt(a), toInt(b));
+  v.f = __NOR__(toIntBG(a), toIntBG(b));
   return v;
 }
 
@@ -60,7 +66,7 @@ Value XorInstruction::scalarOperation(int a, int b) {
 
 Value XorInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = toInt(a) __XOR__ toInt(b);
+  v.f = toIntBG(a) __XOR__ toIntBG(b);
   return v;
 }
 
@@ -72,7 +78,7 @@ Value NotInstruction::scalarOperation(int a, int b) {
 
 Value NotInstruction::scalarOperation(float a, float b) {
   Value v;
-  v.f = __NOT__ toInt(a);
+  v.f = __NOT__ toIntBG(a);
   return v;
 }
 

@@ -7,6 +7,7 @@
 #include "BranchInstruction.h"
 #include "CompareInstruction.h"
 #include "LongAddInstruction.h"
+#include "ReadVectorElementInstruction.h"
 #include "WriteVectorElementInstruction.h"
 #include "../memory/Flag.h"
 #include "../Utility.h"
@@ -69,19 +70,27 @@ void DecodeStage::cycleDown(void){
               break;
           case Opcode::BL:
               break;
+
           case Opcode::SEQ:
               break;
+
           case Opcode::WVE:
               currData->instructionFunctions = new WriteVectorElementInstruction();
               break;
+
           case Opcode::RVE:
-              //TODO insert something here
+              currData->instructionFunctions = new ReadVectorElementInstruction();
+              break;
+
           case Opcode::CMP:
               currData->instructionFunctions = new CompareInstruction();
               break;
+
           case Opcode::CPY:
+              qDebug() << "COM: DecodeStage: found a CPY";
               currData->instructionFunctions = new CpyInstruction();
               break;
+
           case Opcode::LOD:
           case Opcode::STO:
           case Opcode::MVD:
