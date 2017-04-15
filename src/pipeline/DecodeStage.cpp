@@ -8,6 +8,7 @@
 #include "CompareInstruction.h"
 #include "LongAddInstruction.h"
 #include "ReadVectorElementInstruction.h"
+#include "SequenceInstruction.h"
 #include "WriteVectorElementInstruction.h"
 #include "../memory/Flag.h"
 #include "../Utility.h"
@@ -74,6 +75,7 @@ void DecodeStage::cycleDown(void){
               break;
 
           case Opcode::SEQ:
+              currData->instructionFunctions = new SequenceInstruction();
               break;
 
           case Opcode::WVE:
