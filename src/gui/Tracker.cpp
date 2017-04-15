@@ -32,9 +32,7 @@ void Tracker::customContextMenu(QPoint point){
     menu.addAction(addBreakAllAction);
 
     QAction *addSkipAction = new QAction(tr("Skip"), &menu);
-    addSkipAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP);
-    connect(addSkipAction,SIGNAL(triggered()), this, SLOT(handleAddSkip()));
-    menu.addAction(addSkipAction);
+    addSkipAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP); connect(addSkipAction,SIGNAL(triggered()), this, SLOT(handleAddSkip())); menu.addAction(addSkipAction);
 
     QAction *addSkipAllAction = new QAction(tr("Skip all"), &menu);
     addSkipAllAction->setEnabled(item->data(Qt::UserRole) != BreakPoint::SKIP_ALL);

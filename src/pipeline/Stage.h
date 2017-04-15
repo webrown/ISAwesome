@@ -11,11 +11,14 @@ class Stage{
         Stage *next = NULL;
         Stage *prev = NULL;
 
-        StageData* currData;
+        StageData* currData = NULL;
+        bool structureFlag = false;
+        bool dependencyFlag = false; 
         int delay;
         
         void init(void){
             currData = NULL;
+            structureFlag = false;
             delay = 0;
         }
         virtual void cycleUp(void) = 0; 

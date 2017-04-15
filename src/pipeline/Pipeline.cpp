@@ -103,3 +103,14 @@ QString Pipeline::stageDebug(QString label, Stage *stage){
     }
     return result;
 }
+
+uint Pipeline::getPCinWriteStage(){
+    StageData * data = writeStage.currData;
+    if(data == NULL){
+        qDebug() << QString::number(0u-1u, 2);
+        return 0u-1u;
+    }
+    else{
+        return data->instructionAddress;
+    }
+}
