@@ -1,4 +1,5 @@
 #include "WriteStage.h"
+#include "Instruction.h"
 
 void WriteStage::cycleUp(void){
     //Check delay
@@ -15,19 +16,22 @@ void WriteStage::cycleUp(void){
 }
 
 void WriteStage::cycleDown(void){
-    if(currData == NULL){
+    // TODO add this stuff to proper places
+    if(currData == NULL || currData->instructionFunctions == NULL){
         return;
     }
     if(currData->isSquashed() == true){
         return;
     }
-    uint destReg = currData->destReg;
-    if(destReg < 24){
-        qDebug() << destReg << currData->dest.asUInt;
-        regs->write(currData->dest.asUInt, destReg);
-    }
-    else{
-        regs->write(currData->destVec, destReg);
-    }
+    //uint destReg = currData->destReg;
+    //if(destReg < 24){
+    //    qDebug() << destReg << currData->dest.asUInt;
+    //    regs->write(currData->dest.asUInt, destReg);
+    //}
+    //else{
+    //    regs->write(currData->destVec, destReg);
+    //}
+    // Do writeback
+    currData->instructionFunctions->writeBack(currData, regs);
     delay = 1;
 }

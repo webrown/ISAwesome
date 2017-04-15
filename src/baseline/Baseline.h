@@ -4,7 +4,7 @@
 #include "../memory/Register.h"
 #include "../memory/MemoryStructure.h"
 #include "../computer/Status.h"
-#include "Banana.h"
+#include "../banana/Banana.h"
 
 class Baseline : public Banana{
     public:

@@ -10,6 +10,22 @@ namespace ProgramManagerY{
         QByteArray regData = computer->regs->save();
         QByteArray memData = computer->mems->_mainMemory->save();
 
+        QList<QByteArray> cacheData;
+        int firstBothId = 0;
+        for(MemoryInterface * m  = computer->mems->_dataAccess; m = m->next; m!= NULL){
+            if(m != computer->mems->_mainMemory){
+                cacheData.append(m->save());
+            }
+        }
+        for(MemoryInterface * m = computer->mems->_instructionAccess; m = m->next; m!= NULL){
+            if(m->type == Cache::BOTH){
+                break;
+            }
+            else{
+                cacheData.append(m->save());
+            }
+        }
+
 
         // QByteArray regData = qCompress(computer->regs->save(),9);
         // QByteArray memData = qCompress(computer->mems->_mainMemory->save(), 9);
@@ -17,6 +33,7 @@ namespace ProgramManagerY{
         QFile file(fileName);
         //file can't be open return false
         if(file.open(QIODevice::WriteOnly | QIODevice::Text) == false){
+            qDebug() << "PROGRAM SAVE FAILED";
             return false;
         }
         QDataStream out(&file);

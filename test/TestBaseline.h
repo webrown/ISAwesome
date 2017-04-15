@@ -4,7 +4,7 @@
 #include <QDebug>
 #include "../src/memory/Register.h"
 #include "../src/memory/MemoryStructure.h"
-#include "../src/pipeline/Baseline.h"
+#include "../src/baseline/Baseline.h"
 #include "../src/memory/Flag.h"
 #include "../src/Utility.h"
 

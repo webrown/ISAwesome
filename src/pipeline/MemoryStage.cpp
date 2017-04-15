@@ -1,4 +1,5 @@
 #include "MemoryStage.h"
+#include "Instruction.h"
 
 void MemoryStage::cycleUp(void){
     //Check delay
@@ -19,7 +20,7 @@ void MemoryStage::cycleUp(void){
 }
 
 void MemoryStage::cycleDown(void){
-    if(currData == NULL){
+    if(currData == NULL || currData->instructionFunctions == NULL){
         return;
     }
     if(currData->isSquashed() == true){
@@ -27,6 +28,7 @@ void MemoryStage::cycleDown(void){
         return;
     }
     //Process memory instruction here.
+    currData->instructionFunctions->memory(currData, mems);
 }
 
 

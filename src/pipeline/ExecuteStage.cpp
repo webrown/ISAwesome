@@ -1,4 +1,5 @@
 #include "ExecuteStage.h"
+#include "Instruction.h"
 
 void ExecuteStage::cycleUp(void){
     //Check delay
@@ -19,7 +20,7 @@ void ExecuteStage::cycleUp(void){
 }
 
 void ExecuteStage::cycleDown(void){
-    if(currData == NULL){
+    if(currData == NULL || currData->instructionFunctions == NULL){
         return;
     }
     if(currData->isSquashed() == true){

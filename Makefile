@@ -57,6 +57,38 @@ SOURCES       = src/main.cpp \
 		src/assembler/Assembler.cpp \
 		src/assembler/Disassembler.cpp \
 		src/assembler/InstructionResolver.cpp \
+		src/baseline/AddOperation.cpp \
+		src/baseline/AndOperation.cpp \
+		src/baseline/ArithmeticOperation.cpp \
+		src/baseline/ArithmeticShiftLeftOperation.cpp \
+		src/baseline/ArithmeticShiftRightOperation.cpp \
+		src/baseline/Baseline.cpp \
+		src/baseline/CompareOperation.cpp \
+		src/baseline/CopyOperation.cpp \
+		src/baseline/DivideOperation.cpp \
+		src/baseline/LoadOperation.cpp \
+		src/baseline/LogicalShiftLeftOperation.cpp \
+		src/baseline/LogicalShiftRightOperation.cpp \
+		src/baseline/LongAddOperation.cpp \
+		src/baseline/LongMultiplyOperation.cpp \
+		src/baseline/LongOperation.cpp \
+		src/baseline/LongSubtractOperation.cpp \
+		src/baseline/MemoryOperation.cpp \
+		src/baseline/ModOperation.cpp \
+		src/baseline/MultiplyOperation.cpp \
+		src/baseline/NandOperation.cpp \
+		src/baseline/NorOperation.cpp \
+		src/baseline/NotOperation.cpp \
+		src/baseline/OrOperation.cpp \
+		src/baseline/ReadVectorElementOperation.cpp \
+		src/baseline/Shift.cpp \
+		src/baseline/StoreOperation.cpp \
+		src/baseline/SubtractOperation.cpp \
+		src/baseline/TernaryOperation.cpp \
+		src/baseline/ToFloatOperation.cpp \
+		src/baseline/ToIntOperation.cpp \
+		src/baseline/WriteVectorElementOperation.cpp \
+		src/baseline/XorOperation.cpp \
 		src/computer/Computer.cpp \
 		src/gui/CacheView.cpp \
 		src/gui/CodeEditor.cpp \
@@ -78,45 +110,17 @@ SOURCES       = src/main.cpp \
 		src/memory/QueryResult.cpp \
 		src/memory/Register.cpp \
 		src/memory/serialization.cpp \
-		src/pipeline/AddOperation.cpp \
-		src/pipeline/AndOperation.cpp \
-		src/pipeline/ArithmeticOperation.cpp \
-		src/pipeline/ArithmeticShiftLeftOperation.cpp \
-		src/pipeline/ArithmeticShiftRightOperation.cpp \
-		src/pipeline/Baseline.cpp \
-		src/pipeline/CompareOperation.cpp \
-		src/pipeline/CopyOperation.cpp \
+		src/pipeline/BinaryInstruction.cpp \
+		src/pipeline/BranchInstruction.cpp \
 		src/pipeline/DecodeStage.cpp \
-		src/pipeline/DivideOperation.cpp \
 		src/pipeline/ExecuteStage.cpp \
-		src/pipeline/LoadOperation.cpp \
-		src/pipeline/LogicalShiftLeftOperation.cpp \
-		src/pipeline/LogicalShiftRightOperation.cpp \
-		src/pipeline/LongAddOperation.cpp \
-		src/pipeline/LongMultiplyOperation.cpp \
-		src/pipeline/LongOperation.cpp \
-		src/pipeline/LongSubtractOperation.cpp \
-		src/pipeline/MemoryOperation.cpp \
 		src/pipeline/MemoryStage.cpp \
-		src/pipeline/ModOperation.cpp \
-		src/pipeline/MultiplyOperation.cpp \
-		src/pipeline/NandOperation.cpp \
-		src/pipeline/NorOperation.cpp \
-		src/pipeline/NotOperation.cpp \
-		src/pipeline/OrOperation.cpp \
 		src/pipeline/Pipeline.cpp \
 		src/pipeline/PrefetchStage.cpp \
-		src/pipeline/ReadVectorElementOperation.cpp \
-		src/pipeline/Shift.cpp \
 		src/pipeline/StageData.cpp \
-		src/pipeline/StoreOperation.cpp \
-		src/pipeline/SubtractOperation.cpp \
-		src/pipeline/TernaryOperation.cpp \
-		src/pipeline/ToFloatOperation.cpp \
-		src/pipeline/ToIntOperation.cpp \
-		src/pipeline/WriteStage.cpp \
-		src/pipeline/WriteVectorElementOperation.cpp \
-		src/pipeline/XorOperation.cpp build/qrc_pisa.cpp \
+		src/pipeline/TernaryInstruction.cpp \
+		src/pipeline/UnaryInstruction.cpp \
+		src/pipeline/WriteStage.cpp build/qrc_pisa.cpp \
 		build/moc_TestAssembler.cpp \
 		build/moc_TestBaseline.cpp \
 		build/moc_TestComputer.cpp \
@@ -144,6 +148,38 @@ OBJECTS       = build/main.o \
 		build/Assembler.o \
 		build/Disassembler.o \
 		build/InstructionResolver.o \
+		build/AddOperation.o \
+		build/AndOperation.o \
+		build/ArithmeticOperation.o \
+		build/ArithmeticShiftLeftOperation.o \
+		build/ArithmeticShiftRightOperation.o \
+		build/Baseline.o \
+		build/CompareOperation.o \
+		build/CopyOperation.o \
+		build/DivideOperation.o \
+		build/LoadOperation.o \
+		build/LogicalShiftLeftOperation.o \
+		build/LogicalShiftRightOperation.o \
+		build/LongAddOperation.o \
+		build/LongMultiplyOperation.o \
+		build/LongOperation.o \
+		build/LongSubtractOperation.o \
+		build/MemoryOperation.o \
+		build/ModOperation.o \
+		build/MultiplyOperation.o \
+		build/NandOperation.o \
+		build/NorOperation.o \
+		build/NotOperation.o \
+		build/OrOperation.o \
+		build/ReadVectorElementOperation.o \
+		build/Shift.o \
+		build/StoreOperation.o \
+		build/SubtractOperation.o \
+		build/TernaryOperation.o \
+		build/ToFloatOperation.o \
+		build/ToIntOperation.o \
+		build/WriteVectorElementOperation.o \
+		build/XorOperation.o \
 		build/Computer.o \
 		build/CacheView.o \
 		build/CodeEditor.o \
@@ -165,45 +201,17 @@ OBJECTS       = build/main.o \
 		build/QueryResult.o \
 		build/Register.o \
 		build/serialization.o \
-		build/AddOperation.o \
-		build/AndOperation.o \
-		build/ArithmeticOperation.o \
-		build/ArithmeticShiftLeftOperation.o \
-		build/ArithmeticShiftRightOperation.o \
-		build/Baseline.o \
-		build/CompareOperation.o \
-		build/CopyOperation.o \
+		build/BinaryInstruction.o \
+		build/BranchInstruction.o \
 		build/DecodeStage.o \
-		build/DivideOperation.o \
 		build/ExecuteStage.o \
-		build/LoadOperation.o \
-		build/LogicalShiftLeftOperation.o \
-		build/LogicalShiftRightOperation.o \
-		build/LongAddOperation.o \
-		build/LongMultiplyOperation.o \
-		build/LongOperation.o \
-		build/LongSubtractOperation.o \
-		build/MemoryOperation.o \
 		build/MemoryStage.o \
-		build/ModOperation.o \
-		build/MultiplyOperation.o \
-		build/NandOperation.o \
-		build/NorOperation.o \
-		build/NotOperation.o \
-		build/OrOperation.o \
 		build/Pipeline.o \
 		build/PrefetchStage.o \
-		build/ReadVectorElementOperation.o \
-		build/Shift.o \
 		build/StageData.o \
-		build/StoreOperation.o \
-		build/SubtractOperation.o \
-		build/TernaryOperation.o \
-		build/ToFloatOperation.o \
-		build/ToIntOperation.o \
+		build/TernaryInstruction.o \
+		build/UnaryInstruction.o \
 		build/WriteStage.o \
-		build/WriteVectorElementOperation.o \
-		build/XorOperation.o \
 		build/qrc_pisa.o \
 		build/moc_TestAssembler.o \
 		build/moc_TestBaseline.o \
@@ -426,6 +434,40 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/assembler/InstructionResolver.h \
 		src/assembler/Problem.h \
 		src/assembler/ProgramManagerX.h \
+		src/banana/Banana.h \
+		src/banana/PipelineGlobals.h \
+		src/baseline/AddOperation.h \
+		src/baseline/AndOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/baseline/ArithmeticShiftLeftOperation.h \
+		src/baseline/ArithmeticShiftRightOperation.h \
+		src/baseline/Baseline.h \
+		src/baseline/CompareOperation.h \
+		src/baseline/CopyOperation.h \
+		src/baseline/DivideOperation.h \
+		src/baseline/LoadOperation.h \
+		src/baseline/LogicalShiftLeftOperation.h \
+		src/baseline/LogicalShiftRightOperation.h \
+		src/baseline/LongAddOperation.h \
+		src/baseline/LongMultiplyOperation.h \
+		src/baseline/LongOperation.h \
+		src/baseline/LongSubtractOperation.h \
+		src/baseline/MemoryOperation.h \
+		src/baseline/ModOperation.h \
+		src/baseline/MultiplyOperation.h \
+		src/baseline/NandOperation.h \
+		src/baseline/NorOperation.h \
+		src/baseline/NotOperation.h \
+		src/baseline/OrOperation.h \
+		src/baseline/ReadVectorElementOperation.h \
+		src/baseline/Shift.h \
+		src/baseline/StoreOperation.h \
+		src/baseline/SubtractOperation.h \
+		src/baseline/TernaryOperation.h \
+		src/baseline/ToFloatOperation.h \
+		src/baseline/ToIntOperation.h \
+		src/baseline/WriteVectorElementOperation.h \
+		src/baseline/XorOperation.h \
 		src/computer/Architecture.h \
 		src/computer/BreakPoint.h \
 		src/computer/Computer.h \
@@ -455,48 +497,21 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/memory/Register.h \
 		src/memory/serialization.h \
 		src/memory/Value.h \
-		src/pipeline/AddOperation.h \
-		src/pipeline/AndOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/pipeline/ArithmeticShiftLeftOperation.h \
-		src/pipeline/ArithmeticShiftRightOperation.h \
-		src/pipeline/Banana.h \
-		src/pipeline/Baseline.h \
-		src/pipeline/CompareOperation.h \
-		src/pipeline/CopyOperation.h \
+		src/pipeline/ArithmeticInstruction.h \
+		src/pipeline/BinaryInstruction.h \
+		src/pipeline/BranchInstruction.h \
 		src/pipeline/DecodeStage.h \
-		src/pipeline/DivideOperation.h \
 		src/pipeline/ExecuteStage.h \
-		src/pipeline/LoadOperation.h \
-		src/pipeline/LogicalShiftLeftOperation.h \
-		src/pipeline/LogicalShiftRightOperation.h \
-		src/pipeline/LongAddOperation.h \
-		src/pipeline/LongMultiplyOperation.h \
-		src/pipeline/LongOperation.h \
-		src/pipeline/LongSubtractOperation.h \
-		src/pipeline/MemoryOperation.h \
+		src/pipeline/Instruction.h \
+		src/pipeline/LongArithmeticInstruction.h \
 		src/pipeline/MemoryStage.h \
-		src/pipeline/ModOperation.h \
-		src/pipeline/MultiplyOperation.h \
-		src/pipeline/NandOperation.h \
-		src/pipeline/NorOperation.h \
-		src/pipeline/NotOperation.h \
-		src/pipeline/OrOperation.h \
 		src/pipeline/Pipeline.h \
-		src/pipeline/PipelineGlobals.h \
 		src/pipeline/PrefetchStage.h \
-		src/pipeline/ReadVectorElementOperation.h \
-		src/pipeline/Shift.h \
 		src/pipeline/Stage.h \
 		src/pipeline/StageData.h \
-		src/pipeline/StoreOperation.h \
-		src/pipeline/SubtractOperation.h \
-		src/pipeline/TernaryOperation.h \
-		src/pipeline/ToFloatOperation.h \
-		src/pipeline/ToIntOperation.h \
-		src/pipeline/WriteStage.h \
-		src/pipeline/WriteVectorElementOperation.h \
-		src/pipeline/XorOperation.h src/main.cpp \
+		src/pipeline/TernaryInstruction.h \
+		src/pipeline/UnaryInstruction.h \
+		src/pipeline/WriteStage.h src/main.cpp \
 		src/Utility.cpp \
 		test/TestAssembler.cpp \
 		test/TestBaseline.cpp \
@@ -505,6 +520,38 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/assembler/Assembler.cpp \
 		src/assembler/Disassembler.cpp \
 		src/assembler/InstructionResolver.cpp \
+		src/baseline/AddOperation.cpp \
+		src/baseline/AndOperation.cpp \
+		src/baseline/ArithmeticOperation.cpp \
+		src/baseline/ArithmeticShiftLeftOperation.cpp \
+		src/baseline/ArithmeticShiftRightOperation.cpp \
+		src/baseline/Baseline.cpp \
+		src/baseline/CompareOperation.cpp \
+		src/baseline/CopyOperation.cpp \
+		src/baseline/DivideOperation.cpp \
+		src/baseline/LoadOperation.cpp \
+		src/baseline/LogicalShiftLeftOperation.cpp \
+		src/baseline/LogicalShiftRightOperation.cpp \
+		src/baseline/LongAddOperation.cpp \
+		src/baseline/LongMultiplyOperation.cpp \
+		src/baseline/LongOperation.cpp \
+		src/baseline/LongSubtractOperation.cpp \
+		src/baseline/MemoryOperation.cpp \
+		src/baseline/ModOperation.cpp \
+		src/baseline/MultiplyOperation.cpp \
+		src/baseline/NandOperation.cpp \
+		src/baseline/NorOperation.cpp \
+		src/baseline/NotOperation.cpp \
+		src/baseline/OrOperation.cpp \
+		src/baseline/ReadVectorElementOperation.cpp \
+		src/baseline/Shift.cpp \
+		src/baseline/StoreOperation.cpp \
+		src/baseline/SubtractOperation.cpp \
+		src/baseline/TernaryOperation.cpp \
+		src/baseline/ToFloatOperation.cpp \
+		src/baseline/ToIntOperation.cpp \
+		src/baseline/WriteVectorElementOperation.cpp \
+		src/baseline/XorOperation.cpp \
 		src/computer/Computer.cpp \
 		src/gui/CacheView.cpp \
 		src/gui/CodeEditor.cpp \
@@ -526,45 +573,17 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/memory/QueryResult.cpp \
 		src/memory/Register.cpp \
 		src/memory/serialization.cpp \
-		src/pipeline/AddOperation.cpp \
-		src/pipeline/AndOperation.cpp \
-		src/pipeline/ArithmeticOperation.cpp \
-		src/pipeline/ArithmeticShiftLeftOperation.cpp \
-		src/pipeline/ArithmeticShiftRightOperation.cpp \
-		src/pipeline/Baseline.cpp \
-		src/pipeline/CompareOperation.cpp \
-		src/pipeline/CopyOperation.cpp \
+		src/pipeline/BinaryInstruction.cpp \
+		src/pipeline/BranchInstruction.cpp \
 		src/pipeline/DecodeStage.cpp \
-		src/pipeline/DivideOperation.cpp \
 		src/pipeline/ExecuteStage.cpp \
-		src/pipeline/LoadOperation.cpp \
-		src/pipeline/LogicalShiftLeftOperation.cpp \
-		src/pipeline/LogicalShiftRightOperation.cpp \
-		src/pipeline/LongAddOperation.cpp \
-		src/pipeline/LongMultiplyOperation.cpp \
-		src/pipeline/LongOperation.cpp \
-		src/pipeline/LongSubtractOperation.cpp \
-		src/pipeline/MemoryOperation.cpp \
 		src/pipeline/MemoryStage.cpp \
-		src/pipeline/ModOperation.cpp \
-		src/pipeline/MultiplyOperation.cpp \
-		src/pipeline/NandOperation.cpp \
-		src/pipeline/NorOperation.cpp \
-		src/pipeline/NotOperation.cpp \
-		src/pipeline/OrOperation.cpp \
 		src/pipeline/Pipeline.cpp \
 		src/pipeline/PrefetchStage.cpp \
-		src/pipeline/ReadVectorElementOperation.cpp \
-		src/pipeline/Shift.cpp \
 		src/pipeline/StageData.cpp \
-		src/pipeline/StoreOperation.cpp \
-		src/pipeline/SubtractOperation.cpp \
-		src/pipeline/TernaryOperation.cpp \
-		src/pipeline/ToFloatOperation.cpp \
-		src/pipeline/ToIntOperation.cpp \
-		src/pipeline/WriteStage.cpp \
-		src/pipeline/WriteVectorElementOperation.cpp \
-		src/pipeline/XorOperation.cpp
+		src/pipeline/TernaryInstruction.cpp \
+		src/pipeline/UnaryInstruction.cpp \
+		src/pipeline/WriteStage.cpp
 QMAKE_TARGET  = PISA
 DESTDIR       = bin/
 TARGET        = bin/PISA
@@ -990,8 +1009,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/ProgramManagerY.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PerformanceView.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/AddOperation.h src/pipeline/AndOperation.h src/pipeline/ArithmeticOperation.h src/pipeline/ArithmeticShiftLeftOperation.h src/pipeline/ArithmeticShiftRightOperation.h src/pipeline/Banana.h src/pipeline/Baseline.h src/pipeline/CompareOperation.h src/pipeline/CopyOperation.h src/pipeline/DecodeStage.h src/pipeline/DivideOperation.h src/pipeline/ExecuteStage.h src/pipeline/LoadOperation.h src/pipeline/LogicalShiftLeftOperation.h src/pipeline/LogicalShiftRightOperation.h src/pipeline/LongAddOperation.h src/pipeline/LongMultiplyOperation.h src/pipeline/LongOperation.h src/pipeline/LongSubtractOperation.h src/pipeline/MemoryOperation.h src/pipeline/MemoryStage.h src/pipeline/ModOperation.h src/pipeline/MultiplyOperation.h src/pipeline/NandOperation.h src/pipeline/NorOperation.h src/pipeline/NotOperation.h src/pipeline/OrOperation.h src/pipeline/Pipeline.h src/pipeline/PipelineGlobals.h src/pipeline/PrefetchStage.h src/pipeline/ReadVectorElementOperation.h src/pipeline/Shift.h src/pipeline/Stage.h src/pipeline/StageData.h src/pipeline/StoreOperation.h src/pipeline/SubtractOperation.h src/pipeline/TernaryOperation.h src/pipeline/ToFloatOperation.h src/pipeline/ToIntOperation.h src/pipeline/WriteStage.h src/pipeline/WriteVectorElementOperation.h src/pipeline/XorOperation.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PerformanceView.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/AddOperation.cpp src/pipeline/AndOperation.cpp src/pipeline/ArithmeticOperation.cpp src/pipeline/ArithmeticShiftLeftOperation.cpp src/pipeline/ArithmeticShiftRightOperation.cpp src/pipeline/Baseline.cpp src/pipeline/CompareOperation.cpp src/pipeline/CopyOperation.cpp src/pipeline/DecodeStage.cpp src/pipeline/DivideOperation.cpp src/pipeline/ExecuteStage.cpp src/pipeline/LoadOperation.cpp src/pipeline/LogicalShiftLeftOperation.cpp src/pipeline/LogicalShiftRightOperation.cpp src/pipeline/LongAddOperation.cpp src/pipeline/LongMultiplyOperation.cpp src/pipeline/LongOperation.cpp src/pipeline/LongSubtractOperation.cpp src/pipeline/MemoryOperation.cpp src/pipeline/MemoryStage.cpp src/pipeline/ModOperation.cpp src/pipeline/MultiplyOperation.cpp src/pipeline/NandOperation.cpp src/pipeline/NorOperation.cpp src/pipeline/NotOperation.cpp src/pipeline/OrOperation.cpp src/pipeline/Pipeline.cpp src/pipeline/PrefetchStage.cpp src/pipeline/ReadVectorElementOperation.cpp src/pipeline/Shift.cpp src/pipeline/StageData.cpp src/pipeline/StoreOperation.cpp src/pipeline/SubtractOperation.cpp src/pipeline/TernaryOperation.cpp src/pipeline/ToFloatOperation.cpp src/pipeline/ToIntOperation.cpp src/pipeline/WriteStage.cpp src/pipeline/WriteVectorElementOperation.cpp src/pipeline/XorOperation.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/banana/Banana.h src/banana/PipelineGlobals.h src/baseline/AddOperation.h src/baseline/AndOperation.h src/baseline/ArithmeticOperation.h src/baseline/ArithmeticShiftLeftOperation.h src/baseline/ArithmeticShiftRightOperation.h src/baseline/Baseline.h src/baseline/CompareOperation.h src/baseline/CopyOperation.h src/baseline/DivideOperation.h src/baseline/LoadOperation.h src/baseline/LogicalShiftLeftOperation.h src/baseline/LogicalShiftRightOperation.h src/baseline/LongAddOperation.h src/baseline/LongMultiplyOperation.h src/baseline/LongOperation.h src/baseline/LongSubtractOperation.h src/baseline/MemoryOperation.h src/baseline/ModOperation.h src/baseline/MultiplyOperation.h src/baseline/NandOperation.h src/baseline/NorOperation.h src/baseline/NotOperation.h src/baseline/OrOperation.h src/baseline/ReadVectorElementOperation.h src/baseline/Shift.h src/baseline/StoreOperation.h src/baseline/SubtractOperation.h src/baseline/TernaryOperation.h src/baseline/ToFloatOperation.h src/baseline/ToIntOperation.h src/baseline/WriteVectorElementOperation.h src/baseline/XorOperation.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/ProgramManagerY.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PerformanceView.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/ArithmeticInstruction.h src/pipeline/BinaryInstruction.h src/pipeline/BranchInstruction.h src/pipeline/DecodeStage.h src/pipeline/ExecuteStage.h src/pipeline/Instruction.h src/pipeline/LongArithmeticInstruction.h src/pipeline/MemoryStage.h src/pipeline/Pipeline.h src/pipeline/PrefetchStage.h src/pipeline/Stage.h src/pipeline/StageData.h src/pipeline/TernaryInstruction.h src/pipeline/UnaryInstruction.h src/pipeline/WriteStage.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/baseline/AddOperation.cpp src/baseline/AndOperation.cpp src/baseline/ArithmeticOperation.cpp src/baseline/ArithmeticShiftLeftOperation.cpp src/baseline/ArithmeticShiftRightOperation.cpp src/baseline/Baseline.cpp src/baseline/CompareOperation.cpp src/baseline/CopyOperation.cpp src/baseline/DivideOperation.cpp src/baseline/LoadOperation.cpp src/baseline/LogicalShiftLeftOperation.cpp src/baseline/LogicalShiftRightOperation.cpp src/baseline/LongAddOperation.cpp src/baseline/LongMultiplyOperation.cpp src/baseline/LongOperation.cpp src/baseline/LongSubtractOperation.cpp src/baseline/MemoryOperation.cpp src/baseline/ModOperation.cpp src/baseline/MultiplyOperation.cpp src/baseline/NandOperation.cpp src/baseline/NorOperation.cpp src/baseline/NotOperation.cpp src/baseline/OrOperation.cpp src/baseline/ReadVectorElementOperation.cpp src/baseline/Shift.cpp src/baseline/StoreOperation.cpp src/baseline/SubtractOperation.cpp src/baseline/TernaryOperation.cpp src/baseline/ToFloatOperation.cpp src/baseline/ToIntOperation.cpp src/baseline/WriteVectorElementOperation.cpp src/baseline/XorOperation.cpp src/computer/Computer.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PerformanceView.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/BinaryInstruction.cpp src/pipeline/BranchInstruction.cpp src/pipeline/DecodeStage.cpp src/pipeline/ExecuteStage.cpp src/pipeline/MemoryStage.cpp src/pipeline/Pipeline.cpp src/pipeline/PrefetchStage.cpp src/pipeline/StageData.cpp src/pipeline/TernaryInstruction.cpp src/pipeline/UnaryInstruction.cpp src/pipeline/WriteStage.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -1082,9 +1101,9 @@ build/moc_TestBaseline.cpp: src/memory/Register.h \
 		src/memory/MemoryInterface.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/computer/Status.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/memory/Flag.h \
 		src/Utility.h \
 		test/TestBaseline.h \
@@ -1102,13 +1121,14 @@ build/moc_TestComputer.cpp: src/computer/Computer.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
 		src/computer/BreakPoint.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/computer/ThreadMessage.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1152,13 +1172,14 @@ build/moc_Computer.cpp: src/memory/Register.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
 		src/computer/BreakPoint.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/computer/ThreadMessage.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1231,12 +1252,13 @@ build/moc_MainWindow.cpp: src/gui/MemoryView.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1328,12 +1350,13 @@ build/moc_PreferenceDialog.cpp: src/gui/ui_preferencedialog.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1469,12 +1492,13 @@ build/main.o: src/main.cpp src/gui/MainWindow.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1512,9 +1536,9 @@ build/TestBaseline.o: test/TestBaseline.cpp test/TestBaseline.h \
 		src/memory/MemoryInterface.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/computer/Status.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/memory/Flag.h \
 		src/Utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TestBaseline.o test/TestBaseline.cpp
@@ -1530,13 +1554,14 @@ build/TestComputer.o: test/TestComputer.cpp test/TestComputer.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
 		src/computer/BreakPoint.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/computer/ThreadMessage.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1574,6 +1599,310 @@ build/InstructionResolver.o: src/assembler/InstructionResolver.cpp src/assembler
 		src/Utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/InstructionResolver.o src/assembler/InstructionResolver.cpp
 
+build/AddOperation.o: src/baseline/AddOperation.cpp src/baseline/AddOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/AddOperation.o src/baseline/AddOperation.cpp
+
+build/AndOperation.o: src/baseline/AndOperation.cpp src/baseline/AndOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/AndOperation.o src/baseline/AndOperation.cpp
+
+build/ArithmeticOperation.o: src/baseline/ArithmeticOperation.cpp src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/Utility.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ArithmeticOperation.o src/baseline/ArithmeticOperation.cpp
+
+build/ArithmeticShiftLeftOperation.o: src/baseline/ArithmeticShiftLeftOperation.cpp src/baseline/ArithmeticShiftLeftOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ArithmeticShiftLeftOperation.o src/baseline/ArithmeticShiftLeftOperation.cpp
+
+build/ArithmeticShiftRightOperation.o: src/baseline/ArithmeticShiftRightOperation.cpp src/baseline/ArithmeticShiftRightOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ArithmeticShiftRightOperation.o src/baseline/ArithmeticShiftRightOperation.cpp
+
+build/Baseline.o: src/baseline/Baseline.cpp src/baseline/Baseline.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Status.h \
+		src/banana/Banana.h \
+		src/Utility.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
+		src/baseline/AddOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/baseline/AndOperation.h \
+		src/baseline/ArithmeticShiftLeftOperation.h \
+		src/baseline/ArithmeticShiftRightOperation.h \
+		src/baseline/CompareOperation.h \
+		src/baseline/CopyOperation.h \
+		src/baseline/DivideOperation.h \
+		src/baseline/LoadOperation.h \
+		src/baseline/MemoryOperation.h \
+		src/baseline/LogicalShiftLeftOperation.h \
+		src/baseline/LogicalShiftRightOperation.h \
+		src/baseline/LongAddOperation.h \
+		src/baseline/LongOperation.h \
+		src/baseline/LongMultiplyOperation.h \
+		src/baseline/LongSubtractOperation.h \
+		src/baseline/ModOperation.h \
+		src/baseline/MultiplyOperation.h \
+		src/baseline/NandOperation.h \
+		src/baseline/NorOperation.h \
+		src/baseline/NotOperation.h \
+		src/baseline/OrOperation.h \
+		src/baseline/ReadVectorElementOperation.h \
+		src/baseline/TernaryOperation.h \
+		src/baseline/Shift.h \
+		src/baseline/StoreOperation.h \
+		src/baseline/SubtractOperation.h \
+		src/baseline/ToFloatOperation.h \
+		src/baseline/ToIntOperation.h \
+		src/baseline/WriteVectorElementOperation.h \
+		src/baseline/XorOperation.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Baseline.o src/baseline/Baseline.cpp
+
+build/CompareOperation.o: src/baseline/CompareOperation.cpp src/baseline/CompareOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/memory/Flag.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CompareOperation.o src/baseline/CompareOperation.cpp
+
+build/CopyOperation.o: src/baseline/CopyOperation.cpp src/baseline/CopyOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CopyOperation.o src/baseline/CopyOperation.cpp
+
+build/DivideOperation.o: src/baseline/DivideOperation.cpp src/baseline/DivideOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/DivideOperation.o src/baseline/DivideOperation.cpp
+
+build/LoadOperation.o: src/baseline/LoadOperation.cpp src/baseline/LoadOperation.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h \
+		src/memory/Register.h \
+		src/baseline/MemoryOperation.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LoadOperation.o src/baseline/LoadOperation.cpp
+
+build/LogicalShiftLeftOperation.o: src/baseline/LogicalShiftLeftOperation.cpp src/baseline/LogicalShiftLeftOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LogicalShiftLeftOperation.o src/baseline/LogicalShiftLeftOperation.cpp
+
+build/LogicalShiftRightOperation.o: src/baseline/LogicalShiftRightOperation.cpp src/baseline/LogicalShiftRightOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LogicalShiftRightOperation.o src/baseline/LogicalShiftRightOperation.cpp
+
+build/LongAddOperation.o: src/baseline/LongAddOperation.cpp src/baseline/LongAddOperation.h \
+		src/baseline/LongOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongAddOperation.o src/baseline/LongAddOperation.cpp
+
+build/LongMultiplyOperation.o: src/baseline/LongMultiplyOperation.cpp src/baseline/LongMultiplyOperation.h \
+		src/baseline/LongOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongMultiplyOperation.o src/baseline/LongMultiplyOperation.cpp
+
+build/LongOperation.o: src/baseline/LongOperation.cpp src/baseline/LongOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/Utility.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongOperation.o src/baseline/LongOperation.cpp
+
+build/LongSubtractOperation.o: src/baseline/LongSubtractOperation.cpp src/baseline/LongSubtractOperation.h \
+		src/baseline/LongOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongSubtractOperation.o src/baseline/LongSubtractOperation.cpp
+
+build/MemoryOperation.o: src/baseline/MemoryOperation.cpp src/baseline/MemoryOperation.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h \
+		src/memory/Register.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryOperation.o src/baseline/MemoryOperation.cpp
+
+build/ModOperation.o: src/baseline/ModOperation.cpp src/baseline/ModOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ModOperation.o src/baseline/ModOperation.cpp
+
+build/MultiplyOperation.o: src/baseline/MultiplyOperation.cpp src/baseline/MultiplyOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MultiplyOperation.o src/baseline/MultiplyOperation.cpp
+
+build/NandOperation.o: src/baseline/NandOperation.cpp src/baseline/NandOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NandOperation.o src/baseline/NandOperation.cpp
+
+build/NorOperation.o: src/baseline/NorOperation.cpp src/baseline/NorOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NorOperation.o src/baseline/NorOperation.cpp
+
+build/NotOperation.o: src/baseline/NotOperation.cpp src/baseline/NotOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NotOperation.o src/baseline/NotOperation.cpp
+
+build/OrOperation.o: src/baseline/OrOperation.cpp src/baseline/OrOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/OrOperation.o src/baseline/OrOperation.cpp
+
+build/ReadVectorElementOperation.o: src/baseline/ReadVectorElementOperation.cpp src/baseline/ReadVectorElementOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/baseline/TernaryOperation.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ReadVectorElementOperation.o src/baseline/ReadVectorElementOperation.cpp
+
+build/Shift.o: src/baseline/Shift.cpp src/baseline/Shift.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Shift.o src/baseline/Shift.cpp
+
+build/StoreOperation.o: src/baseline/StoreOperation.cpp src/baseline/StoreOperation.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/computer/Architecture.h \
+		src/memory/Register.h \
+		src/baseline/MemoryOperation.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/StoreOperation.o src/baseline/StoreOperation.cpp
+
+build/SubtractOperation.o: src/baseline/SubtractOperation.cpp src/baseline/SubtractOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/SubtractOperation.o src/baseline/SubtractOperation.cpp
+
+build/TernaryOperation.o: src/baseline/TernaryOperation.cpp src/baseline/TernaryOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TernaryOperation.o src/baseline/TernaryOperation.cpp
+
+build/ToFloatOperation.o: src/baseline/ToFloatOperation.cpp src/baseline/ToFloatOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ToFloatOperation.o src/baseline/ToFloatOperation.cpp
+
+build/ToIntOperation.o: src/baseline/ToIntOperation.cpp src/baseline/ToIntOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ToIntOperation.o src/baseline/ToIntOperation.cpp
+
+build/WriteVectorElementOperation.o: src/baseline/WriteVectorElementOperation.cpp src/baseline/WriteVectorElementOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h \
+		src/baseline/TernaryOperation.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/WriteVectorElementOperation.o src/baseline/WriteVectorElementOperation.cpp
+
+build/XorOperation.o: src/baseline/XorOperation.cpp src/baseline/XorOperation.h \
+		src/baseline/ArithmeticOperation.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/Value.h \
+		src/computer/Architecture.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/XorOperation.o src/baseline/XorOperation.cpp
+
 build/Computer.o: src/computer/Computer.cpp src/computer/Computer.h \
 		src/memory/Register.h \
 		src/memory/QueryResult.h \
@@ -1584,13 +1913,14 @@ build/Computer.o: src/computer/Computer.cpp src/computer/Computer.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
 		src/computer/BreakPoint.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/computer/ThreadMessage.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1633,12 +1963,13 @@ build/CacheView.o: src/gui/CacheView.cpp src/gui/CacheView.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1696,12 +2027,13 @@ build/MainWindow.o: src/gui/MainWindow.cpp src/gui/MainWindow.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1745,12 +2077,13 @@ build/MemoryView.o: src/gui/MemoryView.cpp src/gui/MemoryView.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1822,12 +2155,13 @@ build/PreferenceDialog.o: src/gui/PreferenceDialog.cpp src/gui/PreferenceDialog.
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1869,12 +2203,13 @@ build/RegisterView.o: src/gui/RegisterView.cpp src/gui/RegisterView.h \
 		src/gui/PerformanceView.h \
 		src/memory/MemoryStructure.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1918,12 +2253,13 @@ build/Tracker.o: src/gui/Tracker.cpp src/gui/Tracker.h \
 		src/gui/RegisterView.h \
 		src/memory/Register.h \
 		src/computer/Computer.h \
-		src/pipeline/Banana.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
-		src/pipeline/Baseline.h \
+		src/baseline/Baseline.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
@@ -1989,140 +2325,66 @@ build/Register.o: src/memory/Register.cpp src/memory/Register.h \
 build/serialization.o: src/memory/serialization.cpp src/memory/serialization.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/serialization.o src/memory/serialization.cpp
 
-build/AddOperation.o: src/pipeline/AddOperation.cpp src/pipeline/AddOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
+build/BinaryInstruction.o: src/pipeline/BinaryInstruction.cpp src/pipeline/BinaryInstruction.h \
+		src/pipeline/Instruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
 		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/AddOperation.o src/pipeline/AddOperation.cpp
-
-build/AndOperation.o: src/pipeline/AndOperation.cpp src/pipeline/AndOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/AndOperation.o src/pipeline/AndOperation.cpp
-
-build/ArithmeticOperation.o: src/pipeline/ArithmeticOperation.cpp src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
+		src/memory/Flag.h \
 		src/computer/Architecture.h \
-		src/Utility.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ArithmeticOperation.o src/pipeline/ArithmeticOperation.cpp
-
-build/ArithmeticShiftLeftOperation.o: src/pipeline/ArithmeticShiftLeftOperation.cpp src/pipeline/ArithmeticShiftLeftOperation.h \
-		src/pipeline/ArithmeticOperation.h \
 		src/memory/Register.h \
 		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ArithmeticShiftLeftOperation.o src/pipeline/ArithmeticShiftLeftOperation.cpp
-
-build/ArithmeticShiftRightOperation.o: src/pipeline/ArithmeticShiftRightOperation.cpp src/pipeline/ArithmeticShiftRightOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ArithmeticShiftRightOperation.o src/pipeline/ArithmeticShiftRightOperation.cpp
-
-build/Baseline.o: src/pipeline/Baseline.cpp src/pipeline/Baseline.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h \
 		src/memory/MemoryStructure.h \
 		src/memory/MemoryInterface.h \
 		src/memory/MainMemory.h \
-		src/memory/Cache.h \
-		src/computer/Status.h \
-		src/pipeline/Banana.h \
-		src/Utility.h \
-		src/pipeline/PipelineGlobals.h \
+		src/memory/Cache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/BinaryInstruction.o src/pipeline/BinaryInstruction.cpp
+
+build/BranchInstruction.o: src/pipeline/BranchInstruction.cpp src/pipeline/BranchInstruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
 		src/memory/Flag.h \
-		src/pipeline/AddOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/pipeline/AndOperation.h \
-		src/pipeline/ArithmeticShiftLeftOperation.h \
-		src/pipeline/ArithmeticShiftRightOperation.h \
-		src/pipeline/CompareOperation.h \
-		src/pipeline/CopyOperation.h \
-		src/pipeline/DivideOperation.h \
-		src/pipeline/LoadOperation.h \
-		src/pipeline/MemoryOperation.h \
-		src/pipeline/LogicalShiftLeftOperation.h \
-		src/pipeline/LogicalShiftRightOperation.h \
-		src/pipeline/LongAddOperation.h \
-		src/pipeline/LongOperation.h \
-		src/pipeline/LongMultiplyOperation.h \
-		src/pipeline/LongSubtractOperation.h \
-		src/pipeline/ModOperation.h \
-		src/pipeline/MultiplyOperation.h \
-		src/pipeline/NandOperation.h \
-		src/pipeline/NorOperation.h \
-		src/pipeline/NotOperation.h \
-		src/pipeline/OrOperation.h \
-		src/pipeline/ReadVectorElementOperation.h \
-		src/pipeline/TernaryOperation.h \
-		src/pipeline/Shift.h \
-		src/pipeline/StoreOperation.h \
-		src/pipeline/SubtractOperation.h \
-		src/pipeline/ToFloatOperation.h \
-		src/pipeline/ToIntOperation.h \
-		src/pipeline/WriteVectorElementOperation.h \
-		src/pipeline/XorOperation.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Baseline.o src/pipeline/Baseline.cpp
-
-build/CompareOperation.o: src/pipeline/CompareOperation.cpp src/pipeline/CompareOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
 		src/computer/Architecture.h \
-		src/memory/Flag.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CompareOperation.o src/pipeline/CompareOperation.cpp
-
-build/CopyOperation.o: src/pipeline/CopyOperation.cpp src/pipeline/CopyOperation.h \
-		src/pipeline/ArithmeticOperation.h \
+		src/pipeline/UnaryInstruction.h \
+		src/pipeline/Instruction.h \
 		src/memory/Register.h \
 		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/CopyOperation.o src/pipeline/CopyOperation.cpp
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/BranchInstruction.o src/pipeline/BranchInstruction.cpp
 
 build/DecodeStage.o: src/pipeline/DecodeStage.cpp src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
 		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
 		src/pipeline/PrefetchStage.h \
 		src/memory/MemoryStructure.h \
 		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
-		src/computer/Architecture.h \
 		src/memory/Register.h \
 		src/pipeline/ExecuteStage.h \
 		src/pipeline/MemoryStage.h \
-		src/Utility.h
+		src/Utility.h \
+		src/pipeline/BranchInstruction.h \
+		src/pipeline/UnaryInstruction.h \
+		src/pipeline/Instruction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/DecodeStage.o src/pipeline/DecodeStage.cpp
-
-build/DivideOperation.o: src/pipeline/DivideOperation.cpp src/pipeline/DivideOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/DivideOperation.o src/pipeline/DivideOperation.cpp
 
 build/ExecuteStage.o: src/pipeline/ExecuteStage.cpp src/pipeline/ExecuteStage.h \
 		src/pipeline/Stage.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
 		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
 		src/pipeline/DecodeStage.h \
 		src/pipeline/PrefetchStage.h \
 		src/memory/MemoryStructure.h \
@@ -2130,143 +2392,27 @@ build/ExecuteStage.o: src/pipeline/ExecuteStage.cpp src/pipeline/ExecuteStage.h 
 		src/memory/QueryResult.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
-		src/computer/Architecture.h \
 		src/memory/Register.h \
 		src/Utility.h \
-		src/pipeline/MemoryStage.h
+		src/pipeline/MemoryStage.h \
+		src/pipeline/Instruction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ExecuteStage.o src/pipeline/ExecuteStage.cpp
-
-build/LoadOperation.o: src/pipeline/LoadOperation.cpp src/pipeline/LoadOperation.h \
-		src/memory/MemoryStructure.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/memory/MainMemory.h \
-		src/memory/Cache.h \
-		src/computer/Architecture.h \
-		src/memory/Register.h \
-		src/pipeline/MemoryOperation.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LoadOperation.o src/pipeline/LoadOperation.cpp
-
-build/LogicalShiftLeftOperation.o: src/pipeline/LogicalShiftLeftOperation.cpp src/pipeline/LogicalShiftLeftOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LogicalShiftLeftOperation.o src/pipeline/LogicalShiftLeftOperation.cpp
-
-build/LogicalShiftRightOperation.o: src/pipeline/LogicalShiftRightOperation.cpp src/pipeline/LogicalShiftRightOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LogicalShiftRightOperation.o src/pipeline/LogicalShiftRightOperation.cpp
-
-build/LongAddOperation.o: src/pipeline/LongAddOperation.cpp src/pipeline/LongAddOperation.h \
-		src/pipeline/LongOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongAddOperation.o src/pipeline/LongAddOperation.cpp
-
-build/LongMultiplyOperation.o: src/pipeline/LongMultiplyOperation.cpp src/pipeline/LongMultiplyOperation.h \
-		src/pipeline/LongOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongMultiplyOperation.o src/pipeline/LongMultiplyOperation.cpp
-
-build/LongOperation.o: src/pipeline/LongOperation.cpp src/pipeline/LongOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h \
-		src/Utility.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongOperation.o src/pipeline/LongOperation.cpp
-
-build/LongSubtractOperation.o: src/pipeline/LongSubtractOperation.cpp src/pipeline/LongSubtractOperation.h \
-		src/pipeline/LongOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongSubtractOperation.o src/pipeline/LongSubtractOperation.cpp
-
-build/MemoryOperation.o: src/pipeline/MemoryOperation.cpp src/pipeline/MemoryOperation.h \
-		src/memory/MemoryStructure.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/memory/MainMemory.h \
-		src/memory/Cache.h \
-		src/computer/Architecture.h \
-		src/memory/Register.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryOperation.o src/pipeline/MemoryOperation.cpp
 
 build/MemoryStage.o: src/pipeline/MemoryStage.cpp src/pipeline/MemoryStage.h \
 		src/pipeline/Stage.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
 		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
 		src/memory/MemoryStructure.h \
 		src/memory/MemoryInterface.h \
 		src/memory/QueryResult.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
-		src/computer/Architecture.h
+		src/pipeline/Instruction.h \
+		src/memory/Register.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryStage.o src/pipeline/MemoryStage.cpp
-
-build/ModOperation.o: src/pipeline/ModOperation.cpp src/pipeline/ModOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ModOperation.o src/pipeline/ModOperation.cpp
-
-build/MultiplyOperation.o: src/pipeline/MultiplyOperation.cpp src/pipeline/MultiplyOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MultiplyOperation.o src/pipeline/MultiplyOperation.cpp
-
-build/NandOperation.o: src/pipeline/NandOperation.cpp src/pipeline/NandOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NandOperation.o src/pipeline/NandOperation.cpp
-
-build/NorOperation.o: src/pipeline/NorOperation.cpp src/pipeline/NorOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NorOperation.o src/pipeline/NorOperation.cpp
-
-build/NotOperation.o: src/pipeline/NotOperation.cpp src/pipeline/NotOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/NotOperation.o src/pipeline/NotOperation.cpp
-
-build/OrOperation.o: src/pipeline/OrOperation.cpp src/pipeline/OrOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/OrOperation.o src/pipeline/OrOperation.cpp
 
 build/Pipeline.o: src/pipeline/Pipeline.cpp src/pipeline/Pipeline.h \
 		src/memory/MemoryInterface.h \
@@ -2278,8 +2424,9 @@ build/Pipeline.o: src/pipeline/Pipeline.cpp src/pipeline/Pipeline.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
-		src/pipeline/Banana.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Flag.h \
+		src/banana/Banana.h \
 		src/computer/Status.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/DecodeStage.h \
@@ -2294,8 +2441,10 @@ build/PrefetchStage.o: src/pipeline/PrefetchStage.cpp src/pipeline/PrefetchStage
 		src/pipeline/DecodeStage.h \
 		src/pipeline/Stage.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
 		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
 		src/pipeline/ExecuteStage.h \
 		src/pipeline/MemoryStage.h \
 		src/memory/MemoryStructure.h \
@@ -2303,99 +2452,63 @@ build/PrefetchStage.o: src/pipeline/PrefetchStage.cpp src/pipeline/PrefetchStage
 		src/memory/QueryResult.h \
 		src/memory/MainMemory.h \
 		src/memory/Cache.h \
-		src/computer/Architecture.h \
 		src/Utility.h \
-		src/memory/Register.h
+		src/memory/Register.h \
+		src/pipeline/Instruction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/PrefetchStage.o src/pipeline/PrefetchStage.cpp
 
-build/ReadVectorElementOperation.o: src/pipeline/ReadVectorElementOperation.cpp src/pipeline/ReadVectorElementOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h \
-		src/pipeline/TernaryOperation.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ReadVectorElementOperation.o src/pipeline/ReadVectorElementOperation.cpp
-
-build/Shift.o: src/pipeline/Shift.cpp src/pipeline/Shift.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Shift.o src/pipeline/Shift.cpp
-
 build/StageData.o: src/pipeline/StageData.cpp src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
-		src/memory/Value.h
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/StageData.o src/pipeline/StageData.cpp
 
-build/StoreOperation.o: src/pipeline/StoreOperation.cpp src/pipeline/StoreOperation.h \
-		src/memory/MemoryStructure.h \
-		src/memory/MemoryInterface.h \
-		src/memory/QueryResult.h \
+build/TernaryInstruction.o: src/pipeline/TernaryInstruction.cpp src/pipeline/TernaryInstruction.h \
+		src/pipeline/Instruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
 		src/memory/Value.h \
-		src/memory/MainMemory.h \
-		src/memory/Cache.h \
+		src/memory/Flag.h \
 		src/computer/Architecture.h \
 		src/memory/Register.h \
-		src/pipeline/MemoryOperation.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/StoreOperation.o src/pipeline/StoreOperation.cpp
+		src/memory/QueryResult.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TernaryInstruction.o src/pipeline/TernaryInstruction.cpp
 
-build/SubtractOperation.o: src/pipeline/SubtractOperation.cpp src/pipeline/SubtractOperation.h \
-		src/pipeline/ArithmeticOperation.h \
+build/UnaryInstruction.o: src/pipeline/UnaryInstruction.cpp src/pipeline/UnaryInstruction.h \
+		src/pipeline/Instruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
 		src/memory/Register.h \
 		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/SubtractOperation.o src/pipeline/SubtractOperation.cpp
-
-build/TernaryOperation.o: src/pipeline/TernaryOperation.cpp src/pipeline/TernaryOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/TernaryOperation.o src/pipeline/TernaryOperation.cpp
-
-build/ToFloatOperation.o: src/pipeline/ToFloatOperation.cpp src/pipeline/ToFloatOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ToFloatOperation.o src/pipeline/ToFloatOperation.cpp
-
-build/ToIntOperation.o: src/pipeline/ToIntOperation.cpp src/pipeline/ToIntOperation.h \
-		src/pipeline/ArithmeticOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ToIntOperation.o src/pipeline/ToIntOperation.cpp
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/UnaryInstruction.o src/pipeline/UnaryInstruction.cpp
 
 build/WriteStage.o: src/pipeline/WriteStage.cpp src/pipeline/WriteStage.h \
 		src/pipeline/Stage.h \
 		src/pipeline/StageData.h \
-		src/pipeline/PipelineGlobals.h \
+		src/banana/PipelineGlobals.h \
 		src/memory/Value.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/WriteStage.o src/pipeline/WriteStage.cpp
-
-build/WriteVectorElementOperation.o: src/pipeline/WriteVectorElementOperation.cpp src/pipeline/WriteVectorElementOperation.h \
-		src/memory/Register.h \
-		src/memory/QueryResult.h \
-		src/memory/Value.h \
+		src/memory/Flag.h \
 		src/computer/Architecture.h \
-		src/pipeline/TernaryOperation.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/WriteVectorElementOperation.o src/pipeline/WriteVectorElementOperation.cpp
-
-build/XorOperation.o: src/pipeline/XorOperation.cpp src/pipeline/XorOperation.h \
-		src/pipeline/ArithmeticOperation.h \
 		src/memory/Register.h \
 		src/memory/QueryResult.h \
-		src/memory/Value.h \
-		src/computer/Architecture.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/XorOperation.o src/pipeline/XorOperation.cpp
+		src/pipeline/Instruction.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/WriteStage.o src/pipeline/WriteStage.cpp
 
 build/qrc_pisa.o: build/qrc_pisa.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_pisa.o build/qrc_pisa.cpp

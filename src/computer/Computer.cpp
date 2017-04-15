@@ -7,7 +7,11 @@ Computer::Computer(){
     qDebug() << "COM: Creating computer";
     regs = new Register();
     mems = new MemoryStructure(MAIN_MEMORY_DELAY, false);
+#if USE_BASELINE
+    exec = new Baseline(regs, mems);
+#else
     exec = new Pipeline(regs, mems);
+#endif
     currState = DEAD;
     qDebug() << "COM: Computer created"; 
 } 

@@ -16,7 +16,6 @@ void StoreOperation::memoryOperation(Register *registers, MemoryStructure *memor
   }
   // Space out for byte addressing.
   QVector<Value> filteredData;
-  Value zero;
   for(int i = 0; i < data.size(); i++) {
     filteredData.push_back(data.at(i));
   }
