@@ -3,6 +3,7 @@
 #include "BranchInstruction.h"
 #include "CompareInstruction.h"
 #include "LongAddInstruction.h"
+#include "ReadVectorElementInstruction.h"
 #include "WriteVectorElementInstruction.h"
 #include "../memory/Flag.h"
 #include "../Utility.h"
@@ -89,57 +90,15 @@ void DecodeStage::cycleDown(void){
           case Opcode::WVE:
               currData->instructionFunctions = new WriteVectorElementInstruction();
               break;
+
           case Opcode::RVE:
-              {
-                  if(isDependent((vvv > 15) & 31) || isDependent(vvv & 31)){
-                      dependencyFlag= true;
-                      return;
-                  }
-                  currData->info |= StageData::VECTOR;
-                  //TODO chekc float or not
-
-                  //get auxillary
-                  if(vvv & L2_BIT == L2_BIT){
-                      currData->src = {(vvv & ((((1 << 5)-1))<<8))>>8};
-                  }
-                  else{
-                      int _ = ((vvv & ((((1 << 5)-1))<<8))>>8);
-                      if(isDependent( _)){
-                          dependencyFlag = true;
-                          return;
-                      }
-                      uint aux = regs->read({_}).asUInt;
-                      currData->aux = regs->read(aux);
-                      currData->regInUse |= 1 << aux;
-                  }
-
-                  //get source 
-                  uint src = regs->read((vvv >>15) & 31).asUInt;
-                  if(src < 24){
-                      currData->src = regs->read(src);
-                  }
-                  else{
-                      currData->srcVec = regs->readVector(src);
-                  }
-                  currData->regInUse = 1 << src;
-
-
-                  //get destination
-                  uint dest = regs->read(vvv & 31).asUInt;
-                  if(dest < 24){
-                      currData->dest = regs->read(dest);
-                  }
-                  else{
-                      currData->destVec = regs->readVector(dest);
-                  }
-                  currData->destReg = dest;
-                  currData->regInUse |= 1 << dest;
-                  break;
-              }
+              currData->instructionFunctions = new ReadVectorElementInstruction();
+              break;
 
           case Opcode::CMP:
               currData->instructionFunctions = new CompareInstruction();
               break;
+
           case Opcode::LOD:
           case Opcode::STO:
           case Opcode::MVD:
