@@ -1,14 +1,15 @@
 #include "DecodeStage.h"
-#include "ShortArithGroup.h"
 #include "BitwiseGroup.h"
 #include "ShiftGroup.h"
 #include "ConversionGroup.h"
 #include "CpyInstruction.h"
+#include "BranchAndLinkInstruction.h"
 #include "BranchInstruction.h"
 #include "CompareInstruction.h"
 #include "LongAddInstruction.h"
 #include "ReadVectorElementInstruction.h"
 #include "SequenceInstruction.h"
+#include "ShortArithGroup.h"
 #include "WriteVectorElementInstruction.h"
 #include "../memory/Flag.h"
 #include "../Utility.h"
@@ -72,6 +73,7 @@ void DecodeStage::cycleDown(void){
               currData->instructionFunctions = new BranchInstruction();
               break;
           case Opcode::BL:
+              currData->instructionFunctions = new BranchAndLinkInstruction();
               break;
 
           case Opcode::SEQ:
