@@ -13,6 +13,7 @@ class Baseline : public Banana{
         int _waitLeft = 0;
         int _instructionFetchWait = 0;
         unsigned int nextInstruction = 0;
+        bool processed = true;
 
         Baseline(Register *regs, MemoryStructure *mem);
         virtual ~Baseline();

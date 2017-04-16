@@ -8,6 +8,8 @@ void MemoryStage::cycleUp(void){
         return;
     }
     else{
+        this->structureFlag = next->currData != NULL;
+
         if(next->currData != NULL){
             //Structural hazard
             return;

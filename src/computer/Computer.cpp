@@ -66,9 +66,10 @@ void Computer::init(QString fileName){
     return;
 }
 void Computer::handleTrackerView(){
+    //buffer for pipeline
     QList<QVariant> instructions;
     for(int i =0 ;i <= program->size; i++){
-        if(i< program->instructionEndAddress ){
+        if(i< program->instructionEndAddress){
             QVariant v = program->instructions->at(i);
             instructions.append(v);
         }
@@ -95,7 +96,15 @@ void Computer::step(int nCycle, double _delay){
         //sleep for sanity
         delay(_delay);
 
-        uint pc = regs->getPC(); 
+        
+        uint pc; 
+        Pipeline* ppp = dynamic_cast<Pipeline*>(exec) ;
+        if( ppp== NULL){
+            pc= regs->getPC(); 
+        }
+        else{
+            pc= ppp->getPCinWriteStage();
+        }
 
         bool skip = false;
         //Stop mechanism
@@ -444,6 +453,7 @@ void Computer::handleBananaView(){
            data.append(false);
            data.append(false);
            data.append(false);
+           // qDebug() << baseline->_instructionFetchWait;
            if(baseline->_instructionFetchWait >0){
                 data.append(baseline->_instructionFetchWait);
                 data.append("Fetching...");
@@ -456,6 +466,26 @@ void Computer::handleBananaView(){
     }
     //Pipeline
     else{
+        Pipeline* pipeline = dynamic_cast<Pipeline*>(exec);
+        for(Stage * stage = &(pipeline->prefetchStage); stage != NULL; stage = stage->next){
+
+            StageData * d = stage->currData;
+            if(d == NULL){
+                data.append(false);
+                data.append(false);
+                data.append(false);
+                data.append(0);
+                data.append("N/A");
+            }
+            else{
+            data.append(stage->structureFlag);
+            data.append(stage->dependencyFlag);
+            data.append(d->isSquashed());
+            data.append(stage->delay >= 0 ? stage->delay : 0);
+            data.append(QString::number(d->instruction));
+            }
+        }
+        qDebug() << data.size();
     }
     sendMessage(ThreadMessage::A_VIEW_BANANA, data);
 

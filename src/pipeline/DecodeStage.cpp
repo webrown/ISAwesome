@@ -23,6 +23,8 @@ void DecodeStage::cycleUp(void){
     if(delay > 0){
         return;
     } else{
+        this->structureFlag = next->currData != NULL;
+        this->dependencyFlag = _dependencyFlag;
         if(next->currData != NULL || dependencyFlag){
             //Structural hazard
             return;
@@ -194,10 +196,10 @@ void DecodeStage::cycleDown(void){
     // Try to decode, just for the heck of it.  Might get dumped later.
     currData->instructionFunctions->decode(currData, regs);
 
-    dependencyFlag = false;
+    _dependencyFlag = false;
     if(isDependent(currData)) {
         // Hey!  We can't decode this instruction yet!  Its dependencies are not resolved!
-        dependencyFlag= true;
+        _dependencyFlag= true;
         return;
     }
 

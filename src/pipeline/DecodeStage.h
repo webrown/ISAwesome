@@ -8,10 +8,10 @@
 #include <QVector>
 class DecodeStage : public Stage{
     public: 
-        bool dependencyFlag; 
         Register * regs;
         void cycleDown(void);
         void cycleUp(void);
+        bool _dependencyFlag = false;
         bool isDependent(char regNum) const;
         bool isDependent(QVector<char> regNums) const;
         bool isDependent(StageData *) const;

@@ -8,6 +8,7 @@ void WriteStage::cycleUp(void){
         return;
     }
     else{
+
         if(currData != NULL){
             pool->kill(currData);
             currData = NULL;

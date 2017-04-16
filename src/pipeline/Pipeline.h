@@ -33,6 +33,9 @@ class Pipeline : public Banana{
         WriteStage writeStage;
 
         QString stageDebug(QString label, Stage *);
+
+        //
+        uint getPCinWriteStage();
         // bool _writeBackStageDone;
         // bool _memoryStageDone;
         // bool _executeStageDone;
