@@ -9,12 +9,12 @@
 class ToiInstruction : public ShortArithmeticInstruction {
   public:
     Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(float, int);
 };
 
 class TofInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
+    Value scalarOperation(int, float);
     Value scalarOperation(float, float);
 };
 #endif

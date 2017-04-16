@@ -60,6 +60,8 @@ Status Baseline::run(void){
     cyclesDone++;
     // Bail if you're still waiting for the next instruction to finish.
     _waitLeft--;
+    // Need this for banana view
+    _instructionFetchWait--;
     if(_waitLeft > 0) {
         return OKAY;
     }
@@ -70,8 +72,8 @@ Status Baseline::run(void){
     // Get the next instruction address.
     // Get next instruction from memory.
     qr = memory->getInstructionAccess()->read(registers->getPC());
-    unsigned int nextInstruction = qr->result.at(0).asUInt;
-    double instructionFetchWait = qr->time;
+    nextInstruction = qr->result.at(0).asUInt;
+    _instructionFetchWait = qr->time;
     delete qr;
     // Move to next instruction address.
     registers->write(registers->getPC()+INSTRUCTION_SIZE, Register::PC);
@@ -328,7 +330,7 @@ Status Baseline::run(void){
         }
      }
      // Don't forget the instructionFetchWait!
-     _waitLeft += instructionFetchWait;
+     _waitLeft += _instructionFetchWait;
      // Yay!  no error!  Well done!
      return OKAY;
 }

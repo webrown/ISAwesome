@@ -17,5 +17,14 @@ class ShortArithmeticInstruction : public BinaryInstruction {
     virtual Value scalarOperation(float, int);   // Override these
     virtual Value scalarOperation(float, float); // Override these
     Value scalarOperation(bool arg1IsFloat, bool arg2IsFloat, Value a, Value b);
+    int toInt(float v){
+        Value x;
+        x.f =v;
+        return x.i;
+    }
+
+
 };
+
+
 #endif

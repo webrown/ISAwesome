@@ -24,6 +24,7 @@ PerformanceView::PerformanceView(QWidget* parent) : QTreeWidget(parent){
 
     //ALU
     QTreeWidgetItem* alu = add(root, "/Alu", "ALU",{});
+    add(alu, "/Alu/Type", "Type: ", {"Baseline"});
 
     //Memory
     QTreeWidgetItem* memory = add(root, "/Memory", "Memory",{});
@@ -52,6 +53,9 @@ QTreeWidgetItem* PerformanceView::add(QTreeWidgetItem* parent, QString str, QStr
     }
     else if(value.type() == QVariant::Double){
         item->setText(0, prefix + QString::number(value.toDouble()));
+    }
+    else if(value.type() == QVariant::String){
+        item->setText(0, prefix + value.toString());
     }
     else{
         item->setText(0, prefix);
@@ -110,6 +114,9 @@ void PerformanceView::display(QMap<QString, QVariant> map){
             }
             else if(map[key].type() == QVariant::LongLong){
                 itemMap[key]->setText(0, prefixMap[key] + QString::number(map[key].toLongLong()));
+            }
+            else if(map[key].type() == QVariant::String){
+                itemMap[key]->setText(0, prefixMap[key] + map[key].toString());
             }
             else{
                 itemMap[key]->setText(0, prefixMap[key]);

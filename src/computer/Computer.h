@@ -27,10 +27,6 @@ class Computer: public QObject{
         enum State{
             DEAD = 0,  RUNNING =1 , PAUSED = 2, BLOCKED =3
         };
-        /*
-         * If this variable is true, then computer will stop with break (I am not hundred percent sure about how to implement "break functionality"
-         * If this variable is false, all break will be ignored
-         */
 
         qint64 totalElapsed = 0;
 
@@ -39,58 +35,70 @@ class Computer: public QObject{
 
         Register* regs = NULL;
         MemoryStructure* mems = NULL;
+
         Banana* exec = NULL;
+
         Program* program = NULL;
 
         Computer();
         ~Computer();
 
-        /* 
-         * Initiate computer, after step, pause, stop will be called only after init is called
-         *
-         */
+
+
+        //initialize computer module with selected program
         void init(QString fileName);
 
-        
-        /*
-         * Run this computer for nCycle 
-         * If nCycle = -1, run indefintely
-         */
+        //Run computer module for n cycles.
+        //If n < 0, run indefinitely.
         void step(int nCycle, double delay);
 
+        //Puase the program
+        void pause();
 
+        //Stop the program
+        void stop();
+
+
+
+        //Change behavior of computer
+        void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
+        void handleChangeBanana(Banana::Type type);
+        void handleSetPC();
+
+        //Return requested view to Gui layer
+        void handleTrackerView();
+        void handleBananaView();
+        void handlePerformanceView();
+        void handleMemoryView(uint startAddress);
+        void handleRegisterView(QString type);
+        void handleCacheView(QList<QVariant> list);
+
+        //Save/Restore State
+        void handleSaveState(QString fileName);
+        void handleRestoreState(QString fileName);
+
+        //Wrapper funciton around sendMessage
+        void sendMessage(ThreadMessage::Type type);
+        void sendMessage(ThreadMessage::Type type, QVariant v1);
+        void sendMessage(ThreadMessage::Type type, QVariant v1, QVariant v2);
+
+
+
+        public slots:
+            void procMessage(ThreadMessage message);
+        signals:
+        void _sendMessage(ThreadMessage message);
+
+        private:
+        void delay(double delay);
+
+
+        public: 
         /*
          * TODO:  THIS IS EVIL.
          */
         void step(int nCycle);
 
 
-        
-        /*
-         * Pause the cycle of computer
-         * If pause is called, during step, then remember the current step that the computer was it
-         */
-        void pause();
-        
-        /*
-         * Kill the current program
-         * This is different from removing the computer, it simply flushes out memory and pipeline
-         */
-        void stop();
-
-        void feedInstructions();
-        void delay(double delay);
-        void addBreakPoint(uint address, BreakPoint::BreakPoint bp);
-        void handlePerformance();
-        void handleMemoryView(uint startAddress);
-        void handleRegisterView(QString type);
-        void handleSaveState(QString fileName);
-        void handleRestoreState(QString fileName);
-        void handleCacheView(QList<QVariant> list);
-
-        public slots:
-            void procMessage(ThreadMessage message);
-        signals:
-            void sendMessage(ThreadMessage message);
 };   
 #endif

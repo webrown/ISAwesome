@@ -10,7 +10,9 @@ class Baseline : public Banana{
     public:
         Register *registers;
         MemoryStructure  *memory;
-        int _waitLeft;
+        int _waitLeft = 0;
+        int _instructionFetchWait = 0;
+        unsigned int nextInstruction = 0;
 
         Baseline(Register *regs, MemoryStructure *mem);
         virtual ~Baseline();

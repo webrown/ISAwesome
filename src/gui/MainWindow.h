@@ -98,6 +98,8 @@ class MainWindow : public QMainWindow
         void handleErrorFromComputer(QString errorMessage);
         void handleSaveState();
         void handleRestoreState();
+        void handlePipeline();
+        void handleBaseline();
 
         
         void handleUpdatePC(int);
