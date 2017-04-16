@@ -5,12 +5,19 @@ void SequenceInstruction::decode(StageData *sd, Register *r) {
   if(Register::isScalarIndex(sd->operand1)) sd->broken = 1;
 }
 void SequenceInstruction::execute(StageData *sd) {
+  qDebug() << "COM: SequenceInstruction: execute";
   // Generate.
   sd->destVec.clear();
   for(int i = 0; i < VECTOR_SIZE; i++) {
     Value v;
-    if(Register::isFloatIndex(sd->operand1)) v.f = i;
-    else                                     v.i = i;
+    if(Register::isFloatIndex(sd->operand1)) {
+      qDebug() << "COM: SequenceInstruction: working with float";
+      v.f = i;
+    }
+    else {
+      qDebug() << "COM: SequenceInstruction: working with int";
+      v.i = i;
+    }
     sd->destVec += v;
   }
 }
