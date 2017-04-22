@@ -1,10 +1,9 @@
 #ifndef STORE_INSTRUCTION_H
 #define STORE_INSTRUCTION_H
 #include "StageData.h"
-#include "BinaryInstruction.h"
-class StoreInstruction : public BinaryInstruction {
+#include "MemoryInstruction.h"
+class StoreInstruction : public MemoryInstruction {
   public:
-    virtual void decode(StageData *, Register *);
     virtual void execute(StageData *);
     virtual void memory(StageData *, MemoryStructure *);
     virtual void writeBack(StageData *, Register *);

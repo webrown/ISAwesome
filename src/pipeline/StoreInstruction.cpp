@@ -1,10 +1,5 @@
 #include "StoreInstruction.h"
 
-void StoreInstruction::decode(StageData *sd, Register *r) {
-  qDebug() << "COM: StoreInstruction: decode";
-  BinaryInstruction::decode(sd, r);
-}
-
 void StoreInstruction::execute(StageData *sd) {
   qDebug() << "COM: StoreInstruction: execute";
   (void) sd;
@@ -14,11 +9,11 @@ void StoreInstruction::memory(StageData *sd, MemoryStructure *m) {
   qDebug() << "COM: StoreInstruction: memory";
   // Write to memory.
   QVector<Value> data;
-  if(Register::isVectorIndex(sd->operand1)) {
-    m->getDataAccess()->write(&sd->srcVec, sd->dest.u);
+  if(Register::isVectorIndex(sd->operand2)) {
+    m->getDataAccess()->write(&sd->destVec, sd->src.u);
   }
   else {
-    m->getDataAccess()->write(sd->src, sd->dest.u);
+    m->getDataAccess()->write(sd->dest, sd->src.u);
   }
 }
 
@@ -30,8 +25,8 @@ void StoreInstruction::writeBack(StageData *sd, Register *r) {
 
 QVector<char> StoreInstruction::registerDependencies(StageData *sd){
   QVector<char> result;
-  // src reg (unless it's an immediate)
-  if(!sd->isImmediate1) result.push_back(sd->operand1.u);
+  // src reg
+  result.push_back(sd->operand1.u);
   // Dest reg
   result.push_back(sd->operand2.u);
   return result;
