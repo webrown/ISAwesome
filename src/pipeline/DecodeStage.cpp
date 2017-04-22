@@ -74,6 +74,7 @@ void DecodeStage::cycleDown(void){
           case Opcode::B: 
               currData->instructionFunctions = new BranchInstruction();
               break;
+
           case Opcode::BL:
               currData->instructionFunctions = new BranchAndLinkInstruction();
               break;
@@ -95,7 +96,6 @@ void DecodeStage::cycleDown(void){
               break;
 
           case Opcode::CPY:
-              qDebug() << "COM: DecodeStage: found a CPY";
               currData->instructionFunctions = new CpyInstruction();
               break;
 
@@ -108,11 +108,19 @@ void DecodeStage::cycleDown(void){
               break;
 
           case Opcode::MVD:
-          case Opcode::MVU:
-          case Opcode::ARR:
-          case Opcode::MOE:
-          case Opcode::SOE:
+              // TODO
+              break;
 
+          case Opcode::MVU:
+              // TODO
+              break;
+
+          case Opcode::ARR:
+              // TODO
+              break;
+
+
+          case Opcode::SOE:
           case Opcode::ADD:
           case Opcode::ADDS:
               currData->instructionFunctions = new AddInstruction();
@@ -122,20 +130,28 @@ void DecodeStage::cycleDown(void){
           case Opcode::ADCS:
               currData->instructionFunctions = new LongAddInstruction();
               break;
+
           case Opcode::SUB:
           case Opcode::SUBS:
               currData->instructionFunctions = new SubInstruction();
               break;
+
           case Opcode::SBC:
           case Opcode::SBCS:
               //TODO fill me in
+              break;
+
+          case Opcode::MOE:
           case Opcode::MUL:
           case Opcode::MULS:
               currData->instructionFunctions = new MulInstruction();
               break;
+
           case Opcode::LMUL:
           case Opcode::LMULS:
-              //TODO 
+              //TODO
+              break;
+
           case Opcode::DIV:
           case Opcode::DIVS:
               currData->instructionFunctions = new DivInstruction();
@@ -143,48 +159,59 @@ void DecodeStage::cycleDown(void){
 
           case Opcode::LDIV:
           case Opcode::LDIVS:
-              //TODO 
+              //TODO
+              break;
+
           case Opcode::MOD:
           case Opcode::MODS:
               currData->instructionFunctions = new ModInstruction();
               break;
-          case Opcode::LSR:
 
+          case Opcode::LSR:
           case Opcode::LSRS:
               currData->instructionFunctions = new LsrInstruction();
               break;
+
           case Opcode::LSL:
           case Opcode::LSLS:
               currData->instructionFunctions = new LslInstruction();
               break;
+
           case Opcode::ASL:
           case Opcode::ASLS:
               currData->instructionFunctions = new AslInstruction();
               break;
+
           case Opcode::ASR:
           case Opcode::ASRS:
               currData->instructionFunctions = new AsrInstruction();
               break;
+
           case Opcode::AND:
           case Opcode::ANDS:
               currData->instructionFunctions = new AndInstruction();
               break;
+
           case Opcode::NAND:
           case Opcode::NANDS:
               currData->instructionFunctions = new NandInstruction();
               break;
+
           case Opcode::OR:
           case Opcode::ORS:
               currData->instructionFunctions = new OrInstruction();
               break;
+
           case Opcode::NOR:
           case Opcode::NORS:
               currData->instructionFunctions = new NorInstruction();
               break;
+
           case Opcode::XOR:
           case Opcode::XORS:
               currData->instructionFunctions = new XorInstruction();
               break;
+
           case Opcode::NOT:
           case Opcode::NOTS:
               currData->instructionFunctions = new NotInstruction();
