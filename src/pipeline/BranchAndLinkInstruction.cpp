@@ -1,11 +1,31 @@
 #include "BranchAndLinkInstruction.h"
+#include "InstructionUtil.h"
 void BranchAndLinkInstruction::decode(StageData *sd, Register *r) {
   UnaryInstruction::decode(sd, r);
   // Barf if register is a vector.
   if(Register::isVectorIndex(sd->operand1) || !Register::indexExists(sd->operand1)) sd->broken = 1;
   // Load
-  sd->aux = r->read(Register::PC);
-  sd->dest = r->read(sd->operand1);
+  QVector<Value> pdvResult = pipelineDecideValue(Register::PC, false, r, sd);
+  if(pdvResult.size() == 0) {
+    sd->broken = true;
+  }
+  else if(pdvResult.size() == 1) {
+    sd->aux = pdvResult.at(0);
+  }
+  else {
+    sd->auxVec = pdvResult;
+  }
+
+  pdvResult = pipelineDecideValue(sd->operand1, false, r, sd);
+  if(pdvResult.size() == 0) {
+    sd->broken = true;
+  }
+  else if(pdvResult.size() == 1) {
+    sd->dest = pdvResult.at(0);
+  }
+  else {
+    sd->destVec = pdvResult;
+  }
 }
 void BranchAndLinkInstruction::execute(StageData *sd) {
   (void) sd;

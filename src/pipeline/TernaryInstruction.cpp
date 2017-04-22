@@ -10,7 +10,7 @@ void TernaryInstruction::decode(StageData *sd, Register *r) {
   sd->isImmediate2 = !spliceMachineCode(nextInstruction, 14, 14);
 
   // Translate first param
-  QVector<Value> pdvResult = pipelineDecideValue(sd->operand1, sd->isImmediate1, r);
+  QVector<Value> pdvResult = pipelineDecideValue(sd->operand1, sd->isImmediate1, r, sd);
   if(pdvResult.size() == 0) {
     sd->broken = true;
   }
@@ -21,7 +21,7 @@ void TernaryInstruction::decode(StageData *sd, Register *r) {
     sd->srcVec = pdvResult;
   }
   // Translate second param.
-  pdvResult = pipelineDecideValue(sd->operand2, sd->isImmediate2, r);
+  pdvResult = pipelineDecideValue(sd->operand2, sd->isImmediate2, r, sd);
   if(pdvResult.size() == 0) {
     sd->broken = true;
   }
@@ -32,7 +32,7 @@ void TernaryInstruction::decode(StageData *sd, Register *r) {
     sd->auxVec = pdvResult;
   }
   // Translate third param.
-  pdvResult = pipelineDecideValue(sd->operand3, false, r);
+  pdvResult = pipelineDecideValue(sd->operand3, false, r, sd);
   if(pdvResult.size() == 0) {
     sd->broken = true;
   }

@@ -12,7 +12,7 @@ void WriteVectorElementInstruction::decode(StageData *sd, Register *r) {
   if(Register::isFloatIndex(sd->operand1) != Register::isFloatIndex(sd->operand3)) sd->broken = 1;
 
   // Special case:  WVE's isImmediate1 is ignored.
-  QVector<Value> pdvResult = pipelineDecideValue(sd->operand1, false, r);
+  QVector<Value> pdvResult = pipelineDecideValue(sd->operand1, false, r, sd);
   if(pdvResult.size() == 0) {
     sd->broken = true;
   }

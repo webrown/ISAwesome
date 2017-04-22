@@ -12,7 +12,7 @@ void BinaryInstruction::decode(StageData *sd, Register *r) {
   qDebug() << "COM: BinaryInstruction: isImmediate1=" << sd->isImmediate1;
 
   // Translate first param. (not required by binaries, but pretty universal)
-  QVector<Value> pdvResult = pipelineDecideValue(sd->operand1, sd->isImmediate1, r);
+  QVector<Value> pdvResult = pipelineDecideValue(sd->operand1, sd->isImmediate1, r, sd);
   if(pdvResult.size() == 0) {
     sd->broken = true;
   }
@@ -23,7 +23,7 @@ void BinaryInstruction::decode(StageData *sd, Register *r) {
     sd->srcVec = pdvResult;
   }
   // Translate second param.
-  pdvResult = pipelineDecideValue(sd->operand2, false, r);
+  pdvResult = pipelineDecideValue(sd->operand2, false, r, sd);
   if(pdvResult.size() == 0) {
     sd->broken = true;
   }

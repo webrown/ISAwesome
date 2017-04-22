@@ -5,7 +5,8 @@
 #include "../memory/Value.h"
 #include <QVector>
 
-QVector<Value> pipelineDecideValue(Value operand, bool isImmediate, Register *r);
+QVector<Value> pipelineDecideValue(Value operand, bool isImmediate, Register *r, StageData *);
+QVector<Value> pipelineDecideValue(int operand, bool isImmediate, Register *r, StageData *);
 
 
 #endif
