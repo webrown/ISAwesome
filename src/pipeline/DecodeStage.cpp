@@ -6,6 +6,7 @@
 #include "BranchAndLinkInstruction.h"
 #include "BranchInstruction.h"
 #include "CompareInstruction.h"
+#include "LoadInstruction.h"
 #include "LongAddInstruction.h"
 #include "ReadVectorElementInstruction.h"
 #include "SequenceInstruction.h"
@@ -99,6 +100,9 @@ void DecodeStage::cycleDown(void){
               break;
 
           case Opcode::LOD:
+              currData->instructionFunctions = new LoadInstruction();
+              break;
+
           case Opcode::STO:
               currData->instructionFunctions = new StoreInstruction();
               break;
