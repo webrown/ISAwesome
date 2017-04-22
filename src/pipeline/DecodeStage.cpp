@@ -10,6 +10,7 @@
 #include "ReadVectorElementInstruction.h"
 #include "SequenceInstruction.h"
 #include "ShortArithGroup.h"
+#include "StoreInstruction.h"
 #include "WriteVectorElementInstruction.h"
 #include "../memory/Flag.h"
 #include "../Utility.h"
@@ -99,6 +100,9 @@ void DecodeStage::cycleDown(void){
 
           case Opcode::LOD:
           case Opcode::STO:
+              currData->instructionFunctions = new StoreInstruction();
+              break;
+
           case Opcode::MVD:
           case Opcode::MVU:
           case Opcode::ARR:
