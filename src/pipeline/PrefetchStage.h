@@ -19,6 +19,6 @@ class PrefetchStage : public Stage {
         void cycleUp(void);
         void cycleDown(void);
 
-        bool makeSequential = 1;
+        bool makeSequential = 0;
 };
 #endif

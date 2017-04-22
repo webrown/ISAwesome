@@ -43,7 +43,6 @@ void PrefetchStage::cycleDown(void){
     if(currData != NULL){
         return;
     }
-    makeSequential = 1;
     if(makeSequential){
         // Do not fetch unles the pipeline is empty.
         for(Stage * curr = next ; curr != NULL ; curr = curr->next){
