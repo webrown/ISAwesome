@@ -56,6 +56,9 @@ void Baseline::init(){
     this->_waitLeft = 0;
     this->instructionsDone = 0;
     this->cyclesDone = 0;
+    this->_instructionFetchWait = 0;
+    this->processed= true;
+    this->nextInstruction = 0;
 
 }
 

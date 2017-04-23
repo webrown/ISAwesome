@@ -113,23 +113,29 @@ SOURCES       = src/main.cpp \
 		src/memory/serialization.cpp \
 		src/pipeline/BinaryInstruction.cpp \
 		src/pipeline/BitwiseGroup.cpp \
+		src/pipeline/BranchAndLinkInstruction.cpp \
 		src/pipeline/BranchInstruction.cpp \
 		src/pipeline/CompareInstruction.cpp \
 		src/pipeline/ConversionGroup.cpp \
 		src/pipeline/CpyInstruction.cpp \
 		src/pipeline/DecodeStage.cpp \
 		src/pipeline/ExecuteStage.cpp \
+		src/pipeline/Instruction.cpp \
 		src/pipeline/InstructionUtil.cpp \
+		src/pipeline/LoadInstruction.cpp \
 		src/pipeline/LongAddInstruction.cpp \
 		src/pipeline/LongArithmeticInstruction.cpp \
+		src/pipeline/MemoryInstruction.cpp \
 		src/pipeline/MemoryStage.cpp \
 		src/pipeline/Pipeline.cpp \
 		src/pipeline/PrefetchStage.cpp \
 		src/pipeline/ReadVectorElementInstruction.cpp \
+		src/pipeline/SequenceInstruction.cpp \
 		src/pipeline/ShiftGroup.cpp \
 		src/pipeline/ShortArithGroup.cpp \
 		src/pipeline/ShortArithmeticInstruction.cpp \
 		src/pipeline/StageData.cpp \
+		src/pipeline/StoreInstruction.cpp \
 		src/pipeline/TernaryInstruction.cpp \
 		src/pipeline/UnaryInstruction.cpp \
 		src/pipeline/WriteStage.cpp \
@@ -218,23 +224,29 @@ OBJECTS       = build/main.o \
 		build/serialization.o \
 		build/BinaryInstruction.o \
 		build/BitwiseGroup.o \
+		build/BranchAndLinkInstruction.o \
 		build/BranchInstruction.o \
 		build/CompareInstruction.o \
 		build/ConversionGroup.o \
 		build/CpyInstruction.o \
 		build/DecodeStage.o \
 		build/ExecuteStage.o \
+		build/Instruction.o \
 		build/InstructionUtil.o \
+		build/LoadInstruction.o \
 		build/LongAddInstruction.o \
 		build/LongArithmeticInstruction.o \
+		build/MemoryInstruction.o \
 		build/MemoryStage.o \
 		build/Pipeline.o \
 		build/PrefetchStage.o \
 		build/ReadVectorElementInstruction.o \
+		build/SequenceInstruction.o \
 		build/ShiftGroup.o \
 		build/ShortArithGroup.o \
 		build/ShortArithmeticInstruction.o \
 		build/StageData.o \
+		build/StoreInstruction.o \
 		build/TernaryInstruction.o \
 		build/UnaryInstruction.o \
 		build/WriteStage.o \
@@ -299,6 +311,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/modules/qt_KIOFileWidgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KIOGui.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KIOWidgets.pri \
+		/usr/lib/qt/mkspecs/modules/qt_Kirigami2.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KItemModels.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KItemViews.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KJobWidgets.pri \
@@ -381,7 +394,10 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quick_private.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickparticles_private.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_quicktemplates2_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_script.pri \
@@ -528,6 +544,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/memory/Value.h \
 		src/pipeline/BinaryInstruction.h \
 		src/pipeline/BitwiseGroup.h \
+		src/pipeline/BranchAndLinkInstruction.h \
 		src/pipeline/BranchInstruction.h \
 		src/pipeline/CompareInstruction.h \
 		src/pipeline/ConversionGroup.h \
@@ -536,17 +553,21 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/pipeline/ExecuteStage.h \
 		src/pipeline/Instruction.h \
 		src/pipeline/InstructionUtil.h \
+		src/pipeline/LoadInstruction.h \
 		src/pipeline/LongAddInstruction.h \
 		src/pipeline/LongArithmeticInstruction.h \
+		src/pipeline/MemoryInstruction.h \
 		src/pipeline/MemoryStage.h \
 		src/pipeline/Pipeline.h \
 		src/pipeline/PrefetchStage.h \
 		src/pipeline/ReadVectorElementInstruction.h \
+		src/pipeline/SequenceInstruction.h \
 		src/pipeline/ShiftGroup.h \
 		src/pipeline/ShortArithGroup.h \
 		src/pipeline/ShortArithmeticInstruction.h \
 		src/pipeline/Stage.h \
 		src/pipeline/StageData.h \
+		src/pipeline/StoreInstruction.h \
 		src/pipeline/TernaryInstruction.h \
 		src/pipeline/UnaryInstruction.h \
 		src/pipeline/WriteStage.h \
@@ -615,23 +636,29 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/memory/serialization.cpp \
 		src/pipeline/BinaryInstruction.cpp \
 		src/pipeline/BitwiseGroup.cpp \
+		src/pipeline/BranchAndLinkInstruction.cpp \
 		src/pipeline/BranchInstruction.cpp \
 		src/pipeline/CompareInstruction.cpp \
 		src/pipeline/ConversionGroup.cpp \
 		src/pipeline/CpyInstruction.cpp \
 		src/pipeline/DecodeStage.cpp \
 		src/pipeline/ExecuteStage.cpp \
+		src/pipeline/Instruction.cpp \
 		src/pipeline/InstructionUtil.cpp \
+		src/pipeline/LoadInstruction.cpp \
 		src/pipeline/LongAddInstruction.cpp \
 		src/pipeline/LongArithmeticInstruction.cpp \
+		src/pipeline/MemoryInstruction.cpp \
 		src/pipeline/MemoryStage.cpp \
 		src/pipeline/Pipeline.cpp \
 		src/pipeline/PrefetchStage.cpp \
 		src/pipeline/ReadVectorElementInstruction.cpp \
+		src/pipeline/SequenceInstruction.cpp \
 		src/pipeline/ShiftGroup.cpp \
 		src/pipeline/ShortArithGroup.cpp \
 		src/pipeline/ShortArithmeticInstruction.cpp \
 		src/pipeline/StageData.cpp \
+		src/pipeline/StoreInstruction.cpp \
 		src/pipeline/TernaryInstruction.cpp \
 		src/pipeline/UnaryInstruction.cpp \
 		src/pipeline/WriteStage.cpp \
@@ -688,6 +715,7 @@ Makefile: PISA.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 		/usr/lib/qt/mkspecs/modules/qt_KIOFileWidgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KIOGui.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KIOWidgets.pri \
+		/usr/lib/qt/mkspecs/modules/qt_Kirigami2.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KItemModels.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KItemViews.pri \
 		/usr/lib/qt/mkspecs/modules/qt_KJobWidgets.pri \
@@ -770,7 +798,10 @@ Makefile: PISA.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 		/usr/lib/qt/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quick_private.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickparticles_private.pri \
+		/usr/lib/qt/mkspecs/modules/qt_lib_quicktemplates2_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets_private.pri \
 		/usr/lib/qt/mkspecs/modules/qt_lib_script.pri \
@@ -887,6 +918,7 @@ Makefile: PISA.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 /usr/lib/qt/mkspecs/modules/qt_KIOFileWidgets.pri:
 /usr/lib/qt/mkspecs/modules/qt_KIOGui.pri:
 /usr/lib/qt/mkspecs/modules/qt_KIOWidgets.pri:
+/usr/lib/qt/mkspecs/modules/qt_Kirigami2.pri:
 /usr/lib/qt/mkspecs/modules/qt_KItemModels.pri:
 /usr/lib/qt/mkspecs/modules/qt_KItemViews.pri:
 /usr/lib/qt/mkspecs/modules/qt_KJobWidgets.pri:
@@ -969,7 +1001,10 @@ Makefile: PISA.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 /usr/lib/qt/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quick.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quick_private.pri:
+/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2.pri:
+/usr/lib/qt/mkspecs/modules/qt_lib_quickcontrols2_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quickparticles_private.pri:
+/usr/lib/qt/mkspecs/modules/qt_lib_quicktemplates2_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_quickwidgets_private.pri:
 /usr/lib/qt/mkspecs/modules/qt_lib_script.pri:
@@ -1061,8 +1096,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/pisa.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/banana/Banana.h src/banana/PipelineGlobals.h src/baseline/AddOperation.h src/baseline/AndOperation.h src/baseline/ArithmeticOperation.h src/baseline/ArithmeticShiftLeftOperation.h src/baseline/ArithmeticShiftRightOperation.h src/baseline/Baseline.h src/baseline/CompareOperation.h src/baseline/CopyOperation.h src/baseline/DivideOperation.h src/baseline/LoadOperation.h src/baseline/LogicalShiftLeftOperation.h src/baseline/LogicalShiftRightOperation.h src/baseline/LongAddOperation.h src/baseline/LongMultiplyOperation.h src/baseline/LongOperation.h src/baseline/LongSubtractOperation.h src/baseline/MemoryOperation.h src/baseline/ModOperation.h src/baseline/MultiplyOperation.h src/baseline/NandOperation.h src/baseline/NorOperation.h src/baseline/NotOperation.h src/baseline/OrOperation.h src/baseline/ReadVectorElementOperation.h src/baseline/Shift.h src/baseline/StoreOperation.h src/baseline/SubtractOperation.h src/baseline/TernaryOperation.h src/baseline/ToFloatOperation.h src/baseline/ToIntOperation.h src/baseline/WriteVectorElementOperation.h src/baseline/XorOperation.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/ProgramManagerY.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/BananaView.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PerformanceView.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/BinaryInstruction.h src/pipeline/BitwiseGroup.h src/pipeline/BranchInstruction.h src/pipeline/CompareInstruction.h src/pipeline/ConversionGroup.h src/pipeline/CpyInstruction.h src/pipeline/DecodeStage.h src/pipeline/ExecuteStage.h src/pipeline/Instruction.h src/pipeline/InstructionUtil.h src/pipeline/LongAddInstruction.h src/pipeline/LongArithmeticInstruction.h src/pipeline/MemoryStage.h src/pipeline/Pipeline.h src/pipeline/PrefetchStage.h src/pipeline/ReadVectorElementInstruction.h src/pipeline/ShiftGroup.h src/pipeline/ShortArithGroup.h src/pipeline/ShortArithmeticInstruction.h src/pipeline/Stage.h src/pipeline/StageData.h src/pipeline/TernaryInstruction.h src/pipeline/UnaryInstruction.h src/pipeline/WriteStage.h src/pipeline/WriteVectorElementInstruction.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/baseline/AddOperation.cpp src/baseline/AndOperation.cpp src/baseline/ArithmeticOperation.cpp src/baseline/ArithmeticShiftLeftOperation.cpp src/baseline/ArithmeticShiftRightOperation.cpp src/baseline/Baseline.cpp src/baseline/CompareOperation.cpp src/baseline/CopyOperation.cpp src/baseline/DivideOperation.cpp src/baseline/LoadOperation.cpp src/baseline/LogicalShiftLeftOperation.cpp src/baseline/LogicalShiftRightOperation.cpp src/baseline/LongAddOperation.cpp src/baseline/LongMultiplyOperation.cpp src/baseline/LongOperation.cpp src/baseline/LongSubtractOperation.cpp src/baseline/MemoryOperation.cpp src/baseline/ModOperation.cpp src/baseline/MultiplyOperation.cpp src/baseline/NandOperation.cpp src/baseline/NorOperation.cpp src/baseline/NotOperation.cpp src/baseline/OrOperation.cpp src/baseline/ReadVectorElementOperation.cpp src/baseline/Shift.cpp src/baseline/StoreOperation.cpp src/baseline/SubtractOperation.cpp src/baseline/TernaryOperation.cpp src/baseline/ToFloatOperation.cpp src/baseline/ToIntOperation.cpp src/baseline/WriteVectorElementOperation.cpp src/baseline/XorOperation.cpp src/computer/Computer.cpp src/gui/BananaView.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PerformanceView.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/BinaryInstruction.cpp src/pipeline/BitwiseGroup.cpp src/pipeline/BranchInstruction.cpp src/pipeline/CompareInstruction.cpp src/pipeline/ConversionGroup.cpp src/pipeline/CpyInstruction.cpp src/pipeline/DecodeStage.cpp src/pipeline/ExecuteStage.cpp src/pipeline/InstructionUtil.cpp src/pipeline/LongAddInstruction.cpp src/pipeline/LongArithmeticInstruction.cpp src/pipeline/MemoryStage.cpp src/pipeline/Pipeline.cpp src/pipeline/PrefetchStage.cpp src/pipeline/ReadVectorElementInstruction.cpp src/pipeline/ShiftGroup.cpp src/pipeline/ShortArithGroup.cpp src/pipeline/ShortArithmeticInstruction.cpp src/pipeline/StageData.cpp src/pipeline/TernaryInstruction.cpp src/pipeline/UnaryInstruction.cpp src/pipeline/WriteStage.cpp src/pipeline/WriteVectorElementInstruction.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/Utility.h test/TestAssembler.h test/TestBaseline.h test/TestComputer.h test/TestInstructionResolver.h src/assembler/Assembler.h src/assembler/ConditionResolver.h src/assembler/Disassembler.h src/assembler/InstructionResolver.h src/assembler/Problem.h src/assembler/ProgramManagerX.h src/banana/Banana.h src/banana/PipelineGlobals.h src/baseline/AddOperation.h src/baseline/AndOperation.h src/baseline/ArithmeticOperation.h src/baseline/ArithmeticShiftLeftOperation.h src/baseline/ArithmeticShiftRightOperation.h src/baseline/Baseline.h src/baseline/CompareOperation.h src/baseline/CopyOperation.h src/baseline/DivideOperation.h src/baseline/LoadOperation.h src/baseline/LogicalShiftLeftOperation.h src/baseline/LogicalShiftRightOperation.h src/baseline/LongAddOperation.h src/baseline/LongMultiplyOperation.h src/baseline/LongOperation.h src/baseline/LongSubtractOperation.h src/baseline/MemoryOperation.h src/baseline/ModOperation.h src/baseline/MultiplyOperation.h src/baseline/NandOperation.h src/baseline/NorOperation.h src/baseline/NotOperation.h src/baseline/OrOperation.h src/baseline/ReadVectorElementOperation.h src/baseline/Shift.h src/baseline/StoreOperation.h src/baseline/SubtractOperation.h src/baseline/TernaryOperation.h src/baseline/ToFloatOperation.h src/baseline/ToIntOperation.h src/baseline/WriteVectorElementOperation.h src/baseline/XorOperation.h src/computer/Architecture.h src/computer/BreakPoint.h src/computer/Computer.h src/computer/ProgramManagerY.h src/computer/Status.h src/computer/ThreadMessage.h src/computer/ThreadMessageQueue.h src/gui/BananaView.h src/gui/CacheView.h src/gui/CodeEditor.h src/gui/EditorTab.h src/gui/HexSpinBox.h src/gui/HighLighter.h src/gui/MainWindow.h src/gui/MemoryView.h src/gui/MiscDialog.h src/gui/MyQSpinBox.h src/gui/PerformanceView.h src/gui/PreferenceDialog.h src/gui/RegisterView.h src/gui/Tracker.h src/memory/Cache.h src/memory/Flag.h src/memory/MainMemory.h src/memory/MemoryInterface.h src/memory/MemoryStructure.h src/memory/QueryResult.h src/memory/Register.h src/memory/serialization.h src/memory/Value.h src/pipeline/BinaryInstruction.h src/pipeline/BitwiseGroup.h src/pipeline/BranchAndLinkInstruction.h src/pipeline/BranchInstruction.h src/pipeline/CompareInstruction.h src/pipeline/ConversionGroup.h src/pipeline/CpyInstruction.h src/pipeline/DecodeStage.h src/pipeline/ExecuteStage.h src/pipeline/Instruction.h src/pipeline/InstructionUtil.h src/pipeline/LoadInstruction.h src/pipeline/LongAddInstruction.h src/pipeline/LongArithmeticInstruction.h src/pipeline/MemoryInstruction.h src/pipeline/MemoryStage.h src/pipeline/Pipeline.h src/pipeline/PrefetchStage.h src/pipeline/ReadVectorElementInstruction.h src/pipeline/SequenceInstruction.h src/pipeline/ShiftGroup.h src/pipeline/ShortArithGroup.h src/pipeline/ShortArithmeticInstruction.h src/pipeline/Stage.h src/pipeline/StageData.h src/pipeline/StoreInstruction.h src/pipeline/TernaryInstruction.h src/pipeline/UnaryInstruction.h src/pipeline/WriteStage.h src/pipeline/WriteVectorElementInstruction.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/Utility.cpp test/TestAssembler.cpp test/TestBaseline.cpp test/TestComputer.cpp test/TestInstructionResolver.cpp src/assembler/Assembler.cpp src/assembler/Disassembler.cpp src/assembler/InstructionResolver.cpp src/baseline/AddOperation.cpp src/baseline/AndOperation.cpp src/baseline/ArithmeticOperation.cpp src/baseline/ArithmeticShiftLeftOperation.cpp src/baseline/ArithmeticShiftRightOperation.cpp src/baseline/Baseline.cpp src/baseline/CompareOperation.cpp src/baseline/CopyOperation.cpp src/baseline/DivideOperation.cpp src/baseline/LoadOperation.cpp src/baseline/LogicalShiftLeftOperation.cpp src/baseline/LogicalShiftRightOperation.cpp src/baseline/LongAddOperation.cpp src/baseline/LongMultiplyOperation.cpp src/baseline/LongOperation.cpp src/baseline/LongSubtractOperation.cpp src/baseline/MemoryOperation.cpp src/baseline/ModOperation.cpp src/baseline/MultiplyOperation.cpp src/baseline/NandOperation.cpp src/baseline/NorOperation.cpp src/baseline/NotOperation.cpp src/baseline/OrOperation.cpp src/baseline/ReadVectorElementOperation.cpp src/baseline/Shift.cpp src/baseline/StoreOperation.cpp src/baseline/SubtractOperation.cpp src/baseline/TernaryOperation.cpp src/baseline/ToFloatOperation.cpp src/baseline/ToIntOperation.cpp src/baseline/WriteVectorElementOperation.cpp src/baseline/XorOperation.cpp src/computer/Computer.cpp src/gui/BananaView.cpp src/gui/CacheView.cpp src/gui/CodeEditor.cpp src/gui/EditorTab.cpp src/gui/HighLighter.cpp src/gui/MainWindow.cpp src/gui/MemoryView.cpp src/gui/MiscDialog.cpp src/gui/MyQSpinBox.cpp src/gui/PerformanceView.cpp src/gui/PreferenceDialog.cpp src/gui/RegisterView.cpp src/gui/Tracker.cpp src/memory/Cache.cpp src/memory/Flag.cpp src/memory/MainMemory.cpp src/memory/MemoryInterface.cpp src/memory/MemoryStructure.cpp src/memory/QueryResult.cpp src/memory/Register.cpp src/memory/serialization.cpp src/pipeline/BinaryInstruction.cpp src/pipeline/BitwiseGroup.cpp src/pipeline/BranchAndLinkInstruction.cpp src/pipeline/BranchInstruction.cpp src/pipeline/CompareInstruction.cpp src/pipeline/ConversionGroup.cpp src/pipeline/CpyInstruction.cpp src/pipeline/DecodeStage.cpp src/pipeline/ExecuteStage.cpp src/pipeline/Instruction.cpp src/pipeline/InstructionUtil.cpp src/pipeline/LoadInstruction.cpp src/pipeline/LongAddInstruction.cpp src/pipeline/LongArithmeticInstruction.cpp src/pipeline/MemoryInstruction.cpp src/pipeline/MemoryStage.cpp src/pipeline/Pipeline.cpp src/pipeline/PrefetchStage.cpp src/pipeline/ReadVectorElementInstruction.cpp src/pipeline/SequenceInstruction.cpp src/pipeline/ShiftGroup.cpp src/pipeline/ShortArithGroup.cpp src/pipeline/ShortArithmeticInstruction.cpp src/pipeline/StageData.cpp src/pipeline/StoreInstruction.cpp src/pipeline/TernaryInstruction.cpp src/pipeline/UnaryInstruction.cpp src/pipeline/WriteStage.cpp src/pipeline/WriteVectorElementInstruction.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents rsc/ui/newcachedialog.ui rsc/ui/newfiledialog.ui rsc/ui/pisa.ui rsc/ui/preferencedialog.ui $(DISTDIR)/
 
 
@@ -2457,6 +2492,23 @@ build/BitwiseGroup.o: src/pipeline/BitwiseGroup.cpp src/pipeline/BitwiseGroup.h 
 		src/memory/Cache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/BitwiseGroup.o src/pipeline/BitwiseGroup.cpp
 
+build/BranchAndLinkInstruction.o: src/pipeline/BranchAndLinkInstruction.cpp src/pipeline/BranchAndLinkInstruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
+		src/pipeline/UnaryInstruction.h \
+		src/pipeline/Instruction.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/pipeline/InstructionUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/BranchAndLinkInstruction.o src/pipeline/BranchAndLinkInstruction.cpp
+
 build/BranchInstruction.o: src/pipeline/BranchInstruction.cpp src/pipeline/BranchInstruction.h \
 		src/pipeline/StageData.h \
 		src/banana/PipelineGlobals.h \
@@ -2540,21 +2592,26 @@ build/DecodeStage.o: src/pipeline/DecodeStage.cpp src/pipeline/DecodeStage.h \
 		src/pipeline/ExecuteStage.h \
 		src/pipeline/MemoryStage.h \
 		src/Utility.h \
-		src/pipeline/ShortArithGroup.h \
+		src/pipeline/BitwiseGroup.h \
 		src/pipeline/ShortArithmeticInstruction.h \
 		src/pipeline/BinaryInstruction.h \
 		src/pipeline/Instruction.h \
-		src/pipeline/BitwiseGroup.h \
 		src/pipeline/ShiftGroup.h \
 		src/pipeline/ConversionGroup.h \
 		src/pipeline/CpyInstruction.h \
-		src/pipeline/BranchInstruction.h \
+		src/pipeline/BranchAndLinkInstruction.h \
 		src/pipeline/UnaryInstruction.h \
+		src/pipeline/BranchInstruction.h \
 		src/pipeline/CompareInstruction.h \
+		src/pipeline/LoadInstruction.h \
+		src/pipeline/MemoryInstruction.h \
 		src/pipeline/LongAddInstruction.h \
 		src/pipeline/LongArithmeticInstruction.h \
 		src/pipeline/ReadVectorElementInstruction.h \
 		src/pipeline/TernaryInstruction.h \
+		src/pipeline/SequenceInstruction.h \
+		src/pipeline/ShortArithGroup.h \
+		src/pipeline/StoreInstruction.h \
 		src/pipeline/WriteVectorElementInstruction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/DecodeStage.o src/pipeline/DecodeStage.cpp
 
@@ -2578,6 +2635,20 @@ build/ExecuteStage.o: src/pipeline/ExecuteStage.cpp src/pipeline/ExecuteStage.h 
 		src/pipeline/Instruction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ExecuteStage.o src/pipeline/ExecuteStage.cpp
 
+build/Instruction.o: src/pipeline/Instruction.cpp src/pipeline/Instruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/Instruction.o src/pipeline/Instruction.cpp
+
 build/InstructionUtil.o: src/pipeline/InstructionUtil.cpp src/pipeline/InstructionUtil.h \
 		src/pipeline/StageData.h \
 		src/banana/PipelineGlobals.h \
@@ -2587,6 +2658,23 @@ build/InstructionUtil.o: src/pipeline/InstructionUtil.cpp src/pipeline/Instructi
 		src/memory/Register.h \
 		src/memory/QueryResult.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/InstructionUtil.o src/pipeline/InstructionUtil.cpp
+
+build/LoadInstruction.o: src/pipeline/LoadInstruction.cpp src/pipeline/LoadInstruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
+		src/pipeline/MemoryInstruction.h \
+		src/pipeline/Instruction.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/pipeline/BinaryInstruction.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LoadInstruction.o src/pipeline/LoadInstruction.cpp
 
 build/LongAddInstruction.o: src/pipeline/LongAddInstruction.cpp src/pipeline/LongAddInstruction.h \
 		src/pipeline/LongArithmeticInstruction.h \
@@ -2620,6 +2708,24 @@ build/LongArithmeticInstruction.o: src/pipeline/LongArithmeticInstruction.cpp sr
 		src/memory/MainMemory.h \
 		src/memory/Cache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/LongArithmeticInstruction.o src/pipeline/LongArithmeticInstruction.cpp
+
+build/MemoryInstruction.o: src/pipeline/MemoryInstruction.cpp src/pipeline/MemoryInstruction.h \
+		src/pipeline/Instruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/pipeline/BinaryInstruction.h \
+		src/Utility.h \
+		src/pipeline/InstructionUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/MemoryInstruction.o src/pipeline/MemoryInstruction.cpp
 
 build/MemoryStage.o: src/pipeline/MemoryStage.cpp src/pipeline/MemoryStage.h \
 		src/pipeline/Stage.h \
@@ -2698,6 +2804,22 @@ build/ReadVectorElementInstruction.o: src/pipeline/ReadVectorElementInstruction.
 		src/pipeline/InstructionUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/ReadVectorElementInstruction.o src/pipeline/ReadVectorElementInstruction.cpp
 
+build/SequenceInstruction.o: src/pipeline/SequenceInstruction.cpp src/pipeline/SequenceInstruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
+		src/pipeline/UnaryInstruction.h \
+		src/pipeline/Instruction.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/SequenceInstruction.o src/pipeline/SequenceInstruction.cpp
+
 build/ShiftGroup.o: src/pipeline/ShiftGroup.cpp src/pipeline/ShiftGroup.h \
 		src/pipeline/ShortArithmeticInstruction.h \
 		src/pipeline/BinaryInstruction.h \
@@ -2755,6 +2877,23 @@ build/StageData.o: src/pipeline/StageData.cpp src/pipeline/StageData.h \
 		src/computer/Architecture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/StageData.o src/pipeline/StageData.cpp
 
+build/StoreInstruction.o: src/pipeline/StoreInstruction.cpp src/pipeline/StoreInstruction.h \
+		src/pipeline/StageData.h \
+		src/banana/PipelineGlobals.h \
+		src/memory/Value.h \
+		src/memory/Flag.h \
+		src/computer/Architecture.h \
+		src/pipeline/MemoryInstruction.h \
+		src/pipeline/Instruction.h \
+		src/memory/Register.h \
+		src/memory/QueryResult.h \
+		src/memory/MemoryStructure.h \
+		src/memory/MemoryInterface.h \
+		src/memory/MainMemory.h \
+		src/memory/Cache.h \
+		src/pipeline/BinaryInstruction.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/StoreInstruction.o src/pipeline/StoreInstruction.cpp
+
 build/TernaryInstruction.o: src/pipeline/TernaryInstruction.cpp src/pipeline/TernaryInstruction.h \
 		src/pipeline/Instruction.h \
 		src/pipeline/StageData.h \
@@ -2784,7 +2923,8 @@ build/UnaryInstruction.o: src/pipeline/UnaryInstruction.cpp src/pipeline/UnaryIn
 		src/memory/MemoryStructure.h \
 		src/memory/MemoryInterface.h \
 		src/memory/MainMemory.h \
-		src/memory/Cache.h
+		src/memory/Cache.h \
+		src/Utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/UnaryInstruction.o src/pipeline/UnaryInstruction.cpp
 
 build/WriteStage.o: src/pipeline/WriteStage.cpp src/pipeline/WriteStage.h \
