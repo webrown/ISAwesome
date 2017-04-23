@@ -15,14 +15,14 @@ Value ToiInstruction::scalarOperation(float a, int b, int *wait){
 }
 
 Value TofInstruction::scalarOperation(int a, float b, int *wait){
-  *wait = 4;
+  *wait = 3;
   Value v;
   v.f = (float) a;
   return v;
 }
 
 Value TofInstruction::scalarOperation(float a, float b, int *wait){
-  *wait = 4;
+  *wait = 3;
   Value v;
   v.f = (float) a;
   return v;
