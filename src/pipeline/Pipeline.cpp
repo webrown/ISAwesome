@@ -62,7 +62,8 @@ Status Pipeline::run(){
     executeStage.cycleUp();
     decodeStage.cycleUp();
 
-    prefetchStage.cycleUp();
+    // I assume that if an instruction enters the pipeline, we will do it.
+    this->instructionsDone += prefetchStage.cycleUp();
 
     writeStage.cycleDown();
     memoryStage.cycleDown();
@@ -70,6 +71,8 @@ Status Pipeline::run(){
     decodeStage.cycleDown();
     prefetchStage.cycleDown();
 
+    // Another cycle has passed.
+    this->cyclesDone++;
 
     //Because..., why not?
     return OKAY;
