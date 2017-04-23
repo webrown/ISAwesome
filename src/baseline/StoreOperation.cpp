@@ -20,5 +20,5 @@ void StoreOperation::memoryOperation(Register *registers, MemoryStructure *memor
     filteredData.push_back(data.at(i));
   }
   // Put in data.
-  *wait = memory->getDataAccess()->write(&filteredData, address);
+  *wait = 2+0+memory->getDataAccess()->write(&filteredData, address)+0;
 }

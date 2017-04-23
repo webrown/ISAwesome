@@ -5,7 +5,7 @@
 WriteVectorElementOperation WriteVectorElementOperation::singleton;
 
 void WriteVectorElementOperation::decodeOperation(Register *registers, Value arg1, Value arg2, Value arg3, int *wait) {
-    *wait = 1;
+    *wait = 3+1+0+1;
     if(arg2.i < 0 || arg2.i >= VECTOR_SIZE) {
         qDebug() << "COM: WriteVectorElementOperation: NOOP index out of range.";
         return;

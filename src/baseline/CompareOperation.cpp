@@ -16,7 +16,7 @@ Value CompareOperation::newFlag(int a, int b, int *wait) {
   if(a <  b) result = add(result, LT);
   if(a >  b) result = add(result, GT);
   result = add(result, AL);
-  *wait = 4;
+  *wait = 2+6+0+1;
   return result;
 }
 
@@ -30,7 +30,7 @@ Value CompareOperation::newFlag(float a, float b, int *wait) {
   if(a <  b) result = add(result, LT);
   if(a >  b) result = add(result, GT);
   result = add(result, AL);
-  *wait = 8;
+  *wait = 2+12+0+1;
   return result;
 }
 

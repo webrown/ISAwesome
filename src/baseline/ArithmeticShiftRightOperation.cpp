@@ -4,6 +4,7 @@
 ArithmeticShiftRightOperation ArithmeticShiftRightOperation ::singleton;
 
 Value ArithmeticShiftRightOperation::scalarOperation(int a, int b, int *wait){
+  *wait = 2+1+0+1;
   Value v;
   // Get rid of -.  - is where evil happens with ASR.
   bool mustSwap = false;
@@ -16,7 +17,6 @@ Value ArithmeticShiftRightOperation::scalarOperation(int a, int b, int *wait){
   // Swap back
   if(mustSwap) b = ~b;
   v.i = b;
-  *wait = 1;
   return v;
 }
 

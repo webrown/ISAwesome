@@ -8,7 +8,7 @@ void LoadOperation::memoryOperation(Register *registers, MemoryStructure *memory
   int dataRequested = Register::isVectorIndex(registerIndex)?VECTOR_SIZE:1;
   // Fetch from memory.
   QueryResult *qr = memory->getDataAccess()->read(address, dataRequested);
-  *wait = qr->time;
+  *wait = 2+0+qr->time+1;
   // For code flexibility...
   QVector<Value> filteredResult;
   for(int i = 0; i < qr->result.size(); i+=1) {

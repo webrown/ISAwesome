@@ -22,7 +22,7 @@ Value DivideOperation::scalarOperation(int a, int b, int *wait){
     // Save division.
     v.i = b / a;
   }
-  *wait = 4;
+  *wait = 2+8+0+1;
   return v;
 }
 
@@ -44,7 +44,7 @@ Value DivideOperation::scalarOperation(float a, float b, int *wait){
     // Save division.
     v.f = b / a;
   }
-  *wait = 8;
+  *wait = 2+16+0+1;
   return v;
 }
 

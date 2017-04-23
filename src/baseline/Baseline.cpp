@@ -269,7 +269,7 @@ Status Baseline::run(void){
                           break;
                       }
             case SEQ: {
-                          _waitLeft = 1;
+                          _waitLeft = 1+1+0+1;
                           // SEQ makes no sense with scalars or immediates
                           if(!Register::isScalarIndex(unaryOperand) && Register::indexExists(unaryOperand)) {
                               QVector<Value> newVector;
