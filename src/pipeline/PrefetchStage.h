@@ -16,7 +16,7 @@ class PrefetchStage : public Stage {
 
         StageDataPool * pool;
 
-        void cycleUp(void);
+        bool cycleUp(void);
         void cycleDown(void);
 
         bool makeSequential = 0;

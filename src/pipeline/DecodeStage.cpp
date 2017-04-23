@@ -20,25 +20,27 @@
 
 
 
-void DecodeStage::cycleUp(void){
+bool DecodeStage::cycleUp(void){
     //Check delay
     delay--;
     if(delay > 0){
-        return;
+        return false;
     } else{
         this->structureFlag = next->currData != NULL;
         this->dependencyFlag = _dependencyFlag;
         if(next->currData != NULL || dependencyFlag){
             //Structural hazard
-            return;
+            return false;
         }
         else{
             next->currData = currData;
             next->computing = false; // Produce your result before you start counting.
             computing = false; // You're done computing for now.
             currData = NULL;
+            return true;
         }
     }
+    return false; // How'd you get out here???
 }
 using namespace Opcode;
 void DecodeStage::cycleDown(void){

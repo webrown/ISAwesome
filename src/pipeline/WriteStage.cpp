@@ -1,11 +1,11 @@
 #include "WriteStage.h"
 #include "Instruction.h"
 
-void WriteStage::cycleUp(void){
+bool WriteStage::cycleUp(void){
     //Check delay
     delay--;
     if(delay > 0){
-        return;
+        return false;
     }
     else{
         computing = false; // You're done computing for now.
@@ -13,8 +13,10 @@ void WriteStage::cycleUp(void){
         if(currData != NULL){
             pool->kill(currData);
             currData = NULL;
+            return true;
         }
     }
+    return false;
 }
 
 void WriteStage::cycleDown(void){

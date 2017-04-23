@@ -6,7 +6,7 @@
 
 class ExecuteStage : public Stage{
     public: 
-        void cycleUp(void);
+        bool cycleUp(void);
         void cycleDown(void);
         
 };

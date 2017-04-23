@@ -2,25 +2,27 @@
 #include "Instruction.h"
 #include "../Utility.h"
 
-void PrefetchStage::cycleUp(void){
+bool PrefetchStage::cycleUp(void){
     //Check delay
     delay--;
     if(delay > 0){
-        return;
+        return false;
     }
     else{
         this->structureFlag = next->currData != NULL;
 
         if(next->currData != NULL){
             //Structural hazard
-            return;
+            return false;
         }
         else{
             next->currData = currData;
             next->computing = false; // got to clear prereqs before you compute.
             currData = NULL;
+            return true;
         }
     }
+    return false;
 }
 void PrefetchStage::cycleDown(void){
     if(currData != NULL){

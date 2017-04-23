@@ -5,7 +5,7 @@
 class MemoryStage :public Stage{
     public: 
         MemoryStructure * mems;
-        void cycleUp(void);
+        bool cycleUp(void);
         void cycleDown(void);
 };
 #endif

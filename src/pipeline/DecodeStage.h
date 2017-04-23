@@ -10,7 +10,7 @@ class DecodeStage : public Stage{
     public: 
         Register * regs;
         void cycleDown(void);
-        void cycleUp(void);
+        bool cycleUp(void);
         bool _dependencyFlag = false;
         bool isDependent(char regNum) const;
         bool isDependent(QVector<char> regNums) const;

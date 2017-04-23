@@ -1,26 +1,28 @@
 #include "MemoryStage.h"
 #include "Instruction.h"
 
-void MemoryStage::cycleUp(void){
+bool MemoryStage::cycleUp(void){
     //Check delay
     delay--;
     if(delay > 0){
-        return;
+        return false;
     }
     else{
         this->structureFlag = next->currData != NULL;
 
         if(next->currData != NULL){
             //Structural hazard
-            return;
+            return false;
         }
         else{
             next->currData = currData;
             next->computing = false; // Produce your result before you start counting.
             computing = false; // You're done computing for now.
             currData = NULL;
+            return true;
         }
     }
+    return false;
 }
 
 void MemoryStage::cycleDown(void){

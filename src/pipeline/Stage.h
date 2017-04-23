@@ -22,7 +22,7 @@ class Stage{
             structureFlag = false;
             delay = 0;
         }
-        virtual void cycleUp(void) = 0; 
+        virtual bool cycleUp(void) = 0;  // Returns is an instruction left this stage.
         virtual void cycleDown(void) = 0; 
 
 };

@@ -6,7 +6,7 @@ class WriteStage : public Stage{
     public: 
         StageDataPool * pool;
         Register * regs;
-        void cycleUp(void);
+        bool cycleUp(void);
         void cycleDown(void);
 };
 #endif
