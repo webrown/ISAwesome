@@ -1,8 +1,8 @@
 #include "MemoryInstruction.h"
 #include "../Utility.h"
 #include "InstructionUtil.h"
-void MemoryInstruction::decode(StageData *sd, Register *r) {
-  BinaryInstruction::decode(sd, r);
+void MemoryInstruction::decode(StageData *sd, Register *r, int *wait){
+  BinaryInstruction::decode(sd, r, wait);
 
   // Both params are translated.
   QVector<Value> pdvResult = pipelineDecideValue(sd->operand1, false, r, sd);

@@ -1,7 +1,7 @@
 #include "WriteVectorElementInstruction.h"
 #include "InstructionUtil.h"
-void WriteVectorElementInstruction::decode(StageData *sd, Register *r) {
-  TernaryInstruction::decode(sd, r);
+void WriteVectorElementInstruction::decode(StageData *sd, Register *r, int *wait) {
+  TernaryInstruction::decode(sd, r, wait);
   // First param must be scalar unless immediate
   if(!Register::isScalarIndex(sd->operand1) && !sd->isImmediate1) sd->broken = 1;
   // Middle param must be scalar int unless immediate
@@ -23,14 +23,17 @@ void WriteVectorElementInstruction::decode(StageData *sd, Register *r) {
     sd->srcVec = pdvResult;
   }
 }
-void WriteVectorElementInstruction::execute(StageData *sd) {
+void WriteVectorElementInstruction::execute(StageData *sd, int *wait) {
+  *wait = 1;
   sd->destVec[sd->aux.i % sd->destVec.size()] = sd->src;
 }
-void WriteVectorElementInstruction::memory(StageData *sd, MemoryStructure *m) {
+void WriteVectorElementInstruction::memory(StageData *sd, MemoryStructure *m, int *wait) {
+  *wait = 0;
   (void) sd;
   (void) m;
 }
-void WriteVectorElementInstruction::writeBack(StageData *sd, Register *r) {
+void WriteVectorElementInstruction::writeBack(StageData *sd, Register *r, int *wait) {
+  *wait = 1;
   r->write(sd->destVec, sd->operand3.i);
 }
 bool WriteVectorElementInstruction::decodeDump(StageData *sd, Register *r){

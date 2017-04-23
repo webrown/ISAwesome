@@ -34,6 +34,8 @@ void DecodeStage::cycleUp(void){
         }
         else{
             next->currData = currData;
+            next->computing = false; // Produce your result before you start counting.
+            computing = false; // You're done computing for now.
             currData = NULL;
         }
     }
@@ -41,6 +43,11 @@ void DecodeStage::cycleUp(void){
 using namespace Opcode;
 void DecodeStage::cycleDown(void){
     if(currData == NULL){
+        return;
+    }
+
+    if(computing){
+        // If you're already computing, everything is in place and you don't need to wait for prereqs and such.
         return;
     }
 
@@ -66,15 +73,179 @@ void DecodeStage::cycleDown(void){
     if(flagCode == 14) currData->condFlag = Flag::AL;
     if(flagCode == 15) currData->condFlag = Flag::UN;
 
-    
-    if(currData == NULL || currData->instructionFunctions == NULL) {
-      // Something's gone wrong.  Don't die, just notify.
-      qDebug() << "COM:  DecodeStage: Not sure what to do with opcode" << currData->opcode;
-      return;
+    if(currData->instructionFunctions == NULL) {
+      // What instruction are we looking at?
+      switch(currData->opcode){
+          case Opcode::B: 
+              currData->instructionFunctions = new BranchInstruction();
+              break;
+
+          case Opcode::BL:
+              currData->instructionFunctions = new BranchAndLinkInstruction();
+              break;
+
+          case Opcode::SEQ:
+              currData->instructionFunctions = new SequenceInstruction();
+              break;
+
+          case Opcode::WVE:
+              currData->instructionFunctions = new WriteVectorElementInstruction();
+              break;
+
+          case Opcode::RVE:
+              currData->instructionFunctions = new ReadVectorElementInstruction();
+              break;
+
+          case Opcode::CMP:
+              currData->instructionFunctions = new CompareInstruction();
+              break;
+
+          case Opcode::CPY:
+              currData->instructionFunctions = new CpyInstruction();
+              break;
+
+          case Opcode::LOD:
+              currData->instructionFunctions = new LoadInstruction();
+              break;
+
+          case Opcode::STO:
+              currData->instructionFunctions = new StoreInstruction();
+              break;
+
+          case Opcode::MVD:
+              // TODO
+              break;
+
+          case Opcode::MVU:
+              // TODO
+              break;
+
+          case Opcode::ARR:
+              // TODO
+              break;
+
+
+          case Opcode::SOE:
+          case Opcode::ADD:
+          case Opcode::ADDS:
+              currData->instructionFunctions = new AddInstruction();
+              break;
+          
+          case Opcode::ADC:
+          case Opcode::ADCS:
+              currData->instructionFunctions = new LongAddInstruction();
+              break;
+
+          case Opcode::SUB:
+          case Opcode::SUBS:
+              currData->instructionFunctions = new SubInstruction();
+              break;
+
+          case Opcode::SBC:
+          case Opcode::SBCS:
+              //TODO fill me in
+              break;
+
+          case Opcode::MOE:
+          case Opcode::MUL:
+          case Opcode::MULS:
+              currData->instructionFunctions = new MulInstruction();
+              break;
+
+          case Opcode::LMUL:
+          case Opcode::LMULS:
+              //TODO
+              break;
+
+          case Opcode::DIV:
+          case Opcode::DIVS:
+              currData->instructionFunctions = new DivInstruction();
+              break;
+
+          case Opcode::LDIV:
+          case Opcode::LDIVS:
+              //TODO
+              break;
+
+          case Opcode::MOD:
+          case Opcode::MODS:
+              currData->instructionFunctions = new ModInstruction();
+              break;
+
+          case Opcode::LSR:
+          case Opcode::LSRS:
+              currData->instructionFunctions = new LsrInstruction();
+              break;
+
+          case Opcode::LSL:
+          case Opcode::LSLS:
+              currData->instructionFunctions = new LslInstruction();
+              break;
+
+          case Opcode::ASL:
+          case Opcode::ASLS:
+              currData->instructionFunctions = new AslInstruction();
+              break;
+
+          case Opcode::ASR:
+          case Opcode::ASRS:
+              currData->instructionFunctions = new AsrInstruction();
+              break;
+
+          case Opcode::AND:
+          case Opcode::ANDS:
+              currData->instructionFunctions = new AndInstruction();
+              break;
+
+          case Opcode::NAND:
+          case Opcode::NANDS:
+              currData->instructionFunctions = new NandInstruction();
+              break;
+
+          case Opcode::OR:
+          case Opcode::ORS:
+              currData->instructionFunctions = new OrInstruction();
+              break;
+
+          case Opcode::NOR:
+          case Opcode::NORS:
+              currData->instructionFunctions = new NorInstruction();
+              break;
+
+          case Opcode::XOR:
+          case Opcode::XORS:
+              currData->instructionFunctions = new XorInstruction();
+              break;
+
+          case Opcode::NOT:
+          case Opcode::NOTS:
+              currData->instructionFunctions = new NotInstruction();
+              break;
+
+          case Opcode::TOF:
+              currData->instructionFunctions = new TofInstruction();
+              break;
+
+          case Opcode::TOI:
+              currData->instructionFunctions = new ToiInstruction();
+              break;
+              
+          case Opcode::NOP:
+          default:
+              //Do nothing
+              break;
+      }
+      if(currData == NULL || currData->instructionFunctions == NULL) {
+        // Something's gone wrong.  Don't die, just notify.
+        qDebug() << "COM:  DecodeStage: Not sure what to do with opcode" << currData->opcode;
+        return;
+      }
+
     }
+    
 
     // Try to decode, just for the heck of it.  Might get dumped later.
-    currData->instructionFunctions->decode(currData, regs);
+    currData->instructionFunctions->decode(currData, regs, &delay);
 
     _dependencyFlag = false;
     if(isDependent(currData)) {
@@ -102,7 +273,7 @@ else {
   qDebug() << "COM: DecodeStage: NULLED out";
 }
 #endif
-    delay = 1;
+    computing = true;
 }
 
 bool DecodeStage::isDependent(char regNum) const{

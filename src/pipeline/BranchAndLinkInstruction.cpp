@@ -1,7 +1,8 @@
 #include "BranchAndLinkInstruction.h"
 #include "InstructionUtil.h"
-void BranchAndLinkInstruction::decode(StageData *sd, Register *r) {
-  UnaryInstruction::decode(sd, r);
+void BranchAndLinkInstruction::decode(StageData *sd, Register *r, int *wait) {
+  UnaryInstruction::decode(sd, r, wait);
+  *wait = 2;
   // Barf if register is a vector.
   if(Register::isVectorIndex(sd->operand1) || !Register::indexExists(sd->operand1)) sd->broken = 1;
   // Load
@@ -27,14 +28,17 @@ void BranchAndLinkInstruction::decode(StageData *sd, Register *r) {
     sd->destVec = pdvResult;
   }
 }
-void BranchAndLinkInstruction::execute(StageData *sd) {
+void BranchAndLinkInstruction::execute(StageData *sd, int *wait) {
+  *wait = 1;
   (void) sd;
 }
-void BranchAndLinkInstruction::memory(StageData *sd, MemoryStructure *m) {
+void BranchAndLinkInstruction::memory(StageData *sd, MemoryStructure *m, int *wait) {
+  *wait = 0;
   (void) sd;
   (void) m;
 }
-void BranchAndLinkInstruction::writeBack(StageData *sd, Register *r) {
+void BranchAndLinkInstruction::writeBack(StageData *sd, Register *r, int *wait) {
+  *wait = 2;
   r->write(sd->aux, Register::LR);
   r->write(sd->dest, Register::PC);
 }

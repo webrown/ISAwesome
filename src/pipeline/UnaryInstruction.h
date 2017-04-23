@@ -5,6 +5,6 @@
 #include "../memory/MemoryStructure.h"
 class UnaryInstruction : public Instruction {
   public:
-    virtual void decode(StageData *, Register *);
+    virtual void decode(StageData *, Register *, int *wait);
 };
 #endif

@@ -8,6 +8,7 @@ void WriteStage::cycleUp(void){
         return;
     }
     else{
+        computing = false; // You're done computing for now.
 
         if(currData != NULL){
             pool->kill(currData);
@@ -19,6 +20,10 @@ void WriteStage::cycleUp(void){
 void WriteStage::cycleDown(void){
     // TODO add this stuff to proper places
     if(currData == NULL || currData->instructionFunctions == NULL){
+        return;
+    }
+    if(computing){
+        // If you're already computing, everything is in place and you don't need to wait for prereqs and such.
         return;
     }
     if(currData->isSquashed() == true){
@@ -33,6 +38,6 @@ void WriteStage::cycleDown(void){
     //    regs->write(currData->destVec, destReg);
     //}
     // Do writeback
-    currData->instructionFunctions->writeBack(currData, regs);
-    delay = 1;
+    currData->instructionFunctions->writeBack(currData, regs, &delay);
+    computing = true;
 }

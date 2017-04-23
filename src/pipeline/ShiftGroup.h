@@ -8,23 +8,23 @@
 
 class LslInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 
 class LsrInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 class AslInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 class AsrInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 #endif

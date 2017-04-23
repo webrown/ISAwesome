@@ -16,6 +16,8 @@ void ExecuteStage::cycleUp(void){
         }
         else{
             next->currData = currData;
+            next->computing = false; // Produce your result before you start counting.
+            computing = false; // You're done computing for now.
             currData = NULL;
         }
     }
@@ -23,6 +25,10 @@ void ExecuteStage::cycleUp(void){
 
 void ExecuteStage::cycleDown(void){
     if(currData == NULL || currData->instructionFunctions == NULL){
+        return;
+    }
+    if(computing){
+        // If you're already computed, you don't want to restart your delay timer!
         return;
     }
     if(currData->isSquashed() == true){
@@ -34,8 +40,6 @@ void ExecuteStage::cycleDown(void){
     
     
     //Some execute logic here.
-    currData->instructionFunctions->execute(currData);
-
-    
-    //Some delay logic here
+    currData->instructionFunctions->execute(currData, &delay);
+    computing = true;
 }

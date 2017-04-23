@@ -1,11 +1,12 @@
 #include "LoadInstruction.h"
 
-void LoadInstruction::execute(StageData *sd) {
+void LoadInstruction::execute(StageData *sd, int *wait){
+  *wait = 0;
   qDebug() << "COM: LoadInstruction: execute";
   (void) sd;
 }
 
-void LoadInstruction::memory(StageData *sd, MemoryStructure *m) {
+void LoadInstruction::memory(StageData *sd, MemoryStructure *m, int *wait){
   qDebug() << "COM: LoadInstruction: memory";
   // Decide if you want a vector or a scalar and get 
   int dataRequested = Register::isVectorIndex(sd->operand2.u)?VECTOR_SIZE:1;
@@ -19,10 +20,12 @@ void LoadInstruction::memory(StageData *sd, MemoryStructure *m) {
     sd->auxVec = qr->result;
   }
   // Cleanup.
+  *wait = qr->time;
   delete qr;
 }
 
-void LoadInstruction::writeBack(StageData *sd, Register *r) {
+void LoadInstruction::writeBack(StageData *sd, Register *r, int *wait){
+  *wait = 1;
   qDebug() << "COM: LoadInstruction: writeBack";
   if(Register::isScalarIndex(sd->operand2.u)) {
     r->write(sd->aux, sd->operand2.u);

@@ -5,62 +5,64 @@
 #define __MOD__ %
 #define __MUL__ *
 
-Value AddInstruction::scalarOperation(int a, int b) {
+Value AddInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 2;
   Value v;
   v.i = a __ADD__ b;
   return v;
 }
 
-Value AddInstruction::scalarOperation(float a, float b) {
+Value AddInstruction::scalarOperation(float a, float b, int *wait){
+  *wait = 4;
   Value v;
   v.f = a __ADD__ b;
   return v;
 }
 
-Value SubInstruction::scalarOperation(int a, int b) {
+Value SubInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 2;
   Value v;
   v.i = b __SUB__ a;
   return v;
 }
 
-Value SubInstruction::scalarOperation(float a, float b) {
+Value SubInstruction::scalarOperation(float a, float b, int *wait){
+  *wait = 4;
   Value v;
   v.f = b  __SUB__ a;
   return v;
 }
-Value DivInstruction::scalarOperation(int a, int b) {
+Value DivInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 8;
   Value v;
   v.i = b __DIV__ a;
   return v;
 }
 
-Value DivInstruction::scalarOperation(float a, float b) {
+Value DivInstruction::scalarOperation(float a, float b, int *wait){
+  *wait = 16;
   Value v;
   v.f = b __DIV__ a;
   return v;
 }
-Value MulInstruction::scalarOperation(int a, int b) {
+Value MulInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 4;
   Value v;
   v.i = a __MUL__ b;
   return v;
 }
 
-Value MulInstruction::scalarOperation(float a, float b) {
+Value MulInstruction::scalarOperation(float a, float b, int *wait){
+  *wait = 8;
   Value v;
   v.f = a __MUL__ b;
   return v;
 }
 
-Value ModInstruction::scalarOperation(int a, int b) {
+Value ModInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 8;
   Value v;
   v.i = b __MOD__ a;
   return v;
 }
 
-Value ModInstruction::scalarOperation(float a, float b) {
-  Value v;
-  qDebug() << "COM: Crtical error float modulus is not defined";
-  exit(-1);
-  // v.f = a __MOD__ b;
-  return v;
-}

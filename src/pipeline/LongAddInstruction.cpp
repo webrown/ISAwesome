@@ -1,5 +1,6 @@
 #include "LongAddInstruction.h"
 void LongAddInstruction::scalarOperation(int *a, int *b, int *wait) {
+  *wait = 4;
   // Calculate
   Value v;
   v.i = *a;

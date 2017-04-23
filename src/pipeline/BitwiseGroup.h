@@ -8,33 +8,33 @@
 
 class AndInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 
 class NandInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 class OrInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 class NorInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 class XorInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 class NotInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 #endif

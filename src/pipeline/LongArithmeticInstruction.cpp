@@ -1,14 +1,15 @@
 #include "LongArithmeticInstruction.h"
 
 void LongArithmeticInstruction::scalarOperation(int *a, int *b, int *wait){
+  *wait = 0;
   qDebug() << "COM: LongArithmeticInstruction: NOOPed int int";
   (void) a;
   (void) b;
   (void) wait;
 }
 
-void LongArithmeticInstruction::decode(StageData *sd, Register *r) {
-  BinaryInstruction::decode(sd, r);
+void LongArithmeticInstruction::decode(StageData *sd, Register *r, int *wait){
+  BinaryInstruction::decode(sd, r, wait);
   // Barf unless we're dealing with ints.
   if(Register::isFloatIndex(sd->operand1) || Register::isFloatIndex(sd->operand2) || !Register::indexExists(sd->operand1) || !Register::indexExists(sd->operand2)) {
     qDebug() << "COM:  LongArithmeticInstruction:  Can only work with int registers.";
@@ -21,9 +22,7 @@ void LongArithmeticInstruction::decode(StageData *sd, Register *r) {
   }
 }
 
-void LongArithmeticInstruction::execute(StageData *sd){
-  int w; // TODO Unused for now.
-  int *wait = &w;
+void LongArithmeticInstruction::execute(StageData *sd, int *wait){
   // Immediate is not a thing for longs.
   if(Register::isScalarIndex(sd->operand1) && Register::isScalarIndex(sd->operand2)) {
     //pure scalar operation
@@ -51,14 +50,16 @@ void LongArithmeticInstruction::execute(StageData *sd){
   }
 }
 
-void LongArithmeticInstruction::memory(StageData *sd, MemoryStructure *ms) {
+void LongArithmeticInstruction::memory(StageData *sd, MemoryStructure *ms, int *wait){
+  *wait = 0;
   // Don't touch memory
   (void) sd;
   (void) ms;
 }
 
 
-void LongArithmeticInstruction::writeBack(StageData *sd, Register *r){
+void LongArithmeticInstruction::writeBack(StageData *sd, Register *r, int *wait){
+  *wait = 2;
   qDebug() << "COM: LongArithmeticInstruction: About to write to" << sd->operand2.i;
   if(Register::isScalarIndex(sd->operand2)){
     r->write(sd->src, sd->operand1.i);

@@ -5,10 +5,10 @@
 #include "../memory/MemoryStructure.h"
 class LongArithmeticInstruction : public BinaryInstruction {
   public:
-    virtual void decode(StageData *, Register *);
-    virtual void execute(StageData *sd);
-    virtual void memory(StageData *sd, MemoryStructure *);
-    virtual void writeBack(StageData *sd, Register *r);
+    virtual void decode(StageData *, Register *, int *wait);
+    virtual void execute(StageData *sd, int *wait);
+    virtual void memory(StageData *sd, MemoryStructure *, int *wait);
+    virtual void writeBack(StageData *sd, Register *r, int *wait);
     virtual QVector<char> registerDependencies(StageData *sd);
     virtual QVector<char> registersToSet(StageData *sd);
     virtual bool decodeDump(StageData *, Register *r);

@@ -15,6 +15,7 @@ class Stage{
         bool structureFlag = false;
         bool dependencyFlag = false; 
         int delay;
+        bool computing;
         
         void init(void){
             currData = NULL;

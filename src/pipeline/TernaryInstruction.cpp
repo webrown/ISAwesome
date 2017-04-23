@@ -1,7 +1,8 @@
 #include "TernaryInstruction.h"
 #include "../Utility.h"
 #include "InstructionUtil.h"
-void TernaryInstruction::decode(StageData *sd, Register *r) {
+void TernaryInstruction::decode(StageData *sd, Register *r, int *wait){
+  *wait = 3;
   uint nextInstruction = sd->instruction;
   sd->operand1.i = spliceMachineCode(nextInstruction, 15, 20);
   sd->operand2.i = spliceMachineCode(nextInstruction, 8, 13);

@@ -1,10 +1,11 @@
 #include "SequenceInstruction.h"
-void SequenceInstruction::decode(StageData *sd, Register *r) {
-  UnaryInstruction::decode(sd, r);
+void SequenceInstruction::decode(StageData *sd, Register *r, int *wait){
+  UnaryInstruction::decode(sd, r, wait);
   if(!Register::indexExists(sd->operand1)) sd->broken = 1;
   if(Register::isScalarIndex(sd->operand1)) sd->broken = 1;
 }
-void SequenceInstruction::execute(StageData *sd) {
+void SequenceInstruction::execute(StageData *sd, int *wait){
+  *wait = 1;
   qDebug() << "COM: SequenceInstruction: execute";
   // Generate.
   sd->destVec.clear();
@@ -21,11 +22,13 @@ void SequenceInstruction::execute(StageData *sd) {
     sd->destVec += v;
   }
 }
-void SequenceInstruction::memory(StageData *sd, MemoryStructure *m) {
+void SequenceInstruction::memory(StageData *sd, MemoryStructure *m, int *wait){
+  *wait = 0;
   (void) sd;
   (void) m;
 }
-void SequenceInstruction::writeBack(StageData *sd, Register *r) {
+void SequenceInstruction::writeBack(StageData *sd, Register *r, int *wait){
+  *wait = 1;
   qDebug() << "COM: SequenceInstruction: writing to" << sd->operand1.i;
   r->write(sd->destVec, sd->operand1.i);
 }

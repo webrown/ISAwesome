@@ -6,44 +6,51 @@ int toIntSG(float v){
     return x.i;
 }
 
-Value LslInstruction::scalarOperation(int a, int b) {
+Value LslInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 1;
   Value v;
   v.i = b << a;
   return v;
 }
 
-Value LslInstruction::scalarOperation(float a, float b) {
+Value LslInstruction::scalarOperation(float a, float b, int *wait){
+  *wait = 1;
   Value v;
   v.f = toIntSG(b) << toIntSG(a);
   return v;
 }
 
-Value LsrInstruction::scalarOperation(int a, int b) {
+Value LsrInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 1;
   Value v;
   v.i = ((unsigned)b) >> a;
   return v;
 }
 
-Value LsrInstruction::scalarOperation(float a, float b) {
+Value LsrInstruction::scalarOperation(float a, float b, int *wait){
+  *wait = 1;
   Value v;
   v.f = ((unsigned)toIntSG(b)) >> toIntSG(a);
   return v;
 }
-Value AslInstruction::scalarOperation(int a, int b) {
+Value AslInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 1;
   Value v;
   v.i = b << a;
   return v;
 }
 
-Value AslInstruction::scalarOperation(float a, float b) {
+Value AslInstruction::scalarOperation(float a, float b, int *wait){
+  *wait = 1;
   Value v;
   v.f = toIntSG(b) << toIntSG(a);
   return v;
 }
-Value AsrInstruction::scalarOperation(int a, int b) {
+Value AsrInstruction::scalarOperation(int a, int b, int *wait){
+  *wait = 1;
   Value v;
    bool mustSwap = false;
-  if(b < 0) {
+  if(b < 0){
     mustSwap = true;
     b = ~b;
   }
@@ -55,9 +62,10 @@ Value AsrInstruction::scalarOperation(int a, int b) {
   return v;
 }
 
-Value AsrInstruction::scalarOperation(float a, float b) {
+Value AsrInstruction::scalarOperation(float a, float b, int *wait){
+  *wait = 1;
   Value v;
-  return scalarOperation(toIntSG(a), toIntSG(b));
+  return scalarOperation(toIntSG(a), toIntSG(b), wait);
 }
 
 

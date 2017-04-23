@@ -8,13 +8,13 @@
 
 class ToiInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, int);
-    Value scalarOperation(float, int);
+    Value scalarOperation(int, int, int *wait);
+    Value scalarOperation(float, int, int *wait);
 };
 
 class TofInstruction : public ShortArithmeticInstruction {
   public:
-    Value scalarOperation(int, float);
-    Value scalarOperation(float, float);
+    Value scalarOperation(int, float, int *wait);
+    Value scalarOperation(float, float, int *wait);
 };
 #endif

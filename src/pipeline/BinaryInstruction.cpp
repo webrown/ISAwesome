@@ -1,7 +1,8 @@
 #include "BinaryInstruction.h"
 #include "../Utility.h"
 #include "InstructionUtil.h"
-void BinaryInstruction::decode(StageData *sd, Register *r) {
+void BinaryInstruction::decode(StageData *sd, Register *r, int *wait) {
+  *wait = 2;
   uint nextInstruction = sd->instruction;
   sd->operand1.i = spliceMachineCode(nextInstruction, 5, 20);
   sd->operand2.i = spliceMachineCode(nextInstruction, 0, 4);

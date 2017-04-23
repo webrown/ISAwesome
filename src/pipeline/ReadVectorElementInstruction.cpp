@@ -1,7 +1,7 @@
 #include "ReadVectorElementInstruction.h"
 #include "InstructionUtil.h"
-void ReadVectorElementInstruction::decode(StageData *sd, Register *r) {
-  TernaryInstruction::decode(sd, r);
+void ReadVectorElementInstruction::decode(StageData *sd, Register *r, int *wait){
+  TernaryInstruction::decode(sd, r, wait);
   qDebug() << "COM: ReadVectorElementInstruction: In decode.";
   // First param must be vector
   if(!Register::isVectorIndex(sd->operand1)) sd->broken = 1;
@@ -24,14 +24,17 @@ void ReadVectorElementInstruction::decode(StageData *sd, Register *r) {
     sd->srcVec = pdvResult;
   }
 }
-void ReadVectorElementInstruction::execute(StageData *sd) {
+void ReadVectorElementInstruction::execute(StageData *sd, int *wait){
+  *wait = 1;
   sd->dest = sd->srcVec.at(sd->aux.i % sd->srcVec.size());
 }
-void ReadVectorElementInstruction::memory(StageData *sd, MemoryStructure *m) {
+void ReadVectorElementInstruction::memory(StageData *sd, MemoryStructure *m, int *wait){
+  *wait = 0;
   (void) sd;
   (void) m;
 }
-void ReadVectorElementInstruction::writeBack(StageData *sd, Register *r) {
+void ReadVectorElementInstruction::writeBack(StageData *sd, Register *r, int *wait){
+  *wait = 1;
   qDebug() << "COM: ReadVectorElementInstruction: About to replace" << r->read(sd->operand3.i).i << "with" << sd->dest.i << "at index" << sd->operand3.i;
   r->write(sd->dest, sd->operand3.i);
   qDebug() << "COM: ReadVectorElementInstruction: Now we have" << r->read(sd->operand3.i).i << "at index" << sd->operand3.i;
