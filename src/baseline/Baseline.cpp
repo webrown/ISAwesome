@@ -279,7 +279,12 @@ Status Baseline::run(void){
                               for(int i = 0; i < registers->readVector(unaryOperand).size(); i++) {
                                   if(conditionVector.at(i)) {
                                       Value v;
-                                      v.i = i;
+                                      if(Register::isFloatIndex(unaryOperand)) {
+                                        v.f = i;
+                                      }
+                                      else {
+                                        v.i = i;
+                                      }
                                       newVector.push_back(v);
                                   }
                                   else {
