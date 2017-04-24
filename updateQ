@@ -7,7 +7,10 @@ MOC_DIR = build
 RCC_DIR = build
 
 QT += widgets testlib
-CONFIG += qt debug console c++11
+
+#CONFIG += qt debug console c++11
+CONFIG += qt console c++11
+DEFINES += QT_NO_DEBUG_OUTPUT
 
 copydata.commands = cp src/assembler/DefaultMacro src/assembler/DefaultAlias \$\$DESTDIR 
 first.depends = \$(first) copydata
