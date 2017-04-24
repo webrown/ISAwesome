@@ -16,6 +16,8 @@ bool PrefetchStage::cycleUp(void){
             return false;
         }
         else{
+            if(currData == NULL)
+                return false;
             next->currData = currData;
             next->computing = false; // got to clear prereqs before you compute.
             currData = NULL;
